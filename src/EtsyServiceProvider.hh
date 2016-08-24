@@ -7,6 +7,6 @@ class EtsyServiceProvider extends ServiceProvider
 {
 	public function register():void
 	{
-		
+		$this->getApplication()->register(EtsyCronServiceProvider::class);
 	}	
 }
