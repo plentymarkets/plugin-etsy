@@ -11,9 +11,9 @@ class Category
     const GET			= 'GET';
 
     /**
-     * @return array<int,string>
+     * @return string
      */
-    public function getCategory():array<int,string>
+    public function getCategory():string
     {
         $url = self::URL.'taxonomy/buyer/get?api_key='.self::API_KEY;
 
@@ -26,11 +26,6 @@ class Category
 
         curl_close($ch);
 
-        if (strlen($response) > 0)
-        {
-            return $response;
-        }
-
-        return [];
+        return $response;
     }
 }

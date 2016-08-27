@@ -3,26 +3,16 @@
 namespace Etsy;
 
 
-use Plenty\Plugin\Routing\Router;
 use Plenty\Plugin\RouteServiceProvider;
-//use Illuminate\Routing\Router as WebRouter;
-//use Plenty\Api\Services\VersionHandling;
-
+use Plenty\Plugin\Routing\ApiRouter;
 /**
  * Class EtsyRouteServiceProvider
  *
  * @author mbrueschke
- * @package
+ * @package Etsy
  */
 class EtsyRouteServiceProvider extends RouteServiceProvider
 {
-//    /**
-//     * @param WebRouter $router
-//     */
-//    public function boot(WebRouter $router):void
-//    {
-//        parent::boot($router);
-//    }
 
     /**
      *
@@ -31,9 +21,12 @@ class EtsyRouteServiceProvider extends RouteServiceProvider
     {
     }
 
-    public function map(Router $route):void
+    /**
+     * @param ApiRouter $route
+     */
+    public function map(ApiRouter $route):void
     {
-//        $route->version(VersionHandling::startingFrom('v1'), ['namespace' => 'Category;', 'middleware' => ['oauth']],
-            $route->get('etsy/category', 'RestController@getCategory');
+
+            $route->get('etsy/category', 'Etsy\Controller\RestController@getCategory');
     }
 }

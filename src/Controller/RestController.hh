@@ -22,9 +22,9 @@ class RestController extends Controller
     }
 
     /**
-     * @return array<int, string>
+     * @return string
      */
-    public function getCategory():array<int,string>
+    public function getCategory():string
     {
         return $this->category->getCategory();
     }
