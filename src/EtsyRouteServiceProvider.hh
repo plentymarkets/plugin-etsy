@@ -2,7 +2,6 @@
 
 namespace Etsy;
 
-
 use Plenty\Plugin\RouteServiceProvider;
 use Plenty\Plugin\Routing\ApiRouter;
 /**
@@ -26,7 +25,8 @@ class EtsyRouteServiceProvider extends RouteServiceProvider
      */
     public function map(ApiRouter $route):void
     {
-
-            $route->get('etsy/category', 'Etsy\Controller\RestController@getCategory');
+        $route->version(['v1'], ['namespace' => 'Etsy'], (ApiRouter $route) ==> {
+        $route->resource('etsy/category', 'Controller\RestController@getCategory');
+        });
     }
 }
