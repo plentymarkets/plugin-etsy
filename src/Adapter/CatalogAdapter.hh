@@ -144,13 +144,12 @@ class Export
                 $response = json_decode($response);
                 $listingId = $response->result[0]->listing_id;
 
-                if(isset($listingId) && $listingId > 0)
+                if($listingId > 0 && !$listingId == null)
                 {
                     $this->elasticExportHelper->generateSku($item, 3000, (string)$listingId); //todo 3000 ist die test marketnumber
                 }
                 else
                 {
-                    plentylog('etsyExport')->debug('Export unsuccessful');
                 }
             }
         }
