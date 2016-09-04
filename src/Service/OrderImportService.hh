@@ -9,6 +9,7 @@ use Plenty\Modules\Account\Contact\Contracts\ContactRepositoryContract;
 use Plenty\Modules\Account\Contact\Models\Contact;
 use Plenty\Modules\Account\Contracts\AccountRepositoryContract;
 use Plenty\Modules\Account\Models\Account;
+use Plenty\Modules\Order\Contracts\OrderRepositoryContract;
 use Plenty\Modules\Order\Models\Order;
 
 /**
@@ -227,10 +228,11 @@ class OrderImportService
 	/**
 	 * Creates an order by given order data from Etsy.
 	 *
-	 * @param $orderData
+	 * @param array $orderData
+	 * @param Contact $contact
 	 * @return Order
 	 */
-	public function createOrder($orderData):Order
+	public function createOrder($orderData, $contact):Order
 	{
 		// TODO: create order.
 		/*
@@ -239,5 +241,58 @@ class OrderImportService
 		 * Items (Item, Quantity, Price)
 		 * Payment?
 		 */
+
+		/** @var OrderRepositoryContract $orderRepository */
+		$orderRepository = App::make(OrderRepositoryContract::class);
+
+		// TODO: Following array values are required by validator.
+
+		// fill order data
+		$orderData = array
+		(
+			'typeId' => ,
+			'plentyId' => ,
+			'statusId' =>
+		);
+
+		// fill order items data
+		$orderItemsData = array
+		(
+			[
+				'typeId' => ,
+				'itemVariationId' => ,
+				'quantity' => ,
+				'orderItemName' => ,
+				'countryVatId' => ,
+				'vatField' => ,
+				//TODO: or: 'vatRate' => '',
+
+				'amounts' => array
+				(
+					[
+						'currency' => ,
+						'priceOriginalGross' => ,
+						'priceOriginalNet' => ,
+						'discount' => ,
+						'isPercentage' =>
+					],
+				)
+			]
+		);
+
+		$orderData['orderItems'] = $orderItemsData;
+
+		// fill order address data
+		$orderAddressesData = array
+		(
+			[
+				'typeId' => ,
+				'addressId' =>
+			]
+		);
+
+		$orderData['addresses'] = $orderAddressesData;
+
+		$order = $orderRepository->createOrder($orderData);
 	}
 }
