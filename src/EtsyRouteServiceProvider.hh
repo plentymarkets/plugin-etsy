@@ -13,12 +13,6 @@ use Plenty\Plugin\Routing\ApiRouter;
 class EtsyRouteServiceProvider extends RouteServiceProvider
 {
 
-    /**
-     *
-     */
-    public function register():void
-    {
-    }
 
     /**
      * @param ApiRouter $route
