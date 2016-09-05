@@ -58,7 +58,6 @@ class OrderImportService
 								AccountRepositoryContract $accountRepository,
 								AddressRepositoryContract $addressRepository)
 	{
-		plentylog('test')->debug('construct');
 
 		$this->client = $client;
 		$this->contactRepository = $contactRepository;
@@ -70,11 +69,9 @@ class OrderImportService
 
 	public function run():void
 	{
-		plentylog('test')->debug('run');
 		// TODO: Implement. Do rest call here to get transactions.
 		$orders = $this->getOrders();
 
-		plentylog('test')->debug(var_export($orders, true));
 	}
 
 	public function getOrders():mixed
