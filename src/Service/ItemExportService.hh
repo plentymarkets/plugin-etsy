@@ -6,23 +6,15 @@ use Etsy\Service\ItemDataService;
 use Plenty\Modules\Item\DataLayer\Models\RecordList;
 use Plenty\Modules\Item\DataLayer\Contracts\ItemDataLayerRepositoryContract;
 use Plenty\Modules\Item\VariationSku\Contracts\VariationSkuRepositoryContract;
-use ElasticExport\Helper\ElasticExportHelper;
+use Etsy\Api\Client;
 
 class Export
 {
-
-    const API_KEY       = 'pb3qb621tm9boiau3nm7m25l';
-    const URL			= 'https://openapi.etsy.com/v2/';
 
     /**
      * ItemDataService $itemDataService
      */
     private ItemDataService $itemDataService;
-
-    /**
-     * ElasticExportHelper $elasticExportHelper
-     */
-    private ElasticExportHelper $elasticExportHelper;
 
     /**
      * ItemDataLayerRepositoryContract $itemDataLayer
@@ -35,21 +27,26 @@ class Export
     private VariationSkuRepositoryContract $variationSkuRepository;
 
     /**
+     * Client $client
+     */
+    private Client $client;
+
+    /**
      * Export constructor.
      *
+     * @param Client $client
      * @param ItemDataLayerRepositoryContract $itemDataLayer
      * @param ItemDataService $itemDataService
-     * @param ElasticExportHelper $elasticExportHelper
      * @param VariationSkuRepositoryContract $variationSkuRepository
      */
-    public function __construct(ItemDataLayerRepositoryContract $itemDataLayer,
+    public function __construct(Client $client,
+                                ItemDataLayerRepositoryContract $itemDataLayer,
                                 ItemDataService $itemDataService,
-                                ElasticExportHelper $elasticExportHelper,
                                 VariationSkuRepositoryContract $variationSkuRepository)
     {
+        $this->client = $client;
         $this->itemDataLayer = $itemDataLayer;
         $this->itemDataService = $itemDataService;
-        $this->elasticExportHelper = $elasticExportHelper;
         $this->variationSkuRepository = $variationSkuRepository;
     }
 
@@ -142,20 +139,7 @@ class Export
                     'style'                 => '',
                 ];
 
-                $request = json_decode($itemData);
-
-                $url = self::URL.'listings?api_key='.self::API_KEY;
-
-                $ch = curl_init($url);
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-                curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-                curl_setopt($ch, CURLOPT_POST, true);
-                curl_setopt($ch, CURLOPT_POSTFIELDS, $request);
-
-                $response = curl_exec($ch);
-
-                curl_close($ch);
+                $response = $this->client->call('createListing', [], $itemData);
 
                 $response = json_decode($response);
                 $listingId = $response->result[0]->listing_id;
@@ -269,20 +253,6 @@ class Export
 
                     $request = json_decode($itemData);
 
-                    $url = self::URL.'listings/'.$sku.'?api_key='.self::API_KEY;
-
-                    $ch = curl_init($url);
-                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-                    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-                    curl_setopt($ch, CURLOPT_POST, true);
-                    curl_setopt($ch, CURLOPT_POSTFIELDS, $request);
-
-                    $response = curl_exec($ch);
-
-                    curl_close($ch);
-
-                    $response = json_decode($response);
                 }
             }
         }
