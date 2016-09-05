@@ -17,10 +17,11 @@ class Client
      * Call the etsy API.
      * 
      * @param  string method The method that should be called.
-     * @param  ?array<mixed,mixed> params The params that should pe used for the call.
+     * @param  ?array<mixed,mixed> params The params that should pe used for the call. Eg. /shops/:shop_id/sections/:shop_section_id -> shop_id and shop_section_id are params.
+     * @param  ?array<mixed,mixed> data The data that should pe used for the post call. 
      * @return mixed
      */
-    public function call(string $method, ?array<mixed,mixed> $params = []):mixed
+    public function call(string $method, ?array<mixed,mixed> $params = [], ?array<mixed,mixed> $data = []):mixed
     {
     	$response = $this->library->call('EtsyIntegrationPlugin::etsy_sdk', [
             'consumerKey' => 'mmmgsrtdngz5f7h8jlbk81i3', // TODO grab this from config
@@ -29,6 +30,7 @@ class Client
             'accessTokenSecret' => '30e33b2cf8', // TODO grab this from config
             'method' => $method,
             'params' => $params,
+            'data' => $data
         ]);
     
         return $response;
