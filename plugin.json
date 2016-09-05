@@ -4,5 +4,8 @@
   "namespace": "Etsy",
   "author": "plentymarkets",
   "type": "general",
-  "serviceProvider": "Etsy\\EtsyServiceProvider"
+  "serviceProvider": "Etsy\\EtsyServiceProvider",
+  "dependencies": {
+  	"inakiabt/etsy-php": "dev-master"
+  }
 }
