@@ -53,14 +53,22 @@ class Update
     }
 
     /**
-     * Update all items on etsy
-     *
      * @return void
      */
-    public function update():void
+    public function run():void
     {
         $result = $this->dataProvider->getData('Update');
+        $this->update($result);
+    }
 
+    /**
+     * Update all items on etsy
+     *
+     * @param ?RecordList $result
+     * @return void
+     */
+    public function update(?RecordList $result):void
+    {
         if($result instanceof RecordList)
         {
             foreach($result as $item)

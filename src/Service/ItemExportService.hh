@@ -37,7 +37,6 @@ class Export
      * Export constructor.
      *
      * @param Client $client
-     * @param ItemDataService $itemDataService
      * @param VariationSkuRepositoryContract $variationSkuRepository
      * @param DataHelper $dataHelper
      * @param DataProvider $dataProvider
@@ -54,13 +53,22 @@ class Export
     }
 
     /**
-     * Export all article to etsy which are not exported yet
-     *
      * @return void
      */
-    public function export():void
+    public function run():void
     {
         $result = $this->dataProvider->getData('Export');
+        $this->export($result);
+    }
+
+    /**
+     * Export all article to etsy which are not exported yet
+     *
+     * @param ?RecordList $result
+     * @return void
+     */
+    public function export(?RecordList $result):void
+    {
         if($result instanceof RecordList)
         {
             foreach($result as $item)
