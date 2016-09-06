@@ -1,0 +1,26 @@
+[
+	{
+		"key": "consumerKey",
+		"label":"Consumer key",
+		"type": "text",
+		"default":"mmmgsrtdngz5f7h8jlbk81i3"
+	},
+	{
+		"key": "consumerSecret",
+		"label":"Consumer secret",
+		"type": "text",
+		"default":"4voazs4ulx"
+	},
+	{
+		"key": "accessToken",
+		"label":"Access token",
+		"type": "text",
+		"default":"1e597088a0b49070f12cf5fc8725ec"
+	},
+	{
+		"key": "accessTokenSecret",
+		"label":"Access token secret",
+		"type": "text",
+		"default":"30e33b2cf8"
+	}
+]
