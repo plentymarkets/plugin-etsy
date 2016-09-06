@@ -17,7 +17,7 @@ $associations = SdkRestApi::getParam('associations', []);
 $client = new EtsyClient($consumerKey, $consumerSecret);
 $client->authorize($accessToken, $accessTokenSecret);
 
-$api = new EtsyApi($client);
+$api = new EtsyApi($client, __DIR__ . '/methods.json');
 
 return $api->{$method}([
 	'params' => $params, 
