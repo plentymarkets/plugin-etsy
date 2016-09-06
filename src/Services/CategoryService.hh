@@ -1,6 +1,6 @@
 <?hh //strict
 
-namespace Etsy\Service;
+namespace Etsy\Services;
 
 class Category
 {

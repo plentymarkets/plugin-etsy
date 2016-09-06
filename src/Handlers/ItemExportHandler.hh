@@ -1,15 +1,14 @@
 <?hh //strict
 
-namespace Etsy\Handler;
+namespace Etsy\Handlers;
 
-use Etsy\Service\Export;
-use Etsy\Service\Update;
+use Etsy\Services\ItemExportService;
 use Plenty\Modules\Cron\Contracts\CronHandler;
 
 
 class ItemExportHandler extends CronHandler
 {
-    public function handle(Export $export):void
+    public function handle(ItemExportService $export):void
     {
         $export->run();
     }
