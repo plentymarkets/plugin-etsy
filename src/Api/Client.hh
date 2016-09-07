@@ -3,14 +3,24 @@
 namespace Etsy\Api;
 
 use Plenty\Modules\Plugin\Libs\Contracts\LibraryCallContract;
+use Plenty\Plugin\ConfigRepository;
 
 class Client
 {
+    /**
+     * LibraryCallContract $library
+     */
 	private LibraryCallContract $library;
 
-    public function __construct(LibraryCallContract $library)
+    /**
+     * ConfigRepository $config
+     */
+    private ConfigRepository $config;
+
+    public function __construct(LibraryCallContract $library, ConfigRepository $config)
     {
         $this->library = $library;
+        $this->config = $config;
     }	
 
     /**
@@ -24,10 +34,10 @@ class Client
     public function call(string $method, ?array<mixed,mixed> $params = [], ?array<mixed,mixed> $data = []):mixed
     {
     	$response = $this->library->call('EtsyIntegrationPlugin::etsy_sdk', [
-            'consumerKey' => 'mmmgsrtdngz5f7h8jlbk81i3', // TODO grab this from config
-            'consumerSecret' => '4voazs4ulx', // TODO grab this from config
-            'accessToken' => '1e597088a0b49070f12cf5fc8725ec', // TODO grab this from config
-            'accessTokenSecret' => '30e33b2cf8', // TODO grab this from config
+            'consumerKey' => $this->config->get('EtsyIntegrationPlugin.consumerKey'),
+            'consumerSecret' => $this->config->get('EtsyIntegrationPlugin.consumerSecret'),
+            'accessToken' => $this->config->get('EtsyIntegrationPlugin.accessToken'),
+            'accessTokenSecret' => $this->config->get('EtsyIntegrationPlugin.accessTokenSecret'),
             'method' => $method,
             'params' => $params,
             'data' => $data
