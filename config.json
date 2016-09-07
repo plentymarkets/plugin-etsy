@@ -22,5 +22,11 @@
 		"label":"Access token secret",
 		"type": "text",
 		"default":"30e33b2cf8"
+	},
+	{
+		"key": "shopId",
+		"label": "Shop ID",
+		"type": "text",
+		"default": "13651803"
 	}
 ]

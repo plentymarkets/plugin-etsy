@@ -1,7 +1,6 @@
 <?hh // strict
 namespace Etsy;
 
-use Etsy\Handler\OrderImportHandler;
 use Plenty\Modules\Cron\Services\CronContainer;
 use Plenty\Plugin\ServiceProvider;
 use Plenty\Modules\Cron\Services\CronContainer;
@@ -9,6 +8,7 @@ use Plenty\Modules\Cron\Services\CronContainer;
 use Etsy\Contracts\ItemDataProviderContract;
 use Etsy\Crons\ItemExportCron;
 use Etsy\Crons\ItemUpdateCron;
+use Etsy\Crons\OrderImportCron;
 use Etsy\Factories\ItemDataProviderFactory;
 use Etsy\Providers\ItemExportDataProvider;
 use Etsy\Providers\ItemUpdateDataProvider;
@@ -27,5 +27,6 @@ class EtsyServiceProvider extends ServiceProvider
     {
         $container->add(CronContainer::DAILY, ItemExportCron::class);
         $container->add(CronContainer::DAILY, ItemUpdateCron::class);
+        $container->add(CronContainer::HOURLY, OrderImportCron::class);
     }
 }

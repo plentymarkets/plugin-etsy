@@ -1,6 +1,6 @@
 <?hh // strict
 
-namespace Etsy\Service;
+namespace Etsy\Services\Order;
 
 use Etsy\Api\Client;
 use Exception;
@@ -13,6 +13,8 @@ use Plenty\Modules\Account\Contact\Models\Contact;
 use Plenty\Modules\Account\Contact\Models\ContactOption;
 use Plenty\Modules\Order\Contracts\OrderRepositoryContract;
 use Plenty\Modules\Order\Models\Order;
+use Plenty\Plugin\ConfigRepository;
+use Plenty\Exceptions\ValidationException;
 
 /**
  * Class OrderImportService
@@ -23,7 +25,7 @@ use Plenty\Modules\Order\Models\Order;
  *
  * @package Etsy\Service
  */
-class OrderImport
+class OrderImportService
 {
 	/**
 	 * @var Client
@@ -55,103 +57,110 @@ class OrderImport
 	 */
 	private OrderRepositoryContract $orderRepository;
 
+	/**
+	 * ConfigRepository $config
+	 */
+	private ConfigRepository $config
 
 	/**
-	 * OrderImportService constructor.
-	 *
 	 * @param Client $client
 	 * @param ContactRepositoryContract $contactRepository
 	 * @param ContactOptionRepositoryContract $contactOptionsRepository
 	 * @param ContactAccountRepositoryContract $accountRepository
 	 * @param ContactAddressRepositoryContract $addressRepository
+	 * @param OrderRepositoryContract $orderRepository
+	 * @param ConfigRepository $config
 	 */
-	public function __construct(Client $client,
-								ContactRepositoryContract $contactRepository,
-								ContactOptionRepositoryContract $contactOptionsRepository,
-								ContactAccountRepositoryContract $accountRepository,
-								ContactAddressRepositoryContract $addressRepository,
-								OrderRepositoryContract $orderRepositoryContract)
+	public function __construct(
+		Client $client,
+		ContactRepositoryContract $contactRepository,
+		ContactOptionRepositoryContract $contactOptionsRepository,
+		ContactAccountRepositoryContract $accountRepository,
+		ContactAddressRepositoryContract $addressRepository,
+		OrderRepositoryContract $orderRepository,
+		ConfigRepository $config
+	)
 	{
 		$this->client = $client;
 		$this->contactRepository = $contactRepository;
 		$this->contactOptionsRepository = $contactOptionsRepository;
 		$this->accountRepository = $accountRepository;
 		$this->addressRepository = $addressRepository;
-		$this->orderRepository = $orderRepositoryContract;
+		$this->orderRepository = $orderRepository;
+		$this->config = $config;
 	}
 
 	/**
 	 * Runs the order import process.
 	 */
 	public function run():void
-	{
-
-		// 1. Get orders from Etsy
+	{		
 		$orders = $this->getOrders();
 
-		if(!is_null($orders) && is_array($orders))
+		if(array_key_exists('results', $orders))
 		{
-			$importedOrders = 0;
-
 			foreach($orders['results'] as $order)
-			{
+			{					
 				try
 				{
-					// TODO: 2. Implement method to check/validate order for import
-					if(!$this->isValid())
-					{
-//						// TODO: Excetpion - invalid order/order exists to prevent duplicates
-					}
+					$this->validate($order);
 
-					// 3. Import orders
-					$this->import($order);
-
-					$importedOrders++;
+					$this->import($order);			
 				}
-				catch(Exception $e)
+				catch(ValidationException $ex)
 				{
-					// TODO: Log
-				}
-			}
-
-			// TODO: Log, order import result, like 'x new orders imported' or '2/4 imported'.
-		}
-		else
-		{
-			// TODO: Log, no response/no orders
-		}
+					// do something here
+				}				
+			}			
+		}	
 	}
 
 	/**
 	 * Gets the orders from Etsy.
 	 *
-	 * @return ?array<string, mixed>
+	 * @return array<string, mixed>
 	 */
-	public function getOrders():?array<string, mixed>
+	public function getOrders():array<string, mixed>
 	{
-		return $this->client->call('findAllShopTransactions', ['shop_id' => 13651803]);
+		return $this->client->call('findAllShopTransactions', 
+			[
+				'shop_id' => $this->config->get('EtsyIntegrationPlugin.shopId')
+			],
+			[],
+			[],
+			[
+				'Receipt'
+			]
+		);
 	}
-
-	/**
-	 * Gets the receipt information of a specific transaction by receipt id.
-	 *
-	 * @param int $receiptId
-	 * @return ?array<string, mixed>
-	 */
-	private function getReceiptData(int $receiptId):?array<string, mixed>
-	{
-		return $this->client->call('getReceipt', ['receipt_id' => $receiptId]);
-	}
-
-
 
 	/**
 	 * Checks whether order already exists to prevent duplicate imports.
+	 * 
+	 * @return void
+	 * @throws ValidationException
 	 */
-	private function isValid():bool
-	{
-		// TODO: Implement. There is no function findByExternal order id. Waiting for team order..
-		return true;
+	private function validate(array<string,mixed> $order):void
+	{		
+		$results = $this->orderRepository->searchOrders([
+			'externalOrderId' => $order['transactionId']
+			'referrerId' => $this->config->get('EtsyIntegrationPlugin.referrerId'),
+		]);			
+
+		if(is_array($results) && count($results))
+		{
+			throw new ValidationException('Order already imported');
+		}
+
+		if(!array_key_exists('receipt_id', $order))
+		{
+			throw new ValidationException('Receipt ID is missing');
+		}
+
+		if(!array_key_exists('results', $receipt))
+		{
+			throw new ValidationException('No results in order');	
+		}		
 	}
 
 	/**
@@ -159,15 +168,14 @@ class OrderImport
 	 * @param array<string, mixed> $order
 	 */
 	private function import(array<string, mixed> $order):void
-	{
-		$receiptData = $this->getReceiptData((int) $order['receipt_id']);
+	{			
+		$contactId = $this->createContact($order);
 
-		if(!is_null($receiptData) && is_array($receiptData))
-		{
-			$addressId = $this->createContact(array_pop($receiptData['results']));
+		$billingAddressId = $this->createAddress($this->getBillingInfo($order), $contactId);
 
-			$this->createOrder($order, $addressId);
-		}
+		$shippingAddressId = $this->createAddress($this->getShippingInfo($order), $contactId);
+
+		$orderId = $this->createOrder($order, $addressId);
 	}
 
 	/**
@@ -176,83 +184,46 @@ class OrderImport
 	 * @param array<string, mixed> $receiptData
 	 * @return int
 	 */
-	private function createContact(array<string, mixed> $receiptData):int
+	private function createContact(array<string, mixed> $order):int
 	{
-		// TODO: if the customer exists the createContact function aborts somewhere intern
-		// create contact
-		$contact = $this->contactRepository->createContact($this->getContactData($receiptData));
+		$receipt = $this->getReceipt((int) $order['receipt_id']);		
 
-		// create contact options and attach to contact
-		$this->contactOptionsRepository->createContactOptions($this->getContactOptionsData($receiptData), $contact->id);
-
-		// create address and attack to contact
-		$address = $this->addressRepository->createAddress($this->getAddressData($receiptData), $contact->id, 1);	// TODO: wtf is the type id
-		$contact->addresses->add($address);
-
-		return $address->id;
-	}
-
-	/**
-	 * Gets the contact information from Etsy order.
-	 *
-	 * @param array<string, mixed> $receiptData
-	 * @return array<string, mixed>
-	 */
-	private function getContactData(array<string, mixed> $receiptData):array<string, mixed>
-	{
-		// fillable fields
-		$contactData =
-		[
+		// TODO: if the customer exists the createContact function aborts somewhere intern		
+		$contact = $this->contactRepository->createContact([
 			'referrerId' => 1.00,
 			'typeId' => 1, // type customer
 			'firstName' => $receiptData['name'],
-		];
+		]);
 
-		return $contactData;
-	}
-
-	/**
-	 * Gets the contact options, like email, from Etsy order.
-	 *
-	 * @param array<string, mixed> $receiptData
-	 * @return array<mixed>
-	 */
-	private function getContactOptionsData(array<string, mixed> $receiptData):array<mixed>
-	{
-		$contactOptionsData =
-		[
+		// create contact options and attach to contact
+		$this->contactOptionsRepository->createContactOptions([
 			[
 				'typeId' => 2,
 				'subTypeId' => 1,
 				'value' => $receiptData['buyer_email'],
 				'priority' => 1
 			],
-		];
+		], $contact->id);
 
-		return $contactOptionsData;
+		return $contact->id;
 	}
 
 	/**
-	 * Gets the address information from Etsy order.
+	 * Gets the receipt information of a specific transaction by receipt id.
 	 *
-	 * @param array<string, mixed> $receiptData
+	 * @param int $receiptId
 	 * @return array<string, mixed>
 	 */
-	private function getAddressData(array<string, mixed> $receiptData):array<string, mixed>
+	private function getReceipt(int $receiptId):array<string, mixed>
 	{
-		$addressData =
-		[
-			'name2' => $receiptData['name'],
-			'name3' => '',
-			'address1' => $receiptData['first_line'],
-			// TODO: address2 - house no.
-			'postalCode' => $receiptData['zip'],
-			'town' => $receiptData['city'],
-			'stateId' => 1, // TODO: receiptData 'state'
-			'countryId' => 49 // TODO: countryId - make call, map by iso code and get id.
-		];
+		$receipt = $this->client->call('getReceipt', ['receipt_id' => $receiptId]);
 
-		return $addressData;
+		if(!array_key_exists('results', $receipt))
+		{
+			throw new ValidationException('Invalid receipt');
+		}
+
+		$receiptData = array_pop($receipt['results']);
 	}
 
 	/**
