@@ -2,14 +2,14 @@
 
 namespace Etsy\Handler;
 
-use Etsy\Service\OrderImportService;
+use Etsy\Service\OrderImport;
 use Plenty\Modules\Cron\Contracts\CronHandler;
 
 
 class OrderImportHandler extends CronHandler
 {
-	public function handle(OrderImportService $orderImportService):void
+	public function handle(OrderImport $orderImport):void
 	{
-		$orderImportService->run();
+		$orderImport->run();
 	}
 }
