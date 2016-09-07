@@ -1,16 +1,18 @@
 <?hh //strict
 
-namespace Etsy\Services;
+namespace Etsy\Services\Item;
 
-use Etsy\Services\ItemService;
 use Plenty\Modules\Item\DataLayer\Models\RecordList;
 use Plenty\Modules\Item\VariationSku\Contracts\VariationSkuRepositoryContract;
+use Plenty\Modules\Item\DataLayer\Models\Record;
+
+use Etsy\Services\Item\AbstractItemService as Service;
 use Etsy\Helper\ItemHelper;
 use Etsy\Api\Client;
 use Etsy\Contracts\ItemDataProviderContract;
-use Plenty\Modules\Item\DataLayer\Models\Record;
+use Etsy\Factories\ItemDataProviderFactory;
 
-class ItemExportService extends ItemService
+class ItemExportService extends Service
 {	
 	/**
 	 * VariationSkuRepositoryContract $variationSkuRepository
@@ -24,19 +26,19 @@ class ItemExportService extends ItemService
 
 	public function __construct(
 		Client $client, 
-		ItemDataProviderContract $itemDataProvider,
+		ItemDataProviderFactory $itemDataProviderFactory,
 		VariationSkuRepositoryContract $variationSkuRepository,
 		ItemHelper $itemHelper
 	)
-	{
-		parent::__construct($client, $itemDataProvider);
+	{        
+        $this->variationSkuRepository = $variationSkuRepository;
+        $this->itemHelper = $itemHelper;
 
-		$this->variationSkuRepository = $variationSkuRepository;
-		$this->itemHelper = $itemHelper;
+		parent::__construct($client, $itemDataProviderFactory->make('export'));
 	}
 
     /**
-     * Export all article to etsy which are not exported yet
+     * Export all article which are not exported yet.
      *
      * @param RecordList $records
      * @return void
@@ -51,6 +53,7 @@ class ItemExportService extends ItemService
 
 	/**
 	 * Start a listing.
+     * 
 	 * @param Record $item
 	 * @return void
 	 */

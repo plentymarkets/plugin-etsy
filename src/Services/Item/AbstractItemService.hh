@@ -1,12 +1,13 @@
 <?hh //strict
 
-namespace Etsy\Services;
+namespace Etsy\Services\Item;
 
 use Plenty\Modules\Item\DataLayer\Models\RecordList;
+
 use Etsy\Api\Client;
 use Etsy\Contracts\ItemDataProviderContract;
 
-abstract class ItemService
+abstract class AbstractItemService
 {	
     /**
      * Client $client
