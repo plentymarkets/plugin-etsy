@@ -28,5 +28,17 @@
 		"label": "Shop ID",
 		"type": "text",
 		"default": "13651803"
+	},
+    {
+        "key": "referrerId",
+        "label": "Referrer ID",
+        "type": "text",
+        "default": "9"
+    },
+    {
+		"key": "logName",
+		"label": "API Log Name",
+		"type": "text",
+		"default": "Etsy"
 	}
 ]

@@ -3,7 +3,6 @@ namespace Etsy;
 
 use Plenty\Modules\Cron\Services\CronContainer;
 use Plenty\Plugin\ServiceProvider;
-use Plenty\Modules\Cron\Services\CronContainer;
 
 use Etsy\Contracts\ItemDataProviderContract;
 use Etsy\Crons\ItemExportCron;
@@ -21,6 +20,8 @@ class EtsyServiceProvider extends ServiceProvider
 		$this->getApplication()->bind('Etsy\item.dataprovider.update', ItemUpdateDataProvider::class);
 
 		$this->getApplication()->singleton(ItemDataProviderFactory::class);
+
+         $this->getApplication()->register(EtsyRouteServiceProvider::class);
 	}
 
     public function boot(CronContainer $container):void
