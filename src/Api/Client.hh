@@ -47,7 +47,7 @@ class Client
             'fields' => $fields,
             'associations' => $associations,
         ]);
-
+        
         return $response;
     }
 }

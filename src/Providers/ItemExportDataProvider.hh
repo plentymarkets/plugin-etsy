@@ -2,6 +2,7 @@
 
 namespace Etsy\Providers;
 
+use Plenty\Plugin\ConfigRepository;
 use Etsy\Contracts\ItemDataProviderContract;
 use Plenty\Modules\Item\DataLayer\Models\RecordList;
 use Plenty\Modules\Item\DataLayer\Contracts\ItemDataLayerRepositoryContract;
@@ -14,16 +15,25 @@ class ItemExportDataProvider implements ItemDataProviderContract
     private ItemDataLayerRepositoryContract $itemDataLayerRepository;
 
     /**
-     * @param ItemDataLayerRepositoryContract $itemDataLayerRepository
+     * ConfigRepository $config
      */
-    public function __construct(ItemDataLayerRepositoryContract $itemDataLayerRepository)
+    private ConfigRepository $config;
+
+    /**
+     * ItemDataLayerRepositoryContract $itemDataLayerRepository
+     */
+    public function __construct(
+        ItemDataLayerRepositoryContract $itemDataLayerRepository,
+        ConfigRepository $config
+    )
     {
-        $this->itemDataLayerRepository = $itemDataLayerRepository;        
+        $this->itemDataLayerRepository = $itemDataLayerRepository;
+        $this->config  = $config;
     }
 
-    /**    
-     * Fetch data using data layer. 
-     * 
+    /**
+     * Fetch data using data layer.
+     *
      * @return RecordList
      */
     public function fetch():RecordList
@@ -32,14 +42,15 @@ class ItemExportDataProvider implements ItemDataProviderContract
     }
 
     /**
-     * Get the result fields needed. 
-     * 
+     * Get the result fields needed.
+     *
      * @return array<string, mixed>
      */
     private function resultFields():array<string, mixed>
     {
         $resultFields = [
             'itemBase' => [
+                'id',
                 'producer',
             ],
 
@@ -66,6 +77,7 @@ class ItemExportDataProvider implements ItemDataProviderContract
             ],
 
             'variationBase' => [
+                'id',
                 'limitOrderByStockSelect',
             ],
 
@@ -81,6 +93,43 @@ class ItemExportDataProvider implements ItemDataProviderContract
                     'stockNet'
                 ]
             ],
+
+            'variationImageList' => [
+				'params' => [
+					'all_images' => [
+						'type' => 'all', // all images
+						'fileType' => ['gif', 'jpeg', 'jpg', 'png'],
+						'imageType' => ['internal'],
+						'referenceMarketplace' => $this->config->get('EtsyIntegrationPlugin.referrerId'),
+					],
+					'only_current_variation_images_and_generic_images' => [
+						'type' => 'item_variation', // current variation + item images
+                        'fileType' => ['gif', 'jpeg', 'jpg', 'png'],
+						'imageType' => ['internal'],
+						'referenceMarketplace' => $this->config->get('EtsyIntegrationPlugin.referrerId'),
+					],
+					'only_current_variation_images' => [
+						'type' => 'variation', // current variation images
+                        'fileType' => ['gif', 'jpeg', 'jpg', 'png'],
+						'imageType' => ['internal'],
+						'referenceMarketplace' => $this->config->get('EtsyIntegrationPlugin.referrerId'),
+					],
+					'only_generic_images' => [
+						'type' => 'item', // only item images
+                        'fileType' => ['gif', 'jpeg', 'jpg', 'png'],
+						'imageType' => ['internal'],
+						'referenceMarketplace' => $this->config->get('EtsyIntegrationPlugin.referrerId'),
+					],
+				],
+				'fields' => [
+					'imageId',
+					'type',
+					'fileType',
+					'path',
+					'position',
+					'attributeValueId',
+				],
+			],
         ];
 
         return $resultFields;
@@ -88,7 +137,7 @@ class ItemExportDataProvider implements ItemDataProviderContract
 
     /**
      * Get the filters based on which we neeed to grab results.
-     * 
+     *
      * @return array<string, mixed>
      */
     private function filters():array<string, mixed>
@@ -106,7 +155,7 @@ class ItemExportDataProvider implements ItemDataProviderContract
 
     /**
      * Other parameters needed by the data layer to grab results.
-     * 
+     *
      * @return array<string, mixed>
      */
     private function params():array<string, mixed>

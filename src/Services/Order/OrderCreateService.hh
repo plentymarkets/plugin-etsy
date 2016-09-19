@@ -1,6 +1,7 @@
 <?hh //strict
 namespace Etsy\Services\Order;
 
+use Plenty\Plugin\Application;
 use Plenty\Plugin\ConfigRepository;
 use Plenty\Modules\Order\Models\Order;
 use Plenty\Modules\Order\Contracts\OrderRepositoryContract;
@@ -11,6 +12,11 @@ use Etsy\Helper\OrderHelper;
 
 class OrderCreateService
 {
+    /**
+    * Application $app
+    */
+    private Application $app;
+
     /**
     * ConfigRepository $config
     */
@@ -32,12 +38,14 @@ class OrderCreateService
     private OrderHelper $orderHelper;
 
     public function __construct(
+        Application $app,
         AddressRepositoryContract $addressRepository,
         OrderHelper $orderHelper,
         ConfigRepository $config,
         OrderRepositoryContract $orderRepository
     )
     {
+        $this->app = $app;
         $this->addressRepository = $addressRepository;
         $this->orderHelper = $orderHelper;
         $this->config = $config;
@@ -90,7 +98,7 @@ class OrderCreateService
     {
         $orderData = [
             'typeId' => 1,
-            'plentyId' => 1000, // TODO grab the current plentyId
+            'plentyId' => $this->app->getPlentyId(),
             'statusId' => 3.00,
             'currency' => $data['currency_code'],
         ];

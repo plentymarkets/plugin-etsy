@@ -2,96 +2,73 @@
 
 namespace Etsy\Services\Item;
 
+use Plenty\Plugin\Application;
+use Plenty\Exceptions\ValidationException;
 use Plenty\Modules\Item\DataLayer\Models\RecordList;
-use Plenty\Modules\Item\VariationSku\Contracts\VariationSkuRepositoryContract;
 use Plenty\Modules\Item\DataLayer\Models\Record;
 
+use Etsy\Services\Logger;
 use Etsy\Services\Item\AbstractItemService as Service;
-use Etsy\Helper\ItemHelper;
-use Etsy\Api\Client;
 use Etsy\Contracts\ItemDataProviderContract;
 use Etsy\Factories\ItemDataProviderFactory;
+use Etsy\Validators\StartListingValidator;
+use Etsy\Services\Item\StartListingService;
+use Etsy\Services\Item\VariationGrouper;
 
 class ItemExportService extends Service
-{	
-	/**
-	 * VariationSkuRepositoryContract $variationSkuRepository
-	 */
-	private VariationSkuRepositoryContract $variationSkuRepository;
+{
+    private Application $app;
 
-	/**
-	 * ItemHelper $itemHelper
-	 */
-	private ItemHelper $itemHelper;
+    private Logger $logger;
+
+    private StartListingService $service;
 
 	public function __construct(
-		Client $client, 
-		ItemDataProviderFactory $itemDataProviderFactory,
-		VariationSkuRepositoryContract $variationSkuRepository,
-		ItemHelper $itemHelper
-	)
-	{        
-        $this->variationSkuRepository = $variationSkuRepository;
-        $this->itemHelper = $itemHelper;
+        Application $app,
+        Logger $logger,
+        ItemDataProviderFactory $itemDataProviderFactory,
+        StartListingService $service,
+    )
+	{
+        $this->app = $app;
+        $this->logger = $logger;
+        $this->service = $service;
 
-		parent::__construct($client, $itemDataProviderFactory->make('export'));
+		parent::__construct($itemDataProviderFactory->make('export'));
 	}
 
     /**
-     * Export all article which are not exported yet.
+     * Export all items.
      *
      * @param RecordList $records
      * @return void
      */
     protected function export(RecordList $records):void
-    {        
-        foreach($records as $item)
-        {
-        	$this->startListing($item);
-        }        
-    }
-
-	/**
-	 * Start a listing.
-     * 
-	 * @param Record $item
-	 * @return void
-	 */
-    private function startListing(Record $item):void
     {
-    	if(!$this->valid($item))
-    	{
-    		return;
-    	}
+        $iterator = $this->app->make(VariationGrouper::class, ['recordList' => $records]);
 
-        $itemData = [
-            'quantity'              => 10,
-            'title'                 => 'TEST ITEM',
-            'description'           => 'TEST ITEM PLEASE DO NOT BUY',
-            'price'                 => 0.20,
-            'shipping_template_id'  => 28706227157,
-            'state'                 => 'draft',
-            'who_made'              => 'i_did',
-            'is_supply'             => 'false',
-            'when_made'             => 'made_to_order'
-        ];
-
-        $response = $this->client->call('createListing', [], $itemData);        
-    }
-
-    /**
-     * Check if the item is valid for export.
-     * 
-     * @param Record $item
-     * @return bool
-     */
-    private function valid(Record $item):bool
-    {
-		if(strlen($item->variationMarketStatus->sku) > 0)
+        if($iterator instanceof VariationGrouper)
         {
-            return false;
+            while($iterator->hasNext())
+    		{
+                try
+                {
+                    StartListingValidator::validateOrFail([
+                        // TODO fill here all data that we need for starting an etsy listing
+                    ]);
+
+                    $this->service->start($iterator->nextGroup());
+                }
+                catch(ValidationException $ex)
+                {
+                    $messageBag = $ex->getMessageBag();
+
+                    if(!is_null($messageBag))
+                    {
+                        $this->logger->log('Can not start listing: ...');
+                    }
+                }
+    		}
         }
-
-        return true;
     }
 }

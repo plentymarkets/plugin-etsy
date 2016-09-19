@@ -22,6 +22,8 @@ class EtsyServiceProvider extends ServiceProvider
 		$this->getApplication()->singleton(ItemDataProviderFactory::class);
 
          $this->getApplication()->register(EtsyRouteServiceProvider::class);
+         
+
 	}
 
     public function boot(CronContainer $container):void
@@ -29,5 +31,6 @@ class EtsyServiceProvider extends ServiceProvider
         $container->add(CronContainer::DAILY, ItemExportCron::class);
         $container->add(CronContainer::DAILY, ItemUpdateCron::class);
         $container->add(CronContainer::HOURLY, OrderImportCron::class);
+
     }
 }

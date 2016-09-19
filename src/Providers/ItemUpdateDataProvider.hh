@@ -20,12 +20,12 @@ class ItemUpdateDataProvider implements ItemDataProviderContract
      */
     public function __construct(ItemDataLayerRepositoryContract $itemDataLayerRepository)
     {
-        $this->itemDataLayerRepository = $itemDataLayerRepository;        
+        $this->itemDataLayerRepository = $itemDataLayerRepository;
     }
 
-    /**    
-     * Fetch data using data layer. 
-     * 
+    /**
+     * Fetch data using data layer.
+     *
      * @return RecordList
      */
     public function fetch():RecordList
@@ -34,14 +34,15 @@ class ItemUpdateDataProvider implements ItemDataProviderContract
     }
 
     /**
-     * Get the result fields needed. 
-     * 
+     * Get the result fields needed.
+     *
      * @return array<string, mixed>
      */
     private function resultFields():array<string, mixed>
     {
         $resultFields = [
             'itemBase' => [
+                'id',
                 'producer',
             ],
 
@@ -68,6 +69,7 @@ class ItemUpdateDataProvider implements ItemDataProviderContract
             ],
 
             'variationBase' => [
+                'id',
                 'limitOrderByStockSelect',
             ],
 
@@ -90,7 +92,7 @@ class ItemUpdateDataProvider implements ItemDataProviderContract
 
     /**
      * Get the filters based on which we neeed to grab results.
-     * 
+     *
      * @return array<string, mixed>
      */
     private function filters():array<string, mixed>
@@ -104,7 +106,7 @@ class ItemUpdateDataProvider implements ItemDataProviderContract
                 ]
             ],
             'variationStock.wasUpdatedBetween' => [
-                'timestampFrom' => (time() - self::LAST_UPDATE),    
+                'timestampFrom' => (time() - self::LAST_UPDATE),
                 'timestampTo'   => time(),
             ],
             'variationMarketStatus.wasLastExportedBetween' =>[
@@ -117,7 +119,7 @@ class ItemUpdateDataProvider implements ItemDataProviderContract
 
     /**
      * Other parameters needed by the data layer to grab results.
-     * 
+     *
      * @return array<string, mixed>
      */
     private function params():array<string, mixed>
