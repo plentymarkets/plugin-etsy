@@ -2,7 +2,7 @@
 namespace Etsy\Services\Item;
 
 use Etsy\Api\Client;
-use Etsy\Services\Logger;
+use Etsy\Logger\Logger;
 
 class ListingImageService
 {
@@ -28,7 +28,7 @@ class ListingImageService
     public function uploadListingImage(int $listingId, string $image):void
     {
         $data = [
-            'image' => 'http://testmag.co.uk/wp-content/uploads/2011/06/TEST-PRESENTS.jpg',
+            'image' => 'http://testmag.co.uk/wp-content/uploads/2011/06/TEST-PRESENTS.jpg', // TODO replace $image
         ];
 
         $response = $this->client->call('uploadListingImage', [

@@ -4,7 +4,7 @@ namespace Etsy\Crons;
 
 use Plenty\Modules\Cron\Contracts\CronHandler as Cron;
 
-use Etsy\Services\Item\ItemUpdateService;
+use Etsy\Batch\Item\ItemUpdateService;
 
 class ItemUpdateCron extends Cron
 {

@@ -6,7 +6,7 @@ use Plenty\Exceptions\ValidationException;
 use Plenty\Plugin\ConfigRepository;
 
 use Etsy\Api\Client;
-use Etsy\Services\Logger;
+use Etsy\Logger\Logger;
 use Etsy\Services\Order\OrderCreateService;
 use Etsy\Validators\EtsyReceiptValidator;
 

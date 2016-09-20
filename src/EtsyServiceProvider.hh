@@ -9,8 +9,8 @@ use Etsy\Crons\ItemExportCron;
 use Etsy\Crons\ItemUpdateCron;
 use Etsy\Crons\OrderImportCron;
 use Etsy\Factories\ItemDataProviderFactory;
-use Etsy\Providers\ItemExportDataProvider;
-use Etsy\Providers\ItemUpdateDataProvider;
+use Etsy\DataProviders\ItemExportDataProvider;
+use Etsy\DataProviders\ItemUpdateDataProvider;
 
 class EtsyServiceProvider extends ServiceProvider
 {
@@ -22,7 +22,7 @@ class EtsyServiceProvider extends ServiceProvider
 		$this->getApplication()->singleton(ItemDataProviderFactory::class);
 
          $this->getApplication()->register(EtsyRouteServiceProvider::class);
-         
+
 
 	}
 

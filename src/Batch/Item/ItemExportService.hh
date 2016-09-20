@@ -1,14 +1,14 @@
 <?hh //strict
 
-namespace Etsy\Services\Item;
+namespace Etsy\Batch\Item;
 
 use Plenty\Plugin\Application;
 use Plenty\Exceptions\ValidationException;
 use Plenty\Modules\Item\DataLayer\Models\RecordList;
 use Plenty\Modules\Item\DataLayer\Models\Record;
 
-use Etsy\Services\Logger;
-use Etsy\Services\Item\AbstractItemService as Service;
+use Etsy\Logger\Logger;
+use Etsy\Batch\AbstractBatchService as Service;
 use Etsy\Contracts\ItemDataProviderContract;
 use Etsy\Factories\ItemDataProviderFactory;
 use Etsy\Validators\StartListingValidator;
@@ -45,30 +45,26 @@ class ItemExportService extends Service
      */
     protected function export(RecordList $records):void
     {
-        $iterator = $this->app->make(VariationGrouper::class, ['recordList' => $records]);
+        foreach($records as $record)
+		{
+            try
+            {
+                StartListingValidator::validateOrFail([
+                    // TODO fill here all data that we need for starting an etsy listing
+                ]);
 
-        if($iterator instanceof VariationGrouper)
-        {
-            while($iterator->hasNext())
-    		{
-                try
+                $this->service->start($record);
+            }
+            catch(ValidationException $ex)
+            {
+                $messageBag = $ex->getMessageBag();
+
+                if(!is_null($messageBag))
                 {
-                    StartListingValidator::validateOrFail([
-                        // TODO fill here all data that we need for starting an etsy listing
-                    ]);
-
-                    $this->service->start($iterator->nextGroup());
+                    $this->logger->log('Can not start listing: ...');
                 }
-                catch(ValidationException $ex)
-                {
-                    $messageBag = $ex->getMessageBag();
+            }
+		}
 
-                    if(!is_null($messageBag))
-                    {
-                        $this->logger->log('Can not start listing: ...');
-                    }
-                }
-    		}
-        }
     }
 }

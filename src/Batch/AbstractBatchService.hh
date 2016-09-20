@@ -1,12 +1,12 @@
 <?hh //strict
 
-namespace Etsy\Services\Item;
+namespace Etsy\Batch;
 
 use Plenty\Modules\Item\DataLayer\Models\RecordList;
 
 use Etsy\Contracts\ItemDataProviderContract;
 
-abstract class AbstractItemService
+abstract class AbstractBatchService
 {
     /**
      * ItemDataProvider $itemDataProvider;

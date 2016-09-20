@@ -7,6 +7,7 @@ use Plenty\Modules\Order\Models\Order;
 use Plenty\Modules\Order\Contracts\OrderRepositoryContract;
 use Plenty\Modules\Account\Address\Contracts\AddressRepositoryContract;
 use Plenty\Modules\Account\Address\Models\Address;
+use Plenty\Modules\Item\VariationSku\Contracts\VariationSkuRepositoryContract;
 
 use Etsy\Helper\OrderHelper;
 
@@ -33,6 +34,11 @@ class OrderCreateService
     private AddressRepositoryContract $addressRepository;
 
     /**
+    * VariationSkuRepositoryContract $variationSkuRepository
+    */
+    private VariationSkuRepositoryContract $variationSkuRepository;
+
+    /**
     * OrderHelper $orderHelper
     */
     private OrderHelper $orderHelper;
@@ -42,7 +48,8 @@ class OrderCreateService
         AddressRepositoryContract $addressRepository,
         OrderHelper $orderHelper,
         ConfigRepository $config,
-        OrderRepositoryContract $orderRepository
+        OrderRepositoryContract $orderRepository,
+        VariationSkuRepositoryContract $variationSkuRepository
     )
     {
         $this->app = $app;
@@ -50,11 +57,13 @@ class OrderCreateService
         $this->orderHelper = $orderHelper;
         $this->config = $config;
         $this->orderRepository = $orderRepository;
+        $this->variationSkuRepository = $variationSkuRepository;
     }
 
     public function create(array<string,mixed> $data):void
     {
         // create contact
+        $contactId = $this->createContact($data);
 
         // create address
         $addressId = $this->createAddress($data);
@@ -64,6 +73,11 @@ class OrderCreateService
         {
             $this->createOrder($data, $addressId);
         }
+    }
+
+    private function createContact(array<string,mixed> $data):?int
+    {
+        return 1;
     }
 
     private function createAddress(array<string,mixed> $data):?int
@@ -167,8 +181,7 @@ class OrderCreateService
                 $orderItems[] = [
                     'typeId' => 1,
                     'referrerId' => $this->config->get('EtsyIntegrationPlugin.referrerId'),
-                    'itemVariationId' => 1, // TODO use variationsku
-                    // 'attributeValues' => '', // TODO get this from $transaction['variations']
+                    'itemVariationId' => $this->matchVariationId((string) $transaction['listing_id']),
                     'quantity' => $transaction['quantity'],
                     'orderItemName' => $transaction['title'],
                     'amounts' => [
@@ -194,5 +207,20 @@ class OrderCreateService
         }
 
         return $orderItems;
+    }
+
+    private function matchVariationId(string $sku):?int
+    {
+        $result = $this->variationSkuRepository->search([
+                'marketId' => $this->config->get('EtsyIntegrationPlugin.referrerId'),
+                'variationSku' => $sku,
+            ]);
+
+        foreach($result as $variationSku)
+        {
+            return $variationSku->variationId;
+        }
+
+        return null;
     }
 }

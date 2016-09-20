@@ -5,7 +5,7 @@ namespace Etsy;
 use Plenty\Plugin\RouteServiceProvider;
 use Plenty\Plugin\Routing\Router;
 use Etsy\Services\Order\OrderImportService;
-use Etsy\Services\Item\ItemExportService;
+use Etsy\Batch\Item\ItemExportService;
 
 /**
  * Class EtsyRouteServiceProvider

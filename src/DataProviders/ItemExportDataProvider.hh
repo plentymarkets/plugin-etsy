@@ -1,26 +1,34 @@
 <?hh //strict
 
-namespace Etsy\Providers;
+namespace Etsy\DataProviders;
 
+use Plenty\Plugin\ConfigRepository;
 use Etsy\Contracts\ItemDataProviderContract;
 use Plenty\Modules\Item\DataLayer\Models\RecordList;
 use Plenty\Modules\Item\DataLayer\Contracts\ItemDataLayerRepositoryContract;
 
-class ItemUpdateDataProvider implements ItemDataProviderContract
+class ItemExportDataProvider implements ItemDataProviderContract
 {
-    const int LAST_UPDATE = 86400; // items updated in the last n seconds
-
     /**
      * ItemDataLayerRepositoryContract $itemDataLayerRepository
      */
     private ItemDataLayerRepositoryContract $itemDataLayerRepository;
 
     /**
-     * @param ItemDataLayerRepositoryContract $itemDataLayerRepository
+     * ConfigRepository $config
      */
-    public function __construct(ItemDataLayerRepositoryContract $itemDataLayerRepository)
+    private ConfigRepository $config;
+
+    /**
+     * ItemDataLayerRepositoryContract $itemDataLayerRepository
+     */
+    public function __construct(
+        ItemDataLayerRepositoryContract $itemDataLayerRepository,
+        ConfigRepository $config
+    )
     {
         $this->itemDataLayerRepository = $itemDataLayerRepository;
+        $this->config  = $config;
     }
 
     /**
@@ -85,6 +93,43 @@ class ItemUpdateDataProvider implements ItemDataProviderContract
                     'stockNet'
                 ]
             ],
+
+            'variationImageList' => [
+				'params' => [
+					'all_images' => [
+						'type' => 'all', // all images
+						'fileType' => ['gif', 'jpeg', 'jpg', 'png'],
+						'imageType' => ['internal'],
+						'referenceMarketplace' => $this->config->get('EtsyIntegrationPlugin.referrerId'),
+					],
+					'only_current_variation_images_and_generic_images' => [
+						'type' => 'item_variation', // current variation + item images
+                        'fileType' => ['gif', 'jpeg', 'jpg', 'png'],
+						'imageType' => ['internal'],
+						'referenceMarketplace' => $this->config->get('EtsyIntegrationPlugin.referrerId'),
+					],
+					'only_current_variation_images' => [
+						'type' => 'variation', // current variation images
+                        'fileType' => ['gif', 'jpeg', 'jpg', 'png'],
+						'imageType' => ['internal'],
+						'referenceMarketplace' => $this->config->get('EtsyIntegrationPlugin.referrerId'),
+					],
+					'only_generic_images' => [
+						'type' => 'item', // only item images
+                        'fileType' => ['gif', 'jpeg', 'jpg', 'png'],
+						'imageType' => ['internal'],
+						'referenceMarketplace' => $this->config->get('EtsyIntegrationPlugin.referrerId'),
+					],
+				],
+				'fields' => [
+					'imageId',
+					'type',
+					'fileType',
+					'path',
+					'position',
+					'attributeValueId',
+				],
+			],
         ];
 
         return $resultFields;
@@ -104,15 +149,6 @@ class ItemUpdateDataProvider implements ItemDataProviderContract
                 'mandatoryAllMarketplace' => [
                     148 // TODO grab this from config.json
                 ]
-            ],
-            'variationStock.wasUpdatedBetween' => [
-                'timestampFrom' => (time() - self::LAST_UPDATE),
-                'timestampTo'   => time(),
-            ],
-            'variationMarketStatus.wasLastExportedBetween' =>[
-                'timestampFrom' => (time() - self::LAST_UPDATE),
-                'timestampTo' => time(),
-                'marketplace' => 148, // TODO grab this from config.json
             ]
         ];
     }

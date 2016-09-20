@@ -6,7 +6,7 @@ use Plenty\Modules\Item\DataLayer\Models\Record;
 
 use Etsy\Helper\ItemHelper;
 use Etsy\Api\Client;
-use Etsy\Services\Logger;
+use Etsy\Logger\Logger;
 use Etsy\Services\Item\ListingImageService;
 
 class StartListingService
@@ -39,9 +39,9 @@ class StartListingService
     public function __construct(
         ItemHelper $itemHelper,
         ConfigRepository $config,
+        ListingImageService $imageService,
         Client $client,
         Logger $logger,
-        ListingImageService $imageService
     )
     {
         $this->itemHelper = $itemHelper;
@@ -51,27 +51,25 @@ class StartListingService
         $this->imageService = $imageService;
     }
 
-    public function start(array<int,Record> $group):void
+    public function start(Record $record):void
     {
-        $primaryVariation = $this->primaryVariation($group);
-
-        // $listingId = $this->createListing($primaryVariation);
+        // $listingId = $this->createListing($record);
 
         $listingId = $this->createListingMockupResponse();
 
         if(!is_null($listingId))
         {
-            $this->addPictures($primaryVariation, $listingId);
+            // $this->addPictures($record, $listingId);
 
-            $this->addVariations($primaryVariation, $group);
+            // $this->addVariations($record, $group);
 
-            $this->addTranslations($primaryVariation);
+            $this->addTranslations($record);
 
             $this->publish();
         }
         else
         {
-            $this->logger->log('Could not start listing for item id: ' . $primaryVariation->itemBase->id);
+            $this->logger->log('Could not start listing for variation id: ' . $record->itemBase->id);
         }
 
     }
@@ -131,7 +129,6 @@ class StartListingService
     {
 
     }
-
 
 
 

@@ -1,5 +1,5 @@
 <?hh //strict
-namespace Etsy\Services;
+namespace Etsy\Logger;
 
 use Plenty\Plugin\ConfigRepository;
 
@@ -10,7 +10,7 @@ class Logger
 	 */
 	private string $logClient;
 
-	/**	 
+	/**
      * @param ConfigRepository $config
 	 */
 	public function __construct(ConfigRepository $config)

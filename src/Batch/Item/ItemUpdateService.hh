@@ -1,12 +1,12 @@
 <?hh //strict
 
-namespace Etsy\Services\Item;
+namespace Etsy\Batch\Item;
 
 use Plenty\Modules\Item\DataLayer\Models\RecordList;
 use Plenty\Modules\Item\VariationSku\Contracts\VariationSkuRepositoryContract;
 use Plenty\Modules\Item\DataLayer\Models\Record;
 
-use Etsy\Services\Item\AbstractItemService as Service;
+use Etsy\Batch\AbstractBatchService as Service;
 use Etsy\Contracts\ItemDataProviderContract;
 use Etsy\Factories\ItemDataProviderFactory;
 
