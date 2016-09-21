@@ -48,6 +48,26 @@
     "visibility": "public",
     "http_method": "GET"
   },
+  "getSellerTaxonomy": {
+    "name": "getSellerTaxonomy",
+    "description": "Retrieve the entire taxonomy as used by sellers in the listing process.",
+    "uri": "/taxonomy/seller/get",
+    "params": null,
+    "defaults": null,
+    "type": "Taxonomy",
+    "visibility": "public",
+    "http_method": "GET"
+  },
+  "getBuyerTaxonomy": {
+    "name": "getBuyerTaxonomy",
+    "description": "Retrieve the entire taxonomy as seen by buyers in search.",
+    "uri": "/taxonomy/buyer/get",
+    "params": null,
+    "defaults": null,
+    "type": "Taxonomy",
+    "visibility": "public",
+    "http_method": "GET"
+  },
   "findAllCountry": {
     "name": "findAllCountry",
     "description": "Finds all Country.",

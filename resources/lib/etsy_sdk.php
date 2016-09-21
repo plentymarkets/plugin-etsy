@@ -9,6 +9,11 @@ $client = new Client(
     __DIR__ . '/methods.json'
 );
 
+if(SdkRestApi::getParam('sandbox', false))
+{
+    $client->sandbox(true);
+}
+
 return $client->call(
     SdkRestApi::getParam('method'),
     [

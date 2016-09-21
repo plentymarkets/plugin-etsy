@@ -8,6 +8,8 @@ class Client
 {
     private $api;
 
+    private $sandbox = false;
+
     public function __construct(
         $consumerKey,
         $consumerSecret,
@@ -22,13 +24,26 @@ class Client
         $this->api = new EtsyApi($client, $methodsJson);
     }
 
+    public function sandbox($sandbox)
+    {
+        $this->sandbox = $sandbox;
+    }
+
     public function call($method, $data)
     {
         try
         {
             $data = $this->prepareData($method, $data);
 
-            return $this->api->{$method}($data);
+            if(!$this->sandbox)
+            {
+                return $this->api->{$method}($data);
+            }
+            else
+            {
+                return json_decode(file_get_contents(__DIR__ . '/' . $method . '.json'));
+            }
+
         }
         catch(EtsyRequestException $ex)
         {

@@ -31,15 +31,24 @@ class Client
      * @param  ?array<string,mixed> $data The data that should pe used for the post call.
      * @param  ?array<string,mixed> $fields The fields that should be returned.
      * @param  ?array<string,mixed> $associations The associations that should be returned.
+     * @param  bool $sandbox Default is false.
      * @return ?array<string,mixed>
      */
-    public function call(string $method, ?array<string,mixed> $params = [], ?array<string,mixed> $data = [], ?array<string, mixed> $fields = [], ?array<string, mixed> $associations = []):?array<string,mixed>
+    public function call(
+        string $method,
+        ?array<string,mixed> $params = [],
+        ?array<string,mixed> $data = [],
+        ?array<string, mixed> $fields = [],
+        ?array<string, mixed> $associations = [],
+        bool $sandbox = false
+    ):?array<string,mixed>
     {
     	$response = $this->library->call('EtsyIntegrationPlugin::etsy_sdk', [
             'consumerKey' => $this->config->get('EtsyIntegrationPlugin.consumerKey'),
             'consumerSecret' => $this->config->get('EtsyIntegrationPlugin.consumerSecret'),
             'accessToken' => $this->config->get('EtsyIntegrationPlugin.accessToken'),
             'accessTokenSecret' => $this->config->get('EtsyIntegrationPlugin.accessTokenSecret'),
+            'sandbox' => $sandbox,
 
             'method' => $method,
             'params' => $params,
@@ -47,7 +56,7 @@ class Client
             'fields' => $fields,
             'associations' => $associations,
         ]);
-        
+
         return $response;
     }
 }

@@ -63,7 +63,7 @@ class StartListingService
 
             // $this->addVariations($record, $group);
 
-            $this->addTranslations($record);
+            // $this->addTranslations($record);
 
             $this->publish();
         }
@@ -74,23 +74,18 @@ class StartListingService
 
     }
 
-    private function primaryVariation(array<int,Record> $group):Record
-    {
-        return reset($group);
-    }
-
-    private function createListing(Record $primaryVariation):?int
+    private function createListing(Record $record):?int
     {
         $itemData = [
             'state'                 => 'draft',
             'title'                 => 'Test', // get title
             'description'           => 'Description', // get description
-            'quantity'              => $this->itemHelper->getStock($primaryVariation),
-            'price'                 => number_format($primaryVariation->variationRetailPrice->price, 2),
-            'shipping_template_id'  => $this->itemHelper->getItemProperty($primaryVariation, 'shipping_template_id'),
-            'who_made'              => $this->itemHelper->getItemProperty($primaryVariation, 'who_made'),
-            'is_supply'             => (string) $this->itemHelper->getItemProperty($primaryVariation, 'is_supply'),
-            'when_made'             => $this->itemHelper->getItemProperty($primaryVariation, 'when_made')
+            'quantity'              => $this->itemHelper->getStock($record),
+            'price'                 => number_format($record->variationRetailPrice->price, 2),
+            'shipping_template_id'  => $this->itemHelper->getItemProperty($record, 'shipping_template_id'),
+            'who_made'              => $this->itemHelper->getItemProperty($record, 'who_made'),
+            'is_supply'             => (string) $this->itemHelper->getItemProperty($record, 'is_supply'),
+            'when_made'             => $this->itemHelper->getItemProperty($record, 'when_made')
         ];
 
         $response = $this->client->call('createListing', ['language' => 'de'], $itemData);
@@ -103,9 +98,9 @@ class StartListingService
         return (int) reset($response['results'])['listing_id'];
     }
 
-    private function addPictures(Record $primaryVariation, int $listingId):void
+    private function addPictures(Record $record, int $listingId):void
     {
-        $list = $this->itemHelper->getImageList($primaryVariation->variationImageList['all_images']->toArray(), 'normal');
+        $list = $this->itemHelper->getImageList($record->variationImageList['all_images']->toArray(), 'normal');
 
         foreach($list as $image)
         {
@@ -113,14 +108,14 @@ class StartListingService
         }
     }
 
-    private function addVariations(Record $primaryVariation, array<int,Record> $group):void
+    private function addVariations(Record $record, array<int,Record> $group):void
     {
 
     }
 
 
 
-    private function addTranslations(Record $primaryVariation):void
+    private function addTranslations(Record $record):void
     {
 
     }

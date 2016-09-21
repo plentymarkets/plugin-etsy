@@ -11,13 +11,21 @@ use Etsy\Crons\OrderImportCron;
 use Etsy\Factories\ItemDataProviderFactory;
 use Etsy\DataProviders\ItemExportDataProvider;
 use Etsy\DataProviders\ItemUpdateDataProvider;
+use Etsy\DataProviders\TaxonomyDeDataProvider;
+
+use Etsy\Contracts\EtsyTaxonomyRepositoryContract;
+use Etsy\Repositories\EtsyTaxonomyRepository;
 
 class EtsyServiceProvider extends ServiceProvider
 {
 	public function register():void
 	{
+        $this->getApplication()->bind(EtsyTaxonomyRepositoryContract::class, EtsyTaxonomyRepository::class);
+
 		$this->getApplication()->bind('Etsy\item.dataprovider.export', ItemExportDataProvider::class);
 		$this->getApplication()->bind('Etsy\item.dataprovider.update', ItemUpdateDataProvider::class);
+
+        $this->getApplication()->bind('Etsy\taxonomy.dataprovider.de', TaxonomyDeDataProvider::class);
 
 		$this->getApplication()->singleton(ItemDataProviderFactory::class);
 

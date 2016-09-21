@@ -1,0 +1,4566 @@
+{
+  "count": 15,
+  "results": [
+    {
+      "id": 1,
+      "name": "Accessoires",
+      "children_ids": [
+        48,
+        39,
+        1728,
+        2,
+        219,
+        16,
+        25,
+        6,
+        65,
+        42,
+        164,
+        58
+      ],
+      "path": "accessories",
+      "children": [
+        {
+          "id": 48,
+          "name": "Accessoires für förmliche Anlässe",
+          "children_ids": [
+            49,
+            50,
+            55,
+            51,
+            56,
+            54,
+            53,
+            57
+          ],
+          "path": "accessories.suit_and_tie_accessories",
+          "children": [
+            {
+              "id": 49,
+              "name": "Ascotkrawatten",
+              "children_ids": [],
+              "path": "accessories.suit_and_tie_accessories.ascots",
+              "children": [],
+              "level": 2,
+              "parent": "accessories.suit_and_tie_accessories",
+              "parent_id": 48,
+              "short_name": null,
+              "all_name": null,
+              "description": null,
+              "page_title": null,
+              "meta_title": null,
+              "nav": null,
+              "category_id": 69150467,
+              "full_path_taxonomy_ids": [
+                1,
+                48,
+                49
+              ],
+              "source_finder": "seller:08-2016",
+              "attributeValueSets": [
+                {
+                  "attribute": 2,
+                  "possibleValues": [],
+                  "selectedValues": [],
+                  "isRequired": false,
+                  "displayName": "Farbe",
+                  "version": "5e8ebce",
+                  "taxonomyNode": 49,
+                  "userInputValidator": null
+                }
+              ]
+            },
+            {
+              "id": 50,
+              "name": "Cowboykrawatten",
+              "children_ids": [],
+              "path": "accessories.suit_and_tie_accessories.bolo_ties",
+              "children": [],
+              "level": 2,
+              "parent": "accessories.suit_and_tie_accessories",
+              "parent_id": 48,
+              "short_name": null,
+              "all_name": null,
+              "description": null,
+              "page_title": null,
+              "meta_title": null,
+              "nav": null,
+              "category_id": 69150467,
+              "full_path_taxonomy_ids": [
+                1,
+                48,
+                50
+              ],
+              "source_finder": "seller:08-2016",
+              "attributeValueSets": [
+                {
+                  "attribute": 2,
+                  "possibleValues": [],
+                  "selectedValues": [],
+                  "isRequired": false,
+                  "displayName": "Farbe",
+                  "version": "5e8ebce",
+                  "taxonomyNode": 50,
+                  "userInputValidator": null
+                }
+              ]
+            },
+            {
+              "id": 55,
+              "name": "Einstecktücher",
+              "children_ids": [],
+              "path": "accessories.suit_and_tie_accessories.pocket_squares",
+              "children": [],
+              "level": 2,
+              "parent": "accessories.suit_and_tie_accessories",
+              "parent_id": 48,
+              "short_name": null,
+              "all_name": null,
+              "description": null,
+              "page_title": null,
+              "meta_title": null,
+              "nav": null,
+              "category_id": 69150467,
+              "full_path_taxonomy_ids": [
+                1,
+                48,
+                55
+              ],
+              "source_finder": "seller:08-2016",
+              "attributeValueSets": [
+                {
+                  "attribute": 2,
+                  "possibleValues": [],
+                  "selectedValues": [],
+                  "isRequired": false,
+                  "displayName": "Farbe",
+                  "version": "5e8ebce",
+                  "taxonomyNode": 55,
+                  "userInputValidator": null
+                }
+              ]
+            },
+            {
+              "id": 51,
+              "name": "Fliegen",
+              "children_ids": [],
+              "path": "accessories.suit_and_tie_accessories.bowties",
+              "children": [],
+              "level": 2,
+              "parent": "accessories.suit_and_tie_accessories",
+              "parent_id": 48,
+              "short_name": null,
+              "all_name": null,
+              "description": null,
+              "page_title": null,
+              "meta_title": null,
+              "nav": null,
+              "category_id": 69150467,
+              "full_path_taxonomy_ids": [
+                1,
+                48,
+                51
+              ],
+              "source_finder": "seller:08-2016",
+              "attributeValueSets": [
+                {
+                  "attribute": 2,
+                  "possibleValues": [],
+                  "selectedValues": [],
+                  "isRequired": false,
+                  "displayName": "Farbe",
+                  "version": "5e8ebce",
+                  "taxonomyNode": 51,
+                  "userInputValidator": null
+                }
+              ]
+            },
+            {
+              "id": 56,
+              "name": "Kragenknöpfe",
+              "children_ids": [],
+              "path": "accessories.suit_and_tie_accessories.shirt_studs",
+              "children": [],
+              "level": 2,
+              "parent": "accessories.suit_and_tie_accessories",
+              "parent_id": 48,
+              "short_name": null,
+              "all_name": null,
+              "description": null,
+              "page_title": null,
+              "meta_title": null,
+              "nav": null,
+              "category_id": 69150467,
+              "full_path_taxonomy_ids": [
+                1,
+                48,
+                56
+              ],
+              "source_finder": "seller:08-2016",
+              "attributeValueSets": [
+                {
+                  "attribute": 2,
+                  "possibleValues": [],
+                  "selectedValues": [],
+                  "isRequired": false,
+                  "displayName": "Farbe",
+                  "version": "5e8ebce",
+                  "taxonomyNode": 56,
+                  "userInputValidator": null
+                }
+              ]
+            },
+            {
+              "id": 54,
+              "name": "Krawatten",
+              "children_ids": [],
+              "path": "accessories.suit_and_tie_accessories.neckties",
+              "children": [],
+              "level": 2,
+              "parent": "accessories.suit_and_tie_accessories",
+              "parent_id": 48,
+              "short_name": null,
+              "all_name": null,
+              "description": null,
+              "page_title": null,
+              "meta_title": null,
+              "nav": null,
+              "category_id": 69153785,
+              "full_path_taxonomy_ids": [
+                1,
+                48,
+                54
+              ],
+              "source_finder": "seller:08-2016",
+              "attributeValueSets": [
+                {
+                  "attribute": 2,
+                  "possibleValues": [],
+                  "selectedValues": [],
+                  "isRequired": false,
+                  "displayName": "Farbe",
+                  "version": "5e8ebce",
+                  "taxonomyNode": 54,
+                  "userInputValidator": null
+                }
+              ]
+            },
+            {
+              "id": 53,
+              "name": "Kummerbunde",
+              "children_ids": [],
+              "path": "accessories.suit_and_tie_accessories.cummerbunds",
+              "children": [],
+              "level": 2,
+              "parent": "accessories.suit_and_tie_accessories",
+              "parent_id": 48,
+              "short_name": null,
+              "all_name": null,
+              "description": null,
+              "page_title": null,
+              "meta_title": null,
+              "nav": null,
+              "category_id": 69150467,
+              "full_path_taxonomy_ids": [
+                1,
+                48,
+                53
+              ],
+              "source_finder": "seller:08-2016",
+              "attributeValueSets": [
+                {
+                  "attribute": 2,
+                  "possibleValues": [],
+                  "selectedValues": [],
+                  "isRequired": false,
+                  "displayName": "Farbe",
+                  "version": "5e8ebce",
+                  "taxonomyNode": 53,
+                  "userInputValidator": null
+                }
+              ]
+            },
+            {
+              "id": 57,
+              "name": "Manschettenknöpfe & Krawattennadeln",
+              "children_ids": [
+                2215,
+                2852,
+                2216,
+                2851,
+                52
+              ],
+              "path": "accessories.suit_and_tie_accessories.cufflinks_and_tie_tacks",
+              "children": [
+                {
+                  "id": 2215,
+                  "name": "Kragenknöpfe",
+                  "children_ids": [],
+                  "path": "accessories.suit_and_tie_accessories.cufflinks_and_tie_tacks.shirt_studs",
+                  "children": [],
+                  "level": 3,
+                  "parent": "accessories.suit_and_tie_accessories.cufflinks_and_tie_tacks",
+                  "parent_id": 57,
+                  "short_name": null,
+                  "all_name": null,
+                  "description": null,
+                  "page_title": null,
+                  "meta_title": null,
+                  "nav": null,
+                  "category_id": 69150467,
+                  "full_path_taxonomy_ids": [
+                    1,
+                    48,
+                    57,
+                    2215
+                  ],
+                  "source_finder": "seller:08-2016",
+                  "attributeValueSets": [
+                    {
+                      "attribute": 2,
+                      "possibleValues": [],
+                      "selectedValues": [],
+                      "isRequired": false,
+                      "displayName": "Farbe",
+                      "version": "5e8ebce",
+                      "taxonomyNode": 2215,
+                      "userInputValidator": null
+                    }
+                  ]
+                },
+                {
+                  "id": 2852,
+                  "name": "Kragenstäbchen",
+                  "children_ids": [],
+                  "path": "accessories.suit_and_tie_accessories.cufflinks_and_tie_tacks.collar_stays",
+                  "children": [],
+                  "level": 3,
+                  "parent": "accessories.suit_and_tie_accessories.cufflinks_and_tie_tacks",
+                  "parent_id": 57,
+                  "short_name": null,
+                  "all_name": null,
+                  "description": null,
+                  "page_title": null,
+                  "meta_title": null,
+                  "nav": null,
+                  "category_id": 69150467,
+                  "full_path_taxonomy_ids": [
+                    1,
+                    48,
+                    57,
+                    2852
+                  ],
+                  "source_finder": "seller:08-2016",
+                  "attributeValueSets": [
+                    {
+                      "attribute": 2,
+                      "possibleValues": [],
+                      "selectedValues": [],
+                      "isRequired": false,
+                      "displayName": "Farbe",
+                      "version": "5e8ebce",
+                      "taxonomyNode": 2852,
+                      "userInputValidator": null
+                    }
+                  ]
+                },
+                {
+                  "id": 2216,
+                  "name": "Krawattenclips & -nadeln",
+                  "children_ids": [],
+                  "path": "accessories.suit_and_tie_accessories.cufflinks_and_tie_tacks.tie_tacks",
+                  "children": [],
+                  "level": 3,
+                  "parent": "accessories.suit_and_tie_accessories.cufflinks_and_tie_tacks",
+                  "parent_id": 57,
+                  "short_name": null,
+                  "all_name": null,
+                  "description": null,
+                  "page_title": null,
+                  "meta_title": null,
+                  "nav": null,
+                  "category_id": 69150467,
+                  "full_path_taxonomy_ids": [
+                    1,
+                    48,
+                    57,
+                    2216
+                  ],
+                  "source_finder": "seller:08-2016",
+                  "attributeValueSets": [
+                    {
+                      "attribute": 2,
+                      "possibleValues": [],
+                      "selectedValues": [],
+                      "isRequired": false,
+                      "displayName": "Farbe",
+                      "version": "5e8ebce",
+                      "taxonomyNode": 2216,
+                      "userInputValidator": null
+                    }
+                  ]
+                },
+                {
+                  "id": 2851,
+                  "name": "Krawattenspange",
+                  "children_ids": [],
+                  "path": "accessories.suit_and_tie_accessories.cufflinks_and_tie_tacks.tie_bars",
+                  "children": [],
+                  "level": 3,
+                  "parent": "accessories.suit_and_tie_accessories.cufflinks_and_tie_tacks",
+                  "parent_id": 57,
+                  "short_name": null,
+                  "all_name": null,
+                  "description": null,
+                  "page_title": null,
+                  "meta_title": null,
+                  "nav": null,
+                  "category_id": 69150467,
+                  "full_path_taxonomy_ids": [
+                    1,
+                    48,
+                    57,
+                    2851
+                  ],
+                  "source_finder": "seller:08-2016",
+                  "attributeValueSets": [
+                    {
+                      "attribute": 2,
+                      "possibleValues": [],
+                      "selectedValues": [],
+                      "isRequired": false,
+                      "displayName": "Farbe",
+                      "version": "5e8ebce",
+                      "taxonomyNode": 2851,
+                      "userInputValidator": null
+                    }
+                  ]
+                },
+                {
+                  "id": 52,
+                  "name": "Manschettenknöpfe",
+                  "children_ids": [],
+                  "path": "accessories.suit_and_tie_accessories.cufflinks_and_tie_tacks.cuff_links",
+                  "children": [],
+                  "level": 3,
+                  "parent": "accessories.suit_and_tie_accessories.cufflinks_and_tie_tacks",
+                  "parent_id": 57,
+                  "short_name": null,
+                  "all_name": null,
+                  "description": null,
+                  "page_title": null,
+                  "meta_title": null,
+                  "nav": null,
+                  "category_id": 69153851,
+                  "full_path_taxonomy_ids": [
+                    1,
+                    48,
+                    57,
+                    52
+                  ],
+                  "source_finder": "seller:08-2016",
+                  "attributeValueSets": [
+                    {
+                      "attribute": 2,
+                      "possibleValues": [],
+                      "selectedValues": [],
+                      "isRequired": false,
+                      "displayName": "Farbe",
+                      "version": "5e8ebce",
+                      "taxonomyNode": 52,
+                      "userInputValidator": null
+                    }
+                  ]
+                }
+              ],
+              "level": 2,
+              "parent": "accessories.suit_and_tie_accessories",
+              "parent_id": 48,
+              "short_name": null,
+              "all_name": null,
+              "description": null,
+              "page_title": null,
+              "meta_title": null,
+              "nav": null,
+              "category_id": 69150467,
+              "full_path_taxonomy_ids": [
+                1,
+                48,
+                57
+              ],
+              "source_finder": "seller:08-2016",
+              "attributeValueSets": [
+                {
+                  "attribute": 2,
+                  "possibleValues": [],
+                  "selectedValues": [],
+                  "isRequired": false,
+                  "displayName": "Farbe",
+                  "version": "5e8ebce",
+                  "taxonomyNode": 57,
+                  "userInputValidator": null
+                }
+              ]
+            }
+          ],
+          "level": 1,
+          "parent": "accessories",
+          "parent_id": 1,
+          "short_name": null,
+          "all_name": null,
+          "description": null,
+          "page_title": null,
+          "meta_title": null,
+          "nav": null,
+          "category_id": 69150467,
+          "full_path_taxonomy_ids": [
+            1,
+            48
+          ],
+          "source_finder": "seller:08-2016",
+          "attributeValueSets": [
+            {
+              "attribute": 2,
+              "possibleValues": [],
+              "selectedValues": [],
+              "isRequired": false,
+              "displayName": "Farbe",
+              "version": "5e8ebce",
+              "taxonomyNode": 48,
+              "userInputValidator": null
+            }
+          ]
+        },
+        {
+          "id": 39,
+          "name": "Aufnäher & Pins",
+          "children_ids": [
+            40,
+            41
+          ],
+          "path": "accessories.patches_and_pins",
+          "children": [
+            {
+              "id": 40,
+              "name": "Aufnäher",
+              "children_ids": [],
+              "path": "accessories.patches_and_pins.patches",
+              "children": [],
+              "level": 2,
+              "parent": "accessories.patches_and_pins",
+              "parent_id": 39,
+              "short_name": null,
+              "all_name": null,
+              "description": null,
+              "page_title": null,
+              "meta_title": null,
+              "nav": null,
+              "category_id": 68892300,
+              "full_path_taxonomy_ids": [
+                1,
+                39,
+                40
+              ],
+              "source_finder": "seller:08-2016",
+              "attributeValueSets": [
+                {
+                  "attribute": 2,
+                  "possibleValues": [],
+                  "selectedValues": [],
+                  "isRequired": false,
+                  "displayName": "Farbe",
+                  "version": "5e8ebce",
+                  "taxonomyNode": 40,
+                  "userInputValidator": null
+                }
+              ]
+            },
+            {
+              "id": 41,
+              "name": "Pins & Buttons",
+              "children_ids": [],
+              "path": "accessories.patches_and_pins.pins_and_pinback_buttons",
+              "children": [],
+              "level": 2,
+              "parent": "accessories.patches_and_pins",
+              "parent_id": 39,
+              "short_name": null,
+              "all_name": null,
+              "description": null,
+              "page_title": null,
+              "meta_title": null,
+              "nav": null,
+              "category_id": 69154907,
+              "full_path_taxonomy_ids": [
+                1,
+                39,
+                41
+              ],
+              "source_finder": "seller:08-2016",
+              "attributeValueSets": [
+                {
+                  "attribute": 2,
+                  "possibleValues": [],
+                  "selectedValues": [],
+                  "isRequired": false,
+                  "displayName": "Farbe",
+                  "version": "5e8ebce",
+                  "taxonomyNode": 41,
+                  "userInputValidator": null
+                }
+              ]
+            }
+          ],
+          "level": 1,
+          "parent": "accessories",
+          "parent_id": 1,
+          "short_name": null,
+          "all_name": null,
+          "description": null,
+          "page_title": null,
+          "meta_title": null,
+          "nav": null,
+          "category_id": 69154907,
+          "full_path_taxonomy_ids": [
+            1,
+            39
+          ],
+          "source_finder": "seller:08-2016",
+          "attributeValueSets": [
+            {
+              "attribute": 2,
+              "possibleValues": [],
+              "selectedValues": [],
+              "isRequired": false,
+              "displayName": "Farbe",
+              "version": "5e8ebce",
+              "taxonomyNode": 39,
+              "userInputValidator": null
+            }
+          ]
+        },
+        {
+          "id": 1728,
+          "name": "Baby-Accessoires",
+          "children_ids": [
+            135,
+            6078
+          ],
+          "path": "accessories.baby_accessories",
+          "children": [
+            {
+              "id": 135,
+              "name": "Babytragen & Tragetücher",
+              "children_ids": [],
+              "path": "accessories.baby_accessories.baby_carriers_and_wraps",
+              "children": [],
+              "level": 2,
+              "parent": "accessories.baby_accessories",
+              "parent_id": 1728,
+              "short_name": null,
+              "all_name": null,
+              "description": null,
+              "page_title": null,
+              "meta_title": null,
+              "nav": null,
+              "category_id": 69150455,
+              "full_path_taxonomy_ids": [
+                1,
+                1728,
+                135
+              ],
+              "source_finder": "seller:08-2016",
+              "attributeValueSets": [
+                {
+                  "attribute": 2,
+                  "possibleValues": [],
+                  "selectedValues": [],
+                  "isRequired": false,
+                  "displayName": "Farbe",
+                  "version": "5e8ebce",
+                  "taxonomyNode": 135,
+                  "userInputValidator": null
+                }
+              ]
+            },
+            {
+              "id": 6078,
+              "name": "Requisiten für Kinderfotos",
+              "children_ids": [],
+              "path": "accessories.baby_accessories.childrens_photo_props",
+              "children": [],
+              "level": 2,
+              "parent": "accessories.baby_accessories",
+              "parent_id": 1728,
+              "short_name": null,
+              "all_name": null,
+              "description": null,
+              "page_title": null,
+              "meta_title": null,
+              "nav": {
+                "buyer_target": null,
+                "is_vintage": null
+              },
+              "category_id": 69150467,
+              "full_path_taxonomy_ids": [
+                1,
+                1728,
+                6078
+              ],
+              "source_finder": "seller:08-2016",
+              "attributeValueSets": [
+                {
+                  "attribute": 2,
+                  "possibleValues": [],
+                  "selectedValues": [],
+                  "isRequired": false,
+                  "displayName": "Farbe",
+                  "version": "5e8ebce",
+                  "taxonomyNode": 6078,
+                  "userInputValidator": null
+                }
+              ]
+            }
+          ],
+          "level": 1,
+          "parent": "accessories",
+          "parent_id": 1,
+          "short_name": null,
+          "all_name": null,
+          "description": null,
+          "page_title": null,
+          "meta_title": null,
+          "nav": null,
+          "category_id": 69150467,
+          "full_path_taxonomy_ids": [
+            1,
+            1728
+          ],
+          "source_finder": "seller:08-2016",
+          "attributeValueSets": [
+            {
+              "attribute": 2,
+              "possibleValues": [],
+              "selectedValues": [],
+              "isRequired": false,
+              "displayName": "Farbe",
+              "version": "5e8ebce",
+              "taxonomyNode": 1728,
+              "userInputValidator": null
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "name": "Gürtel & Hosenträger",
+          "children_ids": [
+            4,
+            3,
+            5
+          ],
+          "path": "accessories.belts_and_suspenders",
+          "children": [
+            {
+              "id": 4,
+              "name": "Gürtel",
+              "children_ids": [],
+              "path": "accessories.belts_and_suspenders.belts",
+              "children": [],
+              "level": 2,
+              "parent": "accessories.belts_and_suspenders",
+              "parent_id": 2,
+              "short_name": null,
+              "all_name": null,
+              "description": null,
+              "page_title": null,
+              "meta_title": null,
+              "nav": null,
+              "category_id": 68892144,
+              "full_path_taxonomy_ids": [
+                1,
+                2,
+                4
+              ],
+              "source_finder": "seller:08-2016",
+              "attributeValueSets": [
+                {
+                  "attribute": 2,
+                  "possibleValues": [],
+                  "selectedValues": [],
+                  "isRequired": false,
+                  "displayName": "Farbe",
+                  "version": "5e8ebce",
+                  "taxonomyNode": 4,
+                  "userInputValidator": null
+                }
+              ]
+            },
+            {
+              "id": 3,
+              "name": "Gürtelschnallen",
+              "children_ids": [],
+              "path": "accessories.belts_and_suspenders.belt_buckles",
+              "children": [],
+              "level": 2,
+              "parent": "accessories.belts_and_suspenders",
+              "parent_id": 2,
+              "short_name": null,
+              "all_name": null,
+              "description": null,
+              "page_title": null,
+              "meta_title": null,
+              "nav": null,
+              "category_id": 68892144,
+              "full_path_taxonomy_ids": [
+                1,
+                2,
+                3
+              ],
+              "source_finder": "seller:08-2016",
+              "attributeValueSets": [
+                {
+                  "attribute": 2,
+                  "possibleValues": [],
+                  "selectedValues": [],
+                  "isRequired": false,
+                  "displayName": "Farbe",
+                  "version": "5e8ebce",
+                  "taxonomyNode": 3,
+                  "userInputValidator": null
+                }
+              ]
+            },
+            {
+              "id": 5,
+              "name": "Hosenträger",
+              "children_ids": [],
+              "path": "accessories.belts_and_suspenders.suspenders",
+              "children": [],
+              "level": 2,
+              "parent": "accessories.belts_and_suspenders",
+              "parent_id": 2,
+              "short_name": null,
+              "all_name": null,
+              "description": null,
+              "page_title": null,
+              "meta_title": null,
+              "nav": null,
+              "category_id": 68892144,
+              "full_path_taxonomy_ids": [
+                1,
+                2,
+                5
+              ],
+              "source_finder": "seller:08-2016",
+              "attributeValueSets": [
+                {
+                  "attribute": 2,
+                  "possibleValues": [],
+                  "selectedValues": [],
+                  "isRequired": false,
+                  "displayName": "Farbe",
+                  "version": "5e8ebce",
+                  "taxonomyNode": 5,
+                  "userInputValidator": null
+                }
+              ]
+            }
+          ],
+          "level": 1,
+          "parent": "accessories",
+          "parent_id": 1,
+          "short_name": null,
+          "all_name": null,
+          "description": null,
+          "page_title": null,
+          "meta_title": null,
+          "nav": null,
+          "category_id": 68892144,
+          "full_path_taxonomy_ids": [
+            1,
+            2
+          ],
+          "source_finder": "seller:08-2016",
+          "attributeValueSets": [
+            {
+              "attribute": 2,
+              "possibleValues": [],
+              "selectedValues": [],
+              "isRequired": false,
+              "displayName": "Farbe",
+              "version": "5e8ebce",
+              "taxonomyNode": 2,
+              "userInputValidator": null
+            }
+          ]
+        },
+        {
+          "id": 219,
+          "name": "Haar-Accessoires",
+          "children_ids": [
+            222,
+            225,
+            221,
+            6114,
+            224,
+            1758,
+            220,
+            227,
+            226
+          ],
+          "path": "accessories.hair_accessories",
+          "children": [
+            {
+              "id": 222,
+              "name": "Dekorative Kämme",
+              "children_ids": [],
+              "path": "accessories.hair_accessories.decorative_combs",
+              "children": [],
+              "level": 2,
+              "parent": "accessories.hair_accessories",
+              "parent_id": 219,
+              "short_name": null,
+              "all_name": null,
+              "description": null,
+              "page_title": null,
+              "meta_title": null,
+              "nav": null,
+              "category_id": 69153737,
+              "full_path_taxonomy_ids": [
+                1,
+                219,
+                222
+              ],
+              "source_finder": "seller:08-2016",
+              "attributeValueSets": [
+                {
+                  "attribute": 2,
+                  "possibleValues": [],
+                  "selectedValues": [],
+                  "isRequired": false,
+                  "displayName": "Farbe",
+                  "version": "5e8ebce",
+                  "taxonomyNode": 222,
+                  "userInputValidator": null
+                }
+              ]
+            },
+            {
+              "id": 225,
+              "name": "Haarbänder & Turbane",
+              "children_ids": [
+                2906
+              ],
+              "path": "accessories.hair_accessories.headbands",
+              "children": [
+                {
+                  "id": 2906,
+                  "name": "Haarreifen und -bänder für Babys",
+                  "children_ids": [],
+                  "path": "accessories.hair_accessories.headbands.baby_headbands",
+                  "children": [],
+                  "level": 3,
+                  "parent": "accessories.hair_accessories.headbands",
+                  "parent_id": 225,
+                  "short_name": null,
+                  "all_name": null,
+                  "description": null,
+                  "page_title": null,
+                  "meta_title": null,
+                  "nav": {
+                    "buyer_target": null,
+                    "is_vintage": null
+                  },
+                  "category_id": 69187747,
+                  "full_path_taxonomy_ids": [
+                    1,
+                    219,
+                    225,
+                    2906
+                  ],
+                  "source_finder": "seller:08-2016",
+                  "attributeValueSets": [
+                    {
+                      "attribute": 2,
+                      "possibleValues": [],
+                      "selectedValues": [],
+                      "isRequired": false,
+                      "displayName": "Farbe",
+                      "version": "5e8ebce",
+                      "taxonomyNode": 2906,
+                      "userInputValidator": null
+                    }
+                  ]
+                }
+              ],
+              "level": 2,
+              "parent": "accessories.hair_accessories",
+              "parent_id": 219,
+              "short_name": null,
+              "all_name": null,
+              "description": null,
+              "page_title": null,
+              "meta_title": null,
+              "nav": {
+                "buyer_target": null,
+                "is_vintage": null
+              },
+              "category_id": 69187747,
+              "full_path_taxonomy_ids": [
+                1,
+                219,
+                225
+              ],
+              "source_finder": "seller:08-2016",
+              "attributeValueSets": [
+                {
+                  "attribute": 2,
+                  "possibleValues": [],
+                  "selectedValues": [],
+                  "isRequired": false,
+                  "displayName": "Farbe",
+                  "version": "5e8ebce",
+                  "taxonomyNode": 225,
+                  "userInputValidator": null
+                }
+              ]
+            },
+            {
+              "id": 221,
+              "name": "Haarkissen & Haarteile",
+              "children_ids": [],
+              "path": "accessories.hair_accessories.bun_holders_and_makers",
+              "children": [],
+              "level": 2,
+              "parent": "accessories.hair_accessories",
+              "parent_id": 219,
+              "short_name": null,
+              "all_name": null,
+              "description": null,
+              "page_title": null,
+              "meta_title": null,
+              "nav": null,
+              "category_id": 69153737,
+              "full_path_taxonomy_ids": [
+                1,
+                219,
+                221
+              ],
+              "source_finder": "seller:08-2016",
+              "attributeValueSets": [
+                {
+                  "attribute": 2,
+                  "possibleValues": [],
+                  "selectedValues": [],
+                  "isRequired": false,
+                  "displayName": "Farbe",
+                  "version": "5e8ebce",
+                  "taxonomyNode": 221,
+                  "userInputValidator": null
+                }
+              ]
+            },
+            {
+              "id": 6114,
+              "name": "Haarkämme",
+              "children_ids": [],
+              "path": "accessories.hair_accessories.hair_picks",
+              "children": [],
+              "level": 2,
+              "parent": "accessories.hair_accessories",
+              "parent_id": 219,
+              "short_name": null,
+              "all_name": null,
+              "description": null,
+              "page_title": null,
+              "meta_title": null,
+              "nav": {
+                "buyer_target": null,
+                "is_vintage": null
+              },
+              "category_id": 69153737,
+              "full_path_taxonomy_ids": [
+                1,
+                219,
+                6114
+              ],
+              "source_finder": "seller:08-2016",
+              "attributeValueSets": [
+                {
+                  "attribute": 2,
+                  "possibleValues": [],
+                  "selectedValues": [],
+                  "isRequired": false,
+                  "displayName": "Farbe",
+                  "version": "5e8ebce",
+                  "taxonomyNode": 6114,
+                  "userInputValidator": null
+                }
+              ]
+            },
+            {
+              "id": 224,
+              "name": "Haarnadeln",
+              "children_ids": [],
+              "path": "accessories.hair_accessories.hair_pins",
+              "children": [],
+              "level": 2,
+              "parent": "accessories.hair_accessories",
+              "parent_id": 219,
+              "short_name": null,
+              "all_name": null,
+              "description": null,
+              "page_title": null,
+              "meta_title": null,
+              "nav": null,
+              "category_id": 68923726,
+              "full_path_taxonomy_ids": [
+                1,
+                219,
+                224
+              ],
+              "source_finder": "seller:08-2016",
+              "attributeValueSets": [
+                {
+                  "attribute": 2,
+                  "possibleValues": [],
+                  "selectedValues": [],
+                  "isRequired": false,
+                  "displayName": "Farbe",
+                  "version": "5e8ebce",
+                  "taxonomyNode": 224,
+                  "userInputValidator": null
+                }
+              ]
+            },
+            {
+              "id": 1758,
+              "name": "Haarschmuck",
+              "children_ids": [],
+              "path": "accessories.hair_accessories.hair_jewelry",
+              "children": [],
+              "level": 2,
+              "parent": "accessories.hair_accessories",
+              "parent_id": 219,
+              "short_name": null,
+              "all_name": null,
+              "description": null,
+              "page_title": null,
+              "meta_title": null,
+              "nav": null,
+              "category_id": 69153737,
+              "full_path_taxonomy_ids": [
+                1,
+                219,
+                1758
+              ],
+              "source_finder": "seller:08-2016",
+              "attributeValueSets": [
+                {
+                  "attribute": 2,
+                  "possibleValues": [],
+                  "selectedValues": [],
+                  "isRequired": false,
+                  "displayName": "Farbe",
+                  "version": "5e8ebce",
+                  "taxonomyNode": 1758,
+                  "userInputValidator": null
+                }
+              ]
+            },
+            {
+              "id": 220,
+              "name": "Haarspangen & Clips",
+              "children_ids": [],
+              "path": "accessories.hair_accessories.barrettes_and_clips",
+              "children": [],
+              "level": 2,
+              "parent": "accessories.hair_accessories",
+              "parent_id": 219,
+              "short_name": null,
+              "all_name": null,
+              "description": null,
+              "page_title": null,
+              "meta_title": null,
+              "nav": null,
+              "category_id": 69153737,
+              "full_path_taxonomy_ids": [
+                1,
+                219,
+                220
+              ],
+              "source_finder": "seller:08-2016",
+              "attributeValueSets": [
+                {
+                  "attribute": 2,
+                  "possibleValues": [],
+                  "selectedValues": [],
+                  "isRequired": false,
+                  "displayName": "Farbe",
+                  "version": "5e8ebce",
+                  "taxonomyNode": 220,
+                  "userInputValidator": null
+                }
+              ]
+            },
+            {
+              "id": 227,
+              "name": "Kränze & Tiaras",
+              "children_ids": [
+                2113,
+                2114
+              ],
+              "path": "accessories.hair_accessories.wreaths_and_tiaras",
+              "children": [
+                {
+                  "id": 2113,
+                  "name": "Kränze",
+                  "children_ids": [],
+                  "path": "accessories.hair_accessories.wreaths_and_tiaras.wreaths",
+                  "children": [],
+                  "level": 3,
+                  "parent": "accessories.hair_accessories.wreaths_and_tiaras",
+                  "parent_id": 227,
+                  "short_name": null,
+                  "all_name": null,
+                  "description": null,
+                  "page_title": null,
+                  "meta_title": null,
+                  "nav": null,
+                  "category_id": 69153737,
+                  "full_path_taxonomy_ids": [
+                    1,
+                    219,
+                    227,
+                    2113
+                  ],
+                  "source_finder": "seller:08-2016",
+                  "attributeValueSets": [
+                    {
+                      "attribute": 2,
+                      "possibleValues": [],
+                      "selectedValues": [],
+                      "isRequired": false,
+                      "displayName": "Farbe",
+                      "version": "5e8ebce",
+                      "taxonomyNode": 2113,
+                      "userInputValidator": null
+                    }
+                  ]
+                },
+                {
+                  "id": 2114,
+                  "name": "Tiaras",
+                  "children_ids": [],
+                  "path": "accessories.hair_accessories.wreaths_and_tiaras.tiaras",
+                  "children": [],
+                  "level": 3,
+                  "parent": "accessories.hair_accessories.wreaths_and_tiaras",
+                  "parent_id": 227,
+                  "short_name": null,
+                  "all_name": null,
+                  "description": null,
+                  "page_title": null,
+                  "meta_title": null,
+                  "nav": null,
+                  "category_id": 69153737,
+                  "full_path_taxonomy_ids": [
+                    1,
+                    219,
+                    227,
+                    2114
+                  ],
+                  "source_finder": "seller:08-2016",
+                  "attributeValueSets": [
+                    {
+                      "attribute": 2,
+                      "possibleValues": [],
+                      "selectedValues": [],
+                      "isRequired": false,
+                      "displayName": "Farbe",
+                      "version": "5e8ebce",
+                      "taxonomyNode": 2114,
+                      "userInputValidator": null
+                    }
+                  ]
+                }
+              ],
+              "level": 2,
+              "parent": "accessories.hair_accessories",
+              "parent_id": 219,
+              "short_name": null,
+              "all_name": null,
+              "description": null,
+              "page_title": "Kränze & Tiaras",
+              "meta_title": null,
+              "nav": {
+                "buyer_target": null,
+                "is_vintage": null
+              },
+              "category_id": 69153737,
+              "full_path_taxonomy_ids": [
+                1,
+                219,
+                227
+              ],
+              "source_finder": "seller:08-2016",
+              "attributeValueSets": [
+                {
+                  "attribute": 2,
+                  "possibleValues": [],
+                  "selectedValues": [],
+                  "isRequired": false,
+                  "displayName": "Farbe",
+                  "version": "5e8ebce",
+                  "taxonomyNode": 227,
+                  "userInputValidator": null
+                }
+              ]
+            },
+            {
+              "id": 226,
+              "name": "Schleifen & Haargummis",
+              "children_ids": [],
+              "path": "accessories.hair_accessories.ties_and_elastics",
+              "children": [],
+              "level": 2,
+              "parent": "accessories.hair_accessories",
+              "parent_id": 219,
+              "short_name": null,
+              "all_name": null,
+              "description": null,
+              "page_title": "Schleifen & Haargummis",
+              "meta_title": null,
+              "nav": {
+                "buyer_target": null,
+                "is_vintage": null
+              },
+              "category_id": 69188195,
+              "full_path_taxonomy_ids": [
+                1,
+                219,
+                226
+              ],
+              "source_finder": "seller:08-2016",
+              "attributeValueSets": [
+                {
+                  "attribute": 2,
+                  "possibleValues": [],
+                  "selectedValues": [],
+                  "isRequired": false,
+                  "displayName": "Farbe",
+                  "version": "5e8ebce",
+                  "taxonomyNode": 226,
+                  "userInputValidator": null
+                }
+              ]
+            }
+          ],
+          "level": 1,
+          "parent": "accessories",
+          "parent_id": 1,
+          "short_name": null,
+          "all_name": null,
+          "description": null,
+          "page_title": null,
+          "meta_title": null,
+          "nav": null,
+          "category_id": 69153737,
+          "full_path_taxonomy_ids": [
+            1,
+            219
+          ],
+          "source_finder": "seller:08-2016",
+          "attributeValueSets": [
+            {
+              "attribute": 2,
+              "possibleValues": [],
+              "selectedValues": [],
+              "isRequired": false,
+              "displayName": "Farbe",
+              "version": "5e8ebce",
+              "taxonomyNode": 219,
+              "userInputValidator": null
+            }
+          ]
+        },
+        {
+          "id": 16,
+          "name": "Handschuhe & Fäustlinge",
+          "children_ids": [
+            20,
+            17,
+            19,
+            22,
+            21,
+            18,
+            23,
+            24
+          ],
+          "path": "accessories.gloves_and_mittens",
+          "children": [
+            {
+              "id": 20,
+              "name": "Abendhandschuhe",
+              "children_ids": [],
+              "path": "accessories.gloves_and_mittens.evening_and_formal_gloves",
+              "children": [],
+              "level": 2,
+              "parent": "accessories.gloves_and_mittens",
+              "parent_id": 16,
+              "short_name": null,
+              "all_name": null,
+              "description": null,
+              "page_title": null,
+              "meta_title": null,
+              "nav": null,
+              "category_id": 68890752,
+              "full_path_taxonomy_ids": [
+                1,
+                16,
+                20
+              ],
+              "source_finder": "seller:08-2016",
+              "attributeValueSets": [
+                {
+                  "attribute": 2,
+                  "possibleValues": [],
+                  "selectedValues": [],
+                  "isRequired": false,
+                  "displayName": "Farbe",
+                  "version": "5e8ebce",
+                  "taxonomyNode": 20,
+                  "userInputValidator": null
+                }
+              ]
+            },
+            {
+              "id": 17,
+              "name": "Armstulpen",
+              "children_ids": [],
+              "path": "accessories.gloves_and_mittens.arm_warmers",
+              "children": [],
+              "level": 2,
+              "parent": "accessories.gloves_and_mittens",
+              "parent_id": 16,
+              "short_name": null,
+              "all_name": null,
+              "description": null,
+              "page_title": null,
+              "meta_title": null,
+              "nav": null,
+              "category_id": 68890752,
+              "full_path_taxonomy_ids": [
+                1,
+                16,
+                17
+              ],
+              "source_finder": "seller:08-2016",
+              "attributeValueSets": [
+                {
+                  "attribute": 2,
+                  "possibleValues": [],
+                  "selectedValues": [],
+                  "isRequired": false,
+                  "displayName": "Farbe",
+                  "version": "5e8ebce",
+                  "taxonomyNode": 17,
+                  "userInputValidator": null
+                }
+              ]
+            },
+            {
+              "id": 19,
+              "name": "Autohandschuhe",
+              "children_ids": [],
+              "path": "accessories.gloves_and_mittens.driving_gloves",
+              "children": [],
+              "level": 2,
+              "parent": "accessories.gloves_and_mittens",
+              "parent_id": 16,
+              "short_name": null,
+              "all_name": null,
+              "description": null,
+              "page_title": null,
+              "meta_title": null,
+              "nav": null,
+              "category_id": 68890752,
+              "full_path_taxonomy_ids": [
+                1,
+                16,
+                19
+              ],
+              "source_finder": "seller:08-2016",
+              "attributeValueSets": [
+                {
+                  "attribute": 2,
+                  "possibleValues": [],
+                  "selectedValues": [],
+                  "isRequired": false,
+                  "displayName": "Farbe",
+                  "version": "5e8ebce",
+                  "taxonomyNode": 19,
+                  "userInputValidator": null
+                }
+              ]
+            },
+            {
+              "id": 22,
+              "name": "Fäustlinge & Muffs",
+              "children_ids": [
+                1764,
+                1765
+              ],
+              "path": "accessories.gloves_and_mittens.mittens_and_muffs",
+              "children": [
+                {
+                  "id": 1764,
+                  "name": "Fäustlinge",
+                  "children_ids": [],
+                  "path": "accessories.gloves_and_mittens.mittens_and_muffs.mittens",
+                  "children": [],
+                  "level": 3,
+                  "parent": "accessories.gloves_and_mittens.mittens_and_muffs",
+                  "parent_id": 22,
+                  "short_name": null,
+                  "all_name": null,
+                  "description": null,
+                  "page_title": null,
+                  "meta_title": null,
+                  "nav": null,
+                  "category_id": 68890784,
+                  "full_path_taxonomy_ids": [
+                    1,
+                    16,
+                    22,
+                    1764
+                  ],
+                  "source_finder": "seller:08-2016",
+                  "attributeValueSets": [
+                    {
+                      "attribute": 2,
+                      "possibleValues": [],
+                      "selectedValues": [],
+                      "isRequired": false,
+                      "displayName": "Farbe",
+                      "version": "5e8ebce",
+                      "taxonomyNode": 1764,
+                      "userInputValidator": null
+                    }
+                  ]
+                },
+                {
+                  "id": 1765,
+                  "name": "Muffs",
+                  "children_ids": [],
+                  "path": "accessories.gloves_and_mittens.mittens_and_muffs.muffs",
+                  "children": [],
+                  "level": 3,
+                  "parent": "accessories.gloves_and_mittens.mittens_and_muffs",
+                  "parent_id": 22,
+                  "short_name": null,
+                  "all_name": null,
+                  "description": null,
+                  "page_title": null,
+                  "meta_title": null,
+                  "nav": null,
+                  "category_id": 68890752,
+                  "full_path_taxonomy_ids": [
+                    1,
+                    16,
+                    22,
+                    1765
+                  ],
+                  "source_finder": "seller:08-2016",
+                  "attributeValueSets": [
+                    {
+                      "attribute": 2,
+                      "possibleValues": [],
+                      "selectedValues": [],
+                      "isRequired": false,
+                      "displayName": "Farbe",
+                      "version": "5e8ebce",
+                      "taxonomyNode": 1765,
+                      "userInputValidator": null
+                    }
+                  ]
+                }
+              ],
+              "level": 2,
+              "parent": "accessories.gloves_and_mittens",
+              "parent_id": 16,
+              "short_name": null,
+              "all_name": null,
+              "description": null,
+              "page_title": null,
+              "meta_title": null,
+              "nav": null,
+              "category_id": 68890752,
+              "full_path_taxonomy_ids": [
+                1,
+                16,
+                22
+              ],
+              "source_finder": "seller:08-2016",
+              "attributeValueSets": [
+                {
+                  "attribute": 2,
+                  "possibleValues": [],
+                  "selectedValues": [],
+                  "isRequired": false,
+                  "displayName": "Farbe",
+                  "version": "5e8ebce",
+                  "taxonomyNode": 22,
+                  "userInputValidator": null
+                }
+              ]
+            },
+            {
+              "id": 21,
+              "name": "Garten- & Arbeitshandschuhe",
+              "children_ids": [
+                1763,
+                1762
+              ],
+              "path": "accessories.gloves_and_mittens.gardening_and_work_gloves",
+              "children": [
+                {
+                  "id": 1763,
+                  "name": "Arbeitshandschuhe",
+                  "children_ids": [],
+                  "path": "accessories.gloves_and_mittens.gardening_and_work_gloves.work_gloves",
+                  "children": [],
+                  "level": 3,
+                  "parent": "accessories.gloves_and_mittens.gardening_and_work_gloves",
+                  "parent_id": 21,
+                  "short_name": null,
+                  "all_name": null,
+                  "description": null,
+                  "page_title": null,
+                  "meta_title": null,
+                  "nav": null,
+                  "category_id": 68890752,
+                  "full_path_taxonomy_ids": [
+                    1,
+                    16,
+                    21,
+                    1763
+                  ],
+                  "source_finder": "seller:08-2016",
+                  "attributeValueSets": [
+                    {
+                      "attribute": 2,
+                      "possibleValues": [],
+                      "selectedValues": [],
+                      "isRequired": false,
+                      "displayName": "Farbe",
+                      "version": "5e8ebce",
+                      "taxonomyNode": 1763,
+                      "userInputValidator": null
+                    }
+                  ]
+                },
+                {
+                  "id": 1762,
+                  "name": "Gartenhandschuhe",
+                  "children_ids": [],
+                  "path": "accessories.gloves_and_mittens.gardening_and_work_gloves.gardening_gloves",
+                  "children": [],
+                  "level": 3,
+                  "parent": "accessories.gloves_and_mittens.gardening_and_work_gloves",
+                  "parent_id": 21,
+                  "short_name": null,
+                  "all_name": null,
+                  "description": null,
+                  "page_title": null,
+                  "meta_title": null,
+                  "nav": null,
+                  "category_id": 68890752,
+                  "full_path_taxonomy_ids": [
+                    1,
+                    16,
+                    21,
+                    1762
+                  ],
+                  "source_finder": "seller:08-2016",
+                  "attributeValueSets": [
+                    {
+                      "attribute": 2,
+                      "possibleValues": [],
+                      "selectedValues": [],
+                      "isRequired": false,
+                      "displayName": "Farbe",
+                      "version": "5e8ebce",
+                      "taxonomyNode": 1762,
+                      "userInputValidator": null
+                    }
+                  ]
+                }
+              ],
+              "level": 2,
+              "parent": "accessories.gloves_and_mittens",
+              "parent_id": 16,
+              "short_name": null,
+              "all_name": null,
+              "description": null,
+              "page_title": null,
+              "meta_title": null,
+              "nav": null,
+              "category_id": 68890752,
+              "full_path_taxonomy_ids": [
+                1,
+                16,
+                21
+              ],
+              "source_finder": "seller:08-2016",
+              "attributeValueSets": [
+                {
+                  "attribute": 2,
+                  "possibleValues": [],
+                  "selectedValues": [],
+                  "isRequired": false,
+                  "displayName": "Farbe",
+                  "version": "5e8ebce",
+                  "taxonomyNode": 21,
+                  "userInputValidator": null
+                }
+              ]
+            },
+            {
+              "id": 18,
+              "name": "Kostümhandschuhe",
+              "children_ids": [],
+              "path": "accessories.gloves_and_mittens.costume_gloves",
+              "children": [],
+              "level": 2,
+              "parent": "accessories.gloves_and_mittens",
+              "parent_id": 16,
+              "short_name": null,
+              "all_name": null,
+              "description": null,
+              "page_title": null,
+              "meta_title": null,
+              "nav": null,
+              "category_id": 68890752,
+              "full_path_taxonomy_ids": [
+                1,
+                16,
+                18
+              ],
+              "source_finder": "seller:08-2016",
+              "attributeValueSets": [
+                {
+                  "attribute": 2,
+                  "possibleValues": [],
+                  "selectedValues": [],
+                  "isRequired": false,
+                  "displayName": "Farbe",
+                  "version": "5e8ebce",
+                  "taxonomyNode": 18,
+                  "userInputValidator": null
+                }
+              ]
+            },
+            {
+              "id": 23,
+              "name": "Sporthandschuhe",
+              "children_ids": [],
+              "path": "accessories.gloves_and_mittens.sports_gloves",
+              "children": [],
+              "level": 2,
+              "parent": "accessories.gloves_and_mittens",
+              "parent_id": 16,
+              "short_name": null,
+              "all_name": null,
+              "description": null,
+              "page_title": null,
+              "meta_title": null,
+              "nav": null,
+              "category_id": 68890752,
+              "full_path_taxonomy_ids": [
+                1,
+                16,
+                23
+              ],
+              "source_finder": "seller:08-2016",
+              "attributeValueSets": [
+                {
+                  "attribute": 2,
+                  "possibleValues": [],
+                  "selectedValues": [],
+                  "isRequired": false,
+                  "displayName": "Farbe",
+                  "version": "5e8ebce",
+                  "taxonomyNode": 23,
+                  "userInputValidator": null
+                }
+              ]
+            },
+            {
+              "id": 24,
+              "name": "Winterhandschuhe",
+              "children_ids": [],
+              "path": "accessories.gloves_and_mittens.winter_gloves",
+              "children": [],
+              "level": 2,
+              "parent": "accessories.gloves_and_mittens",
+              "parent_id": 16,
+              "short_name": null,
+              "all_name": null,
+              "description": null,
+              "page_title": null,
+              "meta_title": null,
+              "nav": null,
+              "category_id": 68890752,
+              "full_path_taxonomy_ids": [
+                1,
+                16,
+                24
+              ],
+              "source_finder": "seller:08-2016",
+              "attributeValueSets": [
+                {
+                  "attribute": 2,
+                  "possibleValues": [],
+                  "selectedValues": [],
+                  "isRequired": false,
+                  "displayName": "Farbe",
+                  "version": "5e8ebce",
+                  "taxonomyNode": 24,
+                  "userInputValidator": null
+                }
+              ]
+            }
+          ],
+          "level": 1,
+          "parent": "accessories",
+          "parent_id": 1,
+          "short_name": null,
+          "all_name": null,
+          "description": null,
+          "page_title": null,
+          "meta_title": null,
+          "nav": null,
+          "category_id": 68890752,
+          "full_path_taxonomy_ids": [
+            1,
+            16
+          ],
+          "source_finder": "seller:08-2016",
+          "attributeValueSets": [
+            {
+              "attribute": 2,
+              "possibleValues": [],
+              "selectedValues": [],
+              "isRequired": false,
+              "displayName": "Farbe",
+              "version": "5e8ebce",
+              "taxonomyNode": 16,
+              "userInputValidator": null
+            }
+          ]
+        },
+        {
+          "id": 25,
+          "name": "Hüte, Mützen & Caps",
+          "children_ids": [
+            33,
+            27,
+            26,
+            29,
+            32,
+            1727,
+            31,
+            28,
+            2153,
+            30,
+            35,
+            6080,
+            34,
+            2535,
+            36
+          ],
+          "path": "accessories.hats_and_caps",
+          "children": [
+            {
+              "id": 33,
+              "name": "Ballonmützen",
+              "children_ids": [],
+              "path": "accessories.hats_and_caps.newsboy_caps",
+              "children": [],
+              "level": 2,
+              "parent": "accessories.hats_and_caps",
+              "parent_id": 25,
+              "short_name": null,
+              "all_name": null,
+              "description": null,
+              "page_title": null,
+              "meta_title": null,
+              "nav": null,
+              "category_id": 68891926,
+              "full_path_taxonomy_ids": [
+                1,
+                25,
+                33
+              ],
+              "source_finder": "seller:08-2016",
+              "attributeValueSets": [
+                {
+                  "attribute": 2,
+                  "possibleValues": [],
+                  "selectedValues": [],
+                  "isRequired": false,
+                  "displayName": "Farbe",
+                  "version": "5e8ebce",
+                  "taxonomyNode": 33,
+                  "userInputValidator": null
+                }
+              ]
+            },
+            {
+              "id": 27,
+              "name": "Barette & Schottenmützen",
+              "children_ids": [
+                2140,
+                2141
+              ],
+              "path": "accessories.hats_and_caps.berets_and_tams",
+              "children": [
+                {
+                  "id": 2140,
+                  "name": "Barette",
+                  "children_ids": [],
+                  "path": "accessories.hats_and_caps.berets_and_tams.berets",
+                  "children": [],
+                  "level": 3,
+                  "parent": "accessories.hats_and_caps.berets_and_tams",
+                  "parent_id": 27,
+                  "short_name": null,
+                  "all_name": null,
+                  "description": null,
+                  "page_title": null,
+                  "meta_title": null,
+                  "nav": null,
+                  "category_id": 68891926,
+                  "full_path_taxonomy_ids": [
+                    1,
+                    25,
+                    27,
+                    2140
+                  ],
+                  "source_finder": "seller:08-2016",
+                  "attributeValueSets": [
+                    {
+                      "attribute": 2,
+                      "possibleValues": [],
+                      "selectedValues": [],
+                      "isRequired": false,
+                      "displayName": "Farbe",
+                      "version": "5e8ebce",
+                      "taxonomyNode": 2140,
+                      "userInputValidator": null
+                    }
+                  ]
+                },
+                {
+                  "id": 2141,
+                  "name": "Schottenmützen",
+                  "children_ids": [],
+                  "path": "accessories.hats_and_caps.berets_and_tams.tams",
+                  "children": [],
+                  "level": 3,
+                  "parent": "accessories.hats_and_caps.berets_and_tams",
+                  "parent_id": 27,
+                  "short_name": null,
+                  "all_name": null,
+                  "description": null,
+                  "page_title": null,
+                  "meta_title": null,
+                  "nav": null,
+                  "category_id": 68891926,
+                  "full_path_taxonomy_ids": [
+                    1,
+                    25,
+                    27,
+                    2141
+                  ],
+                  "source_finder": "seller:08-2016",
+                  "attributeValueSets": [
+                    {
+                      "attribute": 2,
+                      "possibleValues": [],
+                      "selectedValues": [],
+                      "isRequired": false,
+                      "displayName": "Farbe",
+                      "version": "5e8ebce",
+                      "taxonomyNode": 2141,
+                      "userInputValidator": null
+                    }
+                  ]
+                }
+              ],
+              "level": 2,
+              "parent": "accessories.hats_and_caps",
+              "parent_id": 25,
+              "short_name": null,
+              "all_name": null,
+              "description": null,
+              "page_title": null,
+              "meta_title": null,
+              "nav": null,
+              "category_id": 68891926,
+              "full_path_taxonomy_ids": [
+                1,
+                25,
+                27
+              ],
+              "source_finder": "seller:08-2016",
+              "attributeValueSets": [
+                {
+                  "attribute": 2,
+                  "possibleValues": [],
+                  "selectedValues": [],
+                  "isRequired": false,
+                  "displayName": "Farbe",
+                  "version": "5e8ebce",
+                  "taxonomyNode": 27,
+                  "userInputValidator": null
+                }
+              ]
+            },
+            {
+              "id": 26,
+              "name": "Baseball- & Truckermützen",
+              "children_ids": [],
+              "path": "accessories.hats_and_caps.baseball_and_trucker_caps",
+              "children": [],
+              "level": 2,
+              "parent": "accessories.hats_and_caps",
+              "parent_id": 25,
+              "short_name": null,
+              "all_name": null,
+              "description": null,
+              "page_title": null,
+              "meta_title": null,
+              "nav": null,
+              "category_id": 68891926,
+              "full_path_taxonomy_ids": [
+                1,
+                25,
+                26
+              ],
+              "source_finder": "seller:08-2016",
+              "attributeValueSets": [
+                {
+                  "attribute": 2,
+                  "possibleValues": [],
+                  "selectedValues": [],
+                  "isRequired": false,
+                  "displayName": "Farbe",
+                  "version": "5e8ebce",
+                  "taxonomyNode": 26,
+                  "userInputValidator": null
+                }
+              ]
+            },
+            {
+              "id": 29,
+              "name": "Cowboyhüte",
+              "children_ids": [],
+              "path": "accessories.hats_and_caps.cowboy_hats",
+              "children": [],
+              "level": 2,
+              "parent": "accessories.hats_and_caps",
+              "parent_id": 25,
+              "short_name": null,
+              "all_name": null,
+              "description": null,
+              "page_title": null,
+              "meta_title": null,
+              "nav": null,
+              "category_id": 68891926,
+              "full_path_taxonomy_ids": [
+                1,
+                25,
+                29
+              ],
+              "source_finder": "seller:08-2016",
+              "attributeValueSets": [
+                {
+                  "attribute": 2,
+                  "possibleValues": [],
+                  "selectedValues": [],
+                  "isRequired": false,
+                  "displayName": "Farbe",
+                  "version": "5e8ebce",
+                  "taxonomyNode": 29,
+                  "userInputValidator": null
+                }
+              ]
+            },
+            {
+              "id": 32,
+              "name": "Elegante Hüte",
+              "children_ids": [
+                2531,
+                2533,
+                2534,
+                2532
+              ],
+              "path": "accessories.hats_and_caps.formal_hats",
+              "children": [
+                {
+                  "id": 2531,
+                  "name": "Bowlerhüte",
+                  "children_ids": [],
+                  "path": "accessories.hats_and_caps.formal_hats.bowler_hats",
+                  "children": [],
+                  "level": 3,
+                  "parent": "accessories.hats_and_caps.formal_hats",
+                  "parent_id": 32,
+                  "short_name": null,
+                  "all_name": null,
+                  "description": null,
+                  "page_title": null,
+                  "meta_title": null,
+                  "nav": null,
+                  "category_id": 68891926,
+                  "full_path_taxonomy_ids": [
+                    1,
+                    25,
+                    32,
+                    2531
+                  ],
+                  "source_finder": "seller:08-2016",
+                  "attributeValueSets": [
+                    {
+                      "attribute": 2,
+                      "possibleValues": [],
+                      "selectedValues": [],
+                      "isRequired": false,
+                      "displayName": "Farbe",
+                      "version": "5e8ebce",
+                      "taxonomyNode": 2531,
+                      "userInputValidator": null
+                    }
+                  ]
+                },
+                {
+                  "id": 2533,
+                  "name": "Glockenhüte",
+                  "children_ids": [],
+                  "path": "accessories.hats_and_caps.formal_hats.cloche_hats",
+                  "children": [],
+                  "level": 3,
+                  "parent": "accessories.hats_and_caps.formal_hats",
+                  "parent_id": 32,
+                  "short_name": null,
+                  "all_name": null,
+                  "description": null,
+                  "page_title": null,
+                  "meta_title": null,
+                  "nav": null,
+                  "category_id": 68891926,
+                  "full_path_taxonomy_ids": [
+                    1,
+                    25,
+                    32,
+                    2533
+                  ],
+                  "source_finder": "seller:08-2016",
+                  "attributeValueSets": [
+                    {
+                      "attribute": 2,
+                      "possibleValues": [],
+                      "selectedValues": [],
+                      "isRequired": false,
+                      "displayName": "Farbe",
+                      "version": "5e8ebce",
+                      "taxonomyNode": 2533,
+                      "userInputValidator": null
+                    }
+                  ]
+                },
+                {
+                  "id": 2534,
+                  "name": "Pillbox-Hüte",
+                  "children_ids": [],
+                  "path": "accessories.hats_and_caps.formal_hats.pillbox_hats",
+                  "children": [],
+                  "level": 3,
+                  "parent": "accessories.hats_and_caps.formal_hats",
+                  "parent_id": 32,
+                  "short_name": null,
+                  "all_name": null,
+                  "description": null,
+                  "page_title": null,
+                  "meta_title": null,
+                  "nav": null,
+                  "category_id": 68891926,
+                  "full_path_taxonomy_ids": [
+                    1,
+                    25,
+                    32,
+                    2534
+                  ],
+                  "source_finder": "seller:08-2016",
+                  "attributeValueSets": [
+                    {
+                      "attribute": 2,
+                      "possibleValues": [],
+                      "selectedValues": [],
+                      "isRequired": false,
+                      "displayName": "Farbe",
+                      "version": "5e8ebce",
+                      "taxonomyNode": 2534,
+                      "userInputValidator": null
+                    }
+                  ]
+                },
+                {
+                  "id": 2532,
+                  "name": "Zylinder",
+                  "children_ids": [],
+                  "path": "accessories.hats_and_caps.formal_hats.top_hats",
+                  "children": [],
+                  "level": 3,
+                  "parent": "accessories.hats_and_caps.formal_hats",
+                  "parent_id": 32,
+                  "short_name": null,
+                  "all_name": null,
+                  "description": null,
+                  "page_title": null,
+                  "meta_title": null,
+                  "nav": null,
+                  "category_id": 68891926,
+                  "full_path_taxonomy_ids": [
+                    1,
+                    25,
+                    32,
+                    2532
+                  ],
+                  "source_finder": "seller:08-2016",
+                  "attributeValueSets": [
+                    {
+                      "attribute": 2,
+                      "possibleValues": [],
+                      "selectedValues": [],
+                      "isRequired": false,
+                      "displayName": "Farbe",
+                      "version": "5e8ebce",
+                      "taxonomyNode": 2532,
+                      "userInputValidator": null
+                    }
+                  ]
+                }
+              ],
+              "level": 2,
+              "parent": "accessories.hats_and_caps",
+              "parent_id": 25,
+              "short_name": null,
+              "all_name": null,
+              "description": null,
+              "page_title": null,
+              "meta_title": null,
+              "nav": null,
+              "category_id": 68891926,
+              "full_path_taxonomy_ids": [
+                1,
+                25,
+                32
+              ],
+              "source_finder": "seller:08-2016",
+              "attributeValueSets": [
+                {
+                  "attribute": 2,
+                  "possibleValues": [],
+                  "selectedValues": [],
+                  "isRequired": false,
+                  "displayName": "Farbe",
+                  "version": "5e8ebce",
+                  "taxonomyNode": 32,
+                  "userInputValidator": null
+                }
+              ]
+            },
+            {
+              "id": 1727,
+              "name": "Fascinators & Minihüte",
+              "children_ids": [
+                2060,
+                2061
+              ],
+              "path": "accessories.hats_and_caps.fascinators_and_mini_hats",
+              "children": [
+                {
+                  "id": 2060,
+                  "name": "Fascinators",
+                  "children_ids": [],
+                  "path": "accessories.hats_and_caps.fascinators_and_mini_hats.fascinators",
+                  "children": [],
+                  "level": 3,
+                  "parent": "accessories.hats_and_caps.fascinators_and_mini_hats",
+                  "parent_id": 1727,
+                  "short_name": null,
+                  "all_name": null,
+                  "description": null,
+                  "page_title": null,
+                  "meta_title": null,
+                  "nav": null,
+                  "category_id": 68887336,
+                  "full_path_taxonomy_ids": [
+                    1,
+                    25,
+                    1727,
+                    2060
+                  ],
+                  "source_finder": "seller:08-2016",
+                  "attributeValueSets": [
+                    {
+                      "attribute": 2,
+                      "possibleValues": [],
+                      "selectedValues": [],
+                      "isRequired": false,
+                      "displayName": "Farbe",
+                      "version": "5e8ebce",
+                      "taxonomyNode": 2060,
+                      "userInputValidator": null
+                    }
+                  ]
+                },
+                {
+                  "id": 2061,
+                  "name": "Minihüte",
+                  "children_ids": [],
+                  "path": "accessories.hats_and_caps.fascinators_and_mini_hats.mini_hats",
+                  "children": [],
+                  "level": 3,
+                  "parent": "accessories.hats_and_caps.fascinators_and_mini_hats",
+                  "parent_id": 1727,
+                  "short_name": null,
+                  "all_name": null,
+                  "description": null,
+                  "page_title": null,
+                  "meta_title": null,
+                  "nav": null,
+                  "category_id": 68887336,
+                  "full_path_taxonomy_ids": [
+                    1,
+                    25,
+                    1727,
+                    2061
+                  ],
+                  "source_finder": "seller:08-2016",
+                  "attributeValueSets": [
+                    {
+                      "attribute": 2,
+                      "possibleValues": [],
+                      "selectedValues": [],
+                      "isRequired": false,
+                      "displayName": "Farbe",
+                      "version": "5e8ebce",
+                      "taxonomyNode": 2061,
+                      "userInputValidator": null
+                    }
+                  ]
+                }
+              ],
+              "level": 2,
+              "parent": "accessories.hats_and_caps",
+              "parent_id": 25,
+              "short_name": null,
+              "all_name": null,
+              "description": null,
+              "page_title": null,
+              "meta_title": null,
+              "nav": null,
+              "category_id": 68891926,
+              "full_path_taxonomy_ids": [
+                1,
+                25,
+                1727
+              ],
+              "source_finder": "seller:08-2016",
+              "attributeValueSets": [
+                {
+                  "attribute": 2,
+                  "possibleValues": [],
+                  "selectedValues": [],
+                  "isRequired": false,
+                  "displayName": "Farbe",
+                  "version": "5e8ebce",
+                  "taxonomyNode": 1727,
+                  "userInputValidator": null
+                }
+              ]
+            },
+            {
+              "id": 31,
+              "name": "Filzhüte",
+              "children_ids": [],
+              "path": "accessories.hats_and_caps.fedoras",
+              "children": [],
+              "level": 2,
+              "parent": "accessories.hats_and_caps",
+              "parent_id": 25,
+              "short_name": null,
+              "all_name": null,
+              "description": null,
+              "page_title": null,
+              "meta_title": null,
+              "nav": null,
+              "category_id": 68891926,
+              "full_path_taxonomy_ids": [
+                1,
+                25,
+                31
+              ],
+              "source_finder": "seller:08-2016",
+              "attributeValueSets": [
+                {
+                  "attribute": 2,
+                  "possibleValues": [],
+                  "selectedValues": [],
+                  "isRequired": false,
+                  "displayName": "Farbe",
+                  "version": "5e8ebce",
+                  "taxonomyNode": 31,
+                  "userInputValidator": null
+                }
+              ]
+            },
+            {
+              "id": 28,
+              "name": "Fischerhüte",
+              "children_ids": [],
+              "path": "accessories.hats_and_caps.bucket_hats",
+              "children": [],
+              "level": 2,
+              "parent": "accessories.hats_and_caps",
+              "parent_id": 25,
+              "short_name": null,
+              "all_name": null,
+              "description": null,
+              "page_title": null,
+              "meta_title": null,
+              "nav": null,
+              "category_id": 68891926,
+              "full_path_taxonomy_ids": [
+                1,
+                25,
+                28
+              ],
+              "source_finder": "seller:08-2016",
+              "attributeValueSets": [
+                {
+                  "attribute": 2,
+                  "possibleValues": [],
+                  "selectedValues": [],
+                  "isRequired": false,
+                  "displayName": "Farbe",
+                  "version": "5e8ebce",
+                  "taxonomyNode": 28,
+                  "userInputValidator": null
+                }
+              ]
+            },
+            {
+              "id": 2153,
+              "name": "Helme",
+              "children_ids": [
+                2540,
+                2154
+              ],
+              "path": "accessories.hats_and_caps.helmets",
+              "children": [
+                {
+                  "id": 2540,
+                  "name": "Militärhelme",
+                  "children_ids": [],
+                  "path": "accessories.hats_and_caps.helmets.military_helmets",
+                  "children": [],
+                  "level": 3,
+                  "parent": "accessories.hats_and_caps.helmets",
+                  "parent_id": 2153,
+                  "short_name": null,
+                  "all_name": null,
+                  "description": null,
+                  "page_title": null,
+                  "meta_title": null,
+                  "nav": null,
+                  "category_id": 68891926,
+                  "full_path_taxonomy_ids": [
+                    1,
+                    25,
+                    2153,
+                    2540
+                  ],
+                  "source_finder": "seller:08-2016",
+                  "attributeValueSets": [
+                    {
+                      "attribute": 2,
+                      "possibleValues": [],
+                      "selectedValues": [],
+                      "isRequired": false,
+                      "displayName": "Farbe",
+                      "version": "5e8ebce",
+                      "taxonomyNode": 2540,
+                      "userInputValidator": null
+                    }
+                  ]
+                },
+                {
+                  "id": 2154,
+                  "name": "Sporthelme",
+                  "children_ids": [
+                    2803,
+                    2804
+                  ],
+                  "path": "accessories.hats_and_caps.helmets.sports_helmets",
+                  "children": [
+                    {
+                      "id": 2803,
+                      "name": "Baseball-Helme",
+                      "children_ids": [],
+                      "path": "accessories.hats_and_caps.helmets.sports_helmets.baseball_helmets",
+                      "children": [],
+                      "level": 4,
+                      "parent": "accessories.hats_and_caps.helmets.sports_helmets",
+                      "parent_id": 2154,
+                      "short_name": null,
+                      "all_name": null,
+                      "description": null,
+                      "page_title": null,
+                      "meta_title": null,
+                      "nav": null,
+                      "category_id": 68891926,
+                      "full_path_taxonomy_ids": [
+                        1,
+                        25,
+                        2153,
+                        2154,
+                        2803
+                      ],
+                      "source_finder": "seller:08-2016",
+                      "attributeValueSets": [
+                        {
+                          "attribute": 2,
+                          "possibleValues": [],
+                          "selectedValues": [],
+                          "isRequired": false,
+                          "displayName": "Farbe",
+                          "version": "5e8ebce",
+                          "taxonomyNode": 2803,
+                          "userInputValidator": null
+                        }
+                      ]
+                    },
+                    {
+                      "id": 2804,
+                      "name": "Football-Helme",
+                      "children_ids": [],
+                      "path": "accessories.hats_and_caps.helmets.sports_helmets.football_helmets",
+                      "children": [],
+                      "level": 4,
+                      "parent": "accessories.hats_and_caps.helmets.sports_helmets",
+                      "parent_id": 2154,
+                      "short_name": null,
+                      "all_name": null,
+                      "description": null,
+                      "page_title": null,
+                      "meta_title": null,
+                      "nav": null,
+                      "category_id": 68891926,
+                      "full_path_taxonomy_ids": [
+                        1,
+                        25,
+                        2153,
+                        2154,
+                        2804
+                      ],
+                      "source_finder": "seller:08-2016",
+                      "attributeValueSets": [
+                        {
+                          "attribute": 2,
+                          "possibleValues": [],
+                          "selectedValues": [],
+                          "isRequired": false,
+                          "displayName": "Farbe",
+                          "version": "5e8ebce",
+                          "taxonomyNode": 2804,
+                          "userInputValidator": null
+                        }
+                      ]
+                    }
+                  ],
+                  "level": 3,
+                  "parent": "accessories.hats_and_caps.helmets",
+                  "parent_id": 2153,
+                  "short_name": null,
+                  "all_name": null,
+                  "description": null,
+                  "page_title": null,
+                  "meta_title": null,
+                  "nav": null,
+                  "category_id": 68891926,
+                  "full_path_taxonomy_ids": [
+                    1,
+                    25,
+                    2153,
+                    2154
+                  ],
+                  "source_finder": "seller:08-2016",
+                  "attributeValueSets": [
+                    {
+                      "attribute": 2,
+                      "possibleValues": [],
+                      "selectedValues": [],
+                      "isRequired": false,
+                      "displayName": "Farbe",
+                      "version": "5e8ebce",
+                      "taxonomyNode": 2154,
+                      "userInputValidator": null
+                    }
+                  ]
+                }
+              ],
+              "level": 2,
+              "parent": "accessories.hats_and_caps",
+              "parent_id": 25,
+              "short_name": null,
+              "all_name": null,
+              "description": null,
+              "page_title": null,
+              "meta_title": null,
+              "nav": null,
+              "category_id": 68891926,
+              "full_path_taxonomy_ids": [
+                1,
+                25,
+                2153
+              ],
+              "source_finder": "seller:08-2016",
+              "attributeValueSets": [
+                {
+                  "attribute": 2,
+                  "possibleValues": [],
+                  "selectedValues": [],
+                  "isRequired": false,
+                  "displayName": "Farbe",
+                  "version": "5e8ebce",
+                  "taxonomyNode": 2153,
+                  "userInputValidator": null
+                }
+              ]
+            },
+            {
+              "id": 30,
+              "name": "Ohrenschützer & -wärmer",
+              "children_ids": [
+                2169,
+                2224
+              ],
+              "path": "accessories.hats_and_caps.earmuffs_and_ear_warmers",
+              "children": [
+                {
+                  "id": 2169,
+                  "name": "Ohrenschützer",
+                  "children_ids": [],
+                  "path": "accessories.hats_and_caps.earmuffs_and_ear_warmers.earmuffs",
+                  "children": [],
+                  "level": 3,
+                  "parent": "accessories.hats_and_caps.earmuffs_and_ear_warmers",
+                  "parent_id": 30,
+                  "short_name": null,
+                  "all_name": null,
+                  "description": null,
+                  "page_title": null,
+                  "meta_title": null,
+                  "nav": null,
+                  "category_id": 68891926,
+                  "full_path_taxonomy_ids": [
+                    1,
+                    25,
+                    30,
+                    2169
+                  ],
+                  "source_finder": "seller:08-2016",
+                  "attributeValueSets": [
+                    {
+                      "attribute": 2,
+                      "possibleValues": [],
+                      "selectedValues": [],
+                      "isRequired": false,
+                      "displayName": "Farbe",
+                      "version": "5e8ebce",
+                      "taxonomyNode": 2169,
+                      "userInputValidator": null
+                    }
+                  ]
+                },
+                {
+                  "id": 2224,
+                  "name": "Ohrenwärmer",
+                  "children_ids": [],
+                  "path": "accessories.hats_and_caps.earmuffs_and_ear_warmers.ear_warmers",
+                  "children": [],
+                  "level": 3,
+                  "parent": "accessories.hats_and_caps.earmuffs_and_ear_warmers",
+                  "parent_id": 30,
+                  "short_name": null,
+                  "all_name": null,
+                  "description": null,
+                  "page_title": null,
+                  "meta_title": null,
+                  "nav": null,
+                  "category_id": 68891926,
+                  "full_path_taxonomy_ids": [
+                    1,
+                    25,
+                    30,
+                    2224
+                  ],
+                  "source_finder": "seller:08-2016",
+                  "attributeValueSets": [
+                    {
+                      "attribute": 2,
+                      "possibleValues": [],
+                      "selectedValues": [],
+                      "isRequired": false,
+                      "displayName": "Farbe",
+                      "version": "5e8ebce",
+                      "taxonomyNode": 2224,
+                      "userInputValidator": null
+                    }
+                  ]
+                }
+              ],
+              "level": 2,
+              "parent": "accessories.hats_and_caps",
+              "parent_id": 25,
+              "short_name": null,
+              "all_name": null,
+              "description": null,
+              "page_title": null,
+              "meta_title": null,
+              "nav": null,
+              "category_id": 68891926,
+              "full_path_taxonomy_ids": [
+                1,
+                25,
+                30
+              ],
+              "source_finder": "seller:08-2016",
+              "attributeValueSets": [
+                {
+                  "attribute": 2,
+                  "possibleValues": [],
+                  "selectedValues": [],
+                  "isRequired": false,
+                  "displayName": "Farbe",
+                  "version": "5e8ebce",
+                  "taxonomyNode": 30,
+                  "userInputValidator": null
+                }
+              ]
+            },
+            {
+              "id": 35,
+              "name": "Schleier",
+              "children_ids": [],
+              "path": "accessories.hats_and_caps.veils",
+              "children": [],
+              "level": 2,
+              "parent": "accessories.hats_and_caps",
+              "parent_id": 25,
+              "short_name": null,
+              "all_name": null,
+              "description": null,
+              "page_title": null,
+              "meta_title": null,
+              "nav": null,
+              "category_id": 68891926,
+              "full_path_taxonomy_ids": [
+                1,
+                25,
+                35
+              ],
+              "source_finder": "seller:08-2016",
+              "attributeValueSets": [
+                {
+                  "attribute": 2,
+                  "possibleValues": [],
+                  "selectedValues": [],
+                  "isRequired": false,
+                  "displayName": "Farbe",
+                  "version": "5e8ebce",
+                  "taxonomyNode": 35,
+                  "userInputValidator": null
+                }
+              ]
+            },
+            {
+              "id": 6080,
+              "name": "Slouch-Mützen",
+              "children_ids": [],
+              "path": "accessories.hats_and_caps.slouchy_hats",
+              "children": [],
+              "level": 2,
+              "parent": "accessories.hats_and_caps",
+              "parent_id": 25,
+              "short_name": null,
+              "all_name": null,
+              "description": null,
+              "page_title": null,
+              "meta_title": null,
+              "nav": {
+                "buyer_target": null,
+                "is_vintage": null
+              },
+              "category_id": 68891926,
+              "full_path_taxonomy_ids": [
+                1,
+                25,
+                6080
+              ],
+              "source_finder": "seller:08-2016",
+              "attributeValueSets": [
+                {
+                  "attribute": 2,
+                  "possibleValues": [],
+                  "selectedValues": [],
+                  "isRequired": false,
+                  "displayName": "Farbe",
+                  "version": "5e8ebce",
+                  "taxonomyNode": 6080,
+                  "userInputValidator": null
+                }
+              ]
+            },
+            {
+              "id": 34,
+              "name": "Sonnenhüte & -blenden",
+              "children_ids": [
+                1774,
+                1883,
+                1775
+              ],
+              "path": "accessories.hats_and_caps.sun_hats_and_visors",
+              "children": [
+                {
+                  "id": 1774,
+                  "name": "Sonnenblenden",
+                  "children_ids": [],
+                  "path": "accessories.hats_and_caps.sun_hats_and_visors.visors",
+                  "children": [],
+                  "level": 3,
+                  "parent": "accessories.hats_and_caps.sun_hats_and_visors",
+                  "parent_id": 34,
+                  "short_name": null,
+                  "all_name": null,
+                  "description": null,
+                  "page_title": null,
+                  "meta_title": null,
+                  "nav": null,
+                  "category_id": 68891926,
+                  "full_path_taxonomy_ids": [
+                    1,
+                    25,
+                    34,
+                    1774
+                  ],
+                  "source_finder": "seller:08-2016",
+                  "attributeValueSets": [
+                    {
+                      "attribute": 2,
+                      "possibleValues": [],
+                      "selectedValues": [],
+                      "isRequired": false,
+                      "displayName": "Farbe",
+                      "version": "5e8ebce",
+                      "taxonomyNode": 1774,
+                      "userInputValidator": null
+                    }
+                  ]
+                },
+                {
+                  "id": 1883,
+                  "name": "Sonnenhütchen",
+                  "children_ids": [],
+                  "path": "accessories.hats_and_caps.sun_hats_and_visors.sunbonnets",
+                  "children": [],
+                  "level": 3,
+                  "parent": "accessories.hats_and_caps.sun_hats_and_visors",
+                  "parent_id": 34,
+                  "short_name": null,
+                  "all_name": null,
+                  "description": null,
+                  "page_title": null,
+                  "meta_title": null,
+                  "nav": null,
+                  "category_id": 68891926,
+                  "full_path_taxonomy_ids": [
+                    1,
+                    25,
+                    34,
+                    1883
+                  ],
+                  "source_finder": "seller:08-2016",
+                  "attributeValueSets": [
+                    {
+                      "attribute": 2,
+                      "possibleValues": [],
+                      "selectedValues": [],
+                      "isRequired": false,
+                      "displayName": "Farbe",
+                      "version": "5e8ebce",
+                      "taxonomyNode": 1883,
+                      "userInputValidator": null
+                    }
+                  ]
+                },
+                {
+                  "id": 1775,
+                  "name": "Sonnenhüte",
+                  "children_ids": [],
+                  "path": "accessories.hats_and_caps.sun_hats_and_visors.sun_hats",
+                  "children": [],
+                  "level": 3,
+                  "parent": "accessories.hats_and_caps.sun_hats_and_visors",
+                  "parent_id": 34,
+                  "short_name": null,
+                  "all_name": null,
+                  "description": null,
+                  "page_title": null,
+                  "meta_title": null,
+                  "nav": null,
+                  "category_id": 68891926,
+                  "full_path_taxonomy_ids": [
+                    1,
+                    25,
+                    34,
+                    1775
+                  ],
+                  "source_finder": "seller:08-2016",
+                  "attributeValueSets": [
+                    {
+                      "attribute": 2,
+                      "possibleValues": [],
+                      "selectedValues": [],
+                      "isRequired": false,
+                      "displayName": "Farbe",
+                      "version": "5e8ebce",
+                      "taxonomyNode": 1775,
+                      "userInputValidator": null
+                    }
+                  ]
+                }
+              ],
+              "level": 2,
+              "parent": "accessories.hats_and_caps",
+              "parent_id": 25,
+              "short_name": null,
+              "all_name": null,
+              "description": null,
+              "page_title": null,
+              "meta_title": null,
+              "nav": null,
+              "category_id": 68891926,
+              "full_path_taxonomy_ids": [
+                1,
+                25,
+                34
+              ],
+              "source_finder": "seller:08-2016",
+              "attributeValueSets": [
+                {
+                  "attribute": 2,
+                  "possibleValues": [],
+                  "selectedValues": [],
+                  "isRequired": false,
+                  "displayName": "Farbe",
+                  "version": "5e8ebce",
+                  "taxonomyNode": 34,
+                  "userInputValidator": null
+                }
+              ]
+            },
+            {
+              "id": 2535,
+              "name": "Strohüte & Panamahüte",
+              "children_ids": [],
+              "path": "accessories.hats_and_caps.boaters_and_panama_hats",
+              "children": [],
+              "level": 2,
+              "parent": "accessories.hats_and_caps",
+              "parent_id": 25,
+              "short_name": null,
+              "all_name": null,
+              "description": null,
+              "page_title": null,
+              "meta_title": null,
+              "nav": null,
+              "category_id": 68891926,
+              "full_path_taxonomy_ids": [
+                1,
+                25,
+                2535
+              ],
+              "source_finder": "seller:08-2016",
+              "attributeValueSets": [
+                {
+                  "attribute": 2,
+                  "possibleValues": [],
+                  "selectedValues": [],
+                  "isRequired": false,
+                  "displayName": "Farbe",
+                  "version": "5e8ebce",
+                  "taxonomyNode": 2535,
+                  "userInputValidator": null
+                }
+              ]
+            },
+            {
+              "id": 36,
+              "name": "Wintermützen",
+              "children_ids": [
+                37,
+                38
+              ],
+              "path": "accessories.hats_and_caps.winter_hats",
+              "children": [
+                {
+                  "id": 37,
+                  "name": "Skull-Mützen & Beanies",
+                  "children_ids": [],
+                  "path": "accessories.hats_and_caps.winter_hats.skull_caps_and_beanies",
+                  "children": [],
+                  "level": 3,
+                  "parent": "accessories.hats_and_caps.winter_hats",
+                  "parent_id": 36,
+                  "short_name": null,
+                  "all_name": null,
+                  "description": null,
+                  "page_title": null,
+                  "meta_title": null,
+                  "nav": null,
+                  "category_id": 68891926,
+                  "full_path_taxonomy_ids": [
+                    1,
+                    25,
+                    36,
+                    37
+                  ],
+                  "source_finder": "seller:08-2016",
+                  "attributeValueSets": [
+                    {
+                      "attribute": 2,
+                      "possibleValues": [],
+                      "selectedValues": [],
+                      "isRequired": false,
+                      "displayName": "Farbe",
+                      "version": "5e8ebce",
+                      "taxonomyNode": 37,
+                      "userInputValidator": null
+                    }
+                  ]
+                },
+                {
+                  "id": 38,
+                  "name": "Trapper-Hüte",
+                  "children_ids": [],
+                  "path": "accessories.hats_and_caps.winter_hats.trapper_hats",
+                  "children": [],
+                  "level": 3,
+                  "parent": "accessories.hats_and_caps.winter_hats",
+                  "parent_id": 36,
+                  "short_name": null,
+                  "all_name": null,
+                  "description": null,
+                  "page_title": null,
+                  "meta_title": null,
+                  "nav": null,
+                  "category_id": 68891926,
+                  "full_path_taxonomy_ids": [
+                    1,
+                    25,
+                    36,
+                    38
+                  ],
+                  "source_finder": "seller:08-2016",
+                  "attributeValueSets": [
+                    {
+                      "attribute": 2,
+                      "possibleValues": [],
+                      "selectedValues": [],
+                      "isRequired": false,
+                      "displayName": "Farbe",
+                      "version": "5e8ebce",
+                      "taxonomyNode": 38,
+                      "userInputValidator": null
+                    }
+                  ]
+                }
+              ],
+              "level": 2,
+              "parent": "accessories.hats_and_caps",
+              "parent_id": 25,
+              "short_name": null,
+              "all_name": null,
+              "description": null,
+              "page_title": null,
+              "meta_title": null,
+              "nav": null,
+              "category_id": 68891926,
+              "full_path_taxonomy_ids": [
+                1,
+                25,
+                36
+              ],
+              "source_finder": "seller:08-2016",
+              "attributeValueSets": [
+                {
+                  "attribute": 2,
+                  "possibleValues": [],
+                  "selectedValues": [],
+                  "isRequired": false,
+                  "displayName": "Farbe",
+                  "version": "5e8ebce",
+                  "taxonomyNode": 36,
+                  "userInputValidator": null
+                }
+              ]
+            }
+          ],
+          "level": 1,
+          "parent": "accessories",
+          "parent_id": 1,
+          "short_name": null,
+          "all_name": null,
+          "description": null,
+          "page_title": null,
+          "meta_title": null,
+          "nav": null,
+          "category_id": 68891926,
+          "full_path_taxonomy_ids": [
+            1,
+            25
+          ],
+          "source_finder": "seller:08-2016",
+          "attributeValueSets": [
+            {
+              "attribute": 2,
+              "possibleValues": [],
+              "selectedValues": [],
+              "isRequired": false,
+              "displayName": "Farbe",
+              "version": "5e8ebce",
+              "taxonomyNode": 25,
+              "userInputValidator": null
+            }
+          ]
+        },
+        {
+          "id": 6,
+          "name": "Kostümzubehör",
+          "children_ids": [
+            15,
+            11,
+            9,
+            8,
+            10,
+            12,
+            13,
+            7,
+            14
+          ],
+          "path": "accessories.costume_accessories",
+          "children": [
+            {
+              "id": 15,
+              "name": "Flügel",
+              "children_ids": [],
+              "path": "accessories.costume_accessories.wings",
+              "children": [],
+              "level": 2,
+              "parent": "accessories.costume_accessories",
+              "parent_id": 6,
+              "short_name": null,
+              "all_name": null,
+              "description": null,
+              "page_title": "Flügel für Kostüme",
+              "meta_title": null,
+              "nav": {
+                "buyer_target": null,
+                "is_vintage": null
+              },
+              "category_id": 69150467,
+              "full_path_taxonomy_ids": [
+                1,
+                6,
+                15
+              ],
+              "source_finder": "seller:08-2016",
+              "attributeValueSets": [
+                {
+                  "attribute": 2,
+                  "possibleValues": [],
+                  "selectedValues": [],
+                  "isRequired": false,
+                  "displayName": "Farbe",
+                  "version": "5e8ebce",
+                  "taxonomyNode": 15,
+                  "userInputValidator": null
+                }
+              ]
+            },
+            {
+              "id": 11,
+              "name": "Gesichtsbehaarung",
+              "children_ids": [],
+              "path": "accessories.costume_accessories.facial_hair",
+              "children": [],
+              "level": 2,
+              "parent": "accessories.costume_accessories",
+              "parent_id": 6,
+              "short_name": null,
+              "all_name": null,
+              "description": null,
+              "page_title": "Gesichtsbehaarung für Kostüme",
+              "meta_title": null,
+              "nav": {
+                "buyer_target": null,
+                "is_vintage": null
+              },
+              "category_id": 69150467,
+              "full_path_taxonomy_ids": [
+                1,
+                6,
+                11
+              ],
+              "source_finder": "seller:08-2016",
+              "attributeValueSets": [
+                {
+                  "attribute": 2,
+                  "possibleValues": [],
+                  "selectedValues": [],
+                  "isRequired": false,
+                  "displayName": "Farbe",
+                  "version": "5e8ebce",
+                  "taxonomyNode": 11,
+                  "userInputValidator": null
+                }
+              ]
+            },
+            {
+              "id": 9,
+              "name": "Hüte & Kopfschmuck",
+              "children_ids": [],
+              "path": "accessories.costume_accessories.costume_hats_and_headpieces",
+              "children": [],
+              "level": 2,
+              "parent": "accessories.costume_accessories",
+              "parent_id": 6,
+              "short_name": null,
+              "all_name": null,
+              "description": null,
+              "page_title": null,
+              "meta_title": null,
+              "nav": null,
+              "category_id": 69150467,
+              "full_path_taxonomy_ids": [
+                1,
+                6,
+                9
+              ],
+              "source_finder": "seller:08-2016",
+              "attributeValueSets": [
+                {
+                  "attribute": 2,
+                  "possibleValues": [],
+                  "selectedValues": [],
+                  "isRequired": false,
+                  "displayName": "Farbe",
+                  "version": "5e8ebce",
+                  "taxonomyNode": 9,
+                  "userInputValidator": null
+                }
+              ]
+            },
+            {
+              "id": 8,
+              "name": "Kostümbrillen",
+              "children_ids": [],
+              "path": "accessories.costume_accessories.costume_goggles",
+              "children": [],
+              "level": 2,
+              "parent": "accessories.costume_accessories",
+              "parent_id": 6,
+              "short_name": null,
+              "all_name": null,
+              "description": null,
+              "page_title": null,
+              "meta_title": null,
+              "nav": null,
+              "category_id": 69150467,
+              "full_path_taxonomy_ids": [
+                1,
+                6,
+                8
+              ],
+              "source_finder": "seller:08-2016",
+              "attributeValueSets": [
+                {
+                  "attribute": 2,
+                  "possibleValues": [],
+                  "selectedValues": [],
+                  "isRequired": false,
+                  "displayName": "Farbe",
+                  "version": "5e8ebce",
+                  "taxonomyNode": 8,
+                  "userInputValidator": null
+                }
+              ]
+            },
+            {
+              "id": 10,
+              "name": "Kostümwaffen",
+              "children_ids": [],
+              "path": "accessories.costume_accessories.costume_weapons",
+              "children": [],
+              "level": 2,
+              "parent": "accessories.costume_accessories",
+              "parent_id": 6,
+              "short_name": null,
+              "all_name": null,
+              "description": null,
+              "page_title": null,
+              "meta_title": null,
+              "nav": null,
+              "category_id": 69150467,
+              "full_path_taxonomy_ids": [
+                1,
+                6,
+                10
+              ],
+              "source_finder": "seller:08-2016",
+              "attributeValueSets": [
+                {
+                  "attribute": 2,
+                  "possibleValues": [],
+                  "selectedValues": [],
+                  "isRequired": false,
+                  "displayName": "Farbe",
+                  "version": "5e8ebce",
+                  "taxonomyNode": 10,
+                  "userInputValidator": null
+                }
+              ]
+            },
+            {
+              "id": 12,
+              "name": "Masken & Prothesen",
+              "children_ids": [
+                1768,
+                2168
+              ],
+              "path": "accessories.costume_accessories.masks_and_prosthetics",
+              "children": [
+                {
+                  "id": 1768,
+                  "name": "Masken",
+                  "children_ids": [],
+                  "path": "accessories.costume_accessories.masks_and_prosthetics.masks",
+                  "children": [],
+                  "level": 3,
+                  "parent": "accessories.costume_accessories.masks_and_prosthetics",
+                  "parent_id": 12,
+                  "short_name": null,
+                  "all_name": null,
+                  "description": null,
+                  "page_title": null,
+                  "meta_title": null,
+                  "nav": null,
+                  "category_id": 69150467,
+                  "full_path_taxonomy_ids": [
+                    1,
+                    6,
+                    12,
+                    1768
+                  ],
+                  "source_finder": "seller:08-2016",
+                  "attributeValueSets": [
+                    {
+                      "attribute": 2,
+                      "possibleValues": [],
+                      "selectedValues": [],
+                      "isRequired": false,
+                      "displayName": "Farbe",
+                      "version": "5e8ebce",
+                      "taxonomyNode": 1768,
+                      "userInputValidator": null
+                    }
+                  ]
+                },
+                {
+                  "id": 2168,
+                  "name": "Prothesen",
+                  "children_ids": [],
+                  "path": "accessories.costume_accessories.masks_and_prosthetics.prosthetics",
+                  "children": [],
+                  "level": 3,
+                  "parent": "accessories.costume_accessories.masks_and_prosthetics",
+                  "parent_id": 12,
+                  "short_name": null,
+                  "all_name": null,
+                  "description": null,
+                  "page_title": null,
+                  "meta_title": null,
+                  "nav": null,
+                  "category_id": 69150467,
+                  "full_path_taxonomy_ids": [
+                    1,
+                    6,
+                    12,
+                    2168
+                  ],
+                  "source_finder": "seller:08-2016",
+                  "attributeValueSets": [
+                    {
+                      "attribute": 2,
+                      "possibleValues": [],
+                      "selectedValues": [],
+                      "isRequired": false,
+                      "displayName": "Farbe",
+                      "version": "5e8ebce",
+                      "taxonomyNode": 2168,
+                      "userInputValidator": null
+                    }
+                  ]
+                }
+              ],
+              "level": 2,
+              "parent": "accessories.costume_accessories",
+              "parent_id": 6,
+              "short_name": null,
+              "all_name": null,
+              "description": null,
+              "page_title": null,
+              "meta_title": null,
+              "nav": null,
+              "category_id": 69150467,
+              "full_path_taxonomy_ids": [
+                1,
+                6,
+                12
+              ],
+              "source_finder": "seller:08-2016",
+              "attributeValueSets": [
+                {
+                  "attribute": 2,
+                  "possibleValues": [],
+                  "selectedValues": [],
+                  "isRequired": false,
+                  "displayName": "Farbe",
+                  "version": "5e8ebce",
+                  "taxonomyNode": 12,
+                  "userInputValidator": null
+                }
+              ]
+            },
+            {
+              "id": 13,
+              "name": "Schwänze & Ohren",
+              "children_ids": [
+                1761,
+                1760
+              ],
+              "path": "accessories.costume_accessories.costume_tails_and_ears",
+              "children": [
+                {
+                  "id": 1761,
+                  "name": "Kostümohren",
+                  "children_ids": [],
+                  "path": "accessories.costume_accessories.costume_tails_and_ears.costume_ears",
+                  "children": [],
+                  "level": 3,
+                  "parent": "accessories.costume_accessories.costume_tails_and_ears",
+                  "parent_id": 13,
+                  "short_name": null,
+                  "all_name": null,
+                  "description": null,
+                  "page_title": null,
+                  "meta_title": null,
+                  "nav": null,
+                  "category_id": 69150467,
+                  "full_path_taxonomy_ids": [
+                    1,
+                    6,
+                    13,
+                    1761
+                  ],
+                  "source_finder": "seller:08-2016",
+                  "attributeValueSets": [
+                    {
+                      "attribute": 2,
+                      "possibleValues": [],
+                      "selectedValues": [],
+                      "isRequired": false,
+                      "displayName": "Farbe",
+                      "version": "5e8ebce",
+                      "taxonomyNode": 1761,
+                      "userInputValidator": null
+                    }
+                  ]
+                },
+                {
+                  "id": 1760,
+                  "name": "Kostümschwänze",
+                  "children_ids": [],
+                  "path": "accessories.costume_accessories.costume_tails_and_ears.costume_tails",
+                  "children": [],
+                  "level": 3,
+                  "parent": "accessories.costume_accessories.costume_tails_and_ears",
+                  "parent_id": 13,
+                  "short_name": null,
+                  "all_name": null,
+                  "description": null,
+                  "page_title": null,
+                  "meta_title": null,
+                  "nav": null,
+                  "category_id": 69150467,
+                  "full_path_taxonomy_ids": [
+                    1,
+                    6,
+                    13,
+                    1760
+                  ],
+                  "source_finder": "seller:08-2016",
+                  "attributeValueSets": [
+                    {
+                      "attribute": 2,
+                      "possibleValues": [],
+                      "selectedValues": [],
+                      "isRequired": false,
+                      "displayName": "Farbe",
+                      "version": "5e8ebce",
+                      "taxonomyNode": 1760,
+                      "userInputValidator": null
+                    }
+                  ]
+                }
+              ],
+              "level": 2,
+              "parent": "accessories.costume_accessories",
+              "parent_id": 6,
+              "short_name": null,
+              "all_name": null,
+              "description": null,
+              "page_title": null,
+              "meta_title": null,
+              "nav": null,
+              "category_id": 69150467,
+              "full_path_taxonomy_ids": [
+                1,
+                6,
+                13
+              ],
+              "source_finder": "seller:08-2016",
+              "attributeValueSets": [
+                {
+                  "attribute": 2,
+                  "possibleValues": [],
+                  "selectedValues": [],
+                  "isRequired": false,
+                  "displayName": "Farbe",
+                  "version": "5e8ebce",
+                  "taxonomyNode": 13,
+                  "userInputValidator": null
+                }
+              ]
+            },
+            {
+              "id": 7,
+              "name": "Umhänge",
+              "children_ids": [],
+              "path": "accessories.costume_accessories.capes",
+              "children": [],
+              "level": 2,
+              "parent": "accessories.costume_accessories",
+              "parent_id": 6,
+              "short_name": null,
+              "all_name": null,
+              "description": null,
+              "page_title": "Umhänge für Kostüme",
+              "meta_title": null,
+              "nav": {
+                "buyer_target": null,
+                "is_vintage": null
+              },
+              "category_id": 69150467,
+              "full_path_taxonomy_ids": [
+                1,
+                6,
+                7
+              ],
+              "source_finder": "seller:08-2016",
+              "attributeValueSets": [
+                {
+                  "attribute": 2,
+                  "possibleValues": [],
+                  "selectedValues": [],
+                  "isRequired": false,
+                  "displayName": "Farbe",
+                  "version": "5e8ebce",
+                  "taxonomyNode": 7,
+                  "userInputValidator": null
+                }
+              ]
+            },
+            {
+              "id": 14,
+              "name": "Zauberstäbe",
+              "children_ids": [],
+              "path": "accessories.costume_accessories.wands",
+              "children": [],
+              "level": 2,
+              "parent": "accessories.costume_accessories",
+              "parent_id": 6,
+              "short_name": null,
+              "all_name": null,
+              "description": null,
+              "page_title": "Zauberstäbe für Kostüme",
+              "meta_title": null,
+              "nav": {
+                "buyer_target": null,
+                "is_vintage": null
+              },
+              "category_id": 69150467,
+              "full_path_taxonomy_ids": [
+                1,
+                6,
+                14
+              ],
+              "source_finder": "seller:08-2016",
+              "attributeValueSets": [
+                {
+                  "attribute": 2,
+                  "possibleValues": [],
+                  "selectedValues": [],
+                  "isRequired": false,
+                  "displayName": "Farbe",
+                  "version": "5e8ebce",
+                  "taxonomyNode": 14,
+                  "userInputValidator": null
+                }
+              ]
+            }
+          ],
+          "level": 1,
+          "parent": "accessories",
+          "parent_id": 1,
+          "short_name": null,
+          "all_name": null,
+          "description": null,
+          "page_title": null,
+          "meta_title": null,
+          "nav": null,
+          "category_id": 69150467,
+          "full_path_taxonomy_ids": [
+            1,
+            6
+          ],
+          "source_finder": "seller:08-2016",
+          "attributeValueSets": [
+            {
+              "attribute": 2,
+              "possibleValues": [],
+              "selectedValues": [],
+              "isRequired": false,
+              "displayName": "Farbe",
+              "version": "5e8ebce",
+              "taxonomyNode": 6,
+              "userInputValidator": null
+            }
+          ]
+        },
+        {
+          "id": 65,
+          "name": "Regenschirme & Regenaccessoires",
+          "children_ids": [
+            1769
+          ],
+          "path": "accessories.umbrellas_and_rain_accessories",
+          "children": [
+            {
+              "id": 1769,
+              "name": "Regenschirme",
+              "children_ids": [],
+              "path": "accessories.umbrellas_and_rain_accessories.umbrellas",
+              "children": [],
+              "level": 2,
+              "parent": "accessories.umbrellas_and_rain_accessories",
+              "parent_id": 65,
+              "short_name": null,
+              "all_name": null,
+              "description": null,
+              "page_title": null,
+              "meta_title": null,
+              "nav": null,
+              "category_id": 69150467,
+              "full_path_taxonomy_ids": [
+                1,
+                65,
+                1769
+              ],
+              "source_finder": "seller:08-2016",
+              "attributeValueSets": [
+                {
+                  "attribute": 2,
+                  "possibleValues": [],
+                  "selectedValues": [],
+                  "isRequired": false,
+                  "displayName": "Farbe",
+                  "version": "5e8ebce",
+                  "taxonomyNode": 1769,
+                  "userInputValidator": null
+                }
+              ]
+            }
+          ],
+          "level": 1,
+          "parent": "accessories",
+          "parent_id": 1,
+          "short_name": null,
+          "all_name": null,
+          "description": null,
+          "page_title": null,
+          "meta_title": null,
+          "nav": null,
+          "category_id": 69150467,
+          "full_path_taxonomy_ids": [
+            1,
+            65
+          ],
+          "source_finder": "seller:08-2016",
+          "attributeValueSets": [
+            {
+              "attribute": 2,
+              "possibleValues": [],
+              "selectedValues": [],
+              "isRequired": false,
+              "displayName": "Farbe",
+              "version": "5e8ebce",
+              "taxonomyNode": 65,
+              "userInputValidator": null
+            }
+          ]
+        },
+        {
+          "id": 42,
+          "name": "Schals & Tücher",
+          "children_ids": [
+            43,
+            45,
+            44,
+            46,
+            47
+          ],
+          "path": "accessories.scarves_and_wraps",
+          "children": [
+            {
+              "id": 43,
+              "name": "Bandanas",
+              "children_ids": [],
+              "path": "accessories.scarves_and_wraps.bandanas",
+              "children": [],
+              "level": 2,
+              "parent": "accessories.scarves_and_wraps",
+              "parent_id": 42,
+              "short_name": null,
+              "all_name": null,
+              "description": null,
+              "page_title": null,
+              "meta_title": null,
+              "nav": null,
+              "category_id": 68892184,
+              "full_path_taxonomy_ids": [
+                1,
+                42,
+                43
+              ],
+              "source_finder": "seller:08-2016",
+              "attributeValueSets": [
+                {
+                  "attribute": 2,
+                  "possibleValues": [],
+                  "selectedValues": [],
+                  "isRequired": false,
+                  "displayName": "Farbe",
+                  "version": "5e8ebce",
+                  "taxonomyNode": 43,
+                  "userInputValidator": null
+                }
+              ]
+            },
+            {
+              "id": 45,
+              "name": "Halstücher",
+              "children_ids": [],
+              "path": "accessories.scarves_and_wraps.handkerchiefs",
+              "children": [],
+              "level": 2,
+              "parent": "accessories.scarves_and_wraps",
+              "parent_id": 42,
+              "short_name": null,
+              "all_name": null,
+              "description": null,
+              "page_title": null,
+              "meta_title": null,
+              "nav": null,
+              "category_id": 68892184,
+              "full_path_taxonomy_ids": [
+                1,
+                42,
+                45
+              ],
+              "source_finder": "seller:08-2016",
+              "attributeValueSets": [
+                {
+                  "attribute": 2,
+                  "possibleValues": [],
+                  "selectedValues": [],
+                  "isRequired": false,
+                  "displayName": "Farbe",
+                  "version": "5e8ebce",
+                  "taxonomyNode": 45,
+                  "userInputValidator": null
+                }
+              ]
+            },
+            {
+              "id": 44,
+              "name": "Kragen & Lätzchen",
+              "children_ids": [
+                2171,
+                2172
+              ],
+              "path": "accessories.scarves_and_wraps.collars_and_bibs",
+              "children": [
+                {
+                  "id": 2171,
+                  "name": "Kragen",
+                  "children_ids": [],
+                  "path": "accessories.scarves_and_wraps.collars_and_bibs.collars",
+                  "children": [],
+                  "level": 3,
+                  "parent": "accessories.scarves_and_wraps.collars_and_bibs",
+                  "parent_id": 44,
+                  "short_name": null,
+                  "all_name": null,
+                  "description": null,
+                  "page_title": null,
+                  "meta_title": null,
+                  "nav": null,
+                  "category_id": 68892184,
+                  "full_path_taxonomy_ids": [
+                    1,
+                    42,
+                    44,
+                    2171
+                  ],
+                  "source_finder": "seller:08-2016",
+                  "attributeValueSets": [
+                    {
+                      "attribute": 2,
+                      "possibleValues": [],
+                      "selectedValues": [],
+                      "isRequired": false,
+                      "displayName": "Farbe",
+                      "version": "5e8ebce",
+                      "taxonomyNode": 2171,
+                      "userInputValidator": null
+                    }
+                  ]
+                },
+                {
+                  "id": 2172,
+                  "name": "Lätzchen",
+                  "children_ids": [],
+                  "path": "accessories.scarves_and_wraps.collars_and_bibs.bibs",
+                  "children": [],
+                  "level": 3,
+                  "parent": "accessories.scarves_and_wraps.collars_and_bibs",
+                  "parent_id": 44,
+                  "short_name": null,
+                  "all_name": null,
+                  "description": null,
+                  "page_title": null,
+                  "meta_title": null,
+                  "nav": null,
+                  "category_id": 68892184,
+                  "full_path_taxonomy_ids": [
+                    1,
+                    42,
+                    44,
+                    2172
+                  ],
+                  "source_finder": "seller:08-2016",
+                  "attributeValueSets": [
+                    {
+                      "attribute": 2,
+                      "possibleValues": [],
+                      "selectedValues": [],
+                      "isRequired": false,
+                      "displayName": "Farbe",
+                      "version": "5e8ebce",
+                      "taxonomyNode": 2172,
+                      "userInputValidator": null
+                    }
+                  ]
+                }
+              ],
+              "level": 2,
+              "parent": "accessories.scarves_and_wraps",
+              "parent_id": 42,
+              "short_name": null,
+              "all_name": null,
+              "description": null,
+              "page_title": null,
+              "meta_title": null,
+              "nav": null,
+              "category_id": 68892184,
+              "full_path_taxonomy_ids": [
+                1,
+                42,
+                44
+              ],
+              "source_finder": "seller:08-2016",
+              "attributeValueSets": [
+                {
+                  "attribute": 2,
+                  "possibleValues": [],
+                  "selectedValues": [],
+                  "isRequired": false,
+                  "displayName": "Farbe",
+                  "version": "5e8ebce",
+                  "taxonomyNode": 44,
+                  "userInputValidator": null
+                }
+              ]
+            },
+            {
+              "id": 46,
+              "name": "Schals",
+              "children_ids": [
+                6079
+              ],
+              "path": "accessories.scarves_and_wraps.scarves",
+              "children": [
+                {
+                  "id": 6079,
+                  "name": "Kapuzenschals",
+                  "children_ids": [],
+                  "path": "accessories.scarves_and_wraps.scarves.hooded_scarves",
+                  "children": [],
+                  "level": 3,
+                  "parent": "accessories.scarves_and_wraps.scarves",
+                  "parent_id": 46,
+                  "short_name": null,
+                  "all_name": null,
+                  "description": null,
+                  "page_title": null,
+                  "meta_title": null,
+                  "nav": {
+                    "buyer_target": null,
+                    "is_vintage": null
+                  },
+                  "category_id": 68892184,
+                  "full_path_taxonomy_ids": [
+                    1,
+                    42,
+                    46,
+                    6079
+                  ],
+                  "source_finder": "seller:08-2016",
+                  "attributeValueSets": [
+                    {
+                      "attribute": 2,
+                      "possibleValues": [],
+                      "selectedValues": [],
+                      "isRequired": false,
+                      "displayName": "Farbe",
+                      "version": "5e8ebce",
+                      "taxonomyNode": 6079,
+                      "userInputValidator": null
+                    }
+                  ]
+                }
+              ],
+              "level": 2,
+              "parent": "accessories.scarves_and_wraps",
+              "parent_id": 42,
+              "short_name": null,
+              "all_name": null,
+              "description": null,
+              "page_title": null,
+              "meta_title": null,
+              "nav": null,
+              "category_id": 68892184,
+              "full_path_taxonomy_ids": [
+                1,
+                42,
+                46
+              ],
+              "source_finder": "seller:08-2016",
+              "attributeValueSets": [
+                {
+                  "attribute": 2,
+                  "possibleValues": [],
+                  "selectedValues": [],
+                  "isRequired": false,
+                  "displayName": "Farbe",
+                  "version": "5e8ebce",
+                  "taxonomyNode": 46,
+                  "userInputValidator": null
+                }
+              ]
+            },
+            {
+              "id": 47,
+              "name": "Tücher & Stolen",
+              "children_ids": [
+                6065
+              ],
+              "path": "accessories.scarves_and_wraps.shawls_and_wraps",
+              "children": [
+                {
+                  "id": 6065,
+                  "name": "Schalnadeln",
+                  "children_ids": [],
+                  "path": "accessories.scarves_and_wraps.shawls_and_wraps.shawl_pins",
+                  "children": [],
+                  "level": 3,
+                  "parent": "accessories.scarves_and_wraps.shawls_and_wraps",
+                  "parent_id": 47,
+                  "short_name": null,
+                  "all_name": null,
+                  "description": null,
+                  "page_title": null,
+                  "meta_title": null,
+                  "nav": {
+                    "buyer_target": null,
+                    "is_vintage": null
+                  },
+                  "category_id": 68892332,
+                  "full_path_taxonomy_ids": [
+                    1,
+                    42,
+                    47,
+                    6065
+                  ],
+                  "source_finder": "seller:08-2016",
+                  "attributeValueSets": [
+                    {
+                      "attribute": 2,
+                      "possibleValues": [],
+                      "selectedValues": [],
+                      "isRequired": false,
+                      "displayName": "Farbe",
+                      "version": "5e8ebce",
+                      "taxonomyNode": 6065,
+                      "userInputValidator": null
+                    }
+                  ]
+                }
+              ],
+              "level": 2,
+              "parent": "accessories.scarves_and_wraps",
+              "parent_id": 42,
+              "short_name": null,
+              "all_name": null,
+              "description": null,
+              "page_title": null,
+              "meta_title": null,
+              "nav": null,
+              "category_id": 68892332,
+              "full_path_taxonomy_ids": [
+                1,
+                42,
+                47
+              ],
+              "source_finder": "seller:08-2016",
+              "attributeValueSets": [
+                {
+                  "attribute": 2,
+                  "possibleValues": [],
+                  "selectedValues": [],
+                  "isRequired": false,
+                  "displayName": "Farbe",
+                  "version": "5e8ebce",
+                  "taxonomyNode": 47,
+                  "userInputValidator": null
+                }
+              ]
+            }
+          ],
+          "level": 1,
+          "parent": "accessories",
+          "parent_id": 1,
+          "short_name": null,
+          "all_name": null,
+          "description": null,
+          "page_title": null,
+          "meta_title": null,
+          "nav": null,
+          "category_id": 68892184,
+          "full_path_taxonomy_ids": [
+            1,
+            42
+          ],
+          "source_finder": "seller:08-2016",
+          "attributeValueSets": [
+            {
+              "attribute": 2,
+              "possibleValues": [],
+              "selectedValues": [],
+              "isRequired": false,
+              "displayName": "Farbe",
+              "version": "5e8ebce",
+              "taxonomyNode": 42,
+              "userInputValidator": null
+            }
+          ]
+        },
+        {
+          "id": 164,
+          "name": "Schlüsselanhänger & Schlüsselbänder",
+          "children_ids": [
+            167,
+            166,
+            165
+          ],
+          "path": "accessories.keychains_and_lanyards",
+          "children": [
+            {
+              "id": 167,
+              "name": "Charms & Anhänger",
+              "children_ids": [],
+              "path": "accessories.keychains_and_lanyards.zipper_charms",
+              "children": [],
+              "level": 2,
+              "parent": "accessories.keychains_and_lanyards",
+              "parent_id": 164,
+              "short_name": null,
+              "all_name": null,
+              "description": null,
+              "page_title": null,
+              "meta_title": null,
+              "nav": null,
+              "category_id": 68923792,
+              "full_path_taxonomy_ids": [
+                1,
+                164,
+                167
+              ],
+              "source_finder": "seller:08-2016",
+              "attributeValueSets": [
+                {
+                  "attribute": 2,
+                  "possibleValues": [],
+                  "selectedValues": [],
+                  "isRequired": false,
+                  "displayName": "Farbe",
+                  "version": "5e8ebce",
+                  "taxonomyNode": 167,
+                  "userInputValidator": null
+                }
+              ]
+            },
+            {
+              "id": 166,
+              "name": "Schlüssel- & Ausweisbänder",
+              "children_ids": [],
+              "path": "accessories.keychains_and_lanyards.lanyards",
+              "children": [],
+              "level": 2,
+              "parent": "accessories.keychains_and_lanyards",
+              "parent_id": 164,
+              "short_name": null,
+              "all_name": null,
+              "description": null,
+              "page_title": null,
+              "meta_title": null,
+              "nav": null,
+              "category_id": 68891822,
+              "full_path_taxonomy_ids": [
+                1,
+                164,
+                166
+              ],
+              "source_finder": "seller:08-2016",
+              "attributeValueSets": [
+                {
+                  "attribute": 2,
+                  "possibleValues": [],
+                  "selectedValues": [],
+                  "isRequired": false,
+                  "displayName": "Farbe",
+                  "version": "5e8ebce",
+                  "taxonomyNode": 166,
+                  "userInputValidator": null
+                }
+              ]
+            },
+            {
+              "id": 165,
+              "name": "Schlüsselanhänger",
+              "children_ids": [],
+              "path": "accessories.keychains_and_lanyards.keychains",
+              "children": [],
+              "level": 2,
+              "parent": "accessories.keychains_and_lanyards",
+              "parent_id": 164,
+              "short_name": null,
+              "all_name": null,
+              "description": null,
+              "page_title": null,
+              "meta_title": null,
+              "nav": null,
+              "category_id": 69154275,
+              "full_path_taxonomy_ids": [
+                1,
+                164,
+                165
+              ],
+              "source_finder": "seller:08-2016",
+              "attributeValueSets": [
+                {
+                  "attribute": 2,
+                  "possibleValues": [],
+                  "selectedValues": [],
+                  "isRequired": false,
+                  "displayName": "Farbe",
+                  "version": "5e8ebce",
+                  "taxonomyNode": 165,
+                  "userInputValidator": null
+                }
+              ]
+            }
+          ],
+          "level": 1,
+          "parent": "accessories",
+          "parent_id": 1,
+          "short_name": null,
+          "all_name": null,
+          "description": null,
+          "page_title": null,
+          "meta_title": null,
+          "nav": null,
+          "category_id": 69150467,
+          "full_path_taxonomy_ids": [
+            1,
+            164
+          ],
+          "source_finder": "seller:08-2016",
+          "attributeValueSets": [
+            {
+              "attribute": 2,
+              "possibleValues": [],
+              "selectedValues": [],
+              "isRequired": false,
+              "displayName": "Farbe",
+              "version": "5e8ebce",
+              "taxonomyNode": 164,
+              "userInputValidator": null
+            }
+          ]
+        },
+        {
+          "id": 58,
+          "name": "Sonnenbrillen & Brillen",
+          "children_ids": [
+            59,
+            60,
+            61,
+            62,
+            64,
+            63
+          ],
+          "path": "accessories.sunglasses_and_eyewear",
+          "children": [
+            {
+              "id": 59,
+              "name": "Brillen",
+              "children_ids": [],
+              "path": "accessories.sunglasses_and_eyewear.glasses",
+              "children": [],
+              "level": 2,
+              "parent": "accessories.sunglasses_and_eyewear",
+              "parent_id": 58,
+              "short_name": null,
+              "all_name": null,
+              "description": null,
+              "page_title": null,
+              "meta_title": null,
+              "nav": null,
+              "category_id": 69153663,
+              "full_path_taxonomy_ids": [
+                1,
+                58,
+                59
+              ],
+              "source_finder": "seller:08-2016",
+              "attributeValueSets": [
+                {
+                  "attribute": 2,
+                  "possibleValues": [],
+                  "selectedValues": [],
+                  "isRequired": false,
+                  "displayName": "Farbe",
+                  "version": "5e8ebce",
+                  "taxonomyNode": 59,
+                  "userInputValidator": null
+                }
+              ]
+            },
+            {
+              "id": 60,
+              "name": "Brillenetuis",
+              "children_ids": [],
+              "path": "accessories.sunglasses_and_eyewear.glasses_cases",
+              "children": [],
+              "level": 2,
+              "parent": "accessories.sunglasses_and_eyewear",
+              "parent_id": 58,
+              "short_name": null,
+              "all_name": null,
+              "description": null,
+              "page_title": null,
+              "meta_title": null,
+              "nav": null,
+              "category_id": 69153663,
+              "full_path_taxonomy_ids": [
+                1,
+                58,
+                60
+              ],
+              "source_finder": "seller:08-2016",
+              "attributeValueSets": [
+                {
+                  "attribute": 2,
+                  "possibleValues": [],
+                  "selectedValues": [],
+                  "isRequired": false,
+                  "displayName": "Farbe",
+                  "version": "5e8ebce",
+                  "taxonomyNode": 60,
+                  "userInputValidator": null
+                }
+              ]
+            },
+            {
+              "id": 61,
+              "name": "Brillenketten",
+              "children_ids": [],
+              "path": "accessories.sunglasses_and_eyewear.glasses_chains",
+              "children": [],
+              "level": 2,
+              "parent": "accessories.sunglasses_and_eyewear",
+              "parent_id": 58,
+              "short_name": null,
+              "all_name": null,
+              "description": null,
+              "page_title": null,
+              "meta_title": null,
+              "nav": null,
+              "category_id": 69153663,
+              "full_path_taxonomy_ids": [
+                1,
+                58,
+                61
+              ],
+              "source_finder": "seller:08-2016",
+              "attributeValueSets": [
+                {
+                  "attribute": 2,
+                  "possibleValues": [],
+                  "selectedValues": [],
+                  "isRequired": false,
+                  "displayName": "Farbe",
+                  "version": "5e8ebce",
+                  "taxonomyNode": 61,
+                  "userInputValidator": null
+                }
+              ]
+            },
+            {
+              "id": 62,
+              "name": "Lesebrillen",
+              "children_ids": [],
+              "path": "accessories.sunglasses_and_eyewear.reading_glasses",
+              "children": [],
+              "level": 2,
+              "parent": "accessories.sunglasses_and_eyewear",
+              "parent_id": 58,
+              "short_name": null,
+              "all_name": null,
+              "description": null,
+              "page_title": null,
+              "meta_title": null,
+              "nav": null,
+              "category_id": 69153663,
+              "full_path_taxonomy_ids": [
+                1,
+                58,
+                62
+              ],
+              "source_finder": "seller:08-2016",
+              "attributeValueSets": [
+                {
+                  "attribute": 2,
+                  "possibleValues": [],
+                  "selectedValues": [],
+                  "isRequired": false,
+                  "displayName": "Farbe",
+                  "version": "5e8ebce",
+                  "taxonomyNode": 62,
+                  "userInputValidator": null
+                }
+              ]
+            },
+            {
+              "id": 64,
+              "name": "Sonnenbrillen",
+              "children_ids": [],
+              "path": "accessories.sunglasses_and_eyewear.sunglasses",
+              "children": [],
+              "level": 2,
+              "parent": "accessories.sunglasses_and_eyewear",
+              "parent_id": 58,
+              "short_name": null,
+              "all_name": null,
+              "description": null,
+              "page_title": null,
+              "meta_title": null,
+              "nav": null,
+              "category_id": 69153663,
+              "full_path_taxonomy_ids": [
+                1,
+                58,
+                64
+              ],
+              "source_finder": "seller:08-2016",
+              "attributeValueSets": [
+                {
+                  "attribute": 2,
+                  "possibleValues": [],
+                  "selectedValues": [],
+                  "isRequired": false,
+                  "displayName": "Farbe",
+                  "version": "5e8ebce",
+                  "taxonomyNode": 64,
+                  "userInputValidator": null
+                }
+              ]
+            },
+            {
+              "id": 63,
+              "name": "Sportbrillen",
+              "children_ids": [],
+              "path": "accessories.sunglasses_and_eyewear.sports_goggles",
+              "children": [],
+              "level": 2,
+              "parent": "accessories.sunglasses_and_eyewear",
+              "parent_id": 58,
+              "short_name": null,
+              "all_name": null,
+              "description": null,
+              "page_title": null,
+              "meta_title": null,
+              "nav": null,
+              "category_id": 69153663,
+              "full_path_taxonomy_ids": [
+                1,
+                58,
+                63
+              ],
+              "source_finder": "seller:08-2016",
+              "attributeValueSets": [
+                {
+                  "attribute": 2,
+                  "possibleValues": [],
+                  "selectedValues": [],
+                  "isRequired": false,
+                  "displayName": "Farbe",
+                  "version": "5e8ebce",
+                  "taxonomyNode": 63,
+                  "userInputValidator": null
+                }
+              ]
+            }
+          ],
+          "level": 1,
+          "parent": "accessories",
+          "parent_id": 1,
+          "short_name": null,
+          "all_name": null,
+          "description": null,
+          "page_title": null,
+          "meta_title": null,
+          "nav": null,
+          "category_id": 69153663,
+          "full_path_taxonomy_ids": [
+            1,
+            58
+          ],
+          "source_finder": "seller:08-2016",
+          "attributeValueSets": [
+            {
+              "attribute": 2,
+              "possibleValues": [],
+              "selectedValues": [],
+              "isRequired": false,
+              "displayName": "Farbe",
+              "version": "5e8ebce",
+              "taxonomyNode": 58,
+              "userInputValidator": null
+            }
+          ]
+        }
+      ],
+      "level": 0,
+      "parent": "",
+      "parent_id": null,
+      "short_name": null,
+      "all_name": null,
+      "description": "Schals, Hüte und Haar-Accessoires, die alles zusammenhalten",
+      "page_title": null,
+      "meta_title": null,
+      "nav": {
+        "buyer_target": null,
+        "is_vintage": null
+      },
+      "category_id": 69150467,
+      "full_path_taxonomy_ids": [
+        1
+      ],
+      "source_finder": "seller:08-2016",
+      "attributeValueSets": [
+        {
+          "attribute": 2,
+          "possibleValues": [],
+          "selectedValues": [],
+          "isRequired": false,
+          "displayName": "Farbe",
+          "version": "5e8ebce",
+          "taxonomyNode": 1,
+          "userInputValidator": null
+        }
+      ]
+    }
+  ],
+  "params": null,
+  "type": "Taxonomy",
+  "pagination": {}
+}
