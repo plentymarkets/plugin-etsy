@@ -65,11 +65,11 @@ class StartListingService
 
             // $this->addTranslations($record);
 
-            $this->publish();
+            $this->publish($listingId, $record->variationBase->id);
         }
         else
         {
-            $this->logger->log('Could not start listing for variation id: ' . $record->itemBase->id);
+            $this->logger->log('Could not start listing for variation id: ' . $record->variationBase->id);
         }
 
     }
@@ -120,9 +120,23 @@ class StartListingService
 
     }
 
-    private function publish():void
+    private function publish(int $listingId, int $variationId):void
     {
+        $itemData = [
+            'state' => 'active',
+        ];
 
+        $response = $this->client->call('updateListing', [
+            'language' => 'de',
+            'listing_id' => $listingId,
+        ], $itemData);
+
+        if(is_null($response) || (array_key_exists('exception', $response) && $response['exception'] === true))
+        {
+            // TODO  throw exception
+        }
+
+        $this->itemHelper->generateSku($listingId, $variationId);
     }
 
 
@@ -130,6 +144,6 @@ class StartListingService
 
     private function createListingMockupResponse():int
     {
-        return 465738294;
+        return 465564444;
     }
 }

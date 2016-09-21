@@ -3,8 +3,10 @@
 namespace Etsy\Helper;
 
 use Plenty\Plugin\Application;
+use Plenty\Plugin\ConfigRepository;
 use Plenty\Modules\Helper\Contracts\UrlBuilderRepositoryContract;
 use Plenty\Modules\Item\DataLayer\Models\Record;
+use Plenty\Modules\Item\VariationSku\Contracts\VariationSkuRepositoryContract;
 
 class ItemHelper
 {
@@ -14,17 +16,31 @@ class ItemHelper
     private Application $app;
 
     /**
+    * VariationSkuRepositoryContract $variationSkuRepository
+    */
+    private VariationSkuRepositoryContract $variationSkuRepository;
+
+    /**
+    * ConfigRepository $config
+    */
+    private ConfigRepository $config;
+
+    /**
     * UrlBuilderRepositoryContract $urlBuilderRepository
     */
     private UrlBuilderRepositoryContract $urlBuilderRepository;
 
     public function __construct(
         Application $app,
-        UrlBuilderRepositoryContract $urlBuilderRepository
+        UrlBuilderRepositoryContract $urlBuilderRepository,
+        VariationSkuRepositoryContract $variationSkuRepository,
+        ConfigRepository $config
     )
     {
         $this->app = $app;
         $this->urlBuilderRepository = $urlBuilderRepository;
+        $this->variationSkuRepository = $variationSkuRepository;
+        $this->config = $config;
     }
 
     /**
@@ -74,6 +90,11 @@ class ItemHelper
         }
 
         return $stock;
+    }
+
+    public function generateSku(int $sku, int $variationId):void
+    {
+        $this->variationSkuRepository->generateSku($variationId, $this->config->get('EtsyIntegrationPlugin.referrerId'), 0, $sku);
     }
 
     public function getItemProperty(Record $record, string $propertyName):mixed
