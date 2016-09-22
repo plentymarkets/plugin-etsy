@@ -19,7 +19,7 @@ return $client->call(
     [
         'params'        => SdkRestApi::getParam('params', []),
     	'data'          => SdkRestApi::getParam('data', []),
-    	'associations'  => SdkRestApi::getParam('fields', []),
-    	'fields'        => SdkRestApi::getParam('associations', []),
+    	'associations'  => SdkRestApi::getParam('associations', []),
+    	'fields'        => SdkRestApi::getParam('fields', []),
     ]
 );
