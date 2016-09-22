@@ -8,6 +8,7 @@ use Etsy\Helper\ItemHelper;
 use Etsy\Api\Client;
 use Etsy\Logger\Logger;
 use Etsy\Services\Item\ListingImageService;
+use Etsy\Services\Item\ListingTranslationService;
 
 class StartListingService
 {
@@ -36,12 +37,18 @@ class StartListingService
     */
     private ListingImageService $imageService;
 
+    /**
+     * ListingTranslationService $translationService
+     */
+    private ListingTranslationService $translationService;
+
     public function __construct(
         ItemHelper $itemHelper,
         ConfigRepository $config,
         ListingImageService $imageService,
         Client $client,
         Logger $logger,
+        ListingTranslationService $translationService
     )
     {
         $this->itemHelper = $itemHelper;
@@ -49,6 +56,7 @@ class StartListingService
         $this->client = $client;
         $this->logger = $logger;
         $this->imageService = $imageService;
+        $this->translationService = $translationService;
     }
 
     public function start(Record $record):void
@@ -63,7 +71,7 @@ class StartListingService
 
             // $this->addVariations($record, $group);
 
-            // $this->addTranslations($record);
+            $this->addTranslations($record, $listingId);
 
             $this->publish($listingId, $record->variationBase->id);
         }
@@ -113,11 +121,11 @@ class StartListingService
 
     }
 
-
-
-    private function addTranslations(Record $record):void
+    private function addTranslations(Record $record, int $listingId):void
     {
-
+        //TODO add foreach for the itemDescriptionList
+        $language = 'de';
+        $this->translationService->createListingTranslation($listingId, $record, $language);
     }
 
     private function publish(int $listingId, int $variationId):void

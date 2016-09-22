@@ -40,5 +40,11 @@
 		"label": "API Log Name",
 		"type": "text",
 		"default": "Etsy"
+	},
+	{
+		"key": "language",
+		"label": "Language",
+		"type": "text",
+		"default": "de"
 	}
 ]
