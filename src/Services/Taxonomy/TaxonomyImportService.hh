@@ -2,6 +2,8 @@
 
 namespace Etsy\Services\Taxonomy;
 
+use Etsy\Api\Services\TaxonomyService;
+
 class TaxonomyImportService
 {
     private TaxonomyService $taxonomyService;
