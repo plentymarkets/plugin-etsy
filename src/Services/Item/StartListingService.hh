@@ -114,7 +114,10 @@ class StartListingService
     private function addTranslations(Record $record, int $listingId):void
     {
         //TODO add foreach for the itemDescriptionList
-        $this->listingTranslationService->createListingTranslation($listingId, $record, $this->config->get('EtsyIntegrationPlugin.shopLanguage'));
+        if(strlen($record->itemDescription->name1) > 0 && strlen($record->itemDescription->description) > 0)
+        {
+            $this->listingTranslationService->createListingTranslation($listingId, $record, $this->config->get('EtsyIntegrationPlugin.shopLanguage'));
+        }
     }
 
     private function publish(int $listingId, int $variationId):void
