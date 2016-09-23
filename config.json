@@ -3,42 +3,54 @@
 		"key": "consumerKey",
 		"label":"Consumer key",
 		"type": "text",
-		"default":"mmmgsrtdngz5f7h8jlbk81i3"
+		"default":""
 	},
 	{
 		"key": "consumerSecret",
 		"label":"Consumer secret",
 		"type": "text",
-		"default":"4voazs4ulx"
+		"default":""
 	},
 	{
 		"key": "accessToken",
 		"label":"Access token",
 		"type": "text",
-		"default":"1e597088a0b49070f12cf5fc8725ec"
+		"default":""
 	},
 	{
 		"key": "accessTokenSecret",
 		"label":"Access token secret",
 		"type": "text",
-		"default":"30e33b2cf8"
+		"default":""
 	},
 	{
 		"key": "shopId",
 		"label": "Shop ID",
 		"type": "text",
-		"default": "13651803"
+		"default": ""
 	},
     {
         "key": "referrerId",
         "label": "Referrer ID",
         "type": "text",
-        "default": "9"
+        "default": ""
     },
     {
 		"key": "logName",
 		"label": "API Log Name",
 		"type": "text",
 		"default": "Etsy"
-	}
+	},
+    {
+        "key": "userId",
+        "label": "User ID",
+        "type": "text",
+        "default": ""
+    },
+    {
+        "key": "shopLanguage",
+        "label": "Shop Language",
+        "type": "text",
+        "default": ""
+    }
 ]

@@ -32,9 +32,7 @@ class EtsyServiceProvider extends ServiceProvider
 
 		$this->getApplication()->singleton(ItemDataProviderFactory::class);
 
-         $this->getApplication()->register(EtsyRouteServiceProvider::class);
-
-
+        $this->getApplication()->register(EtsyRouteServiceProvider::class);
 	}
 
     public function boot(CronContainer $container):void

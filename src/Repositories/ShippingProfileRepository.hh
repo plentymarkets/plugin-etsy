@@ -2,22 +2,15 @@
 namespace Etsy\Repositories;
 
 use Etsy\Contracts\ShippingProfileRepositoryContract;
-use Etsy\Models\ShippingProfile;
 use Etsy\Storage\ShippingProfileStorage;
 
 class ShippingProfileRepository implements ShippingProfileRepositoryContract
 {
     private ShippingProfileStorage $storage;
 
-    private ShippingProfile $model;
-
-    public function __construct(
-        ShippingProfileStorage $storage,
-        ShippingProfile $model
-    )
+    public function __construct(ShippingProfileStorage $storage)
     {
-        $this->storage = $storage;
-        $this->model = $model;
+        $this->storage = $storage;        
     }
 
     public function create(array<string,mixed> $data):void

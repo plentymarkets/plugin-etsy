@@ -51,4 +51,34 @@ class ShippingTemplateService
 
         return [];
     }
+
+    public function findAllUserShippingProfiles(int $userId, string $language):array<int,mixed>
+    {
+        $response = $this->client->call('findAllUserShippingProfiles', [
+            'language' => $language,
+            'user_id' => $userId,
+        ],
+        [],
+        [],
+        [
+            'Entries' => 'Entries',
+            'Upgrades' => 'Upgrades',
+        ], true);
+
+        if(is_null($response) || (array_key_exists('exception', $response) && $response['exception'] === true))
+        {
+            $this->logger->log('Could not get shipping profiles for user id "' . $userId . '" and language "' . $language  . '". Reason: ...');
+
+            return []; // TODO  throw exception
+        }
+
+        $results = $response['results'];
+
+        if(is_array($results))
+        {
+            return $results;
+        }
+
+        return [];
+    }
 }
