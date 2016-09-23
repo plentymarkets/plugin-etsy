@@ -45,23 +45,82 @@ class ShippingProfileImportService
 
 	public function run():void
 	{
-		$shippingTemplateList = [27861830444];
+		$shippingProfiles = $this->shippingTemplateService->findAllUserShippingProfiles($this->config->get('EtsyIntegrationPlugin.userId'), $this->config->get('EtsyIntegrationPlugin.shopLanguage'));
 
-		if(is_array($shippingTemplateList))
+		foreach($shippingProfiles as $shippingProfile)
 		{
-			foreach($shippingTemplateList as $shippingTemplateId)
-			{
-			    $shippingTemplate = $this->shippingTemplateService->getShippingTemplate($shippingTemplateId, 'de');
+            if(is_array($shippingProfile))
+            {
+                $data = [
+                    'id' => $shippingProfile['shipping_template_id'],
+                    'title' => $shippingProfile['title'],
+                    'minProcessingDays' =>  $shippingProfile['min_processing_days'],
+                    'maxProcessingDays' => $shippingProfile['max_processing_days'],
+                    'processingDaysDisplayLabel' => $shippingProfile['processing_days_display_label'],
+                    'originCountryId' => $shippingProfile['origin_country_id'],
+                    'shippingInfo' => $this->getShippingInfo($shippingProfile),
+                    'upgrades' => $this->getShippingUpgrade($shippingProfile),
+                ];
 
-                $this->shippingProfileRepository->create([
-                    'id' => $shippingTemplate['shipping_template_id'],
-                    'title' => $shippingTemplate['title'],
-                    'minProcessingDays' =>  $shippingTemplate['min_processing_days'],
-                    'maxProcessingDays' => $shippingTemplate['max_processing_days'],
-                    'processingDaysDisplayLabel' => $shippingTemplate['processing_days_display_label'],
-                    'originCountryId' => $shippingTemplate['origin_country_id'],
-                ]);
-			}
+                $this->shippingProfileRepository->create($data);
+            }
 		}
 	}
+
+    private function getShippingInfo(array<mixed,mixed> $shippingProfile):array<int,mixed>
+    {
+        $list = [];
+
+        if(array_key_exists('Entries', $shippingProfile))
+        {
+            $entries = $shippingProfile['Entries'];
+
+            if(is_array($entries))
+            {
+                foreach($entries as $shippingInfo)
+                {
+                    $list[(int) $shippingInfo['shipping_template_entry_id']] = [
+                        'shippingTtemplateEntryId' => $shippingInfo['shipping_template_entry_id'],
+                        'currency' => $shippingInfo['currency_code'],
+                        'originCountryId' => $shippingInfo['origin_country_id'],
+                        'destinationCountryId' => $shippingInfo['destination_country_id'],
+                        'destinationRegionId' => $shippingInfo['destination_region_id'],
+                        'primaryCost' => $shippingInfo['primary_cost'],
+                        'secondaryCost' => $shippingInfo['secondary_cost'],
+                    ];
+                }
+            }
+        }
+
+        return $list;
+    }
+
+    private function getShippingUpgrade(array<mixed,mixed> $shippingProfile):array<int,mixed>
+    {
+        $list = [];
+
+        if(array_key_exists('Upgrades', $shippingProfile))
+        {
+            $upgrades = $shippingProfile['Upgrades'];
+
+            if(is_array($upgrades))
+            {
+                foreach($upgrades as $upgrade)
+                {
+                    $list[(int) $upgrade['value_id']] = [
+                        'valueId' => $upgrade['value_id'],
+                        'value' => $upgrade['value'],
+                        'price' => $upgrade['price'],
+                        'secondaryPrice' => $upgrade['secondary_price'],
+                        'currencyCode' => $upgrade['currency_code'],
+                        'type' => $upgrade['type'],
+                        'order' => $upgrade['order'],
+                        'language' => $upgrade['language'],
+                    ];
+                }
+            }
+        }
+
+        return $list;
+    }
 }
