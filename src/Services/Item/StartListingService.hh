@@ -4,11 +4,12 @@ namespace Etsy\Services\Item;
 use Plenty\Plugin\ConfigRepository;
 use Plenty\Modules\Item\DataLayer\Models\Record;
 
+use Etsy\Api\Services\ListingService;
+use Etsy\Api\Services\ListingImageService;
 use Etsy\Helper\ItemHelper;
-use Etsy\Api\Client;
 use Etsy\Logger\Logger;
-use Etsy\Services\Item\ListingImageService;
-use Etsy\Services\Item\ListingTranslationService;
+use Etsy\Api\Services\ListingTranslationService;
+
 
 class StartListingService
 {
@@ -23,40 +24,40 @@ class StartListingService
     private ItemHelper $itemHelper;
 
     /**
-    * Client $client
-    */
-    private Client $client;
-
-    /**
     * Logger $logger
     */
     private Logger $logger;
 
     /**
-    * ListingImageService $imageService;
+    * ListingService $listingService
     */
-    private ListingImageService $imageService;
+    private ListingService $listingService;
 
     /**
-     * ListingTranslationService $translationService
+    * ListingImageService $imageService;
+    */
+    private ListingImageService $listingImageService;
+
+    /**
+     * ListingTranslationService $listingTranslationService
      */
-    private ListingTranslationService $translationService;
+    private ListingTranslationService $listingTranslationService;
 
     public function __construct(
         ItemHelper $itemHelper,
         ConfigRepository $config,
-        ListingImageService $imageService,
-        Client $client,
+        ListingService $listingService,
+        ListingImageService $listingImageService,
         Logger $logger,
-        ListingTranslationService $translationService
+        ListingTranslationService $listingTranslationService
     )
     {
         $this->itemHelper = $itemHelper;
         $this->config = $config;
-        $this->client = $client;
         $this->logger = $logger;
-        $this->imageService = $imageService;
-        $this->translationService = $translationService;
+        $this->listingTranslationService = $listingTranslationService;
+        $this->listingService = $listingService;
+        $this->listingImageService = $listingImageService;
     }
 
     public function start(Record $record):void
@@ -68,8 +69,6 @@ class StartListingService
         if(!is_null($listingId))
         {
             // $this->addPictures($record, $listingId);
-
-            // $this->addVariations($record, $group);
 
             $this->addTranslations($record, $listingId);
 
@@ -84,8 +83,8 @@ class StartListingService
 
     private function createListing(Record $record):?int
     {
-        $itemData = [
-            'state'                 => 'draft',
+        $data = [
+            'state'                 => 'inactive',
             'title'                 => 'Test', // get title
             'description'           => 'Description', // get description
             'quantity'              => $this->itemHelper->getStock($record),
@@ -93,17 +92,13 @@ class StartListingService
             'shipping_template_id'  => $this->itemHelper->getItemProperty($record, 'shipping_template_id'),
             'who_made'              => $this->itemHelper->getItemProperty($record, 'who_made'),
             'is_supply'             => (string) $this->itemHelper->getItemProperty($record, 'is_supply'),
-            'when_made'             => $this->itemHelper->getItemProperty($record, 'when_made')
+            'when_made'             => $this->itemHelper->getItemProperty($record, 'when_made'),
+            'taxonomy_id' => '',
+            'should_auto_renew' => false,
+            'is_digital' => false
         ];
 
-        $response = $this->client->call('createListing', ['language' => 'de'], $itemData);
-
-        if(is_null($response) || (array_key_exists('exception', $response) && $response['exception'] === true))
-        {
-            return null; // TODO  throw exception
-        }
-
-        return (int) reset($response['results'])['listing_id'];
+        return $this->listingService->createListing('de', $data); // TODO replace all languages with the shop language
     }
 
     private function addPictures(Record $record, int $listingId):void
@@ -112,43 +107,34 @@ class StartListingService
 
         foreach($list as $image)
         {
-            $this->imageService->uploadListingImage($listingId, $image);
+            $this->listingImageService->uploadListingImage($listingId, $image);
         }
-    }
-
-    private function addVariations(Record $record, array<int,Record> $group):void
-    {
-
     }
 
     private function addTranslations(Record $record, int $listingId):void
     {
         //TODO add foreach for the itemDescriptionList
         $language = 'de';
-        $this->translationService->createListingTranslation($listingId, $record, $language);
+        $this->listingTranslationService->createListingTranslation($listingId, $record, $language);
     }
 
     private function publish(int $listingId, int $variationId):void
     {
-        $itemData = [
+        $data = [
             'state' => 'active',
         ];
 
-        $response = $this->client->call('updateListing', [
-            'language' => 'de',
-            'listing_id' => $listingId,
-        ], $itemData);
+        $response = $this->listingService->updateListing($listingId, $data);
 
-        if(is_null($response) || (array_key_exists('exception', $response) && $response['exception'] === true))
+        if($response)
         {
-            // TODO  throw exception
+            $this->itemHelper->generateSku($listingId, $variationId);
         }
-
-        $this->itemHelper->generateSku($listingId, $variationId);
+        else
+        {
+            // TODO throw exception
+        }
     }
-
-
-
 
     private function createListingMockupResponse():int
     {

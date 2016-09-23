@@ -1,11 +1,10 @@
 <?hh //strict
-
-namespace Etsy\Services\Taxonomy;
+namespace Etsy\Api\Services;
 
 use Etsy\Logger\Logger;
 use Etsy\Api\Client;
 
-class TaxonomyService
+class ShippingTemplateService
 {
     private Client $client;
 
@@ -23,15 +22,22 @@ class TaxonomyService
     /**
      * @return array<mixed>
      */
-    public function getSellerTaxonomy(string $language):array<mixed,mixed>
+    public function getShippingTemplate(int $id, string $language):array<mixed,mixed>
     {
-        $response = $this->client->call('getSellerTaxonomy', [
+        $response = $this->client->call('getShippingTemplate', [
             'language' => $language,
-        ]);
+            'shipping_template_id' => $id,
+        ],
+        [],
+        [],
+        [
+            'Entries' => 'Entries',
+            'Upgrades' => 'Upgrades',
+        ], true);
 
         if(is_null($response) || (array_key_exists('exception', $response) && $response['exception'] === true))
         {
-            $this->logger->log('Could not get seller taxonomies for language "' . $language  . '". Reason: ...');
+            $this->logger->log('Could not get shipping template id "' . $id . '" for language "' . $language  . '". Reason: ...');
 
             return []; // TODO  throw exception
         }
@@ -40,7 +46,7 @@ class TaxonomyService
 
         if(is_array($results))
         {
-            return $results;
+            return reset($results);
         }
 
         return [];

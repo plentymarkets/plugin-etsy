@@ -6,6 +6,7 @@ use Plenty\Plugin\RouteServiceProvider;
 use Plenty\Plugin\Routing\Router;
 use Etsy\Services\Order\OrderImportService;
 use Etsy\Batch\Item\ItemExportService;
+use Etsy\Services\Shipping\ShippingProfileImportService;
 use Etsy\Services\Taxonomy\TaxonomyImportService;
 
 /**
@@ -35,6 +36,10 @@ class EtsyRouteServiceProvider extends RouteServiceProvider
             $service->run('ja');
             $service->run('pt');
             $service->run('ru');
+        }]);
+
+        $router->get('etsy-test/shipping-profile-import', ['middleware' => 'oauth', 'uses' => (ShippingProfileImportService $service) ==> {
+            $service->run();
         }]);
 
         $router->get('etsy/taxonomies/{id}', ['middleware' => 'oauth', 'uses' => 'Etsy\Controllers\TaxonomyController@showEtsyTaxonomy']);

@@ -1,5 +1,5 @@
 <?hh //strict
-namespace Etsy\Services\Item;
+namespace Etsy\Api\Services;
 
 use Etsy\Api\Client;
 use Etsy\Logger\Logger;
