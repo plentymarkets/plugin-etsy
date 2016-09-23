@@ -98,7 +98,7 @@ class StartListingService
             'is_digital' => false
         ];
 
-        return $this->listingService->createListing('de', $data); // TODO replace all languages with the shop language
+        return $this->listingService->createListing($this->config->get('EtsyIntegrationPlugin.shopLanguage'), $data); // TODO replace all languages with the shop language
     }
 
     private function addPictures(Record $record, int $listingId):void
@@ -114,8 +114,7 @@ class StartListingService
     private function addTranslations(Record $record, int $listingId):void
     {
         //TODO add foreach for the itemDescriptionList
-        $language = 'de';
-        $this->listingTranslationService->createListingTranslation($listingId, $record, $language);
+        $this->listingTranslationService->createListingTranslation($listingId, $record, $this->config->get('EtsyIntegrationPlugin.shopLanguage'));
     }
 
     private function publish(int $listingId, int $variationId):void
