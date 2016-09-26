@@ -52,5 +52,21 @@
         "label": "Shop Language",
         "type": "text",
         "default": ""
-    }
+    },
+	{
+		"key": "exportLanguages",
+		"label": "Export Languages",
+		"type": "multi_select",
+		"possibleValues":{
+			"de": "De",
+			"en": "En",
+			"es": "Es",
+			"fr": "Fr",
+			"it": "It",
+			"nl": "Nl",
+			"pt": "Pt",
+			"ru": "Ru"
+		},
+		"default": ""
+	}
 ]

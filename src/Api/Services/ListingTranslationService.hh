@@ -3,7 +3,7 @@ namespace Etsy\Api\Services;
 
 use Etsy\Api\Client;
 use Etsy\Logger\Logger;
-use Plenty\Modules\Item\DataLayer\Models\Record;
+use Plenty\Modules\Item\DataLayer\Models\ItemDescription;
 
 class ListingTranslationService
 {
@@ -28,20 +28,20 @@ class ListingTranslationService
 
     /**
      * @param int $listingId
-     * @param Record $record
+     * @param ItemDescription $description
      * @param string $language
      */
-    public function createListingTranslation(int $listingId, Record $record, string $language):void
+    public function createListingTranslation(int $listingId, ItemDescription $description, string $language):void
     {
         //TODO need to be adjusted as soon as the itemDescriptionList exists
         $response = null;
-        $tags = explode(',', $record->itemDescription->keywords);
+        $tags = explode(',', $description->keywords);
 
         $data = [
             'listing_id'    => $listingId,
             'language'      => $language,
-            'title'         => $record->itemDescription->name1,
-            'description'   => strip_tags($record->itemDescription->description),
+            'title'         => $description->name1,
+            'description'   => strip_tags($description->description),
         ];
 
         if(count($tags) > 0 && strlen($tags[0]) > 0)

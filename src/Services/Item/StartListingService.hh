@@ -62,23 +62,25 @@ class StartListingService
 
     public function start(Record $record):void
     {
-        // $listingId = $this->createListing($record);
-
-        $listingId = $this->createListingMockupResponse();
-
-        if(!is_null($listingId))
+        if(strlen($record->variationMarketStatus->sku) == 0)
         {
-            // $this->addPictures($record, $listingId);
+            // $listingId = $this->createListing($record);
 
-            $this->addTranslations($record, $listingId);
+            $listingId = $this->createListingMockupResponse();
 
-            $this->publish($listingId, $record->variationBase->id);
+            if(!is_null($listingId))
+            {
+                // $this->addPictures($record, $listingId);
+
+                $this->addTranslations($record, $listingId);
+
+                $this->publish($listingId, $record->variationBase->id);
+            }
+            else
+            {
+                $this->logger->log('Could not start listing for variation id: ' . $record->variationBase->id);
+            }
         }
-        else
-        {
-            $this->logger->log('Could not start listing for variation id: ' . $record->variationBase->id);
-        }
-
     }
 
     private function createListing(Record $record):?int
@@ -114,9 +116,16 @@ class StartListingService
     private function addTranslations(Record $record, int $listingId):void
     {
         //TODO add foreach for the itemDescriptionList
-        if(strlen($record->itemDescription->name1) > 0 && strlen($record->itemDescription->description) > 0)
+        foreach($record->itemDescriptionList as $description)
         {
-            $this->listingTranslationService->createListingTranslation($listingId, $record, $this->config->get('EtsyIntegrationPlugin.shopLanguage'));
+            if(
+                in_array($description->lang, $this->config->get('EtsyIntegrationPlugin.exportLanguage'))
+                && strlen($description->name1) > 0
+                && strlen($description->description) > 0
+            )
+            {
+                $this->listingTranslationService->createListingTranslation($listingId, $description, $description->lang);
+            }
         }
     }
 
