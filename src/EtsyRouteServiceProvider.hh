@@ -6,6 +6,7 @@ use Plenty\Plugin\RouteServiceProvider;
 use Plenty\Plugin\Routing\Router;
 use Etsy\Services\Order\OrderImportService;
 use Etsy\Batch\Item\ItemExportService;
+use Etsy\Batch\Item\ItemStockUpdateService;
 use Etsy\Services\Shipping\ShippingProfileImportService;
 use Etsy\Services\Taxonomy\TaxonomyImportService;
 
@@ -25,6 +26,10 @@ class EtsyRouteServiceProvider extends RouteServiceProvider
 
         $router->get('etsy-test/item-export', ['middleware' => 'oauth', 'uses' => (ItemExportService $service) ==> {
             $service->run();
+        }]);
+
+        $router->get('etsy-test/item-stock-update', ['middleware' => 'oauth', 'uses' => (ItemStockUpdateService $service) ==> {
+        $service->run();
         }]);
 
         $router->get('etsy-test/taxonomies-import', ['middleware' => 'oauth', 'uses' => (TaxonomyImportService $service) ==> {

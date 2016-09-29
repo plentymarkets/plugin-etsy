@@ -2,11 +2,12 @@
 
 namespace Etsy\DataProviders;
 
+use Plenty\Plugin\ConfigRepository;
 use Etsy\Contracts\ItemDataProviderContract;
 use Plenty\Modules\Item\DataLayer\Models\RecordList;
 use Plenty\Modules\Item\DataLayer\Contracts\ItemDataLayerRepositoryContract;
 
-class ItemUpdateDataProvider implements ItemDataProviderContract
+class ItemStockUpdateDataProvider implements ItemDataProviderContract
 {
     const int LAST_UPDATE = 86400; // items updated in the last n seconds
 
@@ -16,11 +17,20 @@ class ItemUpdateDataProvider implements ItemDataProviderContract
     private ItemDataLayerRepositoryContract $itemDataLayerRepository;
 
     /**
-     * @param ItemDataLayerRepositoryContract $itemDataLayerRepository
+     * ConfigRepository $config
      */
-    public function __construct(ItemDataLayerRepositoryContract $itemDataLayerRepository)
+    private ConfigRepository $config;
+
+    /**
+     * ItemUpdateDataProvider constructor.
+     * @param ItemDataLayerRepositoryContract $itemDataLayerRepository
+     * @param ConfigRepository $config
+     */
+    public function __construct(ItemDataLayerRepositoryContract $itemDataLayerRepository,
+                                ConfigRepository $config)
     {
         $this->itemDataLayerRepository = $itemDataLayerRepository;
+        $this->config = $config;
     }
 
     /**
@@ -30,7 +40,7 @@ class ItemUpdateDataProvider implements ItemDataProviderContract
      */
     public function fetch():RecordList
     {
-        return $this->itemDataLayerRepository->search($this->resultFields(), $this->filters(), $this->params());
+        return $this->itemDataLayerRepository->search($this->resultFields(), $this->filters());
     }
 
     /**
@@ -40,6 +50,7 @@ class ItemUpdateDataProvider implements ItemDataProviderContract
      */
     private function resultFields():array<string, mixed>
     {
+        //TODO adjust the resultFields, most of them aren't needed for the stock update
         $resultFields = [
             'itemBase' => [
                 'id',
@@ -85,6 +96,43 @@ class ItemUpdateDataProvider implements ItemDataProviderContract
                     'stockNet'
                 ]
             ],
+
+            'variationImageList' => [
+				'params' => [
+					'all_images' => [
+						'type' => 'all', // all images
+						'fileType' => ['gif', 'jpeg', 'jpg', 'png'],
+						'imageType' => ['internal'],
+						'referenceMarketplace' => $this->config->get('EtsyIntegrationPlugin.referrerId'),
+					],
+					'only_current_variation_images_and_generic_images' => [
+						'type' => 'item_variation', // current variation + item images
+                        'fileType' => ['gif', 'jpeg', 'jpg', 'png'],
+						'imageType' => ['internal'],
+						'referenceMarketplace' => $this->config->get('EtsyIntegrationPlugin.referrerId'),
+					],
+					'only_current_variation_images' => [
+						'type' => 'variation', // current variation images
+                        'fileType' => ['gif', 'jpeg', 'jpg', 'png'],
+						'imageType' => ['internal'],
+						'referenceMarketplace' => $this->config->get('EtsyIntegrationPlugin.referrerId'),
+					],
+					'only_generic_images' => [
+						'type' => 'item', // only item images
+                        'fileType' => ['gif', 'jpeg', 'jpg', 'png'],
+						'imageType' => ['internal'],
+						'referenceMarketplace' => $this->config->get('EtsyIntegrationPlugin.referrerId'),
+					],
+				],
+				'fields' => [
+					'imageId',
+					'type',
+					'fileType',
+					'path',
+					'position',
+					'attributeValueId',
+				],
+			],
         ];
 
         return $resultFields;
@@ -113,19 +161,10 @@ class ItemUpdateDataProvider implements ItemDataProviderContract
                 'timestampFrom' => (time() - self::LAST_UPDATE),
                 'timestampTo' => time(),
                 'marketplace' => 148, // TODO grab this from config.json
+            ],
+            'variationMarketStatus.hasMarketStatus?' => [
+                'marketplace' => 148 // TODO grab this from config.json
             ]
-        ];
-    }
-
-    /**
-     * Other parameters needed by the data layer to grab results.
-     *
-     * @return array<string, mixed>
-     */
-    private function params():array<string, mixed>
-    {
-        return [
-            'group_by' => 'groupBy.itemId'
         ];
     }
 }

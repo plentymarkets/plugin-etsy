@@ -42,7 +42,7 @@ class StartListingService
         ConfigRepository $config,
         ListingService $listingService,
         ListingImageService $listingImageService,
-        Logger $logger,
+        Logger $logger
     )
     {
         $this->itemHelper = $itemHelper;
@@ -54,7 +54,14 @@ class StartListingService
 
     public function start(Record $record):void
     {
-        // $listingId = $this->createListing($record);
+        if(strlen((string)$record->variationMarketStatus->sku) == 0)
+        {
+            $listingId = $this->createListing($record);
+        }
+        else
+        {
+            $listingId = $record->variationMarketStatus->sku;
+        }
 
         $listingId = $this->createListingMockupResponse();
 
@@ -72,6 +79,7 @@ class StartListingService
         }
 
     }
+    //TODO need new method updateListing if the listing id already exists
 
     private function createListing(Record $record):?int
     {
@@ -93,6 +101,7 @@ class StartListingService
         return $this->listingService->createListing('de', $data); // TODO replace all languages with the shop language
     }
 
+    //TODO we need to write an extra method for the update
     private function addPictures(Record $record, int $listingId):void
     {
         $list = $this->itemHelper->getImageList($record->variationImageList['all_images']->toArray(), 'normal');
@@ -103,6 +112,7 @@ class StartListingService
         }
     }
 
+    //TODO we need to write an extra method for the update
     private function addTranslations(Record $record):void
     {
 
