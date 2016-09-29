@@ -5,7 +5,6 @@ use Plenty\Plugin\ConfigRepository;
 use Plenty\Modules\Item\DataLayer\Models\Record;
 
 use Etsy\Api\Services\ListingService;
-use Etsy\Api\Services\ListingImageService;
 use Etsy\Helper\ItemHelper;
 use Etsy\Logger\Logger;
 
@@ -32,16 +31,11 @@ class StockUpdateListingService
      */
     private ListingService $listingService;
 
-    /**
-     * ListingImageService $imageService;
-     */
-    private ListingImageService $listingImageService;
 
     public function __construct(
         ItemHelper $itemHelper,
         ConfigRepository $config,
         ListingService $listingService,
-        ListingImageService $listingImageService,
         Logger $logger,
     )
     {
@@ -49,7 +43,6 @@ class StockUpdateListingService
         $this->config = $config;
         $this->logger = $logger;
         $this->listingService = $listingService;
-        $this->listingImageService = $listingImageService;
     }
 
     public function stockUpdate(Record $record):void

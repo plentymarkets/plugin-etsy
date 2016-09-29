@@ -50,24 +50,10 @@ class ItemStockUpdateDataProvider implements ItemDataProviderContract
      */
     private function resultFields():array<string, mixed>
     {
-        //TODO adjust the resultFields, most of them aren't needed for the stock update
         $resultFields = [
             'itemBase' => [
                 'id',
                 'producer',
-            ],
-
-            'itemDescription' => [
-                'params' => [
-                    'language' => 'de',
-                ],
-                'fields' => [
-                    'name1',
-                    'description',
-                    'shortDescription',
-                    'technicalData',
-                    'keywords'
-                ],
             ],
 
             'variationMarketStatus' => [
@@ -84,10 +70,6 @@ class ItemStockUpdateDataProvider implements ItemDataProviderContract
                 'limitOrderByStockSelect',
             ],
 
-            'variationRetailPrice' => [
-                'price',
-            ],
-
             'variationStock' => [
                 'params' => [
                     'type' => 'virtual'
@@ -96,50 +78,13 @@ class ItemStockUpdateDataProvider implements ItemDataProviderContract
                     'stockNet'
                 ]
             ],
-
-            'variationImageList' => [
-				'params' => [
-					'all_images' => [
-						'type' => 'all', // all images
-						'fileType' => ['gif', 'jpeg', 'jpg', 'png'],
-						'imageType' => ['internal'],
-						'referenceMarketplace' => $this->config->get('EtsyIntegrationPlugin.referrerId'),
-					],
-					'only_current_variation_images_and_generic_images' => [
-						'type' => 'item_variation', // current variation + item images
-                        'fileType' => ['gif', 'jpeg', 'jpg', 'png'],
-						'imageType' => ['internal'],
-						'referenceMarketplace' => $this->config->get('EtsyIntegrationPlugin.referrerId'),
-					],
-					'only_current_variation_images' => [
-						'type' => 'variation', // current variation images
-                        'fileType' => ['gif', 'jpeg', 'jpg', 'png'],
-						'imageType' => ['internal'],
-						'referenceMarketplace' => $this->config->get('EtsyIntegrationPlugin.referrerId'),
-					],
-					'only_generic_images' => [
-						'type' => 'item', // only item images
-                        'fileType' => ['gif', 'jpeg', 'jpg', 'png'],
-						'imageType' => ['internal'],
-						'referenceMarketplace' => $this->config->get('EtsyIntegrationPlugin.referrerId'),
-					],
-				],
-				'fields' => [
-					'imageId',
-					'type',
-					'fileType',
-					'path',
-					'position',
-					'attributeValueId',
-				],
-			],
         ];
 
         return $resultFields;
     }
 
     /**
-     * Get the filters based on which we neeed to grab results.
+     * Get the filters based on which we need to grab results.
      *
      * @return array<string, mixed>
      */
@@ -156,11 +101,6 @@ class ItemStockUpdateDataProvider implements ItemDataProviderContract
             'variationStock.wasUpdatedBetween' => [
                 'timestampFrom' => (time() - self::LAST_UPDATE),
                 'timestampTo'   => time(),
-            ],
-            'variationMarketStatus.wasLastExportedBetween' =>[
-                'timestampFrom' => (time() - self::LAST_UPDATE),
-                'timestampTo' => time(),
-                'marketplace' => 148, // TODO grab this from config.json
             ],
             'variationMarketStatus.hasMarketStatus?' => [
                 'marketplace' => 148 // TODO grab this from config.json
