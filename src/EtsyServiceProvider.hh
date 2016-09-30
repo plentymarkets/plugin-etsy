@@ -10,7 +10,7 @@ use Etsy\Crons\ItemUpdateCron;
 use Etsy\Crons\OrderImportCron;
 use Etsy\Factories\ItemDataProviderFactory;
 use Etsy\DataProviders\ItemExportDataProvider;
-use Etsy\DataProviders\ItemStockUpdateDataProvider;
+use Etsy\DataProviders\ItemUpdateDataProvider;
 use Etsy\DataProviders\TaxonomyDeDataProvider;
 
 use Etsy\Contracts\EtsyTaxonomyRepositoryContract;
@@ -26,7 +26,7 @@ class EtsyServiceProvider extends ServiceProvider
         $this->getApplication()->bind(ShippingProfileRepositoryContract::class, ShippingProfileRepository::class);
 
 		$this->getApplication()->bind('Etsy\item.dataprovider.export', ItemExportDataProvider::class);
-		$this->getApplication()->bind('Etsy\item.dataprovider.update', ItemStockUpdateDataProvider::class);
+		$this->getApplication()->bind('Etsy\item.dataprovider.update', ItemUpdateDataProvider::class);
 
         $this->getApplication()->bind('Etsy\taxonomy.dataprovider.de', TaxonomyDeDataProvider::class);
 

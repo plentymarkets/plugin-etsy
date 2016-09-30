@@ -7,7 +7,7 @@ use Etsy\Contracts\ItemDataProviderContract;
 use Plenty\Modules\Item\DataLayer\Models\RecordList;
 use Plenty\Modules\Item\DataLayer\Contracts\ItemDataLayerRepositoryContract;
 
-class ItemStockUpdateDataProvider implements ItemDataProviderContract
+class ItemUpdateDataProvider implements ItemDataProviderContract
 {
     const int LAST_UPDATE = 86400; // items updated in the last n seconds
 

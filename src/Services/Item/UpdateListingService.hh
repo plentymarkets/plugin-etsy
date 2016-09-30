@@ -9,7 +9,7 @@ use Etsy\Helper\ItemHelper;
 use Etsy\Logger\Logger;
 
 
-class StockUpdateListingService
+class UpdateListingService
 {
     /**
      * ConfigRepository $config
@@ -45,7 +45,7 @@ class StockUpdateListingService
         $this->listingService = $listingService;
     }
 
-    public function stockUpdate(Record $record):void
+    public function update(Record $record):void
     {
         if(strlen((string)$record->variationMarketStatus->sku) > 0)
         {
@@ -56,7 +56,7 @@ class StockUpdateListingService
 
         if(!is_null($listingId))
         {
-            $this->stockUpdateListing($record, $listingId);
+            $this->updateListing($record, $listingId);
         }
         else
         {
@@ -69,7 +69,7 @@ class StockUpdateListingService
      * @param Record $record
      * @param int $listingId
     */
-    private function stockUpdateListing(Record $record, int $listingId):void
+    private function updateListing(Record $record, int $listingId):void
     {
         $data = [
             'listing_id' => $listingId,

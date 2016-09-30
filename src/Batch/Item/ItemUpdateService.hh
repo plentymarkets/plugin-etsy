@@ -12,21 +12,21 @@ use Etsy\Batch\AbstractBatchService as Service;
 use Etsy\Contracts\ItemDataProviderContract;
 use Etsy\Factories\ItemDataProviderFactory;
 use Etsy\Validators\UpdateListingValidator;
-use Etsy\Services\Item\StockUpdateListingService;
+use Etsy\Services\Item\UpdateListingService;
 
-class ItemStockUpdateService extends Service
+class ItemUpdateService extends Service
 {
     private Application $app;
 
     private Logger $logger;
 
-    private StockUpdateListingService $service;
+    private UpdateListingService $service;
 
     public function __construct(
         Application $app,
         Logger $logger,
         ItemDataProviderFactory $itemDataProviderFactory,
-        StockUpdateListingService $service
+        UpdateListingService $service
     )
 	{
         $this->app = $app;
@@ -52,7 +52,7 @@ class ItemStockUpdateService extends Service
                     // TODO fill here all data that we need for starting an etsy listing
                 ]);
 
-                $this->service->stockUpdate($record);
+                $this->service->update($record);
             }
             catch (ValidationException $ex)
             {
