@@ -74,6 +74,7 @@ class UpdateListingService
         $data = [
             'listing_id' => $listingId,
             'quantity'   => $this->itemHelper->getStock($record),
+            'price'      => $record->variationRetailPrice->price
         ];
 
         $this->listingService->updateListing($listingId, $data);

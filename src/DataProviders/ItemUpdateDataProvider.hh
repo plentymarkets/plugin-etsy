@@ -56,6 +56,10 @@ class ItemUpdateDataProvider implements ItemDataProviderContract
                 'producer',
             ],
 
+            'variationRetailPrice' => [
+                'price',
+            ],
+
             'variationMarketStatus' => [
                 'params' => [
                     'marketId' => 148
