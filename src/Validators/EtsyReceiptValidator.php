@@ -1,0 +1,33 @@
+<?php
+
+namespace Etsy\Validators;
+
+use Plenty\Validation\Validator;
+
+/**
+ * Class EtsyReceiptValidator
+ */
+class EtsyReceiptValidator extends Validator
+{
+	/**
+	 * @return void
+	 */
+	protected function defineAttributes()
+	{
+		$this->addInt('receipt_id', true);
+		$this->addInt('order_id', true);
+		$this->addInt('buyer_user_id', true);
+
+		$this->addString('name', true);
+		$this->addString('first_line', true);
+		$this->addString('city', true);
+		$this->addConditional('zip', true);
+		$this->addConditional('Transactions', true)->isArray()->min(1);
+		$this->addString('buyer_email', true)->email();
+
+		// TODO exists validator: check if external order id exists
+
+
+		// TODO add here all other fields that etsy needs to return us in order to save the receipt as an plenty order.
+	}
+}
