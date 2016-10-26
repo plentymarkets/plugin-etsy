@@ -35,6 +35,7 @@ class Taxonomy' . ucwords($language) . 'DataProvider implements TaxonomyDataProv
 {
     public function data():array<int,mixed>
     {
+        return null;
     }
 }';
         // save somewhere the generated content

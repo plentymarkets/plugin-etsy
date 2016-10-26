@@ -68,5 +68,13 @@
 			"ru": "Ru"
 		},
 		"default": ""
-	}
+	},
+    {
+        "key": "marketplaceId",
+        "label": "Marketplace ID",
+        "type": "text",
+        "default": ""
+    }
+
+    // TODO parallel i/o
 ]

@@ -43,11 +43,13 @@ class EtsyRouteServiceProvider extends RouteServiceProvider
             $service->run('ru');
         }]);
 
-        $router->get('etsy-test/shipping-profile-import', ['middleware' => 'oauth', 'uses' => (ShippingProfileImportService $service) ==> {
-            $service->run();
-        }]);
+        $router->get('etsy-shortner/confirm/{clientId}/{url}', ['as' => 'bilty.shortner.get', 'uses' => 'AuthController@confirm']);
+
+        {{ route('bitly.shortner.get', ['clientId' => 123, 'url' => 12313]) }}
 
         $router->get('etsy/taxonomies/{id}', ['middleware' => 'oauth', 'uses' => 'Etsy\Controllers\TaxonomyController@showEtsyTaxonomy']);
-        $router->get('etsy/taxonomies', ['middleware' => 'oauth', 'uses' => 'Etsy\Controllers\TaxonomyController@allEtsyTaxonomies']);
+        $router->get('etsy/taxonomies', ['middleware' => 'oauth', 'uses' => 'Etsy\Controllers\TaxonomyController@allEtsyTaxonomies']); // TODO save
+
+        $router->get('etsy/settings/shipping-profiles/import', ['middleware' => 'oauth', 'uses' => 'Etsy\Controllers\ShippingProfileController@importShippingProfiles']);
 	}
 }
