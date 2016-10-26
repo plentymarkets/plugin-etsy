@@ -2,6 +2,7 @@
 
 namespace Etsy\DataProviders;
 
+use Plenty\Plugin\ConfigRepository;
 use Etsy\Contracts\ItemDataProviderContract;
 use Plenty\Modules\Item\DataLayer\Models\RecordList;
 use Plenty\Modules\Item\DataLayer\Contracts\ItemDataLayerRepositoryContract;
@@ -16,11 +17,20 @@ class ItemUpdateDataProvider implements ItemDataProviderContract
     private ItemDataLayerRepositoryContract $itemDataLayerRepository;
 
     /**
-     * @param ItemDataLayerRepositoryContract $itemDataLayerRepository
+     * ConfigRepository $config
      */
-    public function __construct(ItemDataLayerRepositoryContract $itemDataLayerRepository)
+    private ConfigRepository $config;
+
+    /**
+     * ItemUpdateDataProvider constructor.
+     * @param ItemDataLayerRepositoryContract $itemDataLayerRepository
+     * @param ConfigRepository $config
+     */
+    public function __construct(ItemDataLayerRepositoryContract $itemDataLayerRepository,
+                                ConfigRepository $config)
     {
         $this->itemDataLayerRepository = $itemDataLayerRepository;
+        $this->config = $config;
     }
 
     /**
@@ -30,7 +40,7 @@ class ItemUpdateDataProvider implements ItemDataProviderContract
      */
     public function fetch():RecordList
     {
-        return $this->itemDataLayerRepository->search($this->resultFields(), $this->filters(), $this->params());
+        return $this->itemDataLayerRepository->search($this->resultFields(), $this->filters());
     }
 
     /**
@@ -46,17 +56,8 @@ class ItemUpdateDataProvider implements ItemDataProviderContract
                 'producer',
             ],
 
-            'itemDescription' => [
-                'params' => [
-                    'language' => 'de',
-                ],
-                'fields' => [
-                    'name1',
-                    'description',
-                    'shortDescription',
-                    'technicalData',
-                    'keywords'
-                ],
+            'variationRetailPrice' => [
+                'price',
             ],
 
             'variationMarketStatus' => [
@@ -73,10 +74,6 @@ class ItemUpdateDataProvider implements ItemDataProviderContract
                 'limitOrderByStockSelect',
             ],
 
-            'variationRetailPrice' => [
-                'price',
-            ],
-
             'variationStock' => [
                 'params' => [
                     'type' => 'virtual'
@@ -91,7 +88,7 @@ class ItemUpdateDataProvider implements ItemDataProviderContract
     }
 
     /**
-     * Get the filters based on which we neeed to grab results.
+     * Get the filters based on which we need to grab results.
      *
      * @return array<string, mixed>
      */
@@ -109,23 +106,9 @@ class ItemUpdateDataProvider implements ItemDataProviderContract
                 'timestampFrom' => (time() - self::LAST_UPDATE),
                 'timestampTo'   => time(),
             ],
-            'variationMarketStatus.wasLastExportedBetween' =>[
-                'timestampFrom' => (time() - self::LAST_UPDATE),
-                'timestampTo' => time(),
-                'marketplace' => 148, // TODO grab this from config.json
+            'variationMarketStatus.hasMarketStatus?' => [
+                'marketplace' => 148 // TODO grab this from config.json
             ]
-        ];
-    }
-
-    /**
-     * Other parameters needed by the data layer to grab results.
-     *
-     * @return array<string, mixed>
-     */
-    private function params():array<string, mixed>
-    {
-        return [
-            'group_by' => 'groupBy.itemId'
         ];
     }
 }

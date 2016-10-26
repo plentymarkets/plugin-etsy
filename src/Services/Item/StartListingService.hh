@@ -62,24 +62,29 @@ class StartListingService
 
     public function start(Record $record):void
     {
-        if(strlen($record->variationMarketStatus->sku) == 0)
+
+        if(strlen((string)$record->variationMarketStatus->sku) == 0)
         {
-            // $listingId = $this->createListing($record);
+            $listingId = $this->createListing($record);
+        }
+        else
+        {
+            $listingId = $record->variationMarketStatus->sku;
+        }
 
-            $listingId = $this->createListingMockupResponse();
+        $listingId = $this->createListingMockupResponse();
 
-            if(!is_null($listingId))
-            {
-                // $this->addPictures($record, $listingId);
+        if(!is_null($listingId))
+        {
+            // $this->addPictures($record, $listingId);
 
-                $this->addTranslations($record, $listingId);
+            $this->addTranslations($record, $listingId);
 
-                $this->publish($listingId, $record->variationBase->id);
-            }
-            else
-            {
-                $this->logger->log('Could not start listing for variation id: ' . $record->variationBase->id);
-            }
+            $this->publish($listingId, $record->variationBase->id);
+        }
+        else
+        {
+            $this->logger->log('Could not start listing for variation id: ' . $record->variationBase->id);
         }
     }
 

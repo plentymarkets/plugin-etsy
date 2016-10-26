@@ -27,7 +27,7 @@ class ItemExportService extends Service
         Application $app,
         Logger $logger,
         ItemDataProviderFactory $itemDataProviderFactory,
-        StartListingService $service,
+        StartListingService $service
     )
 	{
         $this->app = $app;
