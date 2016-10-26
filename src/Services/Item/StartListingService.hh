@@ -8,6 +8,7 @@ use Etsy\Api\Services\ListingService;
 use Etsy\Api\Services\ListingImageService;
 use Etsy\Helper\ItemHelper;
 use Etsy\Logger\Logger;
+use Etsy\Api\Services\ListingTranslationService;
 
 
 class StartListingService
@@ -37,40 +38,49 @@ class StartListingService
     */
     private ListingImageService $listingImageService;
 
+    /**
+     * ListingTranslationService $listingTranslationService
+     */
+    private ListingTranslationService $listingTranslationService;
+
     public function __construct(
         ItemHelper $itemHelper,
         ConfigRepository $config,
         ListingService $listingService,
         ListingImageService $listingImageService,
         Logger $logger,
+        ListingTranslationService $listingTranslationService
     )
     {
         $this->itemHelper = $itemHelper;
         $this->config = $config;
         $this->logger = $logger;
+        $this->listingTranslationService = $listingTranslationService;
         $this->listingService = $listingService;
         $this->listingImageService = $listingImageService;
     }
 
     public function start(Record $record):void
     {
-        // $listingId = $this->createListing($record);
-
-        $listingId = $this->createListingMockupResponse();
-
-        if(!is_null($listingId))
+        if(strlen($record->variationMarketStatus->sku) == 0)
         {
-            // $this->addPictures($record, $listingId);
+            // $listingId = $this->createListing($record);
 
-            // $this->addTranslations($record);
+            $listingId = $this->createListingMockupResponse();
 
-            $this->publish($listingId, $record->variationBase->id);
+            if(!is_null($listingId))
+            {
+                // $this->addPictures($record, $listingId);
+
+                $this->addTranslations($record, $listingId);
+
+                $this->publish($listingId, $record->variationBase->id);
+            }
+            else
+            {
+                $this->logger->log('Could not start listing for variation id: ' . $record->variationBase->id);
+            }
         }
-        else
-        {
-            $this->logger->log('Could not start listing for variation id: ' . $record->variationBase->id);
-        }
-
     }
 
     private function createListing(Record $record):?int
@@ -90,7 +100,7 @@ class StartListingService
             'is_digital' => false
         ];
 
-        return $this->listingService->createListing('de', $data); // TODO replace all languages with the shop language
+        return $this->listingService->createListing($this->config->get('EtsyIntegrationPlugin.shopLanguage'), $data); // TODO replace all languages with the shop language
     }
 
     private function addPictures(Record $record, int $listingId):void
@@ -103,9 +113,20 @@ class StartListingService
         }
     }
 
-    private function addTranslations(Record $record):void
+    private function addTranslations(Record $record, int $listingId):void
     {
-
+        //TODO add foreach for the itemDescriptionList
+        foreach($record->itemDescriptionList as $description)
+        {
+            if(
+                in_array($description->lang, $this->config->get('EtsyIntegrationPlugin.exportLanguage'))
+                && strlen($description->name1) > 0
+                && strlen($description->description) > 0
+            )
+            {
+                $this->listingTranslationService->createListingTranslation($listingId, $description, $description->lang);
+            }
+        }
     }
 
     private function publish(int $listingId, int $variationId):void

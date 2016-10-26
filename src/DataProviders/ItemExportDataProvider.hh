@@ -54,17 +54,13 @@ class ItemExportDataProvider implements ItemDataProviderContract
                 'producer',
             ],
 
-            'itemDescription' => [
-                'params' => [
-                    'language' => 'de',
-                ],
-                'fields' => [
-                    'name1',
-                    'description',
-                    'shortDescription',
-                    'technicalData',
-                    'keywords'
-                ],
+            'itemDescriptionList' => [
+                'name1',
+                'description',
+                'shortDescription',
+                'technicalData',
+                'keywords',
+                'lang'
             ],
 
             'variationMarketStatus' => [
