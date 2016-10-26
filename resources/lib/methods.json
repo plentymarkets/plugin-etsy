@@ -686,7 +686,10 @@
     "uri": "/listings/:listing_id/translations/:language",
     "params": {
       "listing_id": "int",
-      "language": "language"
+      "language": "string",
+      "title": "string",
+      "description": "text",
+      "tags": "array(string)"
     },
     "defaults": null,
     "type": "ListingTranslation",
