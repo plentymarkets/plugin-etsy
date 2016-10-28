@@ -7,7 +7,6 @@ use Etsy\Api\Client;
 
 /**
  * Class ReceiptService
- * @package Etsy\Api\Services
  */
 class ReceiptService
 {
@@ -42,7 +41,7 @@ class ReceiptService
 		                                                     ], [], [], [
 			                                'Transactions' => 'Transactions',
 			                                'Buyer'        => 'Buyer',
-		                                ]);
+		                                ], true);
 
 		if(!is_null($response) && is_array($response['results']))
 		{

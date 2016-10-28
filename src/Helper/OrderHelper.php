@@ -8,6 +8,19 @@ namespace Etsy\Helper;
 class OrderHelper
 {
 	/**
+	 * @var PaymentHelper
+	 */
+	private $paymentHelper;
+
+	/**
+	 * @param PaymentHelper $paymentHelper
+	 */
+	public function __construct(PaymentHelper $paymentHelper)
+	{
+		$this->paymentHelper = $paymentHelper;
+	}
+
+	/**
 	 * @param string $address
 	 * @return string
 	 */
@@ -70,7 +83,7 @@ class OrderHelper
 		$map = [
 			'other' => 0,
 			'pp'    => 14,
-			'cc'    => 12,
+			'cc'    => $this->paymentHelper->getPaymentMethodId(), // etsy direct checkout,
 			'ck'    => 1, // TODO not sure
 			'mo'    => 1, // TODO not sure
 		];

@@ -2,6 +2,8 @@
 
 namespace Etsy\Services\Order;
 
+use Plenty\Modules\Account\Contact\Contracts\ContactRepositoryContract;
+use Plenty\Modules\Order\Models\OrderItemType;
 use Plenty\Plugin\Application;
 use Plenty\Plugin\ConfigRepository;
 use Plenty\Modules\Order\Models\Order;
@@ -43,6 +45,11 @@ class OrderCreateService
 	private $variationSkuRepository;
 
 	/**
+	 * @var ContactRepositoryContract
+	 */
+	private $contactRepository;
+
+	/**
 	 * @var OrderHelper
 	 */
 	private $orderHelper;
@@ -54,8 +61,17 @@ class OrderCreateService
 	 * @param ConfigRepository               $config
 	 * @param OrderRepositoryContract        $orderRepository
 	 * @param VariationSkuRepositoryContract $variationSkuRepository
+	 * @param ContactRepositoryContract $contactRepository
 	 */
-	public function __construct(Application $app, AddressRepositoryContract $addressRepository, OrderHelper $orderHelper, ConfigRepository $config, OrderRepositoryContract $orderRepository, VariationSkuRepositoryContract $variationSkuRepository)
+	public function __construct(
+		Application $app,
+		AddressRepositoryContract $addressRepository,
+		OrderHelper $orderHelper,
+		ConfigRepository $config,
+		OrderRepositoryContract $orderRepository,
+		VariationSkuRepositoryContract $variationSkuRepository,
+		ContactRepositoryContract $contactRepository
+	)
 	{
 		$this->app                    = $app;
 		$this->addressRepository      = $addressRepository;
@@ -63,6 +79,7 @@ class OrderCreateService
 		$this->config                 = $config;
 		$this->orderRepository        = $orderRepository;
 		$this->variationSkuRepository = $variationSkuRepository;
+		$this->contactRepository      = $contactRepository;
 	}
 
 	/**
@@ -188,6 +205,9 @@ class OrderCreateService
 		$orderItems = [
 			[
 				'typeId'  => 6,
+				'itemVariationId' => 0,
+				'quantity' => 1,
+				'orderItemName' => 'Shipping Costs',
 				'amounts' => [
 					[
 						'priceOriginalGross' => $data['total_shipping_cost'],
@@ -203,8 +223,10 @@ class OrderCreateService
 		{
 			foreach($transactions as $transaction)
 			{
+				$itemVariationId = $this->matchVariationId((string) $transaction['listing_id']);
+
 				$orderItems[] = [
-					'typeId'          => 1,
+					'typeId'          => $itemVariationId > 0 ? 1 : 9,
 					'referrerId'      => $this->config->get('EtsyIntegrationPlugin.referrerId'),
 					'itemVariationId' => $this->matchVariationId((string) $transaction['listing_id']),
 					'quantity'        => $transaction['quantity'],
@@ -250,6 +272,6 @@ class OrderCreateService
 			return $variationSku->variationId;
 		}
 
-		return null;
+		return 0;
 	}
 }

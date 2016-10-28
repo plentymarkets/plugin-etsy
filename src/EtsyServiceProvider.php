@@ -11,7 +11,6 @@ use Etsy\Factories\ItemDataProviderFactory;
 use Etsy\DataProviders\ItemExportDataProvider;
 use Etsy\DataProviders\ItemUpdateDataProvider;
 use Etsy\DataProviders\TaxonomyDeDataProvider;
-
 use Etsy\Contracts\EtsyTaxonomyRepositoryContract;
 use Etsy\Repositories\EtsyTaxonomyRepository;
 use Etsy\Contracts\ShippingProfileRepositoryContract;
@@ -41,10 +40,11 @@ class EtsyServiceProvider extends ServiceProvider
 	}
 
 	/**
-	 * @param CronContainer $container
+	 * @param CronContainer          $container
 	 */
 	public function boot(CronContainer $container)
 	{
+		// register crons
 		$container->add(CronContainer::DAILY, ItemExportCron::class);
 		$container->add(CronContainer::DAILY, ItemUpdateCron::class);
 		$container->add(CronContainer::HOURLY, OrderImportCron::class);

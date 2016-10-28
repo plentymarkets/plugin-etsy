@@ -1,80 +1,156 @@
 [
-	{
-		"key": "consumerKey",
-		"label":"Consumer key",
-		"type": "text",
-		"default":""
-	},
-	{
-		"key": "consumerSecret",
-		"label":"Consumer secret",
-		"type": "text",
-		"default":""
-	},
-	{
-		"key": "accessToken",
-		"label":"Access token",
-		"type": "text",
-		"default":""
-	},
-	{
-		"key": "accessTokenSecret",
-		"label":"Access token secret",
-		"type": "text",
-		"default":""
-	},
-	{
-		"key": "shopId",
-		"label": "Shop ID",
-		"type": "text",
-		"default": ""
-	},
-    {
-        "key": "referrerId",
-        "label": "Referrer ID",
-        "type": "text",
-        "default": ""
+  {
+    "tab": "General",
+    "key": "referrerId",
+    "label": "Referrer ID",
+    "type": "text",
+    "default": ""
+  },
+  {
+    "tab": "General",
+    "key": "logName",
+    "label": "API Log Name",
+    "type": "text",
+    "default": "Etsy"
+  },
+  {
+    "tab": "General",
+    "key": "marketplaceId",
+    "label": "Marketplace ID",
+    "type": "text",
+    "default": ""
+  },
+  {
+    "tab": "Authentication",
+    "key": "consumerKey",
+    "label": "Consumer key",
+    "type": "text",
+    "default": ""
+  },
+  {
+    "tab": "Authentication",
+    "key": "consumerSecret",
+    "label": "Consumer secret",
+    "type": "text",
+    "default": ""
+  },
+  {
+    "tab": "Authentication",
+    "key": "accessToken",
+    "label": "Access token",
+    "type": "text",
+    "default": ""
+  },
+  {
+    "tab": "Authentication",
+    "key": "accessTokenSecret",
+    "label": "Access token secret",
+    "type": "text",
+    "default": ""
+  },
+  {
+    "tab": "Shop Settings",
+    "key": "shopId",
+    "label": "Shop ID",
+    "type": "text",
+    "default": ""
+  },
+  {
+    "tab": "Shop Settings",
+    "key": "userId",
+    "label": "User ID",
+    "type": "text",
+    "default": ""
+  },
+  {
+    "tab": "Shop Settings",
+    "key": "shopLanguage",
+    "label": "Shop Main Language",
+    "type": "dropdown",
+    "possibleValues": {
+      "de": "De",
+      "en": "En",
+      "es": "Es",
+      "fr": "Fr",
+      "it": "It",
+      "nl": "Nl",
+      "pt": "Pt",
+      "ru": "Ru"
     },
-    {
-		"key": "logName",
-		"label": "API Log Name",
-		"type": "text",
-		"default": "Etsy"
-	},	
-    {
-        "key": "userId",
-        "label": "User ID",
-        "type": "text",
-        "default": ""
+    "default": "de"
+  },
+  {
+    "tab": "Shop Settings",
+    "key": "exportLanguages",
+    "label": "Export Languages",
+    "type": "multi_select",
+    "possibleValues": {
+      "de": "De",
+      "en": "En",
+      "es": "Es",
+      "fr": "Fr",
+      "it": "It",
+      "nl": "Nl",
+      "pt": "Pt",
+      "ru": "Ru"
     },
-    {
-        "key": "shopLanguage",
-        "label": "Shop Language",
-        "type": "text",
-        "default": ""
+    "default": ""
+  },
+  {
+    "tab": "Payment Method",
+    "key": "paymentMethod.name",
+    "label": "Name",
+    "type": "text",
+    "default": "Etsy Direct Checkout"
+  },
+  {
+    "tab": "Payment Method",
+    "key": "paymentMethod.infoPage.type",
+    "label": "Information page",
+    "type": "dropdown",
+    "possibleValues": {
+      "0": "None",
+      "1": "External content",
+      "2": "Internal content"
     },
-	{
-		"key": "exportLanguages",
-		"label": "Export Languages",
-		"type": "multi_select",
-		"possibleValues":{
-			"de": "De",
-			"en": "En",
-			"es": "Es",
-			"fr": "Fr",
-			"it": "It",
-			"nl": "Nl",
-			"pt": "Pt",
-			"ru": "Ru"
-		},
-		"default": ""
-	},
-    {
-        "key": "marketplaceId",
-        "label": "Marketplace ID",
-        "type": "text",
-        "default": ""
-    }
-
-    // TODO parallel i/o
+    "default": "0"
+  },
+  {
+    "tab": "Payment Method",
+    "key": "paymentMethod.infoPage.intern",
+    "label": "Internal information page",
+    "type": "category_select"
+  },
+  {
+    "tab": "Payment Method",
+    "key": "paymentMethod.infoPage.extern",
+    "label": "External information page",
+    "type": "text",
+    "default": ""
+  },
+  {
+    "tab": "Payment Method",
+    "key": "paymentMethod.logo",
+    "label": "Logo",
+    "type": "dropdown",
+    "possibleValues": {
+      "0": "None",
+      "1": "Logo URL"
+    },
+    "default": "0"
+  },
+  {
+    "tab": "Payment Method",
+    "key": "paymentMethod.logo.url",
+    "label": "Logo URL",
+    "type": "text",
+    "default": ""
+  },
+  {
+    "tab": "Payment Method",
+    "key": "paymentMethod.shippingProfileId",
+    "label": "Shipping profile ID",
+    "type": "text",
+    "default": ""
+  }
 ]
