@@ -9,6 +9,7 @@
   	"inakiabt/etsy-php": "dev-master"
   },
   "runOnBuild": [
-    "Etsy\\Migrations\\CreatePaymentMethod"
+    "Etsy\\Migrations\\CreatePaymentMethod",
+    "Etsy\\Migrations\\CreateSettingsTable"
   ]
 }

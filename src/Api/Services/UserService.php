@@ -6,9 +6,9 @@ use Etsy\Api\Client;
 use Etsy\Logger\Logger;
 
 /**
- * Class ListingImageService
+ * Class UserService
  */
-class ListingImageService
+class UserService
 {
 	/**
 	 * @var Client
@@ -31,17 +31,15 @@ class ListingImageService
 	}
 
 	/**
-	 * @param int    $listingId
-	 * @param string $image
+	 * @param int|string $userId
+	 * @return array
 	 */
-	public function uploadListingImage($listingId, $image)
+	public function getUser($userId)
 	{
-		$data = [
-			'image' => 'http://testmag.co.uk/wp-content/uploads/2011/06/TEST-PRESENTS.jpg', // TODO replace $image
-		];
+		$response = $this->client->call('getUser', [], [
+			'user_id' => $userId
+		]);
 
-		$this->client->call('uploadListingImage', [
-			'listing_id' => $listingId,
-		], $data);
+		return (int) reset($response['results'])['listing_id']; // TODO maybe it's better to return the entire listing data?
 	}
 }

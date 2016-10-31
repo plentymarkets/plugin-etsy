@@ -43,6 +43,8 @@ class EtsyRouteServiceProvider extends RouteServiceProvider
             $service->run('ru');
         }]);
 
+		$router->get('etsy/auth', [ 'uses' => 'Etsy\Controllers\AuthController@showLogin']);
+		$router->get('etsy/auth-token', ['uses' => 'Etsy\Controllers\AuthController@getToken']);
         $router->get('etsy/taxonomies/{id}', ['middleware' => 'oauth', 'uses' => 'Etsy\Controllers\TaxonomyController@showEtsyTaxonomy']);
         $router->get('etsy/taxonomies', ['middleware' => 'oauth', 'uses' => 'Etsy\Controllers\TaxonomyController@allEtsyTaxonomies']); // TODO save
         $router->get('etsy/settings/shipping-profiles/import', ['middleware' => 'oauth', 'uses' => 'Etsy\Controllers\ShippingProfileController@importShippingProfiles']);

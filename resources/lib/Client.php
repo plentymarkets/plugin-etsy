@@ -4,12 +4,28 @@ use Etsy\EtsyClient;
 use Etsy\EtsyApi;
 use Etsy\EtsyRequestException;
 
+/**
+ * Class Client
+ */
 class Client
 {
+	/**
+	 * @var EtsyApi
+	 */
     private $api;
 
+	/**
+	 * @var bool
+	 */
     private $sandbox = false;
 
+	/**
+	 * @param string $consumerKey
+	 * @param string $consumerSecret
+	 * @param string $accessToken
+	 * @param string $accessTokenSecret
+	 * @param string $methodsJson
+	 */
     public function __construct(
         $consumerKey,
         $consumerSecret,
@@ -24,11 +40,21 @@ class Client
         $this->api = new EtsyApi($client, $methodsJson);
     }
 
+	/**
+	 * @param bool $sandbox
+	 */
     public function sandbox($sandbox)
     {
         $this->sandbox = $sandbox;
     }
 
+	/**
+	 * Call a given api.
+	 *
+	 * @param string $method
+	 * @param array $data
+	 * @return array
+	 */
     public function call($method, $data)
     {
         try
@@ -37,12 +63,17 @@ class Client
 
             if(!$this->sandbox)
             {
-                return $this->api->{$method}($data);
+                $response = $this->api->{$method}($data);
             }
             else
             {
-                return json_decode(file_get_contents(__DIR__ . '/' . $method . '.json'));
+                $response = json_decode(file_get_contents(__DIR__ . '/' . $method . '.json'));
             }
+
+	        if(is_null($response))
+	        {
+		        throw new \Exception('No response.');
+	        }
 
         }
         catch(EtsyRequestException $ex)
@@ -53,7 +84,7 @@ class Client
             ];
         }
 
-        catch(Exception $ex)
+        catch(\Exception $ex)
         {
             return [
                 'exception' => true,
@@ -62,6 +93,13 @@ class Client
         }
     }
 
+	/**
+	 * Prepare data for call.
+	 *
+	 * @param string $method
+	 * @param array $data
+	 * @return array
+	 */
     private function prepareData($method, $data)
     {
         if($method == 'uploadListingImage')
@@ -72,6 +110,12 @@ class Client
         return $data;
     }
 
+	/**
+	 * Prepare data for image upload.
+	 *
+	 * @param array $data
+	 * @return array
+	 */
     private function prepareForImageUpload($data)
     {
         if(isset($data['data']) && isset($data['data']['image']))

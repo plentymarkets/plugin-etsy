@@ -2,6 +2,7 @@
 
 namespace Etsy\Api;
 
+use Etsy\Helper\AccountHelper;
 use Plenty\Modules\Plugin\Libs\Contracts\LibraryCallContract;
 use Plenty\Plugin\ConfigRepository;
 
@@ -21,32 +22,43 @@ class Client
 	private $config;
 
 	/**
+	 * @var AccountHelper
+	 */
+	private $accountHelper;
+
+	/**
 	 * @param LibraryCallContract $library
 	 * @param ConfigRepository    $config
+	 * @param AccountHelper       $accountHelper
 	 */
-	public function __construct(LibraryCallContract $library, ConfigRepository $config)
+	public function __construct(LibraryCallContract $library, ConfigRepository $config, AccountHelper $accountHelper)
 	{
-		$this->library = $library;
-		$this->config  = $config;
+		$this->library       = $library;
+		$this->config        = $config;
+		$this->accountHelper = $accountHelper;
 	}
 
 	/**
 	 * Call the etsy API.
+	 *
 	 * @param  string $method       The method that should be called.
 	 * @param  array  $params       The params that should pe used for the call. Eg. /shops/:shop_id/sections/:shop_section_id -> shop_id and shop_section_id are params.
 	 * @param  array  $data         The data that should pe used for the post call.
 	 * @param  array  $fields       The fields that should be returned.
 	 * @param  array  $associations The associations that should be returned.
 	 * @param  bool   $sandbox      Default is false.
-	 * @return array|null
+	 * @throws \Exception
+	 * @return array
 	 */
 	public function call($method, array $params = [], array $data = [], array $fields = [], array $associations = [], $sandbox = false)
 	{
+		$tokenData = $this->accountHelper->getTokenData();
+
 		$response = $this->library->call('EtsyIntegrationPlugin::etsy_sdk', [
-			'consumerKey'       => $this->config->get('EtsyIntegrationPlugin.consumerKey'),
-			'consumerSecret'    => $this->config->get('EtsyIntegrationPlugin.consumerSecret'),
-			'accessToken'       => $this->config->get('EtsyIntegrationPlugin.accessToken'),
-			'accessTokenSecret' => $this->config->get('EtsyIntegrationPlugin.accessTokenSecret'),
+			'consumerKey'       => $this->accountHelper->getConsumerKey(),
+			'consumerSecret'    => $this->accountHelper->getConsumerSecret(),
+			'accessToken'       => $tokenData['accessToken'],
+			'accessTokenSecret' => $tokenData['accessTokenSecret'],
 			'sandbox'           => $sandbox,
 
 			'method'       => $method,
@@ -55,6 +67,11 @@ class Client
 			'fields'       => $fields,
 			'associations' => $associations,
 		]);
+
+		if(is_null($response) || (isset($response['exception']) && $response['exception'] == true))
+		{
+			throw new \Exception($response['message']);
+		}
 
 		return $response;
 	}

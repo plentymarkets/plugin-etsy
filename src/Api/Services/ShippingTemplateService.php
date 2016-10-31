@@ -45,13 +45,6 @@ class ShippingTemplateService
 			                                'Upgrades' => 'Upgrades',
 		                                ], true);
 
-		if(is_null($response) || (array_key_exists('exception', $response) && $response['exception'] === true))
-		{
-			$this->logger->log('Could not get shipping template id "' . $id . '" for language "' . $language . '". Reason: ...');
-
-			return []; // TODO  throw exception
-		}
-
 		$results = $response['results'];
 
 		if(is_array($results))

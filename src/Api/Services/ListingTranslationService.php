@@ -60,11 +60,5 @@ class ListingTranslationService
 			'listing_id' => $listingId,
 			'language'   => $language,
 		], $data);
-
-		if(is_null($response) || (array_key_exists('exception', $response) && $response['exception'] === true))
-		{
-			$this->logger->log('Could not create listing translation for listing id ' . $listingId . '. Reason: ...');
-			// TODO  throw exception
-		}
 	}
 }

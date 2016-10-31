@@ -39,11 +39,6 @@ class ListingService
 	{
 		$response = $this->client->call('createListing', ['language' => 'de'], $data);
 
-		if(is_null($response) || (array_key_exists('exception', $response) && $response['exception'] === true))
-		{
-			return null; // TODO  throw exception
-		}
-
 		return (int) reset($response['results'])['listing_id']; // TODO maybe it's better to return the entire listing data?
 	}
 
@@ -57,12 +52,6 @@ class ListingService
 		$response = $this->client->call('updateListing', [
 			'listing_id' => $id,
 		], $data);
-
-		if(is_null($response) || (array_key_exists('exception', $response) && $response['exception'] === true))
-		{
-			// TODO  throw exception
-			return false;
-		}
 
 		return true;
 	}

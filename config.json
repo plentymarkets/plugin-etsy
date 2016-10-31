@@ -21,34 +21,6 @@
     "default": ""
   },
   {
-    "tab": "Authentication",
-    "key": "consumerKey",
-    "label": "Consumer key",
-    "type": "text",
-    "default": ""
-  },
-  {
-    "tab": "Authentication",
-    "key": "consumerSecret",
-    "label": "Consumer secret",
-    "type": "text",
-    "default": ""
-  },
-  {
-    "tab": "Authentication",
-    "key": "accessToken",
-    "label": "Access token",
-    "type": "text",
-    "default": ""
-  },
-  {
-    "tab": "Authentication",
-    "key": "accessTokenSecret",
-    "label": "Access token secret",
-    "type": "text",
-    "default": ""
-  },
-  {
     "tab": "Shop Settings",
     "key": "shopId",
     "label": "Shop ID",

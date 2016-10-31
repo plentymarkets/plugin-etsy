@@ -52,7 +52,7 @@ class ShippingProfileImportService
 	 */
 	public function run()
 	{
-		$shippingProfiles = $this->shippingTemplateService->findAllUserShippingProfiles($this->config->get('EtsyIntegrationPlugin.userId'), $this->config->get('EtsyIntegrationPlugin.shopLanguage'));
+		$shippingProfiles = $this->shippingTemplateService->findAllUserShippingProfiles('__SELF__', $this->config->get('EtsyIntegrationPlugin.shopLanguage'));
 
 		foreach($shippingProfiles as $shippingProfile)
 		{

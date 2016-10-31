@@ -33,9 +33,9 @@ class PaymentHelper
 	{
 		$paymentMethods = $this->paymentMethodRepository->allForPlugin(self::PLUGIN_KEY);
 
-		if($paymentMethods->count())
+		foreach($paymentMethods as $paymentMethod)
 		{
-			return $paymentMethods->first()->id;
+			return $paymentMethod->id;
 		}
 
 		return null;

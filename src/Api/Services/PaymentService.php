@@ -38,13 +38,6 @@ class PaymentService
 			'receipt_id' => $receiptId,
 		], [], [], []);
 
-		if(!is_null($response) && is_array($response['results']))
-		{
-			return $response['results'];
-		}
-		else
-		{
-			return [];
-		}
+		return $response['results'];
 	}
 }
