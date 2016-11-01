@@ -13,8 +13,6 @@ use Etsy\DataProviders\ItemUpdateDataProvider;
 use Etsy\DataProviders\TaxonomyDeDataProvider;
 use Etsy\Contracts\EtsyTaxonomyRepositoryContract;
 use Etsy\Repositories\EtsyTaxonomyRepository;
-use Etsy\Contracts\ShippingProfileRepositoryContract;
-use Etsy\Repositories\ShippingProfileRepository;
 
 /**
  * Class EtsyServiceProvider
@@ -27,7 +25,6 @@ class EtsyServiceProvider extends ServiceProvider
 	public function register()
 	{
 		$this->getApplication()->bind(EtsyTaxonomyRepositoryContract::class, EtsyTaxonomyRepository::class);
-		$this->getApplication()->bind(ShippingProfileRepositoryContract::class, ShippingProfileRepository::class);
 
 		$this->getApplication()->bind('Etsy\item.dataprovider.export', ItemExportDataProvider::class);
 		$this->getApplication()->bind('Etsy\item.dataprovider.update', ItemUpdateDataProvider::class);

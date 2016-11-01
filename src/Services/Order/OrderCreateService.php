@@ -2,14 +2,17 @@
 
 namespace Etsy\Services\Order;
 
+use Etsy\Api\Services\PaymentService;
+use Etsy\Helper\PaymentHelper;
+use Plenty\Modules\Account\Contact\Contracts\ContactAddressRepositoryContract;
 use Plenty\Modules\Account\Contact\Contracts\ContactRepositoryContract;
-use Plenty\Modules\Order\Models\OrderItemType;
+use Plenty\Modules\Order\Models\Order;
+use Plenty\Modules\Payment\Contracts\PaymentOrderRelationRepositoryContract;
+use Plenty\Modules\Payment\Contracts\PaymentRepositoryContract;
+use Plenty\Modules\Payment\Models\Payment;
 use Plenty\Plugin\Application;
 use Plenty\Plugin\ConfigRepository;
-use Plenty\Modules\Order\Models\Order;
 use Plenty\Modules\Order\Contracts\OrderRepositoryContract;
-use Plenty\Modules\Account\Address\Contracts\AddressRepositoryContract;
-use Plenty\Modules\Account\Address\Models\Address;
 use Plenty\Modules\Item\VariationSku\Contracts\VariationSkuRepositoryContract;
 
 use Etsy\Helper\OrderHelper;
@@ -35,9 +38,9 @@ class OrderCreateService
 	private $orderRepository;
 
 	/**
-	 * @var AddressRepositoryContract
+	 * @var ContactAddressRepositoryContract
 	 */
-	private $addressRepository;
+	private $contactAddressRepository;
 
 	/**
 	 * @var VariationSkuRepositoryContract
@@ -55,31 +58,47 @@ class OrderCreateService
 	private $orderHelper;
 
 	/**
-	 * @param Application                    $app
-	 * @param AddressRepositoryContract      $addressRepository
-	 * @param OrderHelper                    $orderHelper
-	 * @param ConfigRepository               $config
-	 * @param OrderRepositoryContract        $orderRepository
-	 * @param VariationSkuRepositoryContract $variationSkuRepository
-	 * @param ContactRepositoryContract $contactRepository
+	 * @var PaymentService
+	 */
+	private $paymentService;
+
+	/**
+	 * @var PaymentRepositoryContract
+	 */
+	private $paymentRepository;
+
+	/**
+	 * @param Application                      $app
+	 * @param ContactAddressRepositoryContract $contactAddressRepository
+	 * @param OrderHelper                      $orderHelper
+	 * @param ConfigRepository                 $config
+	 * @param OrderRepositoryContract          $orderRepository
+	 * @param VariationSkuRepositoryContract   $variationSkuRepository
+	 * @param ContactRepositoryContract        $contactRepository
+	 * @param PaymentService                   $paymentService
+	 * @param PaymentRepositoryContract        $paymentRepository
 	 */
 	public function __construct(
 		Application $app,
-		AddressRepositoryContract $addressRepository,
+		ContactAddressRepositoryContract $contactAddressRepository,
 		OrderHelper $orderHelper,
 		ConfigRepository $config,
 		OrderRepositoryContract $orderRepository,
 		VariationSkuRepositoryContract $variationSkuRepository,
-		ContactRepositoryContract $contactRepository
+		ContactRepositoryContract $contactRepository,
+		PaymentService $paymentService,
+		PaymentRepositoryContract $paymentRepository
 	)
 	{
-		$this->app                    = $app;
-		$this->addressRepository      = $addressRepository;
-		$this->orderHelper            = $orderHelper;
-		$this->config                 = $config;
-		$this->orderRepository        = $orderRepository;
-		$this->variationSkuRepository = $variationSkuRepository;
-		$this->contactRepository      = $contactRepository;
+		$this->app                      = $app;
+		$this->contactAddressRepository = $contactAddressRepository;
+		$this->orderHelper              = $orderHelper;
+		$this->config                   = $config;
+		$this->orderRepository          = $orderRepository;
+		$this->variationSkuRepository   = $variationSkuRepository;
+		$this->contactRepository        = $contactRepository;
+		$this->paymentService           = $paymentService;
+		$this->paymentRepository        = $paymentRepository;
 	}
 
 	/**
@@ -91,12 +110,17 @@ class OrderCreateService
 		$contactId = $this->createContact($data);
 
 		// create address
-		$addressId = $this->createAddress($data);
+		$addressId = $this->createAddress($contactId, $data);
 
 		// create order
 		if(!is_null($addressId))
 		{
-			$this->createOrder($data, $addressId);
+			$order = $this->createOrder($data, $addressId);
+
+			if($this->orderHelper->isDirectCheckout((string) $data['payment_method']))
+			{
+				$this->createPayment($data, $order);
+			}
 		}
 	}
 
@@ -104,16 +128,27 @@ class OrderCreateService
 	 * @param array $data
 	 * @return int
 	 */
-	private function createContact(array $data)
+	private function createContact(array $data):int
 	{
-		return 1;
+		$contactData = [
+			'typeId' => 1,
+			'referrerId' => 1,
+			'externalId' => $data['buyer_user_id'],
+			'name' => $data['name'],
+			'email' => $data['buyer_email'],
+		];
+
+		$contact = $this->contactRepository->createContact($contactData);
+
+		return $contact->id;
 	}
 
 	/**
+	 * @param int $contactId
 	 * @param array $data
 	 * @return int
 	 */
-	private function createAddress(array $data)
+	private function createAddress(int $contactId, array $data):int
 	{
 		$addressData = [
 			'name2'      => $data['name'],
@@ -131,22 +166,17 @@ class OrderCreateService
 			],
 		];
 
-		$address = $this->addressRepository->createAddress($addressData);
+		$address = $this->contactAddressRepository->createAddress($addressData, $contactId, 2);
 
-		if($address instanceof Address)
-		{
-			return $address->id;
-		}
-
-		return null;
+		return $address->id;
 	}
 
 	/**
 	 * @param array $data
 	 * @param int   $addressId
-	 * @return int
+	 * @return Order
 	 */
-	private function createOrder(array $data, $addressId)
+	private function createOrder(array $data, $addressId):Order
 	{
 		$orderData = [
 			'typeId'   => 1,
@@ -172,7 +202,7 @@ class OrderCreateService
 			],
 		];
 
-		$orderData['addresses'] = [
+		$orderData['addressRelations'] = [
 			[
 				'typeId'    => 1,
 				'addressId' => $addressId,
@@ -188,12 +218,7 @@ class OrderCreateService
 
 		$order = $this->orderRepository->createOrder($orderData);
 
-		if($order instanceof Order)
-		{
-			return $order->id;
-		}
-
-		return null;
+		return $order;
 	}
 
 	/**
@@ -273,5 +298,50 @@ class OrderCreateService
 		}
 
 		return 0;
+	}
+
+	/**
+	 * Create payment.
+	 *
+	 * @param array $data
+	 * @param Order $order
+	 */
+	private function createPayment(array $data, Order $order)
+	{
+		$payments = $this->paymentService->findShopPaymentByReceipt($this->config->get('EtsyIntegrationPlugin.shopId'), $data['receipt_id']);
+
+		if(is_array($payments) && count($payments))
+		{
+			/** @var PaymentHelper $paymentHelper */
+			$paymentHelper = $this->app->make(PaymentHelper::class);
+
+			foreach($payments as $paymentData)
+			{
+				/** @var Payment $payment */
+				$payment = $this->app->make(Payment::class);
+				$payment->amount = $paymentData['amount_gross'] / 100;
+				$payment->mopId = $paymentHelper->getPaymentMethodId();
+				$payment->currency = $paymentData['currency'];
+				$payment->status = 2;
+				$payment->transactionType = 2;
+
+				$payment = $this->paymentRepository->createPayment($payment);
+
+				/*
+								$payment = $this->paymentRepository->createPayment([
+									'amount'          => $payment['amount_gross'] / 100,
+									'mopId'           => $paymentHelper->getPaymentMethodId(),
+									'currency'        => $payment['currency'],
+									'type'            => 'debit',
+									'status'          => Payment::STATUS_APPROVED,
+									'transactionType' => Payment::TRANSACTION_TYPE_BOOKED_POSTING,
+								]);
+				*/
+
+				$paymentOrderRelation = $this->app->make(PaymentOrderRelationRepositoryContract::class);
+
+				$paymentOrderRelation->createOrderRelation($payment, $order);
+			}
+		}
 	}
 }

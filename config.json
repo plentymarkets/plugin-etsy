@@ -14,13 +14,6 @@
     "default": "Etsy"
   },
   {
-    "tab": "General",
-    "key": "marketplaceId",
-    "label": "Marketplace ID",
-    "type": "text",
-    "default": ""
-  },
-  {
     "tab": "Shop Settings",
     "key": "shopId",
     "label": "Shop ID",

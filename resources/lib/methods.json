@@ -908,6 +908,19 @@
     "visibility": "private",
     "http_method": "GET"
   },
+  "findShopPaymentByReceipt": {
+    "name": "findShopPaymentByReceipt",
+    "description": "Get a Payment by Shop Receipt ID",
+    "uri": "/shops/:shop_id/receipts/:receipt_id/payments",
+    "params": {
+      "shop_id": "shop_id_or_name",
+      "receipt_id": "int"
+    },
+    "defaults": null,
+    "type": "Payment",
+    "visibility": "private",
+    "http_method": "GET"
+  },
   "findPaymentAdjustments": {
     "name": "findPaymentAdjustments",
     "description": "Get a Payment Adjustments from a Payment Id",

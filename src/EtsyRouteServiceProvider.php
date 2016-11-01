@@ -5,8 +5,6 @@ namespace Etsy;
 use Plenty\Plugin\RouteServiceProvider;
 use Plenty\Plugin\Routing\Router;
 use Etsy\Services\Order\OrderImportService;
-use Etsy\Batch\Item\ItemExportService;
-use Etsy\Batch\Item\ItemUpdateService;
 use Etsy\Services\Shipping\ShippingProfileImportService;
 use Etsy\Services\Taxonomy\TaxonomyImportService;
 
@@ -24,13 +22,6 @@ class EtsyRouteServiceProvider extends RouteServiceProvider
             $service->run('2016-10-10 00:00:00', date('c'));
         }]);
 
-        $router->get('etsy-test/item-export', ['middleware' => 'oauth', 'uses' => function(ItemExportService $service) {
-            $service->run();
-        }]);
-
-        $router->get('etsy-test/item-update', ['middleware' => 'oauth', 'uses' => function(ItemUpdateService $service) {
-            $service->run();
-        }]);
 
         $router->get('etsy-test/taxonomies-import', ['middleware' => 'oauth', 'uses' => function(TaxonomyImportService $service) {
             $service->run('de');
@@ -47,6 +38,36 @@ class EtsyRouteServiceProvider extends RouteServiceProvider
 		$router->get('etsy/auth-token', ['uses' => 'Etsy\Controllers\AuthController@getToken']);
         $router->get('etsy/taxonomies/{id}', ['middleware' => 'oauth', 'uses' => 'Etsy\Controllers\TaxonomyController@showEtsyTaxonomy']);
         $router->get('etsy/taxonomies', ['middleware' => 'oauth', 'uses' => 'Etsy\Controllers\TaxonomyController@allEtsyTaxonomies']); // TODO save
-        $router->get('etsy/settings/shipping-profiles/import', ['middleware' => 'oauth', 'uses' => 'Etsy\Controllers\ShippingProfileController@importShippingProfiles']);
+
+		// Settings
+		$router->post('etsy/settings', ['middleware' => 'oauth', 'uses' => 'Etsy\Controllers\SettingsController@saveAll']);
+		$router->get('etsy/settings', ['middleware' => 'oauth','uses' => 'Etsy\Controllers\SettingsController@getAll']);
+
+
+		// Shipping Profiles
+		$router->get('etsy/shipping-profiles/imported',  [
+			'middleware' => 'oauth',
+			'uses' => 'Etsy\Controllers\SettingsController@imported'
+		]);
+
+		$router->post('etsy/shipping-profiles/import',    [
+			'middleware' => 'oauth',
+			'uses' => 'Etsy\Controllers\ShippingProfileController@import'
+		]);
+
+		$router->get('etsy/shipping-profiles/correlations',  [
+			'middleware' => 'oauth',
+			'uses' => 'Etsy\Controllers\ShippingProfileController@correlations'
+		]);
+
+		$router->get('etsy/shipping-profiles/parcel-service-presets',  [
+			'middleware' => 'oauth',
+			'uses' => 'Etsy\Controllers\ShippingProfileController@parcelServicePresets'
+		]);
+
+		$router->post('etsy/shipping-profiles/correlate/{settingsId}/{parcelServicePresetId}',    [
+			'middleware' => 'oauth',
+			'uses' => 'Etsy\Controllers\ShippingProfileController@correlate'
+		]);
 	}
 }

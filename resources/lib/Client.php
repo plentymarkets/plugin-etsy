@@ -75,6 +75,8 @@ class Client
 		        throw new \Exception('No response.');
 	        }
 
+	        return $response;
+
         }
         catch(EtsyRequestException $ex)
         {

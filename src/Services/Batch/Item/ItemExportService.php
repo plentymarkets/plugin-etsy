@@ -1,24 +1,21 @@
 <?php
 
-namespace Etsy\Batch\Item;
+namespace Etsy\Services\Batch\Item;
 
 use Plenty\Plugin\Application;
 use Plenty\Exceptions\ValidationException;
 use Plenty\Modules\Item\DataLayer\Models\RecordList;
-use Plenty\Modules\Item\DataLayer\Models\Record;
 
 use Etsy\Logger\Logger;
-use Etsy\Batch\AbstractBatchService as Service;
-use Etsy\Contracts\ItemDataProviderContract;
+use Etsy\Services\Batch\AbstractBatchService;
 use Etsy\Factories\ItemDataProviderFactory;
 use Etsy\Validators\StartListingValidator;
 use Etsy\Services\Item\StartListingService;
-use Etsy\Services\Item\VariationGrouper;
 
 /**
  * Class ItemExportService
  */
-class ItemExportService extends Service
+class ItemExportService extends AbstractBatchService
 {
 	/**
 	 * @var Application

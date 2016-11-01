@@ -1,13 +1,13 @@
 <?php
 
-namespace Etsy\Batch\Item;
+namespace Etsy\Services\Batch\Item;
 
 use Plenty\Plugin\Application;
 use Plenty\Exceptions\ValidationException;
 use Plenty\Modules\Item\DataLayer\Models\RecordList;
 
 use Etsy\Logger\Logger;
-use Etsy\Batch\AbstractBatchService as Service;
+use Etsy\Services\Batch\AbstractBatchService;
 use Etsy\Factories\ItemDataProviderFactory;
 use Etsy\Validators\UpdateListingValidator;
 use Etsy\Services\Item\UpdateListingService;
@@ -15,7 +15,7 @@ use Etsy\Services\Item\UpdateListingService;
 /**
  * Class ItemUpdateService
  */
-class ItemUpdateService extends Service
+class ItemUpdateService extends AbstractBatchService
 {
 	/**
 	 * @var Application
@@ -38,7 +38,12 @@ class ItemUpdateService extends Service
 	 * @param ItemDataProviderFactory $itemDataProviderFactory
 	 * @param UpdateListingService    $service
 	 */
-	public function __construct(Application $app, Logger $logger, ItemDataProviderFactory $itemDataProviderFactory, UpdateListingService $service)
+	public function __construct(
+		Application $app,
+		Logger $logger,
+		ItemDataProviderFactory $itemDataProviderFactory,
+		UpdateListingService $service
+	)
 	{
 		$this->app     = $app;
 		$this->logger  = $logger;

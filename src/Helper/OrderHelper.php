@@ -92,6 +92,17 @@ class OrderHelper
 	}
 
 	/**
+	 * Check if payment method is Etsy direct checkout.
+	 *
+	 * @param string $paymentMethod
+	 * @return bool
+	 */
+	public function isDirectCheckout($paymentMethod):bool
+	{
+		return $this->getPaymentMethodId($paymentMethod) == $this->paymentHelper->getPaymentMethodId();
+	}
+
+	/**
 	 * @param string $address
 	 * @return array
 	 */

@@ -121,6 +121,24 @@ class StartListingService
 			'taxonomy_id'          => '',
 			'should_auto_renew'    => false,
 			'is_digital'           => false
+
+			// TODO
+			// item_weight
+			// item_weight_units
+			// item_length
+			// item_width
+			// item_height
+			// item_dimensions_unit
+			// recipient
+			// occasion
+			// style
+			// currency_code
+			// tags
+			// materials
+			// shop_section_id
+			// processing_min
+			// processing_max
+
 		];
 
 		return $this->listingService->createListing($this->config->get('EtsyIntegrationPlugin.shopLanguage'), $data); // TODO replace all languages with the shop language

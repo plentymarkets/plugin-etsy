@@ -2,17 +2,23 @@
 
 namespace Etsy\Services\Shipping;
 
+use Plenty\Modules\Market\Settings\Contracts\SettingsRepositoryContract;
+use Plenty\Modules\Market\Settings\Factories\SettingsCorrelationFactory;
+use Plenty\Modules\Market\Settings\Models\Settings;
 use Plenty\Plugin\ConfigRepository;
 
 use Etsy\Logger\Logger;
 use Etsy\Api\Services\ShippingTemplateService;
-use Etsy\Contracts\ShippingProfileRepositoryContract;
 
 /**
  * Class ShippingProfileImportService
  */
 class ShippingProfileImportService
 {
+	/**
+	 * @var SettingsRepositoryContract $settingsRepository
+	 */
+	private $settingsRepository;
 	/**
 	 * @var Logger
 	 */
@@ -29,22 +35,17 @@ class ShippingProfileImportService
 	private $shippingTemplateService;
 
 	/**
-	 * @var ShippingProfileRepositoryContract
+	 * @param SettingsRepositoryContract $settingsRepository
+	 * @param Logger                     $logger
+	 * @param ConfigRepository           $config
+	 * @param ShippingTemplateService    $shippingTemplateService
 	 */
-	private $shippingProfileRepository;
-
-	/**
-	 * @param Logger                            $logger
-	 * @param ConfigRepository                  $config
-	 * @param ShippingTemplateService           $shippingTemplateService
-	 * @param ShippingProfileRepositoryContract $shippingProfileRepository
-	 */
-	public function __construct(Logger $logger, ConfigRepository $config, ShippingTemplateService $shippingTemplateService, ShippingProfileRepositoryContract $shippingProfileRepository)
+	public function __construct(SettingsRepositoryContract $settingsRepository, Logger $logger, ConfigRepository $config, ShippingTemplateService $shippingTemplateService)
 	{
-		$this->logger                    = $logger;
-		$this->config                    = $config;
-		$this->shippingTemplateService   = $shippingTemplateService;
-		$this->shippingProfileRepository = $shippingProfileRepository;
+		$this->settingsRepository      = $settingsRepository;
+		$this->logger                  = $logger;
+		$this->config                  = $config;
+		$this->shippingTemplateService = $shippingTemplateService;
 	}
 
 	/**
@@ -56,7 +57,7 @@ class ShippingProfileImportService
 
 		foreach($shippingProfiles as $shippingProfile)
 		{
-			if(is_array($shippingProfile))
+			if(is_array($shippingProfile) && isset($shippingProfile['shipping_template_id']) && $this->canImport($shippingProfile['shipping_template_id']))
 			{
 				$data = [
 					'id'                         => $shippingProfile['shipping_template_id'],
@@ -69,12 +70,39 @@ class ShippingProfileImportService
 					'upgrades'                   => $this->getShippingUpgrade($shippingProfile),
 				];
 
-				$this->shippingProfileRepository->create($data);
+				$this->settingsRepository->create('EtsyIntegrationPlugin', SettingsCorrelationFactory::TYPE_SHIPPING, $data);
 			}
 		}
 	}
 
 	/**
+	 * Check if shipping profile id can be imported.
+	 *
+	 * @param int $id
+	 * @return bool
+	 */
+	private function canImport($id):bool
+	{
+		$importedShippingProfiles = $this->settingsRepository->find('EtsyIntegrationPlugin', SettingsCorrelationFactory::TYPE_SHIPPING);
+
+		if(count($importedShippingProfiles))
+		{
+			/** @var Settings $shippingProfile */
+			foreach($importedShippingProfiles as $shippingProfile)
+			{
+				if(isset($shippingProfile->settings['id']) && $shippingProfile->settings['id'] == $id)
+				{
+					return false;
+				}
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * Get the shipping info.
+	 *
 	 * @param array $shippingProfile
 	 * @return array
 	 */
@@ -91,13 +119,13 @@ class ShippingProfileImportService
 				foreach($entries as $shippingInfo)
 				{
 					$list[ (int) $shippingInfo['shipping_template_entry_id'] ] = [
-						'shippingTtemplateEntryId' => $shippingInfo['shipping_template_entry_id'],
-						'currency'                 => $shippingInfo['currency_code'],
-						'originCountryId'          => $shippingInfo['origin_country_id'],
-						'destinationCountryId'     => $shippingInfo['destination_country_id'],
-						'destinationRegionId'      => $shippingInfo['destination_region_id'],
-						'primaryCost'              => $shippingInfo['primary_cost'],
-						'secondaryCost'            => $shippingInfo['secondary_cost'],
+						'shippingTemplateEntryId' => $shippingInfo['shipping_template_entry_id'],
+						'currency'                => $shippingInfo['currency_code'],
+						'originCountryId'         => $shippingInfo['origin_country_id'],
+						'destinationCountryId'    => $shippingInfo['destination_country_id'],
+						'destinationRegionId'     => $shippingInfo['destination_region_id'],
+						'primaryCost'             => $shippingInfo['primary_cost'],
+						'secondaryCost'           => $shippingInfo['secondary_cost'],
 					];
 				}
 			}
@@ -107,6 +135,8 @@ class ShippingProfileImportService
 	}
 
 	/**
+	 * Get the shipping upgrade data.
+	 *
 	 * @param array $shippingProfile
 	 * @return array
 	 */

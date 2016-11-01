@@ -1,6 +1,6 @@
 <?php
 
-namespace Etsy\Batch;
+namespace Etsy\Services\Batch;
 
 use Plenty\Modules\Item\DataLayer\Models\RecordList;
 
