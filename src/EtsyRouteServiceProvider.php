@@ -46,27 +46,27 @@ class EtsyRouteServiceProvider extends RouteServiceProvider
 
 		// Shipping Profiles
 		$router->get('etsy/shipping-profiles/imported',  [
-			'middleware' => 'oauth',
-			'uses' => 'Etsy\Controllers\SettingsController@imported'
+			// 'middleware' => 'oauth',
+			'uses' => 'Etsy\Controllers\ShippingProfileController@imported'
 		]);
 
 		$router->post('etsy/shipping-profiles/import',    [
-			'middleware' => 'oauth',
+			// 'middleware' => 'oauth',
 			'uses' => 'Etsy\Controllers\ShippingProfileController@import'
 		]);
 
 		$router->get('etsy/shipping-profiles/correlations',  [
-			'middleware' => 'oauth',
+			// 'middleware' => 'oauth',
 			'uses' => 'Etsy\Controllers\ShippingProfileController@correlations'
 		]);
 
 		$router->get('etsy/shipping-profiles/parcel-service-presets',  [
-			'middleware' => 'oauth',
+			// 'middleware' => 'oauth',
 			'uses' => 'Etsy\Controllers\ShippingProfileController@parcelServicePresets'
 		]);
 
-		$router->post('etsy/shipping-profiles/correlate/{settingsId}/{parcelServicePresetId}',    [
-			'middleware' => 'oauth',
+		$router->post('etsy/shipping-profiles/correlate',    [
+			// 'middleware' => 'oauth',
 			'uses' => 'Etsy\Controllers\ShippingProfileController@correlate'
 		]);
 	}

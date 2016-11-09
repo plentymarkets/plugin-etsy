@@ -9,6 +9,8 @@ use Plenty\Modules\Order\Shipping\Contracts\ParcelServicePresetRepositoryContrac
 use Plenty\Plugin\Application;
 use Plenty\Plugin\Controller;
 use Etsy\Services\Shipping\ShippingProfileImportService;
+use Plenty\Plugin\Http\Request;
+use Plenty\Plugin\Http\Response;
 
 /**
  * Class ShippingProfileController
@@ -21,11 +23,18 @@ class ShippingProfileController extends Controller
 	private $app;
 
 	/**
-	 * @param Application $app
+	 * @var Request
 	 */
-	public function __construct(Application $app)
+	private $request;
+
+	/**
+	 * @param Application $app
+	 * @param Request     $request
+	 */
+	public function __construct(Application $app, Request $request)
 	{
-		$this->app = $app;
+		$this->app     = $app;
+		$this->request = $request;
 	}
 
 	/**
@@ -49,10 +58,14 @@ class ShippingProfileController extends Controller
 			{
 				if(isset($settings->settings['id']) && isset($settings->settings['title']))
 				{
-					$nameList[$settings->id] = $settings->settings['title'];
+					$nameList[] = [
+						'id'   => $settings->id,
+						'name' => $settings->settings['title'],
+					];
 				}
 			}
 		}
+
 		return $nameList;
 	}
 
@@ -60,6 +73,7 @@ class ShippingProfileController extends Controller
 	 * Import shipping profiles.
 	 *
 	 * @param ShippingProfileImportService $service
+	 *
 	 * @return void
 	 */
 	public function import(ShippingProfileImportService $service)
@@ -71,13 +85,12 @@ class ShippingProfileController extends Controller
 	 * Get the shipping profile correlations.
 	 *
 	 * @param SettingsCorrelationFactory $settingsCorrelationFactory
+	 *
 	 * @return array
 	 */
 	public function correlations(SettingsCorrelationFactory $settingsCorrelationFactory)
 	{
-		$correlations = $settingsCorrelationFactory
-			->type(SettingsCorrelationFactory::TYPE_SHIPPING)
-			->all('EtsyIntegrationPlugin');
+		$correlations = $settingsCorrelationFactory->type(SettingsCorrelationFactory::TYPE_SHIPPING)->all('EtsyIntegrationPlugin');
 
 		return $correlations;
 	}
@@ -100,7 +113,10 @@ class ShippingProfileController extends Controller
 		{
 			foreach($list as $parcelServicePreset)
 			{
-				$nameList[$parcelServicePreset->id] = $parcelServicePreset->backendName;
+				$nameList[] = [
+					'id'   => $parcelServicePreset->id,
+					'name' => $parcelServicePreset->backendName,
+				];
 			}
 		}
 
@@ -109,16 +125,22 @@ class ShippingProfileController extends Controller
 
 
 	/**
-	 * Correlate an settings ID with an parcel service preset ID.
+	 * Correlate settings IDs with an parcel service preset IDs.
 	 *
-	 * @param int $settingsId
-	 * @param int $parcelServicePresetId
 	 * @param SettingsCorrelationFactory $settingsCorrelationFactory
 	 */
-	public function correlate($settingsId, $parcelServicePresetId, SettingsCorrelationFactory $settingsCorrelationFactory)
+	public function correlate(SettingsCorrelationFactory $settingsCorrelationFactory)
 	{
-		$settingsCorrelationFactory
-			->type(SettingsCorrelationFactory::TYPE_SHIPPING)
-			->createRelation($settingsId, $parcelServicePresetId);
+		$settingsCorrelationFactory->type(SettingsCorrelationFactory::TYPE_SHIPPING)->clear('EtsyIntegrationPlugin');
+
+		foreach($this->request->get('correlations', []) as $correlationData)
+		{
+			if(isset($correlationData['settingsId']) && $correlationData['settingsId'] && isset($correlationData['parcelServicePresetId']) && $correlationData['parcelServicePresetId'])
+			{
+				$settingsCorrelationFactory->type(SettingsCorrelationFactory::TYPE_SHIPPING)->createRelation($correlationData['settingsId'], $correlationData['parcelServicePresetId']);
+			}
+		}
+
+		return pluginApp(Response::class)->make('', 204);
 	}
 }

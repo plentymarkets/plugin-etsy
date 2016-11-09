@@ -115,7 +115,7 @@ class OrderCreateService
 		// create order
 		if(!is_null($addressId))
 		{
-			$order = $this->createOrder($data, $addressId);
+			$order = $this->createOrder($data, $addressId, $contactId);
 
 			if($this->orderHelper->isDirectCheckout((string) $data['payment_method']))
 			{
@@ -174,9 +174,10 @@ class OrderCreateService
 	/**
 	 * @param array $data
 	 * @param int   $addressId
+	 * @param int $contactId
 	 * @return Order
 	 */
-	private function createOrder(array $data, $addressId):Order
+	private function createOrder(array $data, $addressId, $contactId):Order
 	{
 		$orderData = [
 			'typeId'   => 1,
@@ -213,6 +214,16 @@ class OrderCreateService
 				'addressId' => $addressId,
 			],
 		];
+
+		$orderData['relations'] = [
+			[
+				'referenceType' => 'contact',
+				'referenceId' => $contactId,
+				'relation' => 'receiver',
+			]
+		];
+
+
 
 		$orderData['orderItems'] = $this->getOrderItems($data);
 

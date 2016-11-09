@@ -1,0 +1,66 @@
+{
+  "defaultEntryPoint": "index.html",
+  "namespace": "PHP7Plugin",
+  "menuEntries": [
+    {
+      "label": "Grundeinstellungen",
+      "menu": "settings/markets/etsy",
+      "urlKey": "settings",
+      "entryPoint": "index.html"
+    },
+    {
+      "label": "Zweiter Menü-Eintrag",
+      "menu": "settings/markets/etsy",
+      "urlKey": "second",
+      "entryPoint": "index.html"
+    },
+    {
+      "label": "Dritter Menü-Eintrag",
+      "menu": "settings/markets/etsy",
+      "urlKey": "third",
+      "entryPoint": "index.html"
+    },
+    {
+      "label": "Dritter Menü-Eintrag",
+      "menu": "settings/items/etsy",
+      "urlKey": "third",
+      "entryPoint": "index.html"
+    },
+    {
+      "label": "Dritter Menü-Eintrag",
+      "menu": "settings/listings/etsy",
+      "urlKey": "third",
+      "entryPoint": "index.html"
+    },
+    {
+      "label": "Dritter Menü-Eintrag",
+      "menu": "settings/shop/etsy",
+      "urlKey": "third",
+      "entryPoint": "index.html"
+    },
+    {
+      "label": "Dritter Menü-Eintrag",
+      "menu": "settings/stock/etsy",
+      "urlKey": "third",
+      "entryPoint": "index.html"
+    },
+    {
+      "label": "Dritter Menü-Eintrag",
+      "menu": "settings/crm/etsy",
+      "urlKey": "third",
+      "entryPoint": "index.html"
+    },
+    {
+      "label": "Dritter Menü-Eintrag",
+      "menu": "settings/orders/etsy",
+      "urlKey": "third",
+      "entryPoint": "index.html"
+    },
+    {
+      "label": "Dritter Menü-Eintrag",
+      "menu": "settings/cms/etsy",
+      "urlKey": "third",
+      "entryPoint": "index.html"
+    }
+  ]
+}
