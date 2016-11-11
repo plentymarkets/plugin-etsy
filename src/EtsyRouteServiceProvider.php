@@ -7,7 +7,6 @@ use Plenty\Plugin\Routing\Router;
 use Etsy\Services\Order\OrderImportService;
 use Etsy\Services\Shipping\ShippingProfileImportService;
 use Etsy\Services\Taxonomy\TaxonomyImportService;
-
 /**
  * Class EtsyRouteServiceProvider
  */
@@ -34,15 +33,35 @@ class EtsyRouteServiceProvider extends RouteServiceProvider
             $service->run('ru');
         }]);
 
-		$router->get('etsy/auth', [ 'uses' => 'Etsy\Controllers\AuthController@showLogin']);
-		$router->get('etsy/auth-token', ['uses' => 'Etsy\Controllers\AuthController@getToken']);
+
         $router->get('etsy/taxonomies/{id}', ['middleware' => 'oauth', 'uses' => 'Etsy\Controllers\TaxonomyController@showEtsyTaxonomy']);
         $router->get('etsy/taxonomies', ['middleware' => 'oauth', 'uses' => 'Etsy\Controllers\TaxonomyController@allEtsyTaxonomies']); // TODO save
 
-		// Settings
-		$router->post('etsy/settings', ['middleware' => 'oauth', 'uses' => 'Etsy\Controllers\SettingsController@saveAll']);
-		$router->get('etsy/settings', ['middleware' => 'oauth','uses' => 'Etsy\Controllers\SettingsController@getAll']);
 
+
+		// Auth
+		$router->get('etsy/auth/login-url', [
+			'uses' => 'Etsy\Controllers\AuthController@getLoginUrl'
+		]);
+
+		$router->get('etsy/auth/access-token', [
+			'uses' => 'Etsy\Controllers\AuthController@getAccessToken'
+		]);
+
+		$router->get('etsy/auth/status', [
+			'uses' => 'Etsy\Controllers\AuthController@status'
+		]);
+
+		// Settings
+		$router->post('etsy/settings/save', [
+			// 'middleware' => 'oauth',
+			'uses' => 'Etsy\Controllers\SettingsController@save'
+		]);
+
+		$router->get('etsy/settings/all', [
+			// 'middleware' => 'oauth',
+			'uses' => 'Etsy\Controllers\SettingsController@all'
+		]);
 
 		// Shipping Profiles
 		$router->get('etsy/shipping-profiles/imported',  [

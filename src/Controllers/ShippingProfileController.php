@@ -18,22 +18,15 @@ use Plenty\Plugin\Http\Response;
 class ShippingProfileController extends Controller
 {
 	/**
-	 * @var Application
-	 */
-	private $app;
-
-	/**
 	 * @var Request
 	 */
 	private $request;
 
 	/**
-	 * @param Application $app
 	 * @param Request     $request
 	 */
-	public function __construct(Application $app, Request $request)
+	public function __construct(Request $request)
 	{
-		$this->app     = $app;
 		$this->request = $request;
 	}
 
@@ -47,7 +40,7 @@ class ShippingProfileController extends Controller
 		$nameList = [];
 
 		/** @var SettingsRepositoryContract $marketSettingsRepository */
-		$marketSettingsRepository = $this->app->make(SettingsRepositoryContract::class);
+		$marketSettingsRepository = pluginApp(SettingsRepositoryContract::class);
 
 		$list = $marketSettingsRepository->find('EtsyIntegrationPlugin', SettingsCorrelationFactory::TYPE_SHIPPING);
 
@@ -79,6 +72,8 @@ class ShippingProfileController extends Controller
 	public function import(ShippingProfileImportService $service)
 	{
 		$service->run();
+
+		return pluginApp(Response::class)->make('', 204);
 	}
 
 	/**
@@ -105,7 +100,7 @@ class ShippingProfileController extends Controller
 		$nameList = [];
 
 		/** @var ParcelServicePresetRepositoryContract $parcelServicePresetRepository */
-		$parcelServicePresetRepository = $this->app->make(ParcelServicePresetRepositoryContract::class);
+		$parcelServicePresetRepository = pluginApp(ParcelServicePresetRepositoryContract::class);
 
 		$list = $parcelServicePresetRepository->getPresetList();
 

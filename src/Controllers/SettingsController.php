@@ -3,7 +3,6 @@
 namespace Etsy\Controllers;
 
 use Plenty\Modules\Plugin\DataBase\Contracts\DataBase;
-use Plenty\Plugin\Application;
 use Plenty\Plugin\Controller;
 use Plenty\Plugin\Http\Request;
 
@@ -25,15 +24,13 @@ class SettingsController extends Controller
 	private $dataBase;
 
 	/**
-	 * @var Application
+	 * @param Request     $request
+	 * @param DataBase    $dataBase
 	 */
-	private $app;
-
-	public function __construct(Request $request, DataBase $dataBase, Application $app)
+	public function __construct(Request $request, DataBase $dataBase)
 	{
 		$this->request = $request;
 		$this->dataBase = $dataBase;
-		$this->app = $app;
 	}
 
 	/**
@@ -42,7 +39,7 @@ class SettingsController extends Controller
 	 * @return array
 	 * @throws \Exception
 	 */
-	public function get()
+	public function all()
 	{
 		$settings = $this->dataBase->find(Settings::class, 3);
 
@@ -63,7 +60,7 @@ class SettingsController extends Controller
 	{
 		$settingsData = $this->request->get('settings');
 
-		$settings = $this->app->make(Settings::class);
+		$settings = pluginApp(Settings::class);
 
 		if($settings instanceof Settings)
 		{
