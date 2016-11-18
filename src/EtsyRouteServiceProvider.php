@@ -7,6 +7,7 @@ use Plenty\Plugin\Routing\Router;
 use Etsy\Services\Order\OrderImportService;
 use Etsy\Services\Shipping\ShippingProfileImportService;
 use Etsy\Services\Taxonomy\TaxonomyImportService;
+
 /**
  * Class EtsyRouteServiceProvider
  */
@@ -34,12 +35,28 @@ class EtsyRouteServiceProvider extends RouteServiceProvider
         }]);
 
 
-        $router->get('etsy/taxonomies/{id}', ['middleware' => 'oauth', 'uses' => 'Etsy\Controllers\TaxonomyController@showEtsyTaxonomy']);
-        $router->get('etsy/taxonomies', ['middleware' => 'oauth', 'uses' => 'Etsy\Controllers\TaxonomyController@allEtsyTaxonomies']); // TODO save
+		/** Taxonomies */
+		$router->get('etsy/taxonomies/imported', [
+			// 'middleware' => 'oauth',
+			'uses' => 'Etsy\Controllers\TaxonomyController@imported'
+		]);
 
+		$router->get('etsy/taxonomies/categories', [
+			// 'middleware' => 'oauth',
+			'uses' => 'Etsy\Controllers\TaxonomyController@categories'
+		]);
 
+		$router->post('etsy/taxonomies/correlate', [
+			// 'middleware' => 'oauth',
+			'uses' => 'Etsy\Controllers\TaxonomyController@correlate'
+		]);
 
-		// Auth
+		$router->get('etsy/taxonomies/correlations',  [
+			// 'middleware' => 'oauth',
+			'uses' => 'Etsy\Controllers\TaxonomyController@correlations'
+		]);
+
+		/** Auth */
 		$router->get('etsy/auth/login-url', [
 			'uses' => 'Etsy\Controllers\AuthController@getLoginUrl'
 		]);
@@ -52,7 +69,7 @@ class EtsyRouteServiceProvider extends RouteServiceProvider
 			'uses' => 'Etsy\Controllers\AuthController@status'
 		]);
 
-		// Settings
+		/** Settings */
 		$router->post('etsy/settings/save', [
 			// 'middleware' => 'oauth',
 			'uses' => 'Etsy\Controllers\SettingsController@save'
@@ -63,7 +80,7 @@ class EtsyRouteServiceProvider extends RouteServiceProvider
 			'uses' => 'Etsy\Controllers\SettingsController@all'
 		]);
 
-		// Shipping Profiles
+		/** Shipping Profiles */
 		$router->get('etsy/shipping-profiles/imported',  [
 			// 'middleware' => 'oauth',
 			'uses' => 'Etsy\Controllers\ShippingProfileController@imported'

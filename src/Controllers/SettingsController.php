@@ -7,6 +7,7 @@ use Plenty\Plugin\Controller;
 use Plenty\Plugin\Http\Request;
 
 use Etsy\Models\Settings;
+use Plenty\Plugin\Http\Response;
 
 /**
  * Class SettingsController
@@ -47,10 +48,8 @@ class SettingsController extends Controller
 		{
 			return json_decode($settings->value, true);
 		}
-		else
-		{
-			throw new \Exception('Could not load settings.');
-		}
+
+		return [];
 	}
 
 	/**
@@ -58,7 +57,10 @@ class SettingsController extends Controller
 	 */
 	public function save()
 	{
-		$settingsData = $this->request->get('settings');
+		$settingsData = [
+			'shop' => $this->request->get('shop', []),
+			'payment' => $this->request->get('payment', []),
+		];
 
 		$settings = pluginApp(Settings::class);
 
@@ -72,5 +74,7 @@ class SettingsController extends Controller
 
 			$this->dataBase->save($settings);
 		}
+
+		return pluginApp(Response::class)->make('', 204);
 	}
 }

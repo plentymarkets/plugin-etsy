@@ -3,22 +3,28 @@
   "namespace": "Etsy",
   "menuEntries": [
     {
+      "label": "Authentication",
+      "menu": "settings/markets/etsy",
+      "urlKey": "authentication",
+      "entryPoint": "index.html?action=login"
+    },
+    {
       "label": "Settings",
       "menu": "settings/markets/etsy",
       "urlKey": "settings",
       "entryPoint": "index.html?action=settings"
     },
     {
-      "label": "Shipping profiles",
+      "label": "Shipping Profiles",
       "menu": "settings/markets/etsy",
       "urlKey": "shipping",
       "entryPoint": "index.html?action=shipping"
     },
     {
-      "label": "Authentication",
+      "label": "Taxonomies",
       "menu": "settings/markets/etsy",
-      "urlKey": "authentication",
-      "entryPoint": "index.html?action=login"
+      "urlKey": "taxonomies",
+      "entryPoint": "index.html?action=taxonomies"
     }
   ]
 }
