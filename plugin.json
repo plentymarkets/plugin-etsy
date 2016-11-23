@@ -10,6 +10,7 @@
   },
   "runOnBuild": [
     "Etsy\\Migrations\\CreatePaymentMethod",
-    "Etsy\\Migrations\\CreateSettingsTable"
+    "Etsy\\Migrations\\CreateSettingsTable",
+    "Etsy\\Migrations\\CreateOrderReferrer"
   ]
 }

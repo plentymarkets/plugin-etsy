@@ -2,6 +2,8 @@
 namespace Etsy;
 
 use Plenty\Modules\Cron\Services\CronContainer;
+use Plenty\Modules\EventProcedures\Services\Entries\ProcedureEntry;
+use Plenty\Modules\EventProcedures\Services\EventProceduresService;
 use Plenty\Plugin\ServiceProvider;
 
 use Etsy\Crons\ItemExportCron;
@@ -38,12 +40,19 @@ class EtsyServiceProvider extends ServiceProvider
 
 	/**
 	 * @param CronContainer          $container
+	 * @param EventProceduresService $eventProceduresService
 	 */
-	public function boot(CronContainer $container)
+	public function boot(CronContainer $container, EventProceduresService $eventProceduresService)
 	{
 		// register crons
 		$container->add(CronContainer::DAILY, ItemExportCron::class);
 		$container->add(CronContainer::DAILY, ItemUpdateCron::class);
 		$container->add(CronContainer::HOURLY, OrderImportCron::class);
+
+		// register event actions
+		$eventProceduresService->registerProcedure('etsy', ProcedureEntry::PROCEDURE_GROUP_ORDER, [
+			                                                 'de' => 'Versandbestätigung an Etsy senden',
+			                                                 'en' => 'Send shipping notification to Etsy'
+		                                                 ], 'Etsy\\Procedures\\ShippingNotificationEventProcedure@run');
 	}
 }

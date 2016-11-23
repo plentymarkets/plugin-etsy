@@ -59,7 +59,7 @@ class TaxonomyController extends Controller
 		$categoryBranchRepo = pluginApp(CategoryBranchRepositoryContract::class);
 
 		/** @var PaginationResponseContract $categories */
-		$categories = $categoryBranchRepo->get($this->request->get('page', 1), $this->request->get('itemsPerPage', 25));
+		$categories = $categoryBranchRepo->get($this->request->get('page', 1), $this->request->get('itemsPerPage', 25), ['type' => 'item']);
 
 		$list = [];
 

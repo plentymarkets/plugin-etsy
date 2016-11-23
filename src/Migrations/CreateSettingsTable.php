@@ -3,6 +3,7 @@ namespace Etsy\Migrations;
 
 use Etsy\Models\Settings;
 use Plenty\Modules\Plugin\DataBase\Contracts\Migrate;
+use Plenty\Modules\Plugin\DynamoDb\Contracts\DynamoDbRepositoryContract;
 
 /**
  * Class CreateSettingsTable
@@ -10,10 +11,10 @@ use Plenty\Modules\Plugin\DataBase\Contracts\Migrate;
 class CreateSettingsTable
 {
 	/**
-	 * @param Migrate $migrate
+	 * @param DynamoDbRepositoryContract $dynamoDbRepository
 	 */
-	public function run(Migrate $migrate)
+	public function run(DynamoDbRepositoryContract $dynamoDbRepository, Migrate $migrate)
 	{
-		$migrate->createTable(Settings::class, 10, 20);
+		$migrate->createTable(Settings::class, 10, 20); // TODO use config (use default 3,3) // use DynamoDBRepo
 	}
 }

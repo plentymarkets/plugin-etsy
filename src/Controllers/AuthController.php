@@ -6,12 +6,9 @@ use Etsy\Api\Services\AuthService;
 use Etsy\Helper\AccountHelper;
 use Etsy\Models\Settings;
 use Plenty\Modules\Helper\Services\WebstoreHelper;
-use Plenty\Modules\Plugin\DataBase\Contracts\DataBase;
-use Plenty\Modules\System\Contracts\WebstoreRepositoryContract;
 use Plenty\Modules\System\Models\WebstoreConfiguration;
 use Plenty\Plugin\Controller;
 use Plenty\Plugin\Http\Request;
-use Plenty\Plugin\Http\Response;
 
 /**
  * Class AuthController
@@ -24,23 +21,17 @@ class AuthController extends Controller
 	private $service;
 
 	/**
-	 * @var DataBase
-	 */
-	private $dataBase;
-
-	/**
 	 * @var AccountHelper
 	 */
 	private $accountHelper;
 
 	/**
 	 * @param AuthService $service
-	 * @param DataBase    $dataBase
+	 * @param AccountHelper $accountHelper
 	 */
-	public function __construct(AuthService $service, DataBase $dataBase, AccountHelper $accountHelper)
+	public function __construct(AuthService $service, AccountHelper $accountHelper)
 	{
 		$this->service  = $service;
-		$this->dataBase = $dataBase;
 		$this->accountHelper = $accountHelper;
 	}
 
@@ -84,7 +75,7 @@ class AuthController extends Controller
 			throw new \Exception($data['error']);
 		}
 
-		$this->saveTokenRequest($data);
+		$this->accountHelper->saveTokenRequest($data);
 
 		return [
 			'loginUrl' => $data['login_url'],
@@ -103,7 +94,7 @@ class AuthController extends Controller
 	{
 		try
 		{
-			$settings = $this->getTokenRequest();
+			$settings = $this->accountHelper->getTokenRequest();
 
 			$requestTokenData = json_decode($settings->value, true);
 
@@ -114,7 +105,7 @@ class AuthController extends Controller
 
 			$accessTokenData = $this->service->getAccessToken($requestTokenData['oauth_token'], $requestTokenData['oauth_token_secret'], $request->get('oauth_verifier'));
 
-			$this->saveAccessToken($accessTokenData);
+			$this->accountHelper->saveAccessToken($accessTokenData);
 
 			return 'Login was successful. This window will close automatically.<script>window.close();</script>';
 		}
@@ -123,56 +114,5 @@ class AuthController extends Controller
 			throw new \Exception($e->getMessage(), $e->getCode());
 		}
 
-	}
-
-	/**
-	 * Save the token request data.
-	 *
-	 * @param $data
-	 */
-	private function saveTokenRequest($data)
-	{
-		$settings = pluginApp(Settings::class);
-		if($settings instanceof Settings)
-		{
-			$settings->id        = 1;
-			$settings->name      = 'token_request';
-			$settings->value     = (string) json_encode($data);
-			$settings->createdAt = date('Y-m-d H:i:s');
-			$settings->updatedAt = date('Y-m-d H:i:s');
-
-			$this->dataBase->save($settings);
-		}
-	}
-
-	/**
-	 * Get the token request data.
-	 *
-	 * @return null|Settings
-	 */
-	private function getTokenRequest()
-	{
-		return $this->dataBase->find(Settings::class, 1);
-	}
-
-	/**
-	 * Save the access token data.
-	 *
-	 * @param array $data
-	 */
-	private function saveAccessToken($data)
-	{
-		$settings = pluginApp(Settings::class);
-
-		if($settings instanceof Settings)
-		{
-			$settings->id        = 2;
-			$settings->name      = 'access_token';
-			$settings->value     = (string) json_encode($data);
-			$settings->createdAt = date('Y-m-d H:i:s');
-			$settings->updatedAt = date('Y-m-d H:i:s');
-
-			$this->dataBase->save($settings);
-		}
 	}
 }

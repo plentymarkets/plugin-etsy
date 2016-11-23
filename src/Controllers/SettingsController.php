@@ -2,12 +2,11 @@
 
 namespace Etsy\Controllers;
 
-use Plenty\Modules\Plugin\DataBase\Contracts\DataBase;
 use Plenty\Plugin\Controller;
 use Plenty\Plugin\Http\Request;
-
-use Etsy\Models\Settings;
 use Plenty\Plugin\Http\Response;
+
+use Etsy\Helper\SettingsHelper;
 
 /**
  * Class SettingsController
@@ -15,23 +14,16 @@ use Plenty\Plugin\Http\Response;
 class SettingsController extends Controller
 {
 	/**
-	 * @var Request
+	 * @var SettingsHelper
 	 */
-	private $request;
+	private $settingsHelper;
 
 	/**
-	 * @var DataBase
+	 * @param SettingsHelper $settingsHelper
 	 */
-	private $dataBase;
-
-	/**
-	 * @param Request     $request
-	 * @param DataBase    $dataBase
-	 */
-	public function __construct(Request $request, DataBase $dataBase)
+	public function __construct(SettingsHelper $settingsHelper)
 	{
-		$this->request = $request;
-		$this->dataBase = $dataBase;
+		$this->settingsHelper = $settingsHelper;
 	}
 
 	/**
@@ -42,9 +34,9 @@ class SettingsController extends Controller
 	 */
 	public function all()
 	{
-		$settings = $this->dataBase->find(Settings::class, 3);
+		$settings = $this->settingsHelper->get(SettingsHelper::SETTINGS_SETTINGS);
 
-		if($settings instanceof Settings)
+		if($settings)
 		{
 			return json_decode($settings->value, true);
 		}
@@ -57,23 +49,10 @@ class SettingsController extends Controller
 	 */
 	public function save()
 	{
-		$settingsData = [
-			'shop' => $this->request->get('shop', []),
-			'payment' => $this->request->get('payment', []),
-		];
-
-		$settings = pluginApp(Settings::class);
-
-		if($settings instanceof Settings)
-		{
-			$settings->id = 3;
-			$settings->name = 'settings';
-			$settings->value = (string) json_encode($settingsData);
-			$settings->createdAt = date('Y-m-d H:i:s');
-			$settings->updatedAt = date('Y-m-d H:i:s');
-
-			$this->dataBase->save($settings);
-		}
+		$this->settingsHelper->save(SettingsHelper::SETTINGS_SETTINGS, (string) json_encode([
+			                                                                'shop'    => pluginApp(Request::class)->get('shop', []),
+			                                                                'payment' => pluginApp(Request::class)->get('payment', []),
+		                                                                ]));
 
 		return pluginApp(Response::class)->make('', 204);
 	}

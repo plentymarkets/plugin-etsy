@@ -1,0 +1,51 @@
+{
+  "save": "Save",
+  "search": "Search",
+  "add": "Add",
+  "delete": "Delete",
+  "addCorrelation": "Add correlation",
+  "importEtsyShippingProfiles": "Import Etsy Shipping Profiles",
+
+  "settings": "Settings",
+  "shopSettings": "Shop Settings",
+  "shopId": "Shop ID",
+  "mainShopLanguage": "Main Shop Language",
+  "exportLanguages": "Export Languages",
+  "paymentSettings": "Payment Settings",
+  "paymentMethodName": "Payment Method Name",
+
+  "taxonomyCorrelations": "Taxonomy Correlations",
+  "categories": "Categories",
+  "category": "Category",
+  "taxonomy": "Etsy Taxonomy",
+
+  "shippingProfilesCorrelations": "Shipping Profiles Correlations",
+  "parcelServicePreset": "Parcel Service Preset",
+  "etsyShippingProfile": "Etsy Shipping Profile",
+
+  "authentication": "Authentication",
+  "checkingLoginStatus": "Checking authentication status...",
+  "alreadyAuthenticated": "You are already authenticated but if you wish you can renew your token.",
+  "notAuthenticated": "You are currently not authenticated. Please log in.",
+  "loginToEtsy": "Login to Etsy",
+
+  "errorLoginStatusCheck": "Could not check the login status",
+  "errorFetchLoginUrl": "Could not get the login url",
+  "errorLoadSettings": "Could not load settings",
+  "errorSaveSettings": "Could not save settings",
+  "errorLoadShippingProfileCorrelations": "Could not load shipping profile correlations",
+  "errorLoadParcelServicePresetList": "Could not load parcel service preset list",
+  "errorLoadShippingProfileSettingsList": "Could not load shipping profile settings list",
+  "errorSaveShippingProfileCorrelations": "Shipping profile correlations not saved",
+  "errorImportShippingProfiles": "Shipping profiles could not be imported",
+  "errorLoadTaxonomies": "Taxonomies could not be loaded",
+  "errorLoadTaxonomyCorrelations": "Taxonomy correlations could not be loaded",
+  "errorLoadCategories": "Categories could not be loaded",
+  "errorSaveTaxonomyCorrelations": "Taxonomy correlations could not be saved",
+
+
+  "successSaveSettings": "Settings saved successfully",
+  "successSaveShippingProfileCorrelations": "Shipping profile correlations saved successfully",
+  "successImportShippingProfiles": "Shipping profiles imported successfully",
+  "successSaveTaxonomyCorrelations": "Taxonomy correlations saved successfully"
+}

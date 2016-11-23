@@ -3,8 +3,9 @@
 namespace Etsy\Helper;
 
 use Etsy\Models\Settings;
-use Plenty\Modules\Plugin\DataBase\Contracts\DataBase;
 use Plenty\Plugin\Application;
+
+use Etsy\Helper\SettingsHelper;
 
 /**
  * Class AccountHelper
@@ -17,18 +18,18 @@ class AccountHelper
 	private $app;
 
 	/**
-	 * @var DataBase
+	 * @var SettingsHelper
 	 */
-	private $dataBase;
+	private $settingsHelper;
 
 	/**
 	 * @param Application $app
-	 * @param DataBase $dataBase
+	 * @param SettingsHelper $settingsHelper
 	 */
-	public function __construct(Application $app, DataBase $dataBase)
+	public function __construct(Application $app, SettingsHelper $settingsHelper)
 	{
 		$this->app = $app;
-		$this->dataBase = $dataBase;
+		$this->settingsHelper = $settingsHelper;
 	}
 
 	/**
@@ -38,9 +39,9 @@ class AccountHelper
 	 */
 	public function getTokenData()
 	{
-		$settings = $this->dataBase->find(Settings::class, 2);
+		$settings = $this->settingsHelper->get(SettingsHelper::SETTINGS_ACCESS_TOKEN);
 
-		if($settings instanceof Settings)
+		if($settings)
 		{
 			$data = json_decode($settings->value, true);
 
@@ -69,5 +70,42 @@ class AccountHelper
 	public function getConsumerSecret()
 	{
 		return 'dzi5pnxwxm';
+	}
+
+	/**
+	 * Get the token request data.
+	 *
+	 * @return null|Settings
+	 */
+	public function getTokenRequest()
+	{
+		$settings = $this->settingsHelper->get(SettingsHelper::SETTINGS_TOKEN_REQUEST);
+
+		if($settings)
+		{
+			return $settings;
+		}
+
+		return null;
+	}
+
+	/**
+	 * Save the token request data.
+	 *
+	 * @param $data
+	 */
+	public function saveTokenRequest($data)
+	{
+		$this->settingsHelper->save(SettingsHelper::SETTINGS_TOKEN_REQUEST, (string) json_encode($data));
+	}
+
+	/**
+	 * Save the access token data.
+	 *
+	 * @param array $data
+	 */
+	public function saveAccessToken($data)
+	{
+		$this->settingsHelper->save(SettingsHelper::SETTINGS_ACCESS_TOKEN, (string) json_encode($data));
 	}
 }

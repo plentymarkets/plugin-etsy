@@ -2,7 +2,6 @@
 
 namespace Etsy\Repositories;
 
-use Illuminate\Database\Eloquent\Collection;
 use Etsy\Contracts\EtsyTaxonomyRepositoryContract;
 use Etsy\Factories\TaxonomyDataProviderFactory;
 
