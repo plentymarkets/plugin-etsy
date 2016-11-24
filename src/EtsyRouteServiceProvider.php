@@ -35,6 +35,17 @@ class EtsyRouteServiceProvider extends RouteServiceProvider
         }]);
 
 
+		/** Properties */
+		$router->post('etsy/properties/import', [
+			// 'middleware' => 'oauth',
+			'uses' => 'Etsy\Controllers\PropertyController@import'
+		]);
+
+		$router->get('etsy/properties/imported', [
+			// 'middleware' => 'oauth',
+			'uses' => 'Etsy\Controllers\PropertyController@imported'
+		]);
+
 		/** Taxonomies */
 		$router->get('etsy/taxonomies/imported', [
 			// 'middleware' => 'oauth',
