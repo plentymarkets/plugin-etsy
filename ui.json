@@ -25,6 +25,12 @@
       "menu": "settings/markets/etsy",
       "urlKey": "taxonomies",
       "entryPoint": "index.html?action=taxonomies"
+    },
+    {
+      "label": "Properties",
+      "menu": "settings/markets/etsy",
+      "urlKey": "properties",
+      "entryPoint": "index.html?action=properties"
     }
   ]
 }

@@ -6,6 +6,7 @@ use Plenty\Modules\Market\Settings\Contracts\SettingsRepositoryContract;
 use Plenty\Modules\Market\Settings\Factories\SettingsCorrelationFactory;
 
 use Etsy\Api\Services\DataTypeService;
+use Plenty\Modules\Market\Settings\Models\Settings;
 
 /**
  * Class PropertyImportService
@@ -28,12 +29,12 @@ class PropertyImportService
 	private $currentProperties = [];
 
 	/**
-	 * @param DataTypeService $dataTypeService
+	 * @param DataTypeService            $dataTypeService
 	 * @param SettingsRepositoryContract $settingsRepository
 	 */
 	public function __construct(DataTypeService $dataTypeService, SettingsRepositoryContract $settingsRepository)
 	{
-		$this->dataTypeService = $dataTypeService;
+		$this->dataTypeService    = $dataTypeService;
 		$this->settingsRepository = $settingsRepository;
 	}
 
@@ -41,7 +42,7 @@ class PropertyImportService
 	 * Import the properties.
 	 *
 	 * @param array $properties
-	 * @param bool $force
+	 * @param bool  $force
 	 */
 	public function run($properties, $force = false)
 	{
@@ -54,31 +55,31 @@ class PropertyImportService
 
 		if(is_array($properties) && count($properties))
 		{
-			$languages = ['de', 'en'];
+			$languages = ['en', 'de', 'it', 'es', 'pt', 'fr', 'nl']; // the order here is very important for calculating the hash key
 
-			foreach ($properties as $propertyKey)
+			foreach($properties as $propertyKey)
 			{
 				try
 				{
 					$enum = [];
 
-					foreach ($languages as $language)
+					foreach($languages as $language)
 					{
 						if($propertyKey == 'when_made')
 						{
-							$enum[$language] = $this->dataTypeService->describeWhenMadeEnum($language);
+							$enum[ $language ] = $this->dataTypeService->describeWhenMadeEnum($language);
 						}
 						elseif($propertyKey == 'who_made')
 						{
-							$enum[$language] = $this->dataTypeService->describeWhoMadeEnum($language);
+							$enum[ $language ] = $this->dataTypeService->describeWhoMadeEnum($language);
 						}
 						elseif($propertyKey == 'occasion')
 						{
-							$enum[$language] = $this->dataTypeService->describeOccasionEnum($language);
+							$enum[ $language ] = $this->dataTypeService->describeOccasionEnum($language);
 						}
 						elseif($propertyKey == 'recipient')
 						{
-							$enum[$language] = $this->dataTypeService->describeRecipientEnum($language);
+							$enum[ $language ] = $this->dataTypeService->describeRecipientEnum($language);
 						}
 					}
 
@@ -102,11 +103,11 @@ class PropertyImportService
 	{
 		$propertySettings = $this->settingsRepository->find('EtsyIntegrationPlugin', SettingsCorrelationFactory::TYPE_PROPERTY);
 
-		if (count($propertySettings))
+		if(count($propertySettings))
 		{
 			foreach($propertySettings as $propertySetting)
 			{
-				$this->currentProperties[$propertySetting->settings['propertyKey']][$this->calculateHash($propertySetting->settings)] = $propertySetting->settings;
+				$this->currentProperties[ $propertySetting->settings['mainPropertyKey'] ][ $propertySetting->settings['hash'] ] = $propertySetting;
 			}
 		}
 	}
@@ -115,37 +116,47 @@ class PropertyImportService
 	 * Create settings for a given property key and enums.
 	 *
 	 * @param string $propertyKey
-	 * @param array $propertyEnum
+	 * @param array  $propertyEnum
 	 */
 	private function createSettings($propertyKey, $propertyEnum)
 	{
 		$defaultPropertyEnum = reset($propertyEnum);
 
-		if (isset($defaultPropertyEnum['values']) && is_array($defaultPropertyEnum['values']) && count($defaultPropertyEnum['values']))
+		if(isset($defaultPropertyEnum['values']) && is_array($defaultPropertyEnum['values']) && count($defaultPropertyEnum['values']))
 		{
-			foreach ($defaultPropertyEnum['values'] as $propertyValueKey)
+			foreach($defaultPropertyEnum['values'] as $key => $propertyValueKey)
 			{
 				$data = [
-					'propertyKey'      => $propertyKey,
-					'propertyValueKey' => $propertyValueKey,
+					'mainPropertyKey' => $propertyKey,
+					'hash'            => $this->calculateHash($propertyKey, $propertyValueKey),
 				];
 
-				foreach (array_keys($propertyEnum) as $lang)
+				foreach(array_keys($propertyEnum) as $lang)
 				{
-					$data['propertyName'][$lang] = $this->getPropertyName($propertyKey, $lang);
+					$data['propertyKey'][ $lang ]      = $propertyKey;
+					$data['propertyValueKey'][ $lang ] = $propertyEnum[ $lang ]['values'][ $key ];
 
-					if (isset($propertyEnum[$lang]['formatted']) && is_array($propertyEnum[$lang]['formatted']) && isset($propertyEnum[$lang]['formatted'][$propertyValueKey]) && strlen($propertyEnum[$lang]['formatted'][$propertyValueKey]))
+					$data['propertyName'][ $lang ] = $this->getPropertyName($propertyKey, $lang);
+
+					if(isset($propertyEnum[ $lang ]['formatted']) && is_array($propertyEnum[ $lang ]['formatted']) && isset($propertyEnum[ $lang ]['formatted'][ $propertyEnum[ $lang ]['values'][ $key ] ]) && strlen($propertyEnum[ $lang ]['formatted'][ $propertyEnum[ $lang ]['values'][ $key ] ]))
 					{
-						$data['propertyValueName'][$lang] = $propertyEnum[$lang]['formatted'][$propertyValueKey];
-					} else
+						$data['propertyValueName'][ $lang ] = $propertyEnum[ $lang ]['formatted'][ $propertyEnum[ $lang ]['values'][ $key ] ];
+					}
+					else
 					{
-						$data['propertyValueName'][$lang] = $this->formatName($propertyValueKey);
+						$data['propertyValueName'][ $lang ] = $this->formatName($propertyEnum[ $lang ]['values'][ $key ]);
 					}
 				}
 
-				if (!$this->isImported($propertyKey, $data))
+				$currentProperty = $this->currentProperty($data);
+
+				if(!$currentProperty)
 				{
 					$this->settingsRepository->create('EtsyIntegrationPlugin', SettingsCorrelationFactory::TYPE_PROPERTY, $data);
+				}
+				else
+				{
+					$this->settingsRepository->update($data, $currentProperty->id);
 				}
 			}
 		}
@@ -183,9 +194,9 @@ class PropertyImportService
 			]
 		];
 
-		if (isset($map[$propertyKey]) && isset($map[$propertyKey][$lang]) && strlen($map[$propertyKey][$lang]))
+		if(isset($map[ $propertyKey ]) && isset($map[ $propertyKey ][ $lang ]) && strlen($map[ $propertyKey ][ $lang ]))
 		{
-			return $map[$propertyKey][$lang];
+			return $map[ $propertyKey ][ $lang ];
 		}
 
 		return $this->formatName($propertyKey);
@@ -206,31 +217,33 @@ class PropertyImportService
 	/**
 	 * Check if property is already imported.
 	 *
-	 * @param string $propertyKey
-	 *
 	 * @param array $data
 	 *
-	 * @return bool
+	 * @return Settings|null
 	 */
-	private function isImported($propertyKey, $data)
+	private function currentProperty($data)
 	{
-		if (isset($this->currentProperties[$propertyKey]) && isset($this->currentProperties[$propertyKey][$this->calculateHash($data)]))
+		if(isset($this->currentProperties[ $data['mainPropertyKey'] ]) && isset($this->currentProperties[ $data['mainPropertyKey'] ][ $data['hash'] ]))
 		{
-			return true;
+			return $this->currentProperties[ $data['mainPropertyKey'] ][ $data['hash'] ];
 		}
 
-		return false;
+		return null;
 	}
 
 	/**
 	 * Calculate hash value for array.
 	 *
-	 * @param array $data
+	 * @param string $propertyKey
+	 * @param string $propertyValueKey
 	 *
 	 * @return string
 	 */
-	private function calculateHash($data)
+	private function calculateHash($propertyKey, $propertyValueKey)
 	{
-		return md5(serialize($data));
+		return md5(json_encode([
+			                       'propertyKey'      => $propertyKey,
+			                       'propertyValueKey' => $propertyValueKey
+		                       ]));
 	}
 }
