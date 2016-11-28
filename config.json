@@ -1,66 +1,28 @@
 [
   {
     "tab": "General",
-    "key": "referrerId",
-    "label": "Referrer ID",
-    "type": "text",
-    "default": ""
-  },
-  {
-    "tab": "General",
     "key": "logName",
     "label": "API Log Name",
     "type": "text",
     "default": "Etsy"
   },
+
   {
-    "tab": "Shop Settings",
-    "key": "shopId",
-    "label": "Shop ID",
+    "tab": "General",
+    "key": "readCapacityUnits",
+    "label": "Read Capacity Units",
     "type": "text",
-    "default": ""
+    "default": "3"
   },
+
   {
-    "tab": "Shop Settings",
-    "key": "userId",
-    "label": "User ID",
+    "tab": "General",
+    "key": "writeCapacityUnits",
+    "label": "Write Capacity Units",
     "type": "text",
-    "default": ""
+    "default": "2"
   },
-  {
-    "tab": "Shop Settings",
-    "key": "shopLanguage",
-    "label": "Shop Main Language",
-    "type": "dropdown",
-    "possibleValues": {
-      "de": "De",
-      "en": "En",
-      "es": "Es",
-      "fr": "Fr",
-      "it": "It",
-      "nl": "Nl",
-      "pt": "Pt",
-      "ru": "Ru"
-    },
-    "default": "de"
-  },
-  {
-    "tab": "Shop Settings",
-    "key": "exportLanguages",
-    "label": "Export Languages",
-    "type": "multi_select",
-    "possibleValues": {
-      "de": "De",
-      "en": "En",
-      "es": "Es",
-      "fr": "Fr",
-      "it": "It",
-      "nl": "Nl",
-      "pt": "Pt",
-      "ru": "Ru"
-    },
-    "default": ""
-  },
+
   {
     "tab": "Payment Method",
     "key": "paymentMethod.name",

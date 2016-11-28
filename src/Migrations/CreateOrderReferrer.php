@@ -15,26 +15,34 @@ class CreateOrderReferrer
 	 */
 	private $settingsHelper;
 
+	/**
+	 * CreateOrderReferrer constructor.
+	 *
+	 * @param SettingsHelper $settingsHelper
+	 */
 	public function __construct(SettingsHelper $settingsHelper)
 	{
 		$this->settingsHelper = $settingsHelper;
 	}
 
 	/**
-	 * @param Migrate $migrate
+	 * @param OrderReferrerRepositoryContract $orderReferrerRepo
 	 */
-	public function run(Migrate $migrate)
+	public function run(OrderReferrerRepositoryContract $orderReferrerRepo)
 	{
-		/** @var OrderReferrerRepositoryContract $orderReferrerRepo */
-		$orderReferrerRepo = pluginApp(OrderReferrerRepositoryContract::class);
-
 		$orderReferrer = $orderReferrerRepo->create([
 			                                            'editable'    => false,
 			                                            'backendName' => 'Etsy',
 			                                            'name'        => 'Etsy',
 			                                            'origin'      => 'EtsyIntegrationPlugin',
 		                                            ]);
+		$retries = 0;
 
-		$this->settingsHelper->save(SettingsHelper::SETTINGS_ORDER_REFERRER, $orderReferrer->id);
+		do
+		{
+			// due to the fact that CreateSettingsTable migration just run, it could be that DynamoDB needs some time to create the table, so we try again
+			$status = $this->settingsHelper->save(SettingsHelper::SETTINGS_ORDER_REFERRER, $orderReferrer->id);
+		}
+		while($status === false || ++$retries < 3);
 	}
 }

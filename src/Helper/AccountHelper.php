@@ -2,7 +2,6 @@
 
 namespace Etsy\Helper;
 
-use Etsy\Models\Settings;
 use Plenty\Plugin\Application;
 
 use Etsy\Helper\SettingsHelper;
@@ -39,11 +38,11 @@ class AccountHelper
 	 */
 	public function getTokenData()
 	{
-		$settings = $this->settingsHelper->get(SettingsHelper::SETTINGS_ACCESS_TOKEN);
+		$data = $this->settingsHelper->get(SettingsHelper::SETTINGS_ACCESS_TOKEN);
 
-		if($settings)
+		if($data)
 		{
-			$data = json_decode($settings->value, true);
+			$data = json_decode($data, true);
 
 			return [
 				'accessToken'       => isset($data['accessToken']) ? $data['accessToken'] : '',
@@ -75,15 +74,15 @@ class AccountHelper
 	/**
 	 * Get the token request data.
 	 *
-	 * @return null|Settings
+	 * @return null|array
 	 */
 	public function getTokenRequest()
 	{
-		$settings = $this->settingsHelper->get(SettingsHelper::SETTINGS_TOKEN_REQUEST);
+		$data = $this->settingsHelper->get(SettingsHelper::SETTINGS_TOKEN_REQUEST);
 
-		if($settings)
+		if($data)
 		{
-			return $settings;
+			return json_decode($data, true);
 		}
 
 		return null;

@@ -4,7 +4,6 @@ namespace Etsy\Controllers;
 
 use Etsy\Api\Services\AuthService;
 use Etsy\Helper\AccountHelper;
-use Etsy\Models\Settings;
 use Plenty\Modules\Helper\Services\WebstoreHelper;
 use Plenty\Modules\System\Models\WebstoreConfiguration;
 use Plenty\Plugin\Controller;
@@ -60,13 +59,15 @@ class AuthController extends Controller
 	/**
 	 * Get the login url.
 	 *
+	 * @param WebstoreHelper $webstoreHelper
+	 *
 	 * @return array
 	 * @throws \Exception
 	 */
-	public function getLoginUrl()
+	public function getLoginUrl(WebstoreHelper $webstoreHelper)
 	{
 		/** @var WebstoreConfiguration $webstoreConfig */
-		$webstore = pluginApp(WebstoreHelper::class)->getCurrentWebstoreConfiguration();
+		$webstore = $webstoreHelper->getCurrentWebstoreConfiguration();
 
 		$data = $this->service->getRequestToken($webstore->domainSsl . '/etsy/auth/access-token');
 
@@ -94,16 +95,9 @@ class AuthController extends Controller
 	{
 		try
 		{
-			$settings = $this->accountHelper->getTokenRequest();
+			$tokenRequestData = $this->accountHelper->getTokenRequest();
 
-			$requestTokenData = json_decode($settings->value, true);
-
-			if(!$settings instanceof Settings)
-			{
-				throw new \Exception('Invalid token settings.');
-			}
-
-			$accessTokenData = $this->service->getAccessToken($requestTokenData['oauth_token'], $requestTokenData['oauth_token_secret'], $request->get('oauth_verifier'));
+			$accessTokenData = $this->service->getAccessToken($tokenRequestData['oauth_token'], $tokenRequestData['oauth_token_secret'], $request->get('oauth_verifier'));
 
 			$this->accountHelper->saveAccessToken($accessTokenData);
 

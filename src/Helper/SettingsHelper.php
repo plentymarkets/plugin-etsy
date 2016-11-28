@@ -2,75 +2,67 @@
 
 namespace Etsy\Helper;
 
-use Etsy\Models\Settings;
-use Plenty\Modules\Plugin\DataBase\Contracts\DataBase;
+use Plenty\Modules\Plugin\DynamoDb\Contracts\DynamoDbRepositoryContract;
 
 /**
  * Class SettingsHelper
  */
 class SettingsHelper
 {
-	const SETTINGS_TOKEN_REQUEST = 1;
-	const SETTINGS_ACCESS_TOKEN = 2;
-	const SETTINGS_SETTINGS = 3;
-	const SETTINGS_ORDER_REFERRER = 4;
-
-	private $settingsMap = [
-		self::SETTINGS_TOKEN_REQUEST  => 'token_request',
-		self::SETTINGS_ACCESS_TOKEN   => 'access_token',
-		self::SETTINGS_SETTINGS       => 'settings',
-		self::SETTINGS_ORDER_REFERRER => 'order_referrer',
-	];
+	const SETTINGS_TOKEN_REQUEST = 'token_request';
+	const SETTINGS_ACCESS_TOKEN = 'access_token';
+	const SETTINGS_SETTINGS = 'settings';
+	const SETTINGS_ORDER_REFERRER = 'order_referrer';
 
 	/**
-	 * @var DataBase
+	 * @var DynamoDbRepositoryContract
 	 */
-	private $dataBase;
+	private $dynamoDbRepo;
 
 	/**
-	 * @param DataBase $dataBase
+	 * @param DynamoDbRepositoryContract $dynamoDbRepository
 	 */
-	public function __construct(DataBase $dataBase)
+	public function __construct(DynamoDbRepositoryContract $dynamoDbRepository)
 	{
-		$this->dataBase = $dataBase;
+		$this->dynamoDbRepo = $dynamoDbRepository;
 	}
 
 	/**
 	 * Save settings to database.
 	 *
-	 * @param int    $id
+	 * @param string $name
 	 * @param string $value
+	 *
+	 * @return bool
 	 */
-	public function save($id, $value)
+	public function save($name, $value)
 	{
-		$settings = pluginApp(Settings::class);
-
-		if($settings instanceof Settings)
-		{
-			$settings->id        = $id;
-			$settings->name      = $this->settingsMap[$id];
-			$settings->value     = $value;
-			$settings->createdAt = date('Y-m-d H:i:s');
-			$settings->updatedAt = date('Y-m-d H:i:s');
-
-			$this->dataBase->save($settings);
-		}
+		return $this->dynamoDbRepo->putItem('EtsyIntegrationPlugin', 'settings', [
+			'name'  => [
+				'S' => (string) $name,
+			],
+			'value' => [
+				'S' => (string) $value,
+			],
+		]);
 	}
 
 	/**
 	 * Get settings for a given id.
 	 *
-	 * @param int $id
+	 * @param string $name
 	 *
-	 * @return Settings|null
+	 * @return string|null
 	 */
-	public function get($id)
+	public function get($name)
 	{
-		$settings = $this->dataBase->find(Settings::class, $id);
+		$data = $this->dynamoDbRepo->getItem('EtsyIntegrationPlugin', 'settings', true, [
+			'name' => ['S' => $name]
+		]);
 
-		if($settings instanceof Settings)
+		if(isset($data['value']['S']))
 		{
-			return $settings;
+			return $data['value']['S'];
 		}
 
 		return null;

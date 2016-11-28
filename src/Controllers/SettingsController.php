@@ -34,11 +34,11 @@ class SettingsController extends Controller
 	 */
 	public function all()
 	{
-		$settings = $this->settingsHelper->get(SettingsHelper::SETTINGS_SETTINGS);
+		$data = $this->settingsHelper->get(SettingsHelper::SETTINGS_SETTINGS);
 
-		if($settings)
+		if($data)
 		{
-			return json_decode($settings->value, true);
+			return json_decode($data, true);
 		}
 
 		return [];
