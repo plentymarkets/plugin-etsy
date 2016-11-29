@@ -2,6 +2,7 @@
 
 namespace Etsy\Services\Order;
 
+use Etsy\Helper\SettingsHelper;
 use Plenty\Exceptions\ValidationException;
 use Plenty\Plugin\ConfigRepository;
 
@@ -37,22 +38,24 @@ class OrderImportService
 	private $receiptService;
 
 	/**
+	 * @var SettingsHelper
+	 */
+	private $settingsHelper;
+
+	/**
 	 * @param Logger                                  $logger
 	 * @param \Etsy\Services\Order\OrderCreateService $orderCreateService
 	 * @param ConfigRepository                        $config
 	 * @param ReceiptService                          $receiptService
+	 * @param SettingsHelper                          $settingsHelper
 	 */
-	public function __construct(
-		Logger $logger,
-		OrderCreateService $orderCreateService,
-		ConfigRepository $config,
-		ReceiptService $receiptService
-	)
+	public function __construct(Logger $logger, OrderCreateService $orderCreateService, ConfigRepository $config, ReceiptService $receiptService, SettingsHelper $settingsHelper)
 	{
 		$this->logger             = $logger;
 		$this->orderCreateService = $orderCreateService;
 		$this->config             = $config;
 		$this->receiptService     = $receiptService;
+		$this->settingsHelper     = $settingsHelper;
 	}
 
 	/**
@@ -63,7 +66,7 @@ class OrderImportService
 	 */
 	public function run($from, $to)
 	{
-		$receipts = $this->receiptService->findAllShopReceipts($this->config->get('EtsyIntegrationPlugin.shopId'), $from, $to);
+		$receipts = $this->receiptService->findAllShopReceipts($this->settingsHelper->getShopSettings('shopId'), $from, $to);
 
 		if(is_array($receipts))
 		{

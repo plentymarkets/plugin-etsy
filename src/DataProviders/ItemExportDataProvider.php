@@ -2,6 +2,7 @@
 
 namespace Etsy\DataProviders;
 
+use Etsy\Helper\OrderHelper;
 use Plenty\Plugin\ConfigRepository;
 use Etsy\Contracts\ItemDataProviderContract;
 use Plenty\Modules\Item\DataLayer\Models\RecordList;
@@ -23,13 +24,20 @@ class ItemExportDataProvider implements ItemDataProviderContract
 	private $config;
 
 	/**
+	 * @var OrderHelper
+	 */
+	private $orderHelper;
+
+	/**
 	 * @param ItemDataLayerRepositoryContract $itemDataLayerRepository
 	 * @param ConfigRepository                $config
+	 * @param OrderHelper                     $orderHelper
 	 */
-	public function __construct(ItemDataLayerRepositoryContract $itemDataLayerRepository, ConfigRepository $config)
+	public function __construct(ItemDataLayerRepositoryContract $itemDataLayerRepository, ConfigRepository $config, OrderHelper $orderHelper)
 	{
 		$this->itemDataLayerRepository = $itemDataLayerRepository;
 		$this->config                  = $config;
+		$this->orderHelper             = $orderHelper;
 	}
 
 	/**
@@ -64,7 +72,7 @@ class ItemExportDataProvider implements ItemDataProviderContract
 
 			'variationMarketStatus' => [
 				'params' => [
-					'marketId' => 148
+					'marketId' => $this->orderHelper->getReferrerId()
 				],
 				'fields' => [
 					'sku'
@@ -95,25 +103,25 @@ class ItemExportDataProvider implements ItemDataProviderContract
 						'type'                 => 'all', // all images
 						'fileType'             => ['gif', 'jpeg', 'jpg', 'png'],
 						'imageType'            => ['internal'],
-						'referenceMarketplace' => $this->config->get('EtsyIntegrationPlugin.referrerId'),
+						'referenceMarketplace' => $this->orderHelper->getReferrerId(),
 					],
 					'only_current_variation_images_and_generic_images' => [
 						'type'                 => 'item_variation', // current variation + item images
 						'fileType'             => ['gif', 'jpeg', 'jpg', 'png'],
 						'imageType'            => ['internal'],
-						'referenceMarketplace' => $this->config->get('EtsyIntegrationPlugin.referrerId'),
+						'referenceMarketplace' => $this->orderHelper->getReferrerId(),
 					],
 					'only_current_variation_images'                    => [
 						'type'                 => 'variation', // current variation images
 						'fileType'             => ['gif', 'jpeg', 'jpg', 'png'],
 						'imageType'            => ['internal'],
-						'referenceMarketplace' => $this->config->get('EtsyIntegrationPlugin.referrerId'),
+						'referenceMarketplace' => $this->orderHelper->getReferrerId(),
 					],
 					'only_generic_images'                              => [
 						'type'                 => 'item', // only item images
 						'fileType'             => ['gif', 'jpeg', 'jpg', 'png'],
 						'imageType'            => ['internal'],
-						'referenceMarketplace' => $this->config->get('EtsyIntegrationPlugin.referrerId'),
+						'referenceMarketplace' => $this->orderHelper->getReferrerId(),
 					],
 				],
 				'fields' => [
@@ -142,7 +150,7 @@ class ItemExportDataProvider implements ItemDataProviderContract
 			'variationVisibility.isVisibleForMarketplace' => [
 				'mandatoryOneMarketplace' => [],
 				'mandatoryAllMarketplace' => [
-					148 // TODO grab this from config.json
+					$this->orderHelper->getReferrerId()
 				]
 			]
 		];

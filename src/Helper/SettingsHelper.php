@@ -13,6 +13,7 @@ class SettingsHelper
 	const SETTINGS_ACCESS_TOKEN = 'access_token';
 	const SETTINGS_SETTINGS = 'settings';
 	const SETTINGS_ORDER_REFERRER = 'order_referrer';
+	const SETTINGS_LAST_ORDER_IMPORT = "last_order_import";
 
 	/**
 	 * @var DynamoDbRepositoryContract
@@ -63,6 +64,30 @@ class SettingsHelper
 		if(isset($data['value']['S']))
 		{
 			return $data['value']['S'];
+		}
+
+		return null;
+	}
+
+	/**
+	 * Get the shop settings.
+	 *
+	 * @param string $key
+	 * @return mixed|null
+	 */
+	public function getShopSettings($key)
+	{
+		$settings = $this->get(SettingsHelper::SETTINGS_SETTINGS);
+
+		if($settings)
+		{
+			$settings = json_decode($settings, true);
+
+			if(isset($settings['shop'][$key]))
+			{
+				return $settings['shop'][$key];
+			}
+
 		}
 
 		return null;

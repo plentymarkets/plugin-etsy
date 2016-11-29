@@ -1,6 +1,7 @@
 <?php
 
 namespace Etsy\Procedures;
+use Etsy\Api\Services\ReceiptService;
 use Plenty\Modules\EventProcedures\Events\EventProceduresTriggered;
 use Plenty\Modules\Order\Models\Legacy\Order;
 
@@ -9,6 +10,16 @@ use Plenty\Modules\Order\Models\Legacy\Order;
  */
 class ShippingNotificationEventProcedure
 {
+	/**
+	 * @var ReceiptService
+	 */
+	private $receiptService;
+
+	public function __construct(ReceiptService $receiptService)
+	{
+		$this->receiptService = $receiptService;
+	}
+
 	/**
 	 * Mark an receipt as shipped on Etsy.
 	 *
@@ -20,7 +31,9 @@ class ShippingNotificationEventProcedure
 		$order = $eventProceduresTriggered->getOrder();
 
 
-		// TODO stuff
+		// TODO if order has tracking than use the submitTracking, otherwise use the updateOrder
+
+
 
 	}
 }

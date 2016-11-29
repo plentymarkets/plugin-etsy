@@ -2,6 +2,7 @@
 
 namespace Etsy\Services\Shipping;
 
+use Etsy\Helper\SettingsHelper;
 use Plenty\Modules\Market\Settings\Contracts\SettingsRepositoryContract;
 use Plenty\Modules\Market\Settings\Factories\SettingsCorrelationFactory;
 use Plenty\Modules\Market\Settings\Models\Settings;
@@ -35,17 +36,24 @@ class ShippingProfileImportService
 	private $shippingTemplateService;
 
 	/**
+	 * @var SettingsHelper
+	 */
+	private $settingsHelper;
+
+	/**
 	 * @param SettingsRepositoryContract $settingsRepository
 	 * @param Logger                     $logger
 	 * @param ConfigRepository           $config
 	 * @param ShippingTemplateService    $shippingTemplateService
+	 * @param SettingsHelper             $settingsHelper
 	 */
-	public function __construct(SettingsRepositoryContract $settingsRepository, Logger $logger, ConfigRepository $config, ShippingTemplateService $shippingTemplateService)
+	public function __construct(SettingsRepositoryContract $settingsRepository, Logger $logger, ConfigRepository $config, ShippingTemplateService $shippingTemplateService, SettingsHelper $settingsHelper)
 	{
 		$this->settingsRepository      = $settingsRepository;
 		$this->logger                  = $logger;
 		$this->config                  = $config;
 		$this->shippingTemplateService = $shippingTemplateService;
+		$this->settingsHelper          = $settingsHelper;
 	}
 
 	/**
@@ -53,7 +61,7 @@ class ShippingProfileImportService
 	 */
 	public function run()
 	{
-		$shippingProfiles = $this->shippingTemplateService->findAllUserShippingProfiles('__SELF__', $this->config->get('EtsyIntegrationPlugin.shopLanguage'));
+		$shippingProfiles = $this->shippingTemplateService->findAllUserShippingProfiles('__SELF__', $this->settingsHelper->getShopSettings('shopLanguage'));
 
 		foreach($shippingProfiles as $shippingProfile)
 		{

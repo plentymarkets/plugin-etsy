@@ -4,6 +4,7 @@ namespace Etsy\Services\Order;
 
 use Etsy\Api\Services\PaymentService;
 use Etsy\Helper\PaymentHelper;
+use Etsy\Helper\SettingsHelper;
 use Plenty\Modules\Account\Contact\Contracts\ContactAddressRepositoryContract;
 use Plenty\Modules\Account\Contact\Contracts\ContactRepositoryContract;
 use Plenty\Modules\Order\Models\Order;
@@ -68,6 +69,11 @@ class OrderCreateService
 	private $paymentRepository;
 
 	/**
+	 * @var SettingsHelper
+	 */
+	private $settingsHelper;
+
+	/**
 	 * @param Application                      $app
 	 * @param ContactAddressRepositoryContract $contactAddressRepository
 	 * @param OrderHelper                      $orderHelper
@@ -77,6 +83,7 @@ class OrderCreateService
 	 * @param ContactRepositoryContract        $contactRepository
 	 * @param PaymentService                   $paymentService
 	 * @param PaymentRepositoryContract        $paymentRepository
+	 * @param SettingsHelper                   $settingsHelper
 	 */
 	public function __construct(
 		Application $app,
@@ -87,7 +94,8 @@ class OrderCreateService
 		VariationSkuRepositoryContract $variationSkuRepository,
 		ContactRepositoryContract $contactRepository,
 		PaymentService $paymentService,
-		PaymentRepositoryContract $paymentRepository
+		PaymentRepositoryContract $paymentRepository,
+		SettingsHelper $settingsHelper
 	)
 	{
 		$this->app                      = $app;
@@ -99,6 +107,7 @@ class OrderCreateService
 		$this->contactRepository        = $contactRepository;
 		$this->paymentService           = $paymentService;
 		$this->paymentRepository        = $paymentRepository;
+		$this->settingsHelper           = $settingsHelper;
 	}
 
 	/**
@@ -263,7 +272,7 @@ class OrderCreateService
 
 				$orderItems[] = [
 					'typeId'          => $itemVariationId > 0 ? 1 : 9,
-					'referrerId'      => $this->config->get('EtsyIntegrationPlugin.referrerId'),
+					'referrerId'      => $this->orderHelper->getReferrerId(),
 					'itemVariationId' => $this->matchVariationId((string) $transaction['listing_id']),
 					'quantity'        => $transaction['quantity'],
 					'orderItemName'   => $transaction['title'],
@@ -299,7 +308,7 @@ class OrderCreateService
 	private function matchVariationId($sku)
 	{
 		$result = $this->variationSkuRepository->search([
-			                                                'marketId'     => $this->config->get('EtsyIntegrationPlugin.referrerId'),
+			                                                'marketId'     => $this->orderHelper->getReferrerId(),
 			                                                'variationSku' => $sku,
 		                                                ]);
 
@@ -319,7 +328,7 @@ class OrderCreateService
 	 */
 	private function createPayment(array $data, Order $order)
 	{
-		$payments = $this->paymentService->findShopPaymentByReceipt($this->config->get('EtsyIntegrationPlugin.shopId'), $data['receipt_id']);
+		$payments = $this->paymentService->findShopPaymentByReceipt($this->settingsHelper->getShopSettings('shopId'), $data['receipt_id']);
 
 		if(is_array($payments) && count($payments))
 		{

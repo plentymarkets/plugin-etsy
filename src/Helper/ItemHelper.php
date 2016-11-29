@@ -34,23 +34,31 @@ class ItemHelper
 	private $urlBuilderRepository;
 
 	/**
+	 * @var OrderHelper
+	 */
+	private $orderHelper;
+
+	/**
 	 * @param Application                    $app
 	 * @param UrlBuilderRepositoryContract   $urlBuilderRepository
 	 * @param VariationSkuRepositoryContract $variationSkuRepository
 	 * @param ConfigRepository               $config
+	 * @param OrderHelper                    $orderHelper
 	 */
-	public function __construct(Application $app, UrlBuilderRepositoryContract $urlBuilderRepository, VariationSkuRepositoryContract $variationSkuRepository, ConfigRepository $config)
+	public function __construct(Application $app, UrlBuilderRepositoryContract $urlBuilderRepository, VariationSkuRepositoryContract $variationSkuRepository, ConfigRepository $config, OrderHelper $orderHelper)
 	{
 		$this->app                    = $app;
 		$this->urlBuilderRepository   = $urlBuilderRepository;
 		$this->variationSkuRepository = $variationSkuRepository;
 		$this->config                 = $config;
+		$this->orderHelper            = $orderHelper;
 	}
 
 	/**
 	 * Get the stock based on the settings.
 	 *
 	 * @param Record $item
+	 *
 	 * @return int
 	 */
 	public function getStock(Record $item)
@@ -102,16 +110,19 @@ class ItemHelper
 	 */
 	public function generateSku($sku, $variationId)
 	{
-		$this->variationSkuRepository->generateSku($variationId, $this->config->get('EtsyIntegrationPlugin.referrerId'), 0, $sku);
+		$this->variationSkuRepository->generateSku($variationId, $this->orderHelper->getReferrerId(), 0, $sku);
 	}
 
 	/**
 	 * @param Record $record
 	 * @param string $propertyName
+	 *
 	 * @return mixed
 	 */
 	public function getItemProperty(Record $record, $propertyName)
 	{
+		// TODO grab correlations
+
 		switch($propertyName)
 		{
 			case 'shipping_template_id':
@@ -136,6 +147,7 @@ class ItemHelper
 	 *
 	 * @param array  $list
 	 * @param string $imageSize
+	 *
 	 * @return array
 	 */
 	public function getImageList(array $list, $imageSize = 'normal')

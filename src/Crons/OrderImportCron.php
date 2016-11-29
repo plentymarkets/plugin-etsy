@@ -4,6 +4,7 @@ namespace Etsy\Crons;
 
 use Plenty\Modules\Cron\Contracts\CronHandler as Cron;
 
+use Etsy\Helper\SettingsHelper;
 use Etsy\Services\Order\OrderImportService;
 
 /**
@@ -11,14 +12,28 @@ use Etsy\Services\Order\OrderImportService;
  */
 class OrderImportCron extends Cron
 {
+	const MAX_DAYS = 3;
+
+	private $settingsHelper;
+
 	/**
+	 * @param SettingsHelper $settingsHelper
+	 */
+	public function __construct(SettingsHelper $settingsHelper)
+	{
+		$this->settingsHelper = $settingsHelper;
+	}
+
+	/**
+	 * Handle the cron execution.
+	 *
 	 * @param OrderImportService $service
 	 */
 	public function handle(OrderImportService $service)
 	{
 		try
 		{
-			$service->run($this->lastRun(), date('c'));
+			$service->run($this->lastRun(), date('Y-m-d H:i:s'));
 
 			$this->saveLastRun();
 		}
@@ -30,11 +45,19 @@ class OrderImportCron extends Cron
 
 	/**
 	 * Get the last run.
+	 *
 	 * @return string
 	 */
 	private function lastRun()
 	{
-		return '2016-09-14 00:00:00';
+		$lastRun = $this->settingsHelper->get(SettingsHelper::SETTINGS_LAST_ORDER_IMPORT);
+
+		if(!$lastRun || strlen($lastRun) <= 0)
+		{
+			return date('Y-m-d H:i:s', time() - (60 * 60 * 24 * self::MAX_DAYS));
+		}
+
+		return $lastRun;
 	}
 
 	/**
@@ -42,6 +65,6 @@ class OrderImportCron extends Cron
 	 */
 	private function saveLastRun()
 	{
-		// TODO save last run
+		$this->settingsHelper->save(SettingsHelper::SETTINGS_LAST_ORDER_IMPORT, date('Y-m-d H:i:s'));
 	}
 }

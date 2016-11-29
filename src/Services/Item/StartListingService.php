@@ -2,6 +2,7 @@
 
 namespace Etsy\Services\Item;
 
+use Etsy\Helper\SettingsHelper;
 use Plenty\Plugin\ConfigRepository;
 use Plenty\Modules\Item\DataLayer\Models\Record;
 
@@ -47,12 +48,18 @@ class StartListingService
 	private $listingTranslationService;
 
 	/**
+	 * @var SettingsHelper
+	 */
+	private $settingsHelper;
+
+	/**
 	 * @param ItemHelper                $itemHelper
 	 * @param ConfigRepository          $config
 	 * @param ListingService            $listingService
 	 * @param ListingImageService       $listingImageService
 	 * @param Logger                    $logger
 	 * @param ListingTranslationService $listingTranslationService
+	 * @param SettingsHelper            $settingsHelper
 	 */
 	public function __construct(
 		ItemHelper $itemHelper,
@@ -60,7 +67,8 @@ class StartListingService
 		ListingService $listingService,
 		ListingImageService $listingImageService,
 		Logger $logger,
-		ListingTranslationService $listingTranslationService
+		ListingTranslationService $listingTranslationService,
+		SettingsHelper $settingsHelper
 	)
 	{
 		$this->itemHelper                = $itemHelper;
@@ -69,6 +77,7 @@ class StartListingService
 		$this->listingTranslationService = $listingTranslationService;
 		$this->listingService            = $listingService;
 		$this->listingImageService       = $listingImageService;
+		$this->settingsHelper            = $settingsHelper;
 	}
 
 	/**
@@ -141,7 +150,7 @@ class StartListingService
 
 		];
 
-		return $this->listingService->createListing($this->config->get('EtsyIntegrationPlugin.shopLanguage'), $data); // TODO replace all languages with the shop language
+		return $this->listingService->createListing($this->settingsHelper->getShopSettings('shopLanguage'), $data); // TODO replace all languages with the shop language
 	}
 
 	/**
@@ -167,7 +176,7 @@ class StartListingService
 		//TODO add foreach for the itemDescriptionList
 		foreach($record as $description) // does not work until you replace with ->itemDescriptionList
 		{
-			if(in_array($description->lang, $this->config->get('EtsyIntegrationPlugin.exportLanguage')) && strlen($description->name1) > 0 && strlen($description->description) > 0)
+			if(is_array($this->settingsHelper->getShopSettings('exportLanguages')) && in_array($description->lang, $this->settingsHelper->getShopSettings('exportLanguages')) && strlen($description->name1) > 0 && strlen($description->description) > 0)
 			{
 				$this->listingTranslationService->createListingTranslation($listingId, $description, $description->lang);
 			}

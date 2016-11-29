@@ -13,15 +13,33 @@ class OrderHelper
 	private $paymentHelper;
 
 	/**
-	 * @param PaymentHelper $paymentHelper
+	 * @var SettingsHelper
 	 */
-	public function __construct(PaymentHelper $paymentHelper)
+	private $settingsHelper;
+
+	/**
+	 * @param PaymentHelper  $paymentHelper
+	 * @param SettingsHelper $settingsHelper
+	 */
+	public function __construct(PaymentHelper $paymentHelper, SettingsHelper $settingsHelper)
 	{
 		$this->paymentHelper = $paymentHelper;
+		$this->settingsHelper = $settingsHelper;
+	}
+
+	/**
+	 * Get the registered referrer ID.
+	 *
+	 * @return null|string
+	 */
+	public function getReferrerId()
+	{
+		return $this->settingsHelper->get(SettingsHelper::SETTINGS_ORDER_REFERRER);
 	}
 
 	/**
 	 * @param string $address
+	 *
 	 * @return string
 	 */
 	public function getStreetName($address)
@@ -38,6 +56,7 @@ class OrderHelper
 
 	/**
 	 * @param string $address
+	 *
 	 * @return string
 	 */
 	public function getHouseNumber($address)
@@ -54,6 +73,7 @@ class OrderHelper
 
 	/**
 	 * @param int $id
+	 *
 	 * @return int
 	 */
 	public function getCountryIdByEtsyCountryId($id)
@@ -76,6 +96,7 @@ class OrderHelper
 
 	/**
 	 * @param string $paymentMethod
+	 *
 	 * @return int
 	 */
 	public function getPaymentMethodId($paymentMethod)
@@ -95,6 +116,7 @@ class OrderHelper
 	 * Check if payment method is Etsy direct checkout.
 	 *
 	 * @param string $paymentMethod
+	 *
 	 * @return bool
 	 */
 	public function isDirectCheckout($paymentMethod):bool
@@ -104,6 +126,7 @@ class OrderHelper
 
 	/**
 	 * @param string $address
+	 *
 	 * @return array
 	 */
 	private function extractAddress($address)

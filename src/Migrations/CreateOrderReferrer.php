@@ -48,6 +48,6 @@ class CreateOrderReferrer
 				sleep(300);
 			}
 		}
-		while($status === false || ++$retries < 3);
+		while($status === false && ++$retries < 3);
 	}
 }
