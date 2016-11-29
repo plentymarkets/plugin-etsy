@@ -42,6 +42,11 @@ class CreateOrderReferrer
 		{
 			// due to the fact that CreateSettingsTable migration just run, it could be that DynamoDB needs some time to create the table, so we try again
 			$status = $this->settingsHelper->save(SettingsHelper::SETTINGS_ORDER_REFERRER, $orderReferrer->id);
+
+			if($status === false)
+			{
+				sleep(300);
+			}
 		}
 		while($status === false || ++$retries < 3);
 	}
