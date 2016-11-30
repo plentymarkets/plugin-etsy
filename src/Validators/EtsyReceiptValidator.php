@@ -25,9 +25,6 @@ class EtsyReceiptValidator extends Validator
 		$this->addConditional('Transactions', true)->isArray()->min(1);
 		$this->addString('buyer_email', true)->email();
 
-		// TODO exists validator: check if external order id exists
-
-
 		// TODO add here all other fields that etsy needs to return us in order to save the receipt as an plenty order.
 	}
 }

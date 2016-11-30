@@ -2,6 +2,10 @@
 
 namespace Etsy\Helper;
 
+use Plenty\Modules\Order\Contracts\OrderRepositoryContract;
+use Plenty\Modules\Order\Models\OrderType;
+use Plenty\Repositories\Models\PaginatedResult;
+
 /**
  * Class OrderHelper
  */
@@ -177,5 +181,34 @@ class OrderHelper
 			'firstName' => $firstName,
 			'lastName'  => $lastName,
 		);
+	}
+
+	/**
+	 * Check if order was already imported.
+	 *
+	 * @param mixed $externalOrderId
+	 *
+	 * @return bool
+	 */
+	public function orderWasImported($externalOrderId)
+	{
+		/** @var OrderRepositoryContract $orderRepo */
+		$orderRepo = pluginApp(OrderRepositoryContract::class);
+
+		$orderRepo->setFilters([
+			                       'externalOrderId' => $externalOrderId,
+			                       'referrerId'      => $this->getReferrerId(),
+			                       'orderType'       => OrderType::TYPE_SALES_ORDER,
+		                       ]);
+
+		/** @var PaginatedResult $paginatedResult */
+		$paginatedResult = $orderRepo->searchOrders();
+
+		if($paginatedResult->getTotalCount() > 0)
+		{
+			return true;
+		}
+
+		return false;
 	}
 }

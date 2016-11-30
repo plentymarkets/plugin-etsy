@@ -2,9 +2,6 @@
 
 namespace Etsy\Services\Order;
 
-use Etsy\Api\Services\PaymentService;
-use Etsy\Helper\PaymentHelper;
-use Etsy\Helper\SettingsHelper;
 use Plenty\Modules\Account\Contact\Contracts\ContactAddressRepositoryContract;
 use Plenty\Modules\Account\Contact\Contracts\ContactRepositoryContract;
 use Plenty\Modules\Accounting\Contracts\AccountingServiceContract;
@@ -15,10 +12,13 @@ use Plenty\Modules\Payment\Contracts\PaymentOrderRelationRepositoryContract;
 use Plenty\Modules\Payment\Contracts\PaymentRepositoryContract;
 use Plenty\Modules\Payment\Models\Payment;
 use Plenty\Plugin\Application;
-use Plenty\Plugin\ConfigRepository;
 use Plenty\Modules\Order\Contracts\OrderRepositoryContract;
 use Plenty\Modules\Item\VariationSku\Contracts\VariationSkuRepositoryContract;
 
+use Etsy\Logger\Logger;
+use Etsy\Api\Services\PaymentService;
+use Etsy\Helper\PaymentHelper;
+use Etsy\Helper\SettingsHelper;
 use Etsy\Helper\OrderHelper;
 
 /**
@@ -32,44 +32,9 @@ class OrderCreateService
 	private $app;
 
 	/**
-	 * @var ConfigRepository
-	 */
-	private $config;
-
-	/**
-	 * @var OrderRepositoryContract
-	 */
-	private $orderRepository;
-
-	/**
-	 * @var ContactAddressRepositoryContract
-	 */
-	private $contactAddressRepository;
-
-	/**
-	 * @var VariationSkuRepositoryContract
-	 */
-	private $variationSkuRepository;
-
-	/**
-	 * @var ContactRepositoryContract
-	 */
-	private $contactRepository;
-
-	/**
 	 * @var OrderHelper
 	 */
 	private $orderHelper;
-
-	/**
-	 * @var PaymentService
-	 */
-	private $paymentService;
-
-	/**
-	 * @var PaymentRepositoryContract
-	 */
-	private $paymentRepository;
 
 	/**
 	 * @var SettingsHelper
@@ -77,29 +42,22 @@ class OrderCreateService
 	private $settingsHelper;
 
 	/**
-	 * @param Application                      $app
-	 * @param ContactAddressRepositoryContract $contactAddressRepository
-	 * @param OrderHelper                      $orderHelper
-	 * @param ConfigRepository                 $config
-	 * @param OrderRepositoryContract          $orderRepository
-	 * @param VariationSkuRepositoryContract   $variationSkuRepository
-	 * @param ContactRepositoryContract        $contactRepository
-	 * @param PaymentService                   $paymentService
-	 * @param PaymentRepositoryContract        $paymentRepository
-	 * @param SettingsHelper                   $settingsHelper
+	 * @var Logger
 	 */
-	public function __construct(Application $app, ContactAddressRepositoryContract $contactAddressRepository, OrderHelper $orderHelper, ConfigRepository $config, OrderRepositoryContract $orderRepository, VariationSkuRepositoryContract $variationSkuRepository, ContactRepositoryContract $contactRepository, PaymentService $paymentService, PaymentRepositoryContract $paymentRepository, SettingsHelper $settingsHelper)
+	private $logger;
+
+	/**
+	 * @param Application    $app
+	 * @param OrderHelper    $orderHelper
+	 * @param SettingsHelper $settingsHelper
+	 * @param Logger         $logger
+	 */
+	public function __construct(Application $app, OrderHelper $orderHelper, SettingsHelper $settingsHelper, Logger $logger)
 	{
-		$this->app                      = $app;
-		$this->contactAddressRepository = $contactAddressRepository;
-		$this->orderHelper              = $orderHelper;
-		$this->config                   = $config;
-		$this->orderRepository          = $orderRepository;
-		$this->variationSkuRepository   = $variationSkuRepository;
-		$this->contactRepository        = $contactRepository;
-		$this->paymentService           = $paymentService;
-		$this->paymentRepository        = $paymentRepository;
-		$this->settingsHelper           = $settingsHelper;
+		$this->app            = $app;
+		$this->orderHelper    = $orderHelper;
+		$this->settingsHelper = $settingsHelper;
+		$this->logger         = $logger;
 	}
 
 	/**
@@ -154,7 +112,10 @@ class OrderCreateService
 			];
 		}
 
-		$contact = $this->contactRepository->createContact($contactData);
+		/** @var ContactRepositoryContract $contactRepo */
+		$contactRepo = pluginApp(ContactRepositoryContract::class);
+
+		$contact = $contactRepo->createContact($contactData);
 
 		return $contact->id;
 	}
@@ -183,7 +144,10 @@ class OrderCreateService
 			],
 		];
 
-		$address = $this->contactAddressRepository->createAddress($addressData, $contactId, 2);
+		/** @var ContactAddressRepositoryContract $contactAddressRepo */
+		$contactAddressRepo = pluginApp(ContactAddressRepositoryContract::class);
+
+		$address = $contactAddressRepo->createAddress($addressData, $contactId, 2);
 
 		return $address->id;
 	}
@@ -218,7 +182,7 @@ class OrderCreateService
 			[
 				'typeId'    => 14,
 				'subTypeId' => 6,
-				'value'     => (string) $data['order_id'],
+				'value'     => (string) $data['receipt_id'],
 			],
 		];
 
@@ -245,7 +209,10 @@ class OrderCreateService
 
 		$orderData['orderItems'] = $this->getOrderItems($data);
 
-		$order = $this->orderRepository->createOrder($orderData);
+		/** @var OrderRepositoryContract $orderRepo */
+		$orderRepo = pluginApp(OrderRepositoryContract::class);
+
+		$order = $orderRepo->createOrder($orderData);
 
 		return $order;
 	}
@@ -320,10 +287,13 @@ class OrderCreateService
 	 */
 	private function matchVariationId($sku)
 	{
-		$result = $this->variationSkuRepository->search([
-			                                                'marketId'     => $this->orderHelper->getReferrerId(),
-			                                                'variationSku' => $sku,
-		                                                ]);
+		/** @var VariationSkuRepositoryContract $variationSkuRepo */
+		$variationSkuRepo = pluginApp(VariationSkuRepositoryContract::class);
+
+		$result = $variationSkuRepo->search([
+			                                    'marketId'     => $this->orderHelper->getReferrerId(),
+			                                    'variationSku' => $sku,
+		                                    ]);
 
 		foreach($result as $variationSku)
 		{
@@ -343,7 +313,13 @@ class OrderCreateService
 	{
 		try
 		{
-			$payments = $this->paymentService->findShopPaymentByReceipt($this->settingsHelper->getShopSettings('shopId'), $data['receipt_id']);
+			/** @var PaymentService $paymentService */
+			$paymentService = pluginApp(PaymentService::class);
+
+			/** @var PaymentRepositoryContract $paymentRepo */
+			$paymentRepo = pluginApp(PaymentRepositoryContract::class);
+
+			$payments = $paymentService->findShopPaymentByReceipt($this->settingsHelper->getShopSettings('shopId'), $data['receipt_id']);
 
 			if(is_array($payments) && count($payments))
 			{
@@ -360,7 +336,7 @@ class OrderCreateService
 					$payment->status          = 2;
 					$payment->transactionType = 2;
 
-					$payment = $this->paymentRepository->createPayment($payment);
+					$payment = $paymentRepo->createPayment($payment);
 
 					/** @var PaymentOrderRelationRepositoryContract $paymentOrderRelation */
 					$paymentOrderRelation = $this->app->make(PaymentOrderRelationRepositoryContract::class);
@@ -371,7 +347,7 @@ class OrderCreateService
 		}
 		catch(\Exception $ex)
 		{
-			// TODO add log
+			$this->logger->log('Can not add payment: ' . $ex->getMessage());
 		}
 	}
 

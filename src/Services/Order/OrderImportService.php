@@ -2,6 +2,7 @@
 
 namespace Etsy\Services\Order;
 
+use Etsy\Helper\OrderHelper;
 use Etsy\Helper\SettingsHelper;
 use Plenty\Exceptions\ValidationException;
 use Plenty\Plugin\ConfigRepository;
@@ -43,19 +44,33 @@ class OrderImportService
 	private $settingsHelper;
 
 	/**
-	 * @param Logger                                  $logger
-	 * @param \Etsy\Services\Order\OrderCreateService $orderCreateService
-	 * @param ConfigRepository                        $config
-	 * @param ReceiptService                          $receiptService
-	 * @param SettingsHelper                          $settingsHelper
+	 * @var OrderHelper
 	 */
-	public function __construct(Logger $logger, OrderCreateService $orderCreateService, ConfigRepository $config, ReceiptService $receiptService, SettingsHelper $settingsHelper)
+	private $orderHelper;
+
+	/**
+	 * @param Logger             $logger
+	 * @param OrderCreateService $orderCreateService
+	 * @param ConfigRepository   $config
+	 * @param ReceiptService     $receiptService
+	 * @param SettingsHelper     $settingsHelper
+	 * @param OrderHelper        $orderHelper
+	 */
+	public function __construct(
+		Logger $logger,
+		OrderCreateService $orderCreateService,
+		ConfigRepository $config,
+		ReceiptService $receiptService,
+		SettingsHelper $settingsHelper,
+		OrderHelper $orderHelper
+	)
 	{
 		$this->logger             = $logger;
 		$this->orderCreateService = $orderCreateService;
 		$this->config             = $config;
 		$this->receiptService     = $receiptService;
 		$this->settingsHelper     = $settingsHelper;
+		$this->orderHelper        = $orderHelper;
 	}
 
 	/**
@@ -76,6 +91,11 @@ class OrderImportService
 				{
 					EtsyReceiptValidator::validateOrFail($receiptData);
 
+					if($this->orderHelper->orderWasImported($receiptData['receipt_id']))
+					{
+						throw new \Exception('Order was already imported.');
+					}
+
 					$this->orderCreateService->create($receiptData);
 				}
 				catch(ValidationException $ex)
@@ -84,8 +104,12 @@ class OrderImportService
 
 					if(!is_null($messageBag))
 					{
-						$this->logger->log('Can not import order: ...');
+						$this->logger->log('Can not import order.'); // TODO show the message bag
 					}
+				}
+				catch(\Exception $ex)
+				{
+					$this->logger->log('Can not import order: ' . $ex->getMessage());
 				}
 			}
 		}
