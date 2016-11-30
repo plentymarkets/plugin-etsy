@@ -7,6 +7,9 @@ use Etsy\Helper\PaymentHelper;
 use Etsy\Helper\SettingsHelper;
 use Plenty\Modules\Account\Contact\Contracts\ContactAddressRepositoryContract;
 use Plenty\Modules\Account\Contact\Contracts\ContactRepositoryContract;
+use Plenty\Modules\Accounting\Contracts\AccountingServiceContract;
+use Plenty\Modules\Accounting\Vat\Contracts\VatInitContract;
+use Plenty\Modules\Accounting\Vat\Models\Vat;
 use Plenty\Modules\Order\Models\Order;
 use Plenty\Modules\Payment\Contracts\PaymentOrderRelationRepositoryContract;
 use Plenty\Modules\Payment\Contracts\PaymentRepositoryContract;
@@ -260,6 +263,7 @@ class OrderCreateService
 				'itemVariationId' => 0,
 				'quantity'        => 1,
 				'orderItemName'   => 'Shipping Costs',
+				'countryVatId'    => $this->getVatId($data),
 				'amounts'         => [
 					[
 						'priceOriginalGross' => $data['total_shipping_cost'],
@@ -283,6 +287,7 @@ class OrderCreateService
 					'itemVariationId' => $this->matchVariationId((string) $transaction['listing_id']),
 					'quantity'        => $transaction['quantity'],
 					'orderItemName'   => $transaction['title'],
+					'countryVatId'    => $this->getVatId($data),
 					'amounts'         => [
 						[
 							'priceOriginalGross' => $transaction['price'],
@@ -336,30 +341,64 @@ class OrderCreateService
 	 */
 	private function createPayment(array $data, Order $order)
 	{
-		$payments = $this->paymentService->findShopPaymentByReceipt($this->settingsHelper->getShopSettings('shopId'), $data['receipt_id']);
-
-		if(is_array($payments) && count($payments))
+		try
 		{
-			/** @var PaymentHelper $paymentHelper */
-			$paymentHelper = $this->app->make(PaymentHelper::class);
+			$payments = $this->paymentService->findShopPaymentByReceipt($this->settingsHelper->getShopSettings('shopId'), $data['receipt_id']);
 
-			foreach($payments as $paymentData)
+			if(is_array($payments) && count($payments))
 			{
-				/** @var Payment $payment */
-				$payment                  = $this->app->make(Payment::class);
-				$payment->amount          = $paymentData['amount_gross'] / 100;
-				$payment->mopId           = $paymentHelper->getPaymentMethodId();
-				$payment->currency        = $paymentData['currency'];
-				$payment->status          = 2;
-				$payment->transactionType = 2;
+				/** @var PaymentHelper $paymentHelper */
+				$paymentHelper = $this->app->make(PaymentHelper::class);
 
-				$payment = $this->paymentRepository->createPayment($payment);
+				foreach($payments as $paymentData)
+				{
+					/** @var Payment $payment */
+					$payment                  = $this->app->make(Payment::class);
+					$payment->amount          = $paymentData['amount_gross'] / 100;
+					$payment->mopId           = $paymentHelper->getPaymentMethodId();
+					$payment->currency        = $paymentData['currency'];
+					$payment->status          = 2;
+					$payment->transactionType = 2;
 
-				/** @var PaymentOrderRelationRepositoryContract $paymentOrderRelation */
-				$paymentOrderRelation = $this->app->make(PaymentOrderRelationRepositoryContract::class);
+					$payment = $this->paymentRepository->createPayment($payment);
 
-				$paymentOrderRelation->createOrderRelation($payment, $order);
+					/** @var PaymentOrderRelationRepositoryContract $paymentOrderRelation */
+					$paymentOrderRelation = $this->app->make(PaymentOrderRelationRepositoryContract::class);
+
+					$paymentOrderRelation->createOrderRelation($payment, $order);
+				}
 			}
 		}
+		catch(\Exception $ex)
+		{
+			// TODO add log
+		}
+	}
+
+	/**
+	 * Get the VAT ID.
+	 *
+	 * @param array $data
+	 *
+	 * @return int
+	 */
+	private function getVatId(array $data):int
+	{
+		/** @var VatInitContract $vatInit */
+		$vatInit = pluginApp(VatInitContract::class);
+
+		/** @var AccountingServiceContract $accountingService */
+		$accountingService = pluginApp(AccountingServiceContract::class);
+
+		$vatInit->init($this->orderHelper->getCountryIdByEtsyCountryId((int) $data['country_id']), '', $accountingService->detectLocationId($this->app->getPlentyId()), $this->orderHelper->getCountryIdByEtsyCountryId((int) $data['country_id']));
+
+		$vat = $vatInit->getStandardVatByLocationId($accountingService->detectLocationId($this->app->getPlentyId()));
+
+		if($vat instanceof Vat)
+		{
+			return $vat->id;
+		}
+
+		return 0;
 	}
 }

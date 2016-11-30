@@ -143,8 +143,8 @@ class OrderHelper
 		}
 
 		return [
-			'street'      => $matches[1],
-			'houseNumber' => $matches[2],
+			'street'      => isset($matches[1]) ? $matches[1] : '',
+			'houseNumber' => isset($matches[2]) ? $matches[2] : '',
 		];
 	}
 
