@@ -45,7 +45,7 @@ class CreateOrderReferrer
 
 			if($status === false)
 			{
-				sleep(1);
+				sleep(5);
 			}
 		}
 		while($status === false && ++$retries < 3);
