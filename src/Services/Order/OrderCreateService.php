@@ -85,18 +85,7 @@ class OrderCreateService
 	 * @param PaymentRepositoryContract        $paymentRepository
 	 * @param SettingsHelper                   $settingsHelper
 	 */
-	public function __construct(
-		Application $app,
-		ContactAddressRepositoryContract $contactAddressRepository,
-		OrderHelper $orderHelper,
-		ConfigRepository $config,
-		OrderRepositoryContract $orderRepository,
-		VariationSkuRepositoryContract $variationSkuRepository,
-		ContactRepositoryContract $contactRepository,
-		PaymentService $paymentService,
-		PaymentRepositoryContract $paymentRepository,
-		SettingsHelper $settingsHelper
-	)
+	public function __construct(Application $app, ContactAddressRepositoryContract $contactAddressRepository, OrderHelper $orderHelper, ConfigRepository $config, OrderRepositoryContract $orderRepository, VariationSkuRepositoryContract $variationSkuRepository, ContactRepositoryContract $contactRepository, PaymentService $paymentService, PaymentRepositoryContract $paymentRepository, SettingsHelper $settingsHelper)
 	{
 		$this->app                      = $app;
 		$this->contactAddressRepository = $contactAddressRepository;
@@ -134,18 +123,33 @@ class OrderCreateService
 	}
 
 	/**
+	 * Create contact for current customer.
+	 *
 	 * @param array $data
+	 *
 	 * @return int
 	 */
 	private function createContact(array $data):int
 	{
+		$name = $this->orderHelper->extractName($data['name']);
+
 		$contactData = [
-			'typeId' => 1,
-			'referrerId' => 1,
+			'typeId'     => 1,
+			'referrerId' => $this->orderHelper->getReferrerId(),
 			'externalId' => $data['buyer_user_id'],
-			'name' => $data['name'],
-			'email' => $data['buyer_email'],
+			'firstName'  => $name['firstName'],
+			'lastName'   => $name['lastName'],
 		];
+
+		if(isset($data['buyer_email']) && strlen($data['buyer_email']))
+		{
+			$contactData['options'][] = [
+				'typeId'    => 2,
+				'subTypeId' => 4,
+				'priority'  => 0,
+				'value'     => $data['buyer_email'],
+			];
+		}
 
 		$contact = $this->contactRepository->createContact($contactData);
 
@@ -153,8 +157,9 @@ class OrderCreateService
 	}
 
 	/**
-	 * @param int $contactId
+	 * @param int   $contactId
 	 * @param array $data
+	 *
 	 * @return int
 	 */
 	private function createAddress(int $contactId, array $data):int
@@ -183,16 +188,18 @@ class OrderCreateService
 	/**
 	 * @param array $data
 	 * @param int   $addressId
-	 * @param int $contactId
+	 * @param int   $contactId
+	 *
 	 * @return Order
 	 */
 	private function createOrder(array $data, $addressId, $contactId):Order
 	{
 		$orderData = [
-			'typeId'   => 1,
-			'plentyId' => $this->app->getPlentyId(),
-			'statusId' => 3.00,
-			'currency' => $data['currency_code'],
+			'typeId'     => 1,
+			'referrerId' => $this->orderHelper->getReferrerId(),
+			'plentyId'   => $this->app->getPlentyId(),
+			'statusId'   => 3.00,
+			'currency'   => $data['currency_code'],
 		];
 
 		$orderData['properties'] = [
@@ -227,11 +234,10 @@ class OrderCreateService
 		$orderData['relations'] = [
 			[
 				'referenceType' => 'contact',
-				'referenceId' => $contactId,
-				'relation' => 'receiver',
+				'referenceId'   => $contactId,
+				'relation'      => 'receiver',
 			]
 		];
-
 
 
 		$orderData['orderItems'] = $this->getOrderItems($data);
@@ -243,17 +249,18 @@ class OrderCreateService
 
 	/**
 	 * @param array $data
+	 *
 	 * @return array
 	 */
 	private function getOrderItems(array $data)
 	{
 		$orderItems = [
 			[
-				'typeId'  => 6,
+				'typeId'          => 6,
 				'itemVariationId' => 0,
-				'quantity' => 1,
-				'orderItemName' => 'Shipping Costs',
-				'amounts' => [
+				'quantity'        => 1,
+				'orderItemName'   => 'Shipping Costs',
+				'amounts'         => [
 					[
 						'priceOriginalGross' => $data['total_shipping_cost'],
 						'currency'           => $data['currency_code'],
@@ -303,6 +310,7 @@ class OrderCreateService
 
 	/**
 	 * @param string $sku
+	 *
 	 * @return int|null
 	 */
 	private function matchVariationId($sku)
@@ -338,25 +346,14 @@ class OrderCreateService
 			foreach($payments as $paymentData)
 			{
 				/** @var Payment $payment */
-				$payment = $this->app->make(Payment::class);
-				$payment->amount = $paymentData['amount_gross'] / 100;
-				$payment->mopId = $paymentHelper->getPaymentMethodId();
-				$payment->currency = $paymentData['currency'];
-				$payment->status = 2;
+				$payment                  = $this->app->make(Payment::class);
+				$payment->amount          = $paymentData['amount_gross'] / 100;
+				$payment->mopId           = $paymentHelper->getPaymentMethodId();
+				$payment->currency        = $paymentData['currency'];
+				$payment->status          = 2;
 				$payment->transactionType = 2;
 
 				$payment = $this->paymentRepository->createPayment($payment);
-
-				/*
-								$payment = $this->paymentRepository->createPayment([
-									'amount'          => $payment['amount_gross'] / 100,
-									'mopId'           => $paymentHelper->getPaymentMethodId(),
-									'currency'        => $payment['currency'],
-									'type'            => 'debit',
-									'status'          => Payment::STATUS_APPROVED,
-									'transactionType' => Payment::TRANSACTION_TYPE_BOOKED_POSTING,
-								]);
-				*/
 
 				$paymentOrderRelation = $this->app->make(PaymentOrderRelationRepositoryContract::class);
 

@@ -23,7 +23,7 @@ class OrderHelper
 	 */
 	public function __construct(PaymentHelper $paymentHelper, SettingsHelper $settingsHelper)
 	{
-		$this->paymentHelper = $paymentHelper;
+		$this->paymentHelper  = $paymentHelper;
 		$this->settingsHelper = $settingsHelper;
 	}
 
@@ -146,5 +146,36 @@ class OrderHelper
 			'street'      => $matches[1],
 			'houseNumber' => $matches[2],
 		];
+	}
+
+	/**
+	 * Extract the first and last name.
+	 *
+	 * @param string $name
+	 *
+	 * @return array
+	 */
+	public function extractName($name)
+	{
+		$name = trim($name);
+
+		$pos = strrpos($name, ' ');
+
+		if($pos > 0)
+		{
+			$lastName  = trim(substr($name, $pos));
+			$firstName = trim(substr($name, 0, - strlen($lastName)));
+		}
+		else
+		{
+			// no space character was found, don't split
+			$lastName  = $name;
+			$firstName = '';
+		}
+
+		return array(
+			'firstName' => $firstName,
+			'lastName'  => $lastName,
+		);
 	}
 }
