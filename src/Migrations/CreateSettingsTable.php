@@ -1,6 +1,7 @@
 <?php
 namespace Etsy\Migrations;
 
+use Etsy\Helper\SettingsHelper;
 use Plenty\Modules\Plugin\DynamoDb\Contracts\DynamoDbRepositoryContract;
 use Plenty\Plugin\ConfigRepository;
 
@@ -15,7 +16,7 @@ class CreateSettingsTable
 	 */
 	public function run(DynamoDbRepositoryContract $dynamoDbRepository, ConfigRepository $config)
 	{
-		$dynamoDbRepository->createTable('EtsyIntegrationPlugin', 'settings', [
+		$dynamoDbRepository->createTable('EtsyIntegrationPlugin', SettingsHelper::TABLE_NAME, [
 			[
 				'AttributeName' => 'name',
 				'AttributeType' => DynamoDbRepositoryContract::FIELD_TYPE_STRING

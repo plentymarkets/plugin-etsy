@@ -355,6 +355,7 @@ class OrderCreateService
 
 				$payment = $this->paymentRepository->createPayment($payment);
 
+				/** @var PaymentOrderRelationRepositoryContract $paymentOrderRelation */
 				$paymentOrderRelation = $this->app->make(PaymentOrderRelationRepositoryContract::class);
 
 				$paymentOrderRelation->createOrderRelation($payment, $order);
