@@ -2,6 +2,9 @@
 
 namespace Etsy\Helper;
 
+use Plenty\Modules\Accounting\Contracts\AccountingServiceContract;
+use Plenty\Plugin\Application;
+
 class ShippingHelper
 {
 	private $carriers = [
