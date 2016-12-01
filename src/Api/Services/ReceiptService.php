@@ -84,6 +84,7 @@ class ReceiptService
 	 * Submits tracking information and sends a shipping notification email to the buyer. If send_bcc is true, the
 	 * shipping notification will be sent to the seller as well.
 	 *
+	 * @param int    $shopId
 	 * @param int    $receiptId
 	 * @param string $trackingCode
 	 * @param string $carrierName
@@ -92,9 +93,10 @@ class ReceiptService
 	 * @return array
 	 * @throws \Exception
 	 */
-	public function submitTracking($receiptId, $trackingCode, $carrierName, $sendBcc = false)
+	public function submitTracking($shopId, $receiptId, $trackingCode, $carrierName, $sendBcc = false)
 	{
 		$response = $this->client->call('submitTracking', [
+			'shop_id'    => $shopId,
 			'receipt_id' => $receiptId,
 		], [
 			                                'tracking_code' => $trackingCode,

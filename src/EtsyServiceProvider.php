@@ -51,8 +51,13 @@ class EtsyServiceProvider extends ServiceProvider
 
 		// register event actions
 		$eventProceduresService->registerProcedure('etsy', ProcedureEntry::PROCEDURE_GROUP_ORDER, [
-			                                                 'de' => 'Versandbestätigung an Etsy senden',
-			                                                 'en' => 'Send shipping notification to Etsy'
-		                                                 ], 'Etsy\\Procedures\\ShippingNotificationEventProcedure@run');
+			'de' => 'Versandbestätigung an Etsy senden',
+			'en' => 'Send shipping notification to Etsy'
+		], 'Etsy\\Procedures\\ShippingNotificationEventProcedure@run');
+
+		$eventProceduresService->registerProcedure('etsy', ProcedureEntry::PROCEDURE_GROUP_ORDER, [
+			'de' => 'Zahlungsbestätigung an Etsy senden',
+			'en' => 'Send payment notification to Etsy'
+		], 'Etsy\\Procedures\\PaymentNotificationEventProcedure@run');
 	}
 }
