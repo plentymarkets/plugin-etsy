@@ -32,21 +32,25 @@ class ListingTranslationService
 	}
 
 	/**
-	 * @param int             $listingId
-	 * @param ItemDescription $description
-	 * @param string          $language
+	 * Creates a ListingTranslation by listing_id and language
+	 *
+	 * @param int    $listingId
+	 * @param array  $descriptionData
+	 * @param string $language
+	 *
+	 * @return array
+	 * @throws \Exception
 	 */
-	public function createListingTranslation($listingId, ItemDescription $description, $language)
+	public function createListingTranslation($listingId, array $descriptionData, $language)
 	{
-		//TODO need to be adjusted as soon as the itemDescriptionList exists
 		$response = null;
-		$tags     = explode(',', $description->keywords);
+		$tags     = explode(',', $descriptionData['keywords']);
 
 		$data = [
 			'listing_id'  => $listingId,
 			'language'    => $language,
-			'title'       => $description->name1,
-			'description' => strip_tags($description->description),
+			'title'       => $descriptionData['name1'],
+			'description' => strip_tags($descriptionData['description']),
 		];
 
 		if(count($tags) > 0 && strlen($tags[0]) > 0)
@@ -56,7 +60,7 @@ class ListingTranslationService
 			];
 		}
 
-		$response = $this->client->call('createListingTranslation', [
+		return $this->client->call('createListingTranslation', [
 			'listing_id' => $listingId,
 			'language'   => $language,
 		], $data);

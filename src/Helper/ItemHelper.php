@@ -126,24 +126,18 @@ class ItemHelper
 	 *
 	 * @return mixed
 	 */
-	public function getProperty(Record $record, $propertyKey, $lang):string
+	public function getProperty(Record $record, $propertyKey, $lang)
 	{
 		/** @var SettingsCorrelationFactory $settingsCorrelationFactory */
 		$settingsCorrelationFactory = pluginApp(SettingsCorrelationFactory::class);
 
 		foreach($record->itemPropertyList as $itemProperty)
 		{
-			// $settings = $settingsCorrelationFactory->type(SettingsCorrelationFactory::TYPE_PROPERTY)->getSettingsByCorrelation($itemProperty->propertyId);
+			$settings = $settingsCorrelationFactory->type(SettingsCorrelationFactory::TYPE_PROPERTY)->getSettingsByCorrelation('EtsyIntegrationPlugin', $itemProperty['propertyId']);
 
-			$settings = null;
-
-			if(	$settings instanceof Settings &&
-			       isset($settings->settings['mainPropertyKey']) &&
-			       isset($settings->settings['propertyKey']) &&
-			       isset($settings->settings['propertyKey'][$lang]) &&
-			       $settings->settings['mainPropertyKey'] == $propertyKey)
+			if($settings instanceof Settings && isset($settings->settings['mainPropertyKey']) && isset($settings->settings['propertyKey']) && isset($settings->settings['propertyKey'][ $lang ]) && $settings->settings['mainPropertyKey'] == $propertyKey)
 			{
-				return $settings->settings['propertyKey']['lang'];
+				return $settings->settings['propertyValueKey'][ $lang ];
 			}
 		}
 
@@ -174,54 +168,6 @@ class ItemHelper
 	}
 
 	/**
-	 * @return array
-	 */
-	public function getEtsyVariationProperties()
-	{
-		$map = [
-			200 => 'Color',
-			513 => 'Custom 1',
-			514 => 'Custom 2',
-			515 => 'Device',
-			504 => 'Diameter',
-			501 => 'Dimensions',
-			502 => 'Fabric',
-			500 => 'Finish',
-			503 => 'Flavor',
-			505 => 'Height',
-			506 => 'Length',
-			507 => 'Material',
-			508 => 'Pattern',
-			509 => 'Scent',
-			510 => 'Style',
-			100 => 'Size',
-			511 => 'Weight',
-			512 => 'Width',
-		];
-
-		return $map;
-	}
-
-	/**
-	 * @return array
-	 */
-	public function getEtsyQualifierProperties()
-	{
-		$map = [
-			302       => 'Diameter Scale',
-			303       => 'Dimensions Scale',
-			304       => 'Height Scale',
-			305       => 'Length Scale',
-			266817057 => 'Recipient',
-			300       => 'Sizing Scale',
-			301       => 'Weight Scale',
-			306       => 'Width Scale',
-		];
-
-		return $map;
-	}
-
-	/**
 	 * Get the Etsy shipping profile id.
 	 *
 	 * @param Record $record
@@ -234,17 +180,17 @@ class ItemHelper
 		$parcelServicePresetRepo = pluginApp(ParcelServicePresetRepositoryContract::class);
 
 		$parcelServicePresetId = null;
-		$currentPriority = 999;
+		$currentPriority       = 999;
 
 		foreach($record->itemShippingProfilesList as $itemShippingProfile)
 		{
 			try
 			{
-				$parcelServicePreset = $parcelServicePresetRepo->getPresetById($itemShippingProfile->id);
+				$parcelServicePreset = $parcelServicePresetRepo->getPresetById($itemShippingProfile['id']);
 
 				if($parcelServicePreset->priority < $currentPriority)
 				{
-					$currentPriority = $parcelServicePreset->priority;
+					$currentPriority       = $parcelServicePreset->priority;
 					$parcelServicePresetId = $parcelServicePreset->id;
 				}
 			}
@@ -254,9 +200,9 @@ class ItemHelper
 			}
 		}
 
-		// $settings = $settingsCorrelationFactory->type(SettingsCorrelationFactory::TYPE_SHIPPING)->getSettingsByCorrelation($parcelServicePresetId);
+		$settingsCorrelationFactory = pluginApp(SettingsCorrelationFactory::class);
 
-		$settings = null;
+		$settings = $settingsCorrelationFactory->type(SettingsCorrelationFactory::TYPE_SHIPPING)->getSettingsByCorrelation('EtsyIntegrationPlugin', $parcelServicePresetId);
 
 		if($settings instanceof Settings && isset($settings->settings['id']))
 		{
@@ -275,11 +221,11 @@ class ItemHelper
 	 */
 	public function getTaxonomyId(Record $record)
 	{
-		$categoryId = $record->variationStandardCategory->categoryId;
+		$categoryId = $record->variationStandardCategory['categoryId'];
 
-		// $settings = $settingsCorrelationFactory->type(SettingsCorrelationFactory::TYPE_CATEGORY)->getSettingsByCorrelation($categoryId);
+		$settingsCorrelationFactory = pluginApp(SettingsCorrelationFactory::class);
 
-		$settings = null;
+		$settings = $settingsCorrelationFactory->type(SettingsCorrelationFactory::TYPE_CATEGORY)->getSettingsByCorrelation('EtsyIntegrationPlugin', $categoryId);
 
 		if($settings instanceof Settings && isset($settings->settings['id']))
 		{

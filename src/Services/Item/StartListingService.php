@@ -2,9 +2,9 @@
 
 namespace Etsy\Services\Item;
 
-use Etsy\Helper\SettingsHelper;
 use Plenty\Modules\Item\DataLayer\Models\Record;
 
+use Etsy\Helper\SettingsHelper;
 use Etsy\Api\Services\ListingService;
 use Etsy\Api\Services\ListingImageService;
 use Etsy\Helper\ItemHelper;
@@ -65,6 +65,8 @@ class StartListingService
 	}
 
 	/**
+	 * Start the listing
+	 *
 	 * @param Record $record
 	 */
 	public function start(Record $record)
@@ -86,24 +88,32 @@ class StartListingService
 	}
 
 	/**
+	 * Create a listing base.
+	 *
 	 * @param Record $record
 	 *
 	 * @return int
 	 */
 	private function createListing(Record $record)
 	{
+		$language = $this->settingsHelper->getShopSettings('mainLanguage', 'de');
+
+		$title       = $record->itemDescription[ $language ]['name1'];
+		$description = $record->itemDescription[ $language ]['description'];
+		$isSupply = $this->itemHelper->getProperty($record, 'is_supply', $language);
+
 		$data = [
-			'state'                => 'inactive',
-			'title'                => 'Test', // get title
-			'description'          => 'Description', // get description
+			'state'                => 'draft',
+			'title'                => $title,
+			'description'          => $description,
 			'quantity'             => $this->itemHelper->getStock($record),
 			'price'                => number_format($record->variationRetailPrice->price, 2),
 			'shipping_template_id' => $this->itemHelper->getShippingTemplateId($record),
-			'who_made'             => $this->itemHelper->getProperty($record, 'who_made', $this->settingsHelper->getShopSettings('mainLanguage')),
-			'is_supply'            => $this->itemHelper->getProperty($record, 'is_supply', $this->settingsHelper->getShopSettings('mainLanguage')),
-			'occasion'             => $this->itemHelper->getProperty($record, 'is_supply', $this->settingsHelper->getShopSettings('mainLanguage')),
-			'recipient'            => $this->itemHelper->getProperty($record, 'is_supply', $this->settingsHelper->getShopSettings('mainLanguage')),
-			'when_made'            => $this->itemHelper->getProperty($record, 'when_made', $this->settingsHelper->getShopSettings('mainLanguage')),
+			'who_made'             => $this->itemHelper->getProperty($record, 'who_made', 'en'),
+			'is_supply'            => $isSupply ? $isSupply : false,
+			'occasion'             => $this->itemHelper->getProperty($record, 'occasion', 'en'),
+			'recipient'            => $this->itemHelper->getProperty($record, 'recipient', 'en'),
+			'when_made'            => $this->itemHelper->getProperty($record, 'when_made', 'en'),
 			'taxonomy_id'          => $this->itemHelper->getTaxonomyId($record),
 			'should_auto_renew'    => true,
 			'is_digital'           => false
@@ -124,10 +134,12 @@ class StartListingService
 
 		];
 
-		return $this->listingService->createListing($this->settingsHelper->getShopSettings('shopLanguage'), $data); // TODO replace all languages with the shop language
+		return $this->listingService->createListing($this->settingsHelper->getShopSettings('shopLanguage', 'de'), $data); // TODO replace all languages with the shop language
 	}
 
 	/**
+	 * Add pictures to listing.
+	 *
 	 * @param Record $record
 	 * @param int    $listingId
 	 */
@@ -142,17 +154,22 @@ class StartListingService
 	}
 
 	/**
+	 * Add translations to listing.
+	 *
 	 * @param Record $record
 	 * @param int    $listingId
 	 */
 	private function addTranslations(Record $record, $listingId)
 	{
-		//TODO add foreach for the itemDescriptionList
-		foreach($record as $description) // does not work until you replace with ->itemDescriptionList
+		foreach($this->settingsHelper->getShopSettings('exportLanguages', [$this->settingsHelper->getShopSettings('mainLanguage', 'de')]) as $language)
 		{
-			if(is_array($this->settingsHelper->getShopSettings('exportLanguages')) && in_array($description->lang, $this->settingsHelper->getShopSettings('exportLanguages')) && strlen($description->name1) > 0 && strlen($description->description) > 0)
+			try
 			{
-				$this->listingTranslationService->createListingTranslation($listingId, $description, $description->lang);
+				$this->listingTranslationService->createListingTranslation($listingId, $record->itemDescription[ $language ], $language);
+			}
+			catch(\Exception $ex)
+			{
+				$this->logger->log('Could not upload translation for listing ID ' . $listingId . ': ' . $ex->getMessage());
 			}
 		}
 	}

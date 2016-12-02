@@ -2,12 +2,15 @@
 
 namespace Etsy\DataProviders;
 
-use Etsy\Helper\OrderHelper;
 use Plenty\Plugin\Application;
 use Plenty\Plugin\ConfigRepository;
-use Etsy\Contracts\ItemDataProviderContract;
 use Plenty\Modules\Item\DataLayer\Models\RecordList;
 use Plenty\Modules\Item\DataLayer\Contracts\ItemDataLayerRepositoryContract;
+
+use Etsy\Helper\OrderHelper;
+use Etsy\Helper\SettingsHelper;
+use Etsy\Contracts\ItemDataProviderContract;
+
 
 /**
  * Class ItemExportDataProvider
@@ -30,15 +33,22 @@ class ItemExportDataProvider implements ItemDataProviderContract
 	private $orderHelper;
 
 	/**
+	 * @var SettingsHelper
+	 */
+	private $settingsHelper;
+
+	/**
 	 * @param ItemDataLayerRepositoryContract $itemDataLayerRepository
 	 * @param ConfigRepository                $config
 	 * @param OrderHelper                     $orderHelper
+	 * @param SettingsHelper                  $settingsHelper
 	 */
-	public function __construct(ItemDataLayerRepositoryContract $itemDataLayerRepository, ConfigRepository $config, OrderHelper $orderHelper)
+	public function __construct(ItemDataLayerRepositoryContract $itemDataLayerRepository, ConfigRepository $config, OrderHelper $orderHelper, SettingsHelper $settingsHelper)
 	{
 		$this->itemDataLayerRepository = $itemDataLayerRepository;
 		$this->config                  = $config;
 		$this->orderHelper             = $orderHelper;
+		$this->settingsHelper          = $settingsHelper;
 	}
 
 	/**
@@ -67,13 +77,16 @@ class ItemExportDataProvider implements ItemDataProviderContract
 				'name',
 			],
 
-			'itemDescriptionList' => [
-				'name1',
-				'description',
-				'shortDescription',
-				'technicalData',
-				'keywords',
-				'lang'
+			'itemDescription' => [
+				'params' => $this->getItemDescriptionParams(),
+				'fields' => [
+					'name1',
+					'description',
+					'shortDescription',
+					'technicalData',
+					'keywords',
+					'lang',
+				],
 			],
 
 			'variationMarketStatus' => [
@@ -189,5 +202,30 @@ class ItemExportDataProvider implements ItemDataProviderContract
 	{
 		return [
 		];
+	}
+
+	/**
+	 * Get the item description params.
+	 *
+	 * @return array
+	 */
+	private function getItemDescriptionParams()
+	{
+		$exportLanguages = $this->settingsHelper->getShopSettings('exportLanguages', [$this->settingsHelper->getShopSettings('mainLanguage', 'de')]);
+
+		$list = [
+			$this->settingsHelper->getShopSettings('mainLanguage', 'de') => [
+				'language' => $this->settingsHelper->getShopSettings('mainLanguage', 'de'),
+			]
+		];
+
+		foreach($exportLanguages as $language)
+		{
+			$list[ $language ] = [
+				'language' => $language,
+			];
+		}
+
+		return $list;
 	}
 }

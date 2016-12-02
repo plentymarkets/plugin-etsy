@@ -23,6 +23,11 @@ class SettingsHelper
 	private $dynamoDbRepo;
 
 	/**
+	 * @var array
+	 */
+	private $settings;
+
+	/**
 	 * @param DynamoDbRepositoryContract $dynamoDbRepository
 	 */
 	public function __construct(DynamoDbRepositoryContract $dynamoDbRepository)
@@ -54,10 +59,11 @@ class SettingsHelper
 	 * Get settings for a given id.
 	 *
 	 * @param string $name
+	 * @param mixed $default
 	 *
 	 * @return string|null
 	 */
-	public function get($name)
+	public function get($name, $default = null)
 	{
 		$data = $this->dynamoDbRepo->getItem('EtsyIntegrationPlugin', self::TABLE_NAME, true, [
 			'name' => ['S' => $name]
@@ -68,22 +74,27 @@ class SettingsHelper
 			return $data['value']['S'];
 		}
 
-		return null;
+		return $default;
 	}
 
 	/**
 	 * Get the shop settings.
 	 *
 	 * @param string $key
+	 * @param mixed $default
+	 *
 	 * @return mixed|null
 	 */
-	public function getShopSettings($key)
+	public function getShopSettings($key, $default = null)
 	{
-		$settings = $this->get(SettingsHelper::SETTINGS_SETTINGS);
-
-		if($settings)
+		if(!$this->settings)
 		{
-			$settings = json_decode($settings, true);
+			$this->settings = $this->get(SettingsHelper::SETTINGS_SETTINGS);
+		}
+
+		if($this->settings)
+		{
+			$settings = json_decode($this->settings, true);
 
 			if(isset($settings['shop'][$key]))
 			{
@@ -92,6 +103,6 @@ class SettingsHelper
 
 		}
 
-		return null;
+		return $default;
 	}
 }

@@ -2,6 +2,7 @@
 
 namespace Etsy\Services\Batch\Item;
 
+use Plenty\Modules\Item\DataLayer\Models\Record;
 use Plenty\Plugin\Application;
 use Plenty\Exceptions\ValidationException;
 use Plenty\Modules\Item\DataLayer\Models\RecordList;
@@ -67,7 +68,15 @@ class ItemExportService extends AbstractBatchService
 					                                      // TODO fill here all data that we need for starting an etsy listing
 				                                      ]);
 
-				$this->service->start($record);
+				if($this->isAlreadyCreated($record))
+				{
+
+				}
+				else
+				{
+					$this->service->start($record);
+				}
+
 			}
 			catch(ValidationException $ex)
 			{
@@ -79,5 +88,17 @@ class ItemExportService extends AbstractBatchService
 				}
 			}
 		}
+	}
+
+	/**
+	 * Check if listing is already created.
+	 *
+	 * @param Record $record
+	 *
+	 * @return bool
+	 */
+	private function isAlreadyCreated(Record $record):bool
+	{
+		return false;
 	}
 }

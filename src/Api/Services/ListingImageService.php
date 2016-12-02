@@ -37,7 +37,7 @@ class ListingImageService
 	public function uploadListingImage($listingId, $image)
 	{
 		$data = [
-			'image' => 'http://testmag.co.uk/wp-content/uploads/2011/06/TEST-PRESENTS.jpg', // TODO replace $image
+			'image' => $image,
 		];
 
 		$this->client->call('uploadListingImage', [
