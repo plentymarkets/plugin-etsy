@@ -115,9 +115,6 @@ class StartListingService
 			// item_width
 			// item_height
 			// item_dimensions_unit
-			// recipient
-			// occasion
-			// style
 			// currency_code
 			// tags
 			// materials

@@ -57,12 +57,7 @@ class UpdateListingService
 	 */
 	public function update(Record $record)
 	{
-		if(strlen((string) $record->variationMarketStatus->sku) > 0)
-		{
-			$listingId = $record->variationMarketStatus->sku;
-		}
-
-		$listingId = $this->createListingMockupResponse();  //TODO need to be deleted
+		$listingId = $record->variationMarketStatus->sku;
 
 		if(!is_null($listingId))
 		{
@@ -88,13 +83,5 @@ class UpdateListingService
 		];
 
 		$this->listingService->updateListing($listingId, $data);
-	}
-
-	/**
-	 * @return int
-	 */
-	private function createListingMockupResponse()
-	{
-		return 465564444;
 	}
 }
