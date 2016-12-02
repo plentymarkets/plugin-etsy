@@ -2,6 +2,10 @@
 
 namespace Etsy\Helper;
 
+use Plenty\Modules\Market\Settings\Contracts\SettingsRepositoryContract;
+use Plenty\Modules\Market\Settings\Factories\SettingsCorrelationFactory;
+use Plenty\Modules\Market\Settings\Models\Settings;
+use Plenty\Modules\Order\Shipping\Contracts\ParcelServicePresetRepositoryContract;
 use Plenty\Plugin\Application;
 use Plenty\Plugin\ConfigRepository;
 use Plenty\Modules\Helper\Contracts\UrlBuilderRepositoryContract;
@@ -114,32 +118,36 @@ class ItemHelper
 	}
 
 	/**
+	 * Get the Etsy property.
+	 *
 	 * @param Record $record
-	 * @param string $propertyName
+	 * @param string $propertyKey
+	 * @param string $lang
 	 *
 	 * @return mixed
 	 */
-	public function getItemProperty(Record $record, $propertyName)
+	public function getProperty(Record $record, $propertyKey, $lang):string
 	{
-		// TODO grab correlations
+		/** @var SettingsCorrelationFactory $settingsCorrelationFactory */
+		$settingsCorrelationFactory = pluginApp(SettingsCorrelationFactory::class);
 
-		switch($propertyName)
+		foreach($record->itemPropertyList as $itemProperty)
 		{
-			case 'shipping_template_id':
-				return 28734983909;
+			// $settings = $settingsCorrelationFactory->type(SettingsCorrelationFactory::TYPE_PROPERTY)->getSettingsByCorrelation($itemProperty->propertyId);
 
-			case 'who_made':
-				return 'i_did';
+			$settings = null;
 
-			case 'is_supply':
-				return false;
-
-			case 'when_made':
-				return '1990_1996';
-
-			default:
-				return '';
+			if(	$settings instanceof Settings &&
+			       isset($settings->settings['mainPropertyKey']) &&
+			       isset($settings->settings['propertyKey']) &&
+			       isset($settings->settings['propertyKey'][$lang]) &&
+			       $settings->settings['mainPropertyKey'] == $propertyKey)
+			{
+				return $settings->settings['propertyKey']['lang'];
+			}
 		}
+
+		return '';
 	}
 
 	/**
@@ -214,106 +222,70 @@ class ItemHelper
 	}
 
 	/**
-	 * @return array
+	 * Get the Etsy shipping profile id.
+	 *
+	 * @param Record $record
+	 *
+	 * @return int|null
 	 */
-	public function getEtsyMarketplaceAttributes()
+	public function getShippingTemplateId(Record $record)
 	{
-		$map = [
-			'who_made' => [
-				'i_did',
-				'collective',
-				'someone_else'
-			],
+		/** @var ParcelServicePresetRepositoryContract $parcelServicePresetRepo */
+		$parcelServicePresetRepo = pluginApp(ParcelServicePresetRepositoryContract::class);
 
-			'when_made'            => [
-				'made_to_order',
-				'2010_2016',
-				'2000_2009',
-				'1997_1999',
-				'before_1997',
-				'1990_1996',
-				'1980s',
-				'1970s',
-				'1960s',
-				'1950s',
-				'1940s',
-				'1930s',
-				'1920s',
-				'1910s',
-				'1900s',
-				'1800s',
-				'1700s',
-				'before_1700'
-			],
-			'item_weight_units'    => [
-				'oz',
-				'lb',
-				'g',
-				'kg',
-			],
-			'item_dimensions_unit' => [
-				'in',
-				'ft',
-				'mm',
-				'cm',
-				'm',
-			],
-			'recipient'            => [
-				'men',
-				'women',
-				'unisex_adults',
-				'teen_boys',
-				'teen_girls',
-				'teens',
-				'boys',
-				'girls',
-				'children',
-				'baby_boys',
-				'baby_girls',
-				'babies',
-				'birds',
-				'cats',
-				'dogs',
-				'pets',
-				'not_specified'
-			],
-			'occasion'             => [
-				'anniversary',
-				'baptism',
-				'bar_or_bat_mitzvah',
-				'birthday',
-				'canada_day',
-				'chinese_new_year',
-				'cinco_de_mayo',
-				'confirmation',
-				'christmas',
-				'day_of_the_dead',
-				'easter',
-				'eid',
-				'engagement',
-				'fathers_day',
-				'get_well',
-				'graduation',
-				'halloween',
-				'hanukkah',
-				'housewarming',
-				'kwanzaa',
-				'prom',
-				'july_4th',
-				'mothers_day',
-				'new_baby',
-				'new_years',
-				'quinceanera',
-				'retirement',
-				'st_patricks_day',
-				'sweet_16',
-				'sympathy',
-				'thanksgiving',
-				'valentines',
-				'wedding'
-			],
-		];
+		$parcelServicePresetId = null;
+		$currentPriority = 999;
 
-		return $map;
+		foreach($record->itemShippingProfilesList as $itemShippingProfile)
+		{
+			try
+			{
+				$parcelServicePreset = $parcelServicePresetRepo->getPresetById($itemShippingProfile->id);
+
+				if($parcelServicePreset->priority < $currentPriority)
+				{
+					$currentPriority = $parcelServicePreset->priority;
+					$parcelServicePresetId = $parcelServicePreset->id;
+				}
+			}
+			catch(\Exception $ex)
+			{
+				// do nothing, move to next one
+			}
+		}
+
+		// $settings = $settingsCorrelationFactory->type(SettingsCorrelationFactory::TYPE_SHIPPING)->getSettingsByCorrelation($parcelServicePresetId);
+
+		$settings = null;
+
+		if($settings instanceof Settings && isset($settings->settings['id']))
+		{
+			return $settings->settings['id'];
+		}
+
+		return null;
+	}
+
+	/**
+	 * Get the Etsy taxonomy id.
+	 *
+	 * @param Record $record
+	 *
+	 * @return int|null
+	 */
+	public function getTaxonomyId(Record $record)
+	{
+		$categoryId = $record->variationStandardCategory->categoryId;
+
+		// $settings = $settingsCorrelationFactory->type(SettingsCorrelationFactory::TYPE_CATEGORY)->getSettingsByCorrelation($categoryId);
+
+		$settings = null;
+
+		if($settings instanceof Settings && isset($settings->settings['id']))
+		{
+			return $settings->settings['id'];
+		}
+
+		return null;
 	}
 }

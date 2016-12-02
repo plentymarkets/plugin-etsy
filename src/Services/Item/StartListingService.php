@@ -3,7 +3,6 @@
 namespace Etsy\Services\Item;
 
 use Etsy\Helper\SettingsHelper;
-use Plenty\Plugin\ConfigRepository;
 use Plenty\Modules\Item\DataLayer\Models\Record;
 
 use Etsy\Api\Services\ListingService;
@@ -17,11 +16,6 @@ use Etsy\Api\Services\ListingTranslationService;
  */
 class StartListingService
 {
-	/**
-	 * @var ConfigRepository
-	 */
-	private $config;
-
 	/**
 	 * @var ItemHelper
 	 */
@@ -54,25 +48,15 @@ class StartListingService
 
 	/**
 	 * @param ItemHelper                $itemHelper
-	 * @param ConfigRepository          $config
 	 * @param ListingService            $listingService
 	 * @param ListingImageService       $listingImageService
 	 * @param Logger                    $logger
 	 * @param ListingTranslationService $listingTranslationService
 	 * @param SettingsHelper            $settingsHelper
 	 */
-	public function __construct(
-		ItemHelper $itemHelper,
-		ConfigRepository $config,
-		ListingService $listingService,
-		ListingImageService $listingImageService,
-		Logger $logger,
-		ListingTranslationService $listingTranslationService,
-		SettingsHelper $settingsHelper
-	)
+	public function __construct(ItemHelper $itemHelper, ListingService $listingService, ListingImageService $listingImageService, Logger $logger, ListingTranslationService $listingTranslationService, SettingsHelper $settingsHelper)
 	{
 		$this->itemHelper                = $itemHelper;
-		$this->config                    = $config;
 		$this->logger                    = $logger;
 		$this->listingTranslationService = $listingTranslationService;
 		$this->listingService            = $listingService;
@@ -85,21 +69,11 @@ class StartListingService
 	 */
 	public function start(Record $record)
 	{
-
-		if(strlen((string) $record->variationMarketStatus->sku) == 0)
-		{
-			$listingId = $this->createListing($record);
-		}
-		else
-		{
-			$listingId = $record->variationMarketStatus->sku;
-		}
-
-		$listingId = $this->createListingMockupResponse();
+		$listingId = $this->createListing($record);
 
 		if(!is_null($listingId))
 		{
-			// $this->addPictures($record, $listingId);
+			$this->addPictures($record, $listingId);
 
 			$this->addTranslations($record, $listingId);
 
@@ -113,6 +87,7 @@ class StartListingService
 
 	/**
 	 * @param Record $record
+	 *
 	 * @return int
 	 */
 	private function createListing(Record $record)
@@ -123,12 +98,14 @@ class StartListingService
 			'description'          => 'Description', // get description
 			'quantity'             => $this->itemHelper->getStock($record),
 			'price'                => number_format($record->variationRetailPrice->price, 2),
-			'shipping_template_id' => $this->itemHelper->getItemProperty($record, 'shipping_template_id'),
-			'who_made'             => $this->itemHelper->getItemProperty($record, 'who_made'),
-			'is_supply'            => (string) $this->itemHelper->getItemProperty($record, 'is_supply'),
-			'when_made'            => $this->itemHelper->getItemProperty($record, 'when_made'),
-			'taxonomy_id'          => '',
-			'should_auto_renew'    => false,
+			'shipping_template_id' => $this->itemHelper->getShippingTemplateId($record),
+			'who_made'             => $this->itemHelper->getProperty($record, 'who_made', $this->settingsHelper->getShopSettings('mainLanguage')),
+			'is_supply'            => $this->itemHelper->getProperty($record, 'is_supply', $this->settingsHelper->getShopSettings('mainLanguage')),
+			'occasion'             => $this->itemHelper->getProperty($record, 'is_supply', $this->settingsHelper->getShopSettings('mainLanguage')),
+			'recipient'            => $this->itemHelper->getProperty($record, 'is_supply', $this->settingsHelper->getShopSettings('mainLanguage')),
+			'when_made'            => $this->itemHelper->getProperty($record, 'when_made', $this->settingsHelper->getShopSettings('mainLanguage')),
+			'taxonomy_id'          => $this->itemHelper->getTaxonomyId($record),
+			'should_auto_renew'    => true,
 			'is_digital'           => false
 
 			// TODO
@@ -193,23 +170,8 @@ class StartListingService
 			'state' => 'active',
 		];
 
-		$response = $this->listingService->updateListing($listingId, $data);
+		$this->listingService->updateListing($listingId, $data);
 
-		if($response)
-		{
-			$this->itemHelper->generateSku($listingId, $variationId);
-		}
-		else
-		{
-			// TODO throw exception
-		}
-	}
-
-	/**
-	 * @return int
-	 */
-	private function createListingMockupResponse()
-	{
-		return 465564444;
+		$this->itemHelper->generateSku($listingId, $variationId);
 	}
 }

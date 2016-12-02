@@ -3,6 +3,7 @@
 namespace Etsy\DataProviders;
 
 use Etsy\Helper\OrderHelper;
+use Plenty\Plugin\Application;
 use Plenty\Plugin\ConfigRepository;
 use Etsy\Contracts\ItemDataProviderContract;
 use Plenty\Modules\Item\DataLayer\Models\RecordList;
@@ -61,6 +62,11 @@ class ItemExportDataProvider implements ItemDataProviderContract
 				'producer',
 			],
 
+			'itemShippingProfilesList' => [
+				'id',
+				'name',
+			],
+
 			'itemDescriptionList' => [
 				'name1',
 				'description',
@@ -95,6 +101,24 @@ class ItemExportDataProvider implements ItemDataProviderContract
 				'fields' => [
 					'stockNet'
 				]
+			],
+
+			'variationStandardCategory' => [
+				'params' => [
+					'plentyId' => pluginApp(Application::class)->getPlentyId(),
+				],
+				'fields' => [
+					'categoryId'
+				],
+			],
+
+			'itemCharacterList' => [
+				'itemCharacterId',
+				'characterId',
+				'characterValue',
+				'characterValueType',
+				'isOrderCharacter',
+				'characterOrderMarkup'
 			],
 
 			'variationImageList' => [
@@ -164,7 +188,6 @@ class ItemExportDataProvider implements ItemDataProviderContract
 	private function params()
 	{
 		return [
-			'group_by' => 'groupBy.itemId'
 		];
 	}
 }
