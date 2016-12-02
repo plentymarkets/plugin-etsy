@@ -6,6 +6,7 @@ use Plenty\Modules\Market\Settings\Contracts\SettingsRepositoryContract;
 use Plenty\Modules\Market\Settings\Factories\SettingsCorrelationFactory;
 
 use Etsy\Api\Services\DataTypeService;
+use Etsy\Api\Services\StyleService;
 use Plenty\Modules\Market\Settings\Models\Settings;
 
 /**
@@ -19,6 +20,11 @@ class PropertyImportService
 	private $dataTypeService;
 
 	/**
+	 * @var StyleService
+	 */
+	private $styleService;
+
+	/**
 	 * @var SettingsRepositoryContract
 	 */
 	private $settingsRepository;
@@ -30,11 +36,13 @@ class PropertyImportService
 
 	/**
 	 * @param DataTypeService            $dataTypeService
+	 * @param StyleService               $styleService
 	 * @param SettingsRepositoryContract $settingsRepository
 	 */
-	public function __construct(DataTypeService $dataTypeService, SettingsRepositoryContract $settingsRepository)
+	public function __construct(DataTypeService $dataTypeService, StyleService $styleService, SettingsRepositoryContract $settingsRepository)
 	{
 		$this->dataTypeService    = $dataTypeService;
+		$this->styleService       = $styleService;
 		$this->settingsRepository = $settingsRepository;
 	}
 
@@ -55,7 +63,15 @@ class PropertyImportService
 
 		if(is_array($properties) && count($properties))
 		{
-			$languages = ['en', 'de', 'it', 'es', 'pt', 'fr', 'nl']; // the order here is very important for calculating the hash key
+			$languages = [
+				'en',
+				'de',
+				'it',
+				'es',
+				'pt',
+				'fr',
+				'nl'
+			]; // the order here is very important for calculating the hash key
 
 			foreach($properties as $propertyKey)
 			{
@@ -65,21 +81,27 @@ class PropertyImportService
 
 					foreach($languages as $language)
 					{
-						if($propertyKey == 'when_made')
+						switch($propertyKey)
 						{
-							$enum[ $language ] = $this->dataTypeService->describeWhenMadeEnum($language);
-						}
-						elseif($propertyKey == 'who_made')
-						{
-							$enum[ $language ] = $this->dataTypeService->describeWhoMadeEnum($language);
-						}
-						elseif($propertyKey == 'occasion')
-						{
-							$enum[ $language ] = $this->dataTypeService->describeOccasionEnum($language);
-						}
-						elseif($propertyKey == 'recipient')
-						{
-							$enum[ $language ] = $this->dataTypeService->describeRecipientEnum($language);
+							case 'when_made':
+								$enum[ $language ] = $this->dataTypeService->describeWhenMadeEnum($language);
+								break;
+
+							case 'who_made':
+								$enum[ $language ] = $this->dataTypeService->describeWhoMadeEnum($language);
+								break;
+
+							case 'occasion':
+								$enum[ $language ] = $this->dataTypeService->describeOccasionEnum($language);
+								break;
+
+							case 'recipient':
+								$enum[ $language ] = $this->dataTypeService->describeRecipientEnum($language);
+								break;
+
+							case 'style':
+								$enum[ $language ] = $this->convertStyleTypeToEnumType($this->styleService->findSuggestedStyles($language));
+								break;
 						}
 					}
 
@@ -110,6 +132,34 @@ class PropertyImportService
 				$this->currentProperties[ $propertySetting->settings['mainPropertyKey'] ][ $propertySetting->settings['hash'] ] = $propertySetting;
 			}
 		}
+	}
+
+	/**
+	 * Convert the returned style type to an enum type.
+	 *
+	 * @param array $data
+	 *
+	 * @return array
+	 */
+	private function convertStyleTypeToEnumType($data)
+	{
+		$enumType = [
+			'type'      => 'enum',
+			'values'    => [],
+			'formatted' => [],
+		];
+
+		if(is_array($data) && count($data))
+		{
+			foreach($data as $result)
+			{
+				$enumType['values'][]                         = $result['style_id'];
+				$enumType['formatted'][ $result['style_id'] ] = $result['style'];
+
+			}
+		}
+
+		return $enumType;
 	}
 
 	/**
@@ -191,6 +241,10 @@ class PropertyImportService
 			'recipient' => [
 				'en' => 'Recipient',
 				'de' => 'Empfänger',
+			],
+			'style'     => [
+				'en' => 'Style',
+				'de' => 'Stil',
 			]
 		];
 
