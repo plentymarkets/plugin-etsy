@@ -4,6 +4,8 @@ namespace Etsy\Migrations;
 use Plenty\Modules\Plugin\DynamoDb\Contracts\DynamoDbRepositoryContract;
 use Plenty\Plugin\ConfigRepository;
 
+use Etsy\Helper\ImageHelper;
+
 /**
  * Class CreateVariationImageTable
  */
@@ -15,7 +17,7 @@ class CreateVariationImageTable
 	 */
 	public function run(DynamoDbRepositoryContract $dynamoDbRepository, ConfigRepository $config)
 	{
-		$dynamoDbRepository->createTable('EtsyIntegrationPlugin', 'variation_images', [
+		$dynamoDbRepository->createTable('EtsyIntegrationPlugin', ImageHelper::TABLE_NAME, [
 			[
 				'AttributeName' => 'id',
 				'AttributeType' => DynamoDbRepositoryContract::FIELD_TYPE_STRING
