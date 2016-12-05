@@ -33,6 +33,8 @@ class ListingImageService
 	/**
 	 * @param int    $listingId
 	 * @param string $image
+	 *
+	 * @return mixed
 	 */
 	public function uploadListingImage($listingId, $image)
 	{
@@ -40,7 +42,7 @@ class ListingImageService
 			'image' => $image,
 		];
 
-		$this->client->call('uploadListingImage', [
+		return $this->client->call('uploadListingImage', [
 			'listing_id' => $listingId,
 		], $data);
 	}

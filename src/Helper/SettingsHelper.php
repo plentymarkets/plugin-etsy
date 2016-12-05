@@ -47,10 +47,10 @@ class SettingsHelper
 	{
 		return $this->dynamoDbRepo->putItem('EtsyIntegrationPlugin', self::TABLE_NAME, [
 			'name'  => [
-				'S' => (string) $name,
+				DynamoDbRepositoryContract::FIELD_TYPE_STRING => (string) $name,
 			],
 			'value' => [
-				'S' => (string) $value,
+				DynamoDbRepositoryContract::FIELD_TYPE_STRING => (string) $value,
 			],
 		]);
 	}
@@ -59,19 +59,19 @@ class SettingsHelper
 	 * Get settings for a given id.
 	 *
 	 * @param string $name
-	 * @param mixed $default
+	 * @param mixed  $default
 	 *
 	 * @return string|null
 	 */
 	public function get($name, $default = null)
 	{
 		$data = $this->dynamoDbRepo->getItem('EtsyIntegrationPlugin', self::TABLE_NAME, true, [
-			'name' => ['S' => $name]
+			'name' => [DynamoDbRepositoryContract::FIELD_TYPE_STRING => $name]
 		]);
 
-		if(isset($data['value']['S']))
+		if(isset($data['value'][ DynamoDbRepositoryContract::FIELD_TYPE_STRING ]))
 		{
-			return $data['value']['S'];
+			return $data['value'][ DynamoDbRepositoryContract::FIELD_TYPE_STRING ];
 		}
 
 		return $default;
@@ -81,7 +81,7 @@ class SettingsHelper
 	 * Get the shop settings.
 	 *
 	 * @param string $key
-	 * @param mixed $default
+	 * @param mixed  $default
 	 *
 	 * @return mixed|null
 	 */
@@ -96,9 +96,9 @@ class SettingsHelper
 		{
 			$settings = json_decode($this->settings, true);
 
-			if(isset($settings['shop'][$key]))
+			if(isset($settings['shop'][ $key ]))
 			{
-				return $settings['shop'][$key];
+				return $settings['shop'][ $key ];
 			}
 
 		}

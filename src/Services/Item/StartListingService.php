@@ -2,6 +2,7 @@
 
 namespace Etsy\Services\Item;
 
+use Etsy\Helper\ImageHelper;
 use Plenty\Modules\Item\DataLayer\Models\Record;
 
 use Etsy\Helper\SettingsHelper;
@@ -47,14 +48,27 @@ class StartListingService
 	private $settingsHelper;
 
 	/**
+	 * @var ImageHelper
+	 */
+	private $imageHelper;
+
+	/**
 	 * @param ItemHelper                $itemHelper
 	 * @param ListingService            $listingService
 	 * @param ListingImageService       $listingImageService
 	 * @param Logger                    $logger
 	 * @param ListingTranslationService $listingTranslationService
 	 * @param SettingsHelper            $settingsHelper
+	 * @param ImageHelper               $imageHelper
 	 */
-	public function __construct(ItemHelper $itemHelper, ListingService $listingService, ListingImageService $listingImageService, Logger $logger, ListingTranslationService $listingTranslationService, SettingsHelper $settingsHelper)
+	public function __construct(
+		ItemHelper $itemHelper,
+		ListingService $listingService,
+		ListingImageService $listingImageService,
+		Logger $logger,
+		ListingTranslationService $listingTranslationService,
+		SettingsHelper $settingsHelper,
+		ImageHelper $imageHelper)
 	{
 		$this->itemHelper                = $itemHelper;
 		$this->logger                    = $logger;
@@ -62,6 +76,7 @@ class StartListingService
 		$this->listingService            = $listingService;
 		$this->listingImageService       = $listingImageService;
 		$this->settingsHelper            = $settingsHelper;
+		$this->imageHelper               = $imageHelper;
 	}
 
 	/**
@@ -110,13 +125,13 @@ class StartListingService
 			'price'                => number_format($record->variationRetailPrice->price, 2),
 			'shipping_template_id' => $this->itemHelper->getShippingTemplateId($record),
 			'who_made'             => $this->itemHelper->getProperty($record, 'who_made', 'en'),
-			'is_supply'            => $isSupply ? $isSupply : false,
+			'is_supply'            => strlen($isSupply) ? 'true' : 'false',
 			'occasion'             => $this->itemHelper->getProperty($record, 'occasion', 'en'),
 			'recipient'            => $this->itemHelper->getProperty($record, 'recipient', 'en'),
 			'when_made'            => $this->itemHelper->getProperty($record, 'when_made', 'en'),
 			'taxonomy_id'          => $this->itemHelper->getTaxonomyId($record),
-			'should_auto_renew'    => true,
-			'is_digital'           => false
+			'should_auto_renew'    => 'true',
+			'is_digital'           => 'false'
 
 			// TODO
 			// item_weight
@@ -149,7 +164,7 @@ class StartListingService
 
 		foreach($list as $image)
 		{
-			$this->listingImageService->uploadListingImage($listingId, $image);
+			$response = $this->listingImageService->uploadListingImage($listingId, $image);
 		}
 	}
 
@@ -163,13 +178,16 @@ class StartListingService
 	{
 		foreach($this->settingsHelper->getShopSettings('exportLanguages', [$this->settingsHelper->getShopSettings('mainLanguage', 'de')]) as $language)
 		{
-			try
+			if($language != $this->settingsHelper->getShopSettings('mainLanguage', 'de'))
 			{
-				$this->listingTranslationService->createListingTranslation($listingId, $record->itemDescription[ $language ], $language);
-			}
-			catch(\Exception $ex)
-			{
-				$this->logger->log('Could not upload translation for listing ID ' . $listingId . ': ' . $ex->getMessage());
+				try
+				{
+					$this->listingTranslationService->createListingTranslation($listingId, $record->itemDescription[ $language ], $language);
+				}
+				catch(\Exception $ex)
+				{
+					$this->logger->log('Could not upload translation for listing ID ' . $listingId . ': ' . $ex->getMessage());
+				}
 			}
 		}
 	}
