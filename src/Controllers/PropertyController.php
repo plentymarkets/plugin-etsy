@@ -48,7 +48,8 @@ class PropertyController extends Controller
 			'occasion',
 			'when_made',
 			'recipient',
-			'who_made'
+			'who_made',
+			'style',
 		]), $this->request->get('force', false) === "true");
 
 		return pluginApp(Response::class)->make('', 204);
