@@ -61,14 +61,7 @@ class StartListingService
 	 * @param SettingsHelper            $settingsHelper
 	 * @param ImageHelper               $imageHelper
 	 */
-	public function __construct(
-		ItemHelper $itemHelper,
-		ListingService $listingService,
-		ListingImageService $listingImageService,
-		Logger $logger,
-		ListingTranslationService $listingTranslationService,
-		SettingsHelper $settingsHelper,
-		ImageHelper $imageHelper)
+	public function __construct(ItemHelper $itemHelper, ListingService $listingService, ListingImageService $listingImageService, Logger $logger, ListingTranslationService $listingTranslationService, SettingsHelper $settingsHelper, ImageHelper $imageHelper)
 	{
 		$this->itemHelper                = $itemHelper;
 		$this->logger                    = $logger;
@@ -115,8 +108,6 @@ class StartListingService
 
 		$title       = $record->itemDescription[ $language ]['name1'];
 		$description = $record->itemDescription[ $language ]['description'];
-		$tags        = $record->itemDescription[ $language ]['tags'];
-		$isSupply = $this->itemHelper->getProperty($record, 'is_supply', $language);
 
 		$data = [
 			'state'                => 'draft',
@@ -125,15 +116,10 @@ class StartListingService
 			'quantity'             => $this->itemHelper->getStock($record),
 			'price'                => number_format($record->variationRetailPrice->price, 2),
 			'shipping_template_id' => $this->itemHelper->getShippingTemplateId($record),
-			'who_made'             => $this->itemHelper->getProperty($record, 'who_made', 'en'),
-			'is_supply'            => strlen($isSupply) ? 'true' : 'false',
-			'occasion'             => $this->itemHelper->getProperty($record, 'occasion', 'en'),
-			'recipient'            => $this->itemHelper->getProperty($record, 'recipient', 'en'),
-			'when_made'            => $this->itemHelper->getProperty($record, 'when_made', 'en'),
 			'taxonomy_id'          => $this->itemHelper->getTaxonomyId($record),
 			'should_auto_renew'    => 'true',
 			'is_digital'           => 'false',
-			'tags'                 => $tags,
+			'is_supply'            => 'false',
 
 			// TODO
 			// item_weight
@@ -149,6 +135,36 @@ class StartListingService
 			// processing_max
 
 		];
+
+		if($isSupply = $this->itemHelper->getProperty($record, 'is_supply', $language))
+		{
+			$data['is_supply'] = $isSupply;
+		}
+
+		if(strlen($record->itemDescription[ $language ]['tags']))
+		{
+			$data['tags'] = $record->itemDescription[ $language ]['tags'];
+		}
+
+		if($whoMade = $this->itemHelper->getProperty($record, 'who_made', 'en'))
+		{
+			$data['who_made'] = $whoMade;
+		}
+
+		if($whenMade = $this->itemHelper->getProperty($record, 'when_made', 'en'))
+		{
+			$data['when_made'] = $whenMade;
+		}
+
+		if($occasion = $this->itemHelper->getProperty($record, 'occasion', 'en'))
+		{
+			$data['occasion'] = $occasion;
+		}
+
+		if($recipient = $this->itemHelper->getProperty($record, 'recipient', 'en'))
+		{
+			$data['recipient'] = $recipient;
+		}
 
 		return $this->listingService->createListing($this->settingsHelper->getShopSettings('shopLanguage', 'de'), $data); // TODO replace all languages with the shop language
 	}
@@ -199,11 +215,23 @@ class StartListingService
 	{
 		foreach($this->settingsHelper->getShopSettings('exportLanguages', [$this->settingsHelper->getShopSettings('mainLanguage', 'de')]) as $language)
 		{
-			if($language != $this->settingsHelper->getShopSettings('mainLanguage', 'de'))
+			if($language != $this->settingsHelper->getShopSettings('mainLanguage', 'de') &&
+			   $record->itemDescription[ $language ]['name1'] &&
+			   strip_tags($record->itemDescription[ $language ]['description']))
 			{
 				try
 				{
-					$this->listingTranslationService->createListingTranslation($listingId, $record->itemDescription[ $language ], $language);
+					$data = [
+						'title'       => $record->itemDescription[ $language ]['name1'],
+						'description' => strip_tags($record->itemDescription[ $language ]['description']),
+					];
+
+					if($record->itemDescription[ $language ]['keywords'])
+					{
+						$data['tags'] = $record->itemDescription[ $language ]['keywords'];
+					}
+
+					$this->listingTranslationService->createListingTranslation($listingId, $language, $data);
 				}
 				catch(\Exception $ex)
 				{

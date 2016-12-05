@@ -141,7 +141,7 @@ class ItemHelper
 			}
 		}
 
-		return '';
+		return null;
 	}
 
 	/**

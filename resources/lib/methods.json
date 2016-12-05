@@ -387,7 +387,7 @@
       "taxonomy_id": "int",
       "is_digital": "string",
       "should_auto_renew": "string",
-      "tags": "array(string)",
+      "tags": "string",
       "who_made": "string",
       "is_supply": "string",
       "when_made": "string",
