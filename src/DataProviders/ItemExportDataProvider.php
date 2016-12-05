@@ -189,7 +189,10 @@ class ItemExportDataProvider implements ItemDataProviderContract
 				'mandatoryAllMarketplace' => [
 					$this->orderHelper->getReferrerId()
 				]
-			]
+			],
+			'variationStock.netPositive' => [
+				'warehouse' => 'virtual',
+			],
 		];
 	}
 

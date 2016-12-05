@@ -115,6 +115,7 @@ class StartListingService
 
 		$title       = $record->itemDescription[ $language ]['name1'];
 		$description = $record->itemDescription[ $language ]['description'];
+		$tags        = $record->itemDescription[ $language ]['tags'];
 		$isSupply = $this->itemHelper->getProperty($record, 'is_supply', $language);
 
 		$data = [
@@ -131,7 +132,8 @@ class StartListingService
 			'when_made'            => $this->itemHelper->getProperty($record, 'when_made', 'en'),
 			'taxonomy_id'          => $this->itemHelper->getTaxonomyId($record),
 			'should_auto_renew'    => 'true',
-			'is_digital'           => 'false'
+			'is_digital'           => 'false',
+			'tags'                 => $tags,
 
 			// TODO
 			// item_weight
@@ -141,7 +143,6 @@ class StartListingService
 			// item_height
 			// item_dimensions_unit
 			// currency_code
-			// tags
 			// materials
 			// shop_section_id
 			// processing_min
@@ -162,9 +163,29 @@ class StartListingService
 	{
 		$list = $this->itemHelper->getImageList($record->variationImageList['all_images']->toArray(), 'normal');
 
-		foreach($list as $image)
+		$imageList = [];
+
+		$list = array_slice($list, 0, 5);
+
+		foreach($list as $id => $image)
 		{
 			$response = $this->listingImageService->uploadListingImage($listingId, $image);
+
+			if(isset($response['results']) && isset($response['results'][0]) && isset($response['results'][0]['listing_image_id']))
+			{
+				$imageList[] = [
+					'imageId'        => $id,
+					'listingImageId' => $response['results'][0]['listing_image_id'],
+					'listingId'      => $response['results'][0]['listing_id'],
+					'imageUrl'       => $image,
+				];
+
+			}
+		}
+
+		if(count($imageList))
+		{
+			$this->imageHelper->save($record->variationBase->id, json_encode($imageList));
 		}
 	}
 

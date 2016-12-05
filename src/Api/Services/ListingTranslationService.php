@@ -55,9 +55,7 @@ class ListingTranslationService
 
 		if(count($tags) > 0 && strlen($tags[0]) > 0)
 		{
-			$data = [
-				'tags' => $tags
-			];
+			$data['tags'] = $tags;
 		}
 
 		return $this->client->call('createListingTranslation', [

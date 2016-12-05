@@ -160,7 +160,7 @@ class ItemHelper
 		{
 			if(is_array($image) && array_key_exists('path', $image))
 			{
-				$imageList[] = $this->urlBuilderRepository->getImageUrl((string) $image['path'], null, $imageSize, $image['fileType'], $image['type'] == 'external');
+				$imageList[$image['imageId']] = $this->urlBuilderRepository->getImageUrl((string) $image['path'], null, $imageSize, $image['fileType'], $image['type'] == 'external');
 			}
 		}
 

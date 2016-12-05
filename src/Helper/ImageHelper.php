@@ -27,7 +27,7 @@ class ImageHelper
 	/**
 	 * Save image data to database.
 	 *
-	 * @param int    $id
+	 * @param string $id
 	 * @param string $value
 	 *
 	 * @return bool
@@ -36,7 +36,7 @@ class ImageHelper
 	{
 		return $this->dynamoDbRepo->putItem('EtsyIntegrationPlugin', self::TABLE_NAME, [
 			'id'    => [
-				DynamoDbRepositoryContract::FIELD_TYPE_NUMBER => (int) $id,
+				DynamoDbRepositoryContract::FIELD_TYPE_STRING => (string) $id,
 			],
 			'value' => [
 				DynamoDbRepositoryContract::FIELD_TYPE_STRING => (string) $value,
@@ -47,7 +47,7 @@ class ImageHelper
 	/**
 	 * Get image data for a given id.
 	 *
-	 * @param int   $id
+	 * @param string $id
 	 * @param mixed $default
 	 *
 	 * @return string|null
@@ -56,7 +56,7 @@ class ImageHelper
 	{
 		$data = $this->dynamoDbRepo->getItem('EtsyIntegrationPlugin', self::TABLE_NAME, true, [
 			'id' => [
-				DynamoDbRepositoryContract::FIELD_TYPE_NUMBER => $id
+				DynamoDbRepositoryContract::FIELD_TYPE_STRING => $id
 			]
 		]);
 

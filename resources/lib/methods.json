@@ -445,7 +445,7 @@
       "non_taxable": "boolean",
       "is_private": "boolean",
       "category_id": "int",
-      "tags": "array(string)",
+      "tags": "string",
       "who_made": "enum(i_did, collective, someone_else)",
       "is_supply": "boolean",
       "when_made": "enum(made_to_order, 2010_2015, 2000_2009, 1994_1999, before_1994, 1990_1993, 1980s, 1970s, 1960s, 1950s, 1940s, 1930s, 1920s, 1910s, 1900s, 1800s, 1700s, before_1700)",
@@ -692,7 +692,7 @@
       "language": "string",
       "title": "string",
       "description": "text",
-      "tags": "array(string)"
+      "tags": "string"
     },
     "defaults": null,
     "type": "ListingTranslation",
