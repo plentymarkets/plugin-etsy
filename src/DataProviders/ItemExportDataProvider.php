@@ -101,10 +101,15 @@ class ItemExportDataProvider implements ItemDataProviderContract
 			'variationBase' => [
 				'id',
 				'limitOrderByStockSelect',
+				'weightG',
+				'lengthMm',
+				'widthMm',
+				'heightMm',
 			],
 
 			'variationRetailPrice' => [
 				'price',
+				'currency',
 			],
 
 			'variationStock' => [

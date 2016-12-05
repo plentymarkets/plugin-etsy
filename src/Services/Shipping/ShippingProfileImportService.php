@@ -41,6 +41,11 @@ class ShippingProfileImportService
 	private $settingsHelper;
 
 	/**
+	 * @var array
+	 */
+	private $currentShippingProfiles = [];
+
+	/**
 	 * @param SettingsRepositoryContract $settingsRepository
 	 * @param Logger                     $logger
 	 * @param ConfigRepository           $config
@@ -63,9 +68,11 @@ class ShippingProfileImportService
 	{
 		$shippingProfiles = $this->shippingTemplateService->findAllUserShippingProfiles('__SELF__', $this->settingsHelper->getShopSettings('shopLanguage', 'de'));
 
+		$this->loadAllShippingProfiles();
+
 		foreach($shippingProfiles as $shippingProfile)
 		{
-			if(is_array($shippingProfile) && isset($shippingProfile['shipping_template_id']) && $this->canImport($shippingProfile['shipping_template_id']))
+			if(is_array($shippingProfile) && isset($shippingProfile['shipping_template_id']) && !$this->isImported($shippingProfile['shipping_template_id']))
 			{
 				$data = [
 					'id'                         => $shippingProfile['shipping_template_id'],
@@ -78,7 +85,27 @@ class ShippingProfileImportService
 					'upgrades'                   => $this->getShippingUpgrade($shippingProfile),
 				];
 
-				$this->settingsRepository->create('EtsyIntegrationPlugin', SettingsCorrelationFactory::TYPE_SHIPPING, $data);
+				$settings = $this->settingsRepository->create('EtsyIntegrationPlugin', SettingsCorrelationFactory::TYPE_SHIPPING, $data);
+
+				$this->currentShippingProfiles[$settings->settings['id']] = $settings;
+			}
+		}
+
+		$this->removeDeprecated($shippingProfiles);
+	}
+
+	/**
+	 * Load all shipping profiles that are currently imported.
+	 */
+	private function loadAllShippingProfiles()
+	{
+		$shippingProfileSettings = $this->settingsRepository->find('EtsyIntegrationPlugin', SettingsCorrelationFactory::TYPE_SHIPPING);
+
+		if(count($shippingProfileSettings))
+		{
+			foreach($shippingProfileSettings as $shippingProfileSetting)
+			{
+				$this->currentShippingProfiles[$shippingProfileSetting->settings['id']] = $shippingProfileSetting;
 			}
 		}
 	}
@@ -87,31 +114,24 @@ class ShippingProfileImportService
 	 * Check if shipping profile id can be imported.
 	 *
 	 * @param int $id
+	 *
 	 * @return bool
 	 */
-	private function canImport($id):bool
+	private function isImported($id):bool
 	{
-		$importedShippingProfiles = $this->settingsRepository->find('EtsyIntegrationPlugin', SettingsCorrelationFactory::TYPE_SHIPPING);
-
-		if(count($importedShippingProfiles))
+		if(isset($this->currentShippingProfiles[$id]))
 		{
-			/** @var Settings $shippingProfile */
-			foreach($importedShippingProfiles as $shippingProfile)
-			{
-				if(isset($shippingProfile->settings['id']) && $shippingProfile->settings['id'] == $id)
-				{
-					return false;
-				}
-			}
+			return true;
 		}
 
-		return true;
+		return false;
 	}
 
 	/**
 	 * Get the shipping info.
 	 *
 	 * @param array $shippingProfile
+	 *
 	 * @return array
 	 */
 	private function getShippingInfo(array $shippingProfile)
@@ -146,6 +166,7 @@ class ShippingProfileImportService
 	 * Get the shipping upgrade data.
 	 *
 	 * @param array $shippingProfile
+	 *
 	 * @return array
 	 */
 	private function getShippingUpgrade(array $shippingProfile)
@@ -175,5 +196,28 @@ class ShippingProfileImportService
 		}
 
 		return $list;
+	}
+
+	/**
+	 * Remove deprecated shipping profiles.
+	 *
+	 * @param array $shippingProfiles
+	 */
+	private function removeDeprecated($shippingProfiles)
+	{
+		$shippingProfileList = [];
+
+		foreach($shippingProfiles as $shippingProfile)
+		{
+			$shippingProfileList[$shippingProfile['shipping_template_id']] = $shippingProfile;
+		}
+
+		foreach($this->currentShippingProfiles as $id => $shippingProfileSetting)
+		{
+			if(!isset($shippingProfileList[$id]))
+			{
+				$this->settingsRepository->delete($shippingProfileSetting->id);
+			}
+		}
 	}
 }

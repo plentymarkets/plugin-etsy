@@ -61,7 +61,14 @@ class StartListingService
 	 * @param SettingsHelper            $settingsHelper
 	 * @param ImageHelper               $imageHelper
 	 */
-	public function __construct(ItemHelper $itemHelper, ListingService $listingService, ListingImageService $listingImageService, Logger $logger, ListingTranslationService $listingTranslationService, SettingsHelper $settingsHelper, ImageHelper $imageHelper)
+	public function __construct(
+		ItemHelper $itemHelper,
+		ListingService $listingService,
+		ListingImageService $listingImageService,
+		Logger $logger,
+		ListingTranslationService $listingTranslationService,
+		SettingsHelper $settingsHelper,
+		ImageHelper $imageHelper)
 	{
 		$this->itemHelper                = $itemHelper;
 		$this->logger                    = $logger;
@@ -83,15 +90,24 @@ class StartListingService
 
 		if(!is_null($listingId))
 		{
-			$this->addPictures($record, $listingId);
+			try
+			{
+				$this->addPictures($record, $listingId);
 
-			$this->addTranslations($record, $listingId);
+				$this->addTranslations($record, $listingId);
 
-			$this->publish($listingId, $record->variationBase->id);
+				$this->publish($listingId, $record->variationBase->id);
+			}
+			catch(\Exception $ex)
+			{
+				// TODO delete listing
+
+				$this->logger->log('Could not start listing for variation ID ' . $record->variationBase->id . ': ' . $ex->getMessage());
+			}
 		}
 		else
 		{
-			$this->logger->log('Could not start listing for variation id: ' . $record->variationBase->id);
+			$this->logger->log('Could not start listing for variation ID ' . $record->variationBase->id);
 		}
 	}
 
@@ -115,6 +131,7 @@ class StartListingService
 			'description'          => $description,
 			'quantity'             => $this->itemHelper->getStock($record),
 			'price'                => number_format($record->variationRetailPrice->price, 2),
+			'currency_code'        => $record->variationRetailPrice->currency,
 			'shipping_template_id' => $this->itemHelper->getShippingTemplateId($record),
 			'taxonomy_id'          => $this->itemHelper->getTaxonomyId($record),
 			'should_auto_renew'    => 'true',
@@ -122,13 +139,6 @@ class StartListingService
 			'is_supply'            => 'false',
 
 			// TODO
-			// item_weight
-			// item_weight_units
-			// item_length
-			// item_width
-			// item_height
-			// item_dimensions_unit
-			// currency_code
 			// materials
 			// shop_section_id
 			// processing_min
@@ -141,9 +151,9 @@ class StartListingService
 			$data['is_supply'] = $isSupply;
 		}
 
-		if(strlen($record->itemDescription[ $language ]['tags']))
+		if(strlen($record->itemDescription[ $language ]['keywords']))
 		{
-			$data['tags'] = $record->itemDescription[ $language ]['tags'];
+			$data['tags'] = $record->itemDescription[ $language ]['keywords'];
 		}
 
 		if($whoMade = $this->itemHelper->getProperty($record, 'who_made', 'en'))
@@ -164,6 +174,30 @@ class StartListingService
 		if($recipient = $this->itemHelper->getProperty($record, 'recipient', 'en'))
 		{
 			$data['recipient'] = $recipient;
+		}
+
+		if($itemWeight = $record->variationBase->weightG)
+		{
+			$data['item_weight']       = $itemWeight;
+			$data['item_weight_units'] = 'g';
+		}
+
+		if($itemHeight = $record->variationBase->heightMm)
+		{
+			$data['item_height']          = $itemHeight;
+			$data['item_dimensions_unit'] = 'mm';
+		}
+
+		if($itemLength = $record->variationBase->lengthMm)
+		{
+			$data['item_length']          = $itemLength;
+			$data['item_dimensions_unit'] = 'mm';
+		}
+
+		if($itemWidth = $record->variationBase->widthMm)
+		{
+			$data['item_width']           = $itemWidth;
+			$data['item_dimensions_unit'] = 'mm';
 		}
 
 		return $this->listingService->createListing($this->settingsHelper->getShopSettings('shopLanguage', 'de'), $data); // TODO replace all languages with the shop language
@@ -215,9 +249,7 @@ class StartListingService
 	{
 		foreach($this->settingsHelper->getShopSettings('exportLanguages', [$this->settingsHelper->getShopSettings('mainLanguage', 'de')]) as $language)
 		{
-			if($language != $this->settingsHelper->getShopSettings('mainLanguage', 'de') &&
-			   $record->itemDescription[ $language ]['name1'] &&
-			   strip_tags($record->itemDescription[ $language ]['description']))
+			if($language != $this->settingsHelper->getShopSettings('mainLanguage', 'de') && $record->itemDescription[ $language ]['name1'] && strip_tags($record->itemDescription[ $language ]['description']))
 			{
 				try
 				{
