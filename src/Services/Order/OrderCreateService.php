@@ -161,6 +161,8 @@ class OrderCreateService
 	 */
 	private function createOrder(array $data, $addressId, $contactId):Order
 	{
+		// TODO add also the message_from_buyer(string) to the order
+		
 		$orderData = [
 			'typeId'     => 1,
 			'referrerId' => $this->orderHelper->getReferrerId(),
