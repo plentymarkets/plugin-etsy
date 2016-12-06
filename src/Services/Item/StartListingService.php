@@ -2,9 +2,9 @@
 
 namespace Etsy\Services\Item;
 
-use Etsy\Helper\ImageHelper;
 use Plenty\Modules\Item\DataLayer\Models\Record;
 
+use Etsy\Helper\ImageHelper;
 use Etsy\Helper\SettingsHelper;
 use Etsy\Api\Services\ListingService;
 use Etsy\Api\Services\ListingImageService;

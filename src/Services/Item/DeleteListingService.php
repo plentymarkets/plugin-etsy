@@ -22,20 +22,20 @@ class DeleteListingService
 
 
 	/**
-	 * @param Logger           $logger
-	 * @param ListingService   $listingService
+	 * @param Logger         $logger
+	 * @param ListingService $listingService
 	 */
-	public function __construct(
-		Logger $logger,
-		ListingService $listingService
-	)
+	public function __construct(Logger $logger, ListingService $listingService)
 	{
-		$this->logger = $logger;
+		$this->logger         = $logger;
 		$this->listingService = $listingService;
 	}
 
 	/**
+	 * Delete a listing.
+	 *
 	 * @param mixed $listingId
+	 *
 	 * @return bool
 	 */
 	public function delete($listingId)
@@ -48,12 +48,12 @@ class DeleteListingService
 			}
 			catch(\Exception $e)
 			{
-				$this->logger->log('Could not delete listing for sku ' . $listingId . ': ' . $e->getMessage());
+				$this->logger->log('Could not delete listing ID ' . $listingId . ': ' . $e->getMessage());
 			}
 		}
 		else
 		{
-			$this->logger->log('Could not delete listing for sku ' . $listingId);
+			$this->logger->log('Could not delete listing ID ' . $listingId);
 		}
 
 		return false;

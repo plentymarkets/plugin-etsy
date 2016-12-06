@@ -2,16 +2,15 @@
 
 namespace Etsy\Services\Batch\Item;
 
-use Etsy\Services\Item\UpdateListingService;
 use Plenty\Modules\Item\DataLayer\Models\Record;
 use Plenty\Plugin\Application;
 use Plenty\Exceptions\ValidationException;
 use Plenty\Modules\Item\DataLayer\Models\RecordList;
 
+use Etsy\Services\Item\UpdateListingService;
 use Etsy\Logger\Logger;
 use Etsy\Services\Batch\AbstractBatchService;
 use Etsy\Factories\ItemDataProviderFactory;
-use Etsy\Validators\StartListingValidator;
 use Etsy\Services\Item\StartListingService;
 
 /**
@@ -73,12 +72,7 @@ class ItemExportService extends AbstractBatchService
 		{
 			try
 			{
-				StartListingValidator::validateOrFail([
-					                                      // TODO fill here all data that we need for starting an etsy listing
-				                                      ]);
-
-				// TODO: add if(isExportProcessActive from helper class here)
-				if($this->isAlreadyCreated($record))
+				if($this->listingIsCreated($record))
 				{
 					$this->updateService->update($record);
 				}
@@ -100,13 +94,13 @@ class ItemExportService extends AbstractBatchService
 	}
 
 	/**
-	 * Check if listing is already created.
+	 * Check if listing is created.
 	 *
 	 * @param Record $record
 	 *
 	 * @return bool
 	 */
-	private function isAlreadyCreated(Record $record):bool
+	private function listingIsCreated(Record $record):bool
 	{
 		if(strlen((string) $record->variationMarketStatus->sku) > 0)
 		{

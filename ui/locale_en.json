@@ -11,8 +11,12 @@
   "shopId": "Shop ID",
   "mainShopLanguage": "Main shop language",
   "exportLanguages": "Export languages",
+  "exportLanguageEnglish": "English",
+  "exportLanguageGerman": "German",
+  "exportLanguageFrench": "French",
   "paymentSettings": "Payment settings",
   "paymentMethodName": "Payment method name",
+  "processes": "Processes",
 
   "taxonomyCorrelations": "Taxonomy correlations",
   "categories": "Categories",

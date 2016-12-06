@@ -5,6 +5,7 @@ namespace Etsy\Crons;
 use Plenty\Modules\Cron\Contracts\CronHandler as Cron;
 
 use Etsy\Helper\SettingsHelper;
+use Etsy\Helper\AccountHelper;
 use Etsy\Services\Order\OrderImportService;
 
 /**
@@ -25,17 +26,21 @@ class OrderImportCron extends Cron
 	}
 
 	/**
-	 * Handle the cron execution.
+	 * Run the order import process.
 	 *
 	 * @param OrderImportService $service
+	 * @param AccountHelper      $accountHelper
 	 */
-	public function handle(OrderImportService $service)
+	public function handle(OrderImportService $service, AccountHelper $accountHelper)
 	{
 		try
 		{
-			$service->run($this->lastRun(), date('Y-m-d H:i:s'));
+			if($accountHelper->isProcessActive(SettingsHelper::SETTINGS_PROCESS_ORDER_IMPORT))
+			{
+				$service->run($this->lastRun(), date('Y-m-d H:i:s'));
 
-			$this->saveLastRun();
+				$this->saveLastRun();
+			}
 		}
 		catch(\Exception $ex)
 		{

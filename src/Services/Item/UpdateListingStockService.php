@@ -1,11 +1,9 @@
 <?php
 namespace Etsy\Services\Item;
 
-use Etsy\Helper\OrderHelper;
-use Plenty\Modules\Item\VariationSku\Contracts\VariationSkuRepositoryContract;
-use Plenty\Plugin\ConfigRepository;
 use Plenty\Modules\Item\DataLayer\Models\Record;
 
+use Etsy\Helper\OrderHelper;
 use Etsy\Api\Services\ListingService;
 use Etsy\Helper\ItemHelper;
 use Etsy\Logger\Logger;
@@ -15,11 +13,6 @@ use Etsy\Logger\Logger;
  */
 class UpdateListingStockService
 {
-	/**
-	 * @var ConfigRepository
-	 */
-	private $config;
-
 	/**
 	 * @var ItemHelper
 	 */
@@ -31,43 +24,31 @@ class UpdateListingStockService
 	private $orderHelper;
 
 	/**
-	 * @var Logger
-	 */
-	private $logger;
-
-	/**
 	 * @var ListingService
 	 */
 	private $listingService;
 
 	/**
-	 * @var VariationSkuRepositoryContract
+	 * @var Logger
 	 */
-	private $variationSkuRepositoryContract;
+	private $logger;
 
 	/**
-	 * @param ItemHelper             $itemHelper
-	 * @param OrderHelper            $orderHelper
-	 * @param ConfigRepository       $config
-	 * @param ListingService         $listingService
-	 * @param Logger                 $logger
-	 * @param VariationSkuRepositoryContract $variationSkuRepositoryContract
+	 * @param ItemHelper       $itemHelper
+	 * @param OrderHelper      $orderHelper
+	 * @param ListingService   $listingService
+	 * @param Logger           $logger
 	 */
 	public function __construct(
 		ItemHelper $itemHelper,
 		OrderHelper $orderHelper,
-		ConfigRepository $config,
 		ListingService $listingService,
-		Logger $logger,
-		VariationSkuRepositoryContract $variationSkuRepositoryContract
-	)
+		Logger $logger)
 	{
-		$this->itemHelper                      = $itemHelper;
-		$this->orderHelper                     = $orderHelper;
-		$this->config                          = $config;
-		$this->logger                          = $logger;
-		$this->listingService                  = $listingService;
-		$this->variationSkuRepositoryContract = $variationSkuRepositoryContract;
+		$this->itemHelper     = $itemHelper;
+		$this->orderHelper    = $orderHelper;
+		$this->listingService = $listingService;
+		$this->logger         = $logger;
 	}
 
 	/**
@@ -89,7 +70,7 @@ class UpdateListingStockService
 					'quantity'   => $this->itemHelper->getStock($record) > 0 ? $this->itemHelper->getStock($record) : 1,
 				];
 
-				$this->listingService->updateListingStock($listingId, $data);
+				$this->listingService->updateListing($listingId, $data);
 			}
 			catch(\Exception $e)
 			{

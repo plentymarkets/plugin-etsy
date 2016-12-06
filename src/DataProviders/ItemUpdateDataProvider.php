@@ -2,11 +2,13 @@
 
 namespace Etsy\DataProviders;
 
-use Etsy\Helper\OrderHelper;
-use Plenty\Plugin\ConfigRepository;
-use Etsy\Contracts\ItemDataProviderContract;
 use Plenty\Modules\Item\DataLayer\Models\RecordList;
 use Plenty\Modules\Item\DataLayer\Contracts\ItemDataLayerRepositoryContract;
+use Plenty\Plugin\ConfigRepository;
+
+use Etsy\Contracts\ItemDataProviderContract;
+use Etsy\Helper\OrderHelper;
+
 
 /**
  * Class ItemUpdateDataProvider
@@ -109,11 +111,11 @@ class ItemUpdateDataProvider implements ItemDataProviderContract
 	private function filters()
 	{
 		return [
-			'variationStock.wasUpdatedBetween'            => [
+			'variationStock.wasUpdatedBetween'       => [
 				'timestampFrom' => (time() - self::LAST_UPDATE),
 				'timestampTo'   => time(),
 			],
-			'variationMarketStatus.hasMarketStatus?'      => [
+			'variationMarketStatus.hasMarketStatus?' => [
 				'marketplace' => $this->orderHelper->getReferrerId()
 			]
 		];

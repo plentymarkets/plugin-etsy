@@ -43,8 +43,7 @@ class UpdateListingService
 		ItemHelper $itemHelper,
 		ConfigRepository $config,
 		ListingService $listingService,
-		Logger $logger
-	)
+		Logger $logger)
 	{
 		$this->itemHelper     = $itemHelper;
 		$this->config         = $config;

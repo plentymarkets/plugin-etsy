@@ -2,11 +2,10 @@
 
 namespace Etsy\Helper;
 
-use Exception;
 use Plenty\Plugin\Application;
+
 use Etsy\Helper\OrderHelper;
 use Etsy\Helper\SettingsHelper;
-use Etsy\Logger\Logger;
 
 /**
  * Class AccountHelper
@@ -19,11 +18,6 @@ class AccountHelper
 	private $app;
 
 	/**
-	 * @var Logger
-	 */
-	private $logger;
-
-	/**
 	 * @var SettingsHelper
 	 */
 	private $settingsHelper;
@@ -34,19 +28,14 @@ class AccountHelper
 	private $orderHelper;
 
 	/**
-	 * @param Application $app
+	 * @param Application    $app
 	 * @param SettingsHelper $settingsHelper
 	 */
-	public function __construct(
-		Application $app,
-		Logger $logger,
-		SettingsHelper $settingsHelper,
-		OrderHelper $orderHelper)
+	public function __construct(Application $app, SettingsHelper $settingsHelper, OrderHelper $orderHelper)
 	{
-		$this->app = $app;
-		$this->logger = $logger;
+		$this->app            = $app;
 		$this->settingsHelper = $settingsHelper;
-		$this->orderHelper = $orderHelper;
+		$this->orderHelper    = $orderHelper;
 	}
 
 	/**
@@ -131,46 +120,36 @@ class AccountHelper
 	 *
 	 * @return bool
 	 */
-	public function isValidConfig()
+	public function isValidConfig():bool
 	{
 		try
 		{
-			$tokenData = $this->getTokenData();
-			$shopId = $this->settingsHelper->getShopSettings('shopId');
+			$tokenData  = $this->getTokenData();
+			$shopId     = $this->settingsHelper->getShopSettings('shopId');
 			$referrerId = $this->orderHelper->getReferrerId();
 
-			if(	$tokenData 	&& isset($tokenData['accessToken']) &&
-				$shopId 	&& $shopId > 0 &&
-				$referrerId && $referrerId > 0)
+			if($tokenData && isset($tokenData['accessToken']) && $shopId && $shopId > 0 && $referrerId && $referrerId > 0)
 			{
 				return true;
 			}
 		}
 		catch(\Exception $e)
 		{
-			$this->logger->log('Could not load configuration settings: ' . $e->getMessage());
+			//
 		}
 
 		return false;
 	}
 
 	/**
-	 * Checks whether the process for item export is active or not.
+	 * Checks whether the given process is active.
+	 *
+	 * @param string $processKey
 	 *
 	 * @return bool
 	 */
-	public function isItemExportProcessActive()
+	public function isProcessActive($processKey):bool
 	{
-		return false;
-	}
-
-	/**
-	 * Checks whether the process for item update stock is active or not.
-	 *
-	 * @return bool
-	 */
-	public function isItemUpdateStockProcessActive()
-	{
-		return false;
+		return array_search($processKey, $this->settingsHelper->getShopSettings('processes', [])) !== false;
 	}
 }

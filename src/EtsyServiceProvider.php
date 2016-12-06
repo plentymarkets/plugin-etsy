@@ -7,7 +7,7 @@ use Plenty\Modules\EventProcedures\Services\EventProceduresService;
 use Plenty\Plugin\ServiceProvider;
 
 use Etsy\Crons\ItemExportCron;
-use Etsy\Crons\ItemUpdateCron;
+use Etsy\Crons\StockUpdateCron;
 use Etsy\Crons\OrderImportCron;
 use Etsy\Factories\ItemDataProviderFactory;
 use Etsy\DataProviders\ItemExportDataProvider;
@@ -46,7 +46,7 @@ class EtsyServiceProvider extends ServiceProvider
 	{
 		// register crons
 		$container->add(CronContainer::DAILY, ItemExportCron::class);
-		$container->add(CronContainer::DAILY, ItemUpdateCron::class);
+		$container->add(CronContainer::DAILY, StockUpdateCron::class);
 		$container->add(CronContainer::HOURLY, OrderImportCron::class);
 
 		// register event actions

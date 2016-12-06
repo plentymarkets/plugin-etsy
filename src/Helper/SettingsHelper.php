@@ -17,6 +17,10 @@ class SettingsHelper
 	const SETTINGS_ORDER_REFERRER = 'order_referrer';
 	const SETTINGS_LAST_ORDER_IMPORT = "last_order_import";
 
+	const SETTINGS_PROCESS_ITEM_EXPORT = 'item_export';
+	const SETTINGS_PROCESS_STOCK_UPDATE = 'stock_update';
+	const SETTINGS_PROCESS_ORDER_IMPORT = 'order_import';
+
 	/**
 	 * @var DynamoDbRepositoryContract
 	 */
