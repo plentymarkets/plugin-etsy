@@ -33,6 +33,11 @@ class StartListingService
 	private $listingService;
 
 	/**
+	 * @var DeleteListingService
+	 */
+	private $deleteListingService;
+
+	/**
 	 * @var ListingImageService
 	 */
 	private $listingImageService;
@@ -55,6 +60,7 @@ class StartListingService
 	/**
 	 * @param ItemHelper                $itemHelper
 	 * @param ListingService            $listingService
+	 * @param DeleteListingService      $deleteListingService
 	 * @param ListingImageService       $listingImageService
 	 * @param Logger                    $logger
 	 * @param ListingTranslationService $listingTranslationService
@@ -64,6 +70,7 @@ class StartListingService
 	public function __construct(
 		ItemHelper $itemHelper,
 		ListingService $listingService,
+		DeleteListingService $deleteListingService,
 		ListingImageService $listingImageService,
 		Logger $logger,
 		ListingTranslationService $listingTranslationService,
@@ -74,6 +81,7 @@ class StartListingService
 		$this->logger                    = $logger;
 		$this->listingTranslationService = $listingTranslationService;
 		$this->listingService            = $listingService;
+		$this->deleteListingService      = $deleteListingService;
 		$this->listingImageService       = $listingImageService;
 		$this->settingsHelper            = $settingsHelper;
 		$this->imageHelper               = $imageHelper;
@@ -100,7 +108,7 @@ class StartListingService
 			}
 			catch(\Exception $ex)
 			{
-				// TODO delete listing
+				$this->deleteListingService->delete($listingId);
 
 				$this->logger->log('Could not start listing for variation ID ' . $record->variationBase->id . ': ' . $ex->getMessage());
 			}
@@ -123,7 +131,7 @@ class StartListingService
 		$language = $this->settingsHelper->getShopSettings('mainLanguage', 'de');
 
 		$title       = $record->itemDescription[ $language ]['name1'];
-		$description = $record->itemDescription[ $language ]['description'];
+		$description = strip_tags($record->itemDescription[ $language ]['description']);
 
 		$data = [
 			'state'                => 'draft',

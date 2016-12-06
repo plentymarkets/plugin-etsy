@@ -2,9 +2,8 @@
 
 namespace Etsy\Crons;
 
+use Etsy\Services\Batch\Item\ItemUpdateStockService;
 use Plenty\Modules\Cron\Contracts\CronHandler as Cron;
-
-use Etsy\Services\Batch\Item\ItemUpdateService;
 
 /**
  * Class ItemUpdateCron
@@ -12,9 +11,9 @@ use Etsy\Services\Batch\Item\ItemUpdateService;
 class ItemUpdateCron extends Cron
 {
 	/**
-	 * @param ItemUpdateService $service
+	 * @param ItemUpdateStockService $service
 	 */
-    public function handle(ItemUpdateService $service)
+    public function handle(ItemUpdateStockService $service)
     {
         $service->run();
     }

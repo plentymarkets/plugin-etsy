@@ -2,6 +2,7 @@
 
 namespace Etsy\Services\Batch\Item;
 
+use Etsy\Services\Item\UpdateListingService;
 use Plenty\Modules\Item\DataLayer\Models\Record;
 use Plenty\Plugin\Application;
 use Plenty\Exceptions\ValidationException;
@@ -31,24 +32,32 @@ class ItemExportService extends AbstractBatchService
 	/**
 	 * @var StartListingService
 	 */
-	private $service;
+	private $startService;
+
+	/**
+	 * @var UpdateListingService
+	 */
+	private $updateService;
 
 	/**
 	 * @param Application             $app
 	 * @param Logger                  $logger
 	 * @param ItemDataProviderFactory $itemDataProviderFactory
-	 * @param StartListingService     $service
+	 * @param StartListingService     $startService
+	 * @param UpdateListingService    $updateService
 	 */
 	public function __construct(
 		Application $app,
 		Logger $logger,
 		ItemDataProviderFactory $itemDataProviderFactory,
-		StartListingService $service
+		StartListingService $startService,
+		UpdateListingService $updateService
 	)
 	{
 		$this->app     = $app;
 		$this->logger  = $logger;
-		$this->service = $service;
+		$this->startService = $startService;
+		$this->updateService = $updateService;
 
 		parent::__construct($itemDataProviderFactory->make('export'));
 	}
@@ -68,15 +77,15 @@ class ItemExportService extends AbstractBatchService
 					                                      // TODO fill here all data that we need for starting an etsy listing
 				                                      ]);
 
+				// TODO: add if(isExportProcessActive from helper class here)
 				if($this->isAlreadyCreated($record))
 				{
-
+					$this->updateService->update($record);
 				}
 				else
 				{
-					$this->service->start($record);
+					$this->startService->start($record);
 				}
-
 			}
 			catch(ValidationException $ex)
 			{
@@ -99,6 +108,11 @@ class ItemExportService extends AbstractBatchService
 	 */
 	private function isAlreadyCreated(Record $record):bool
 	{
+		if(strlen((string) $record->variationMarketStatus->sku) > 0)
+		{
+			return true;
+		}
+
 		return false;
 	}
 }

@@ -10,6 +10,10 @@ use Etsy\Logger\Logger;
  */
 class ListingService
 {
+	const STATE_DRAFT = 'draft';
+	const STATE_ACTIVE = 'active';
+	const STATE_INACTIVE = 'inactive';
+
 	/**
 	 * @var Client
 	 */
@@ -31,6 +35,8 @@ class ListingService
 	}
 
 	/**
+	 * Performs an createListing call to Etsy.
+	 *
 	 * @param string $language
 	 * @param array  $data
 	 * @return int
@@ -43,6 +49,8 @@ class ListingService
 	}
 
 	/**
+	 * Performs an updateListing call to Etsy.
+	 *
 	 * @param int   $id
 	 * @param array $data
 	 * @return bool
@@ -52,6 +60,37 @@ class ListingService
 		$response = $this->client->call('updateListing', [
 			'listing_id' => $id,
 		], $data);
+
+		return true;
+	}
+
+	/**
+	 * Performs an updateListing call to Etsy.
+	 *
+	 * @param int   $id
+	 * @param array $data
+	 * @return bool
+	 */
+	public function updateListingStock($id, $data)
+	{
+		$response = $this->client->call('updateListing', [
+			'listing_id' => $id,
+		], $data);
+
+		return true;
+	}
+
+	/**
+	 * Performs an deleteListing call to Etsy.
+	 *
+	 * @param int $id
+	 * @return bool
+	 */
+	public function deleteListing($id)
+	{
+		$response = $this->client->call('deleteListing', [
+			'listing_id' => $id
+		]);
 
 		return true;
 	}

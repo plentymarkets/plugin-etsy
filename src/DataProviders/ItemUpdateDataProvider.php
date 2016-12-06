@@ -2,6 +2,7 @@
 
 namespace Etsy\DataProviders;
 
+use Etsy\Helper\OrderHelper;
 use Plenty\Plugin\ConfigRepository;
 use Etsy\Contracts\ItemDataProviderContract;
 use Plenty\Modules\Item\DataLayer\Models\RecordList;
@@ -25,13 +26,20 @@ class ItemUpdateDataProvider implements ItemDataProviderContract
 	private $config;
 
 	/**
+	 * @var OrderHelper
+	 */
+	private $orderHelper;
+
+	/**
 	 * @param ItemDataLayerRepositoryContract $itemDataLayerRepository
 	 * @param ConfigRepository                $config
+	 * @param OrderHelper                     $orderHelper
 	 */
-	public function __construct(ItemDataLayerRepositoryContract $itemDataLayerRepository, ConfigRepository $config)
+	public function __construct(ItemDataLayerRepositoryContract $itemDataLayerRepository, ConfigRepository $config, OrderHelper $orderHelper)
 	{
 		$this->itemDataLayerRepository = $itemDataLayerRepository;
 		$this->config                  = $config;
+		$this->orderHelper             = $orderHelper;
 	}
 
 	/**
@@ -63,7 +71,7 @@ class ItemUpdateDataProvider implements ItemDataProviderContract
 
 			'variationMarketStatus' => [
 				'params' => [
-					'marketId' => 148
+					'marketId' => $this->orderHelper->getReferrerId()
 				],
 				'fields' => [
 					'sku'
@@ -73,6 +81,7 @@ class ItemUpdateDataProvider implements ItemDataProviderContract
 			'variationBase' => [
 				'id',
 				'limitOrderByStockSelect',
+				'active'
 			],
 
 			'variationStock' => [
@@ -82,6 +91,10 @@ class ItemUpdateDataProvider implements ItemDataProviderContract
 				'fields' => [
 					'stockNet'
 				]
+			],
+
+			'variationLinkMarketplace' => [
+				'marketplaceId'
 			],
 		];
 
@@ -96,19 +109,12 @@ class ItemUpdateDataProvider implements ItemDataProviderContract
 	private function filters()
 	{
 		return [
-			'variationBase.isActive?'                     => [],
-			'variationVisibility.isVisibleForMarketplace' => [
-				'mandatoryOneMarketplace' => [],
-				'mandatoryAllMarketplace' => [
-					148 // TODO grab this from config.json
-				]
-			],
 			'variationStock.wasUpdatedBetween'            => [
 				'timestampFrom' => (time() - self::LAST_UPDATE),
 				'timestampTo'   => time(),
 			],
 			'variationMarketStatus.hasMarketStatus?'      => [
-				'marketplace' => 148 // TODO grab this from config.json
+				'marketplace' => $this->orderHelper->getReferrerId()
 			]
 		];
 	}

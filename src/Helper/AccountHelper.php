@@ -2,9 +2,11 @@
 
 namespace Etsy\Helper;
 
+use Exception;
 use Plenty\Plugin\Application;
-
+use Etsy\Helper\OrderHelper;
 use Etsy\Helper\SettingsHelper;
+use Etsy\Logger\Logger;
 
 /**
  * Class AccountHelper
@@ -17,18 +19,34 @@ class AccountHelper
 	private $app;
 
 	/**
+	 * @var Logger
+	 */
+	private $logger;
+
+	/**
 	 * @var SettingsHelper
 	 */
 	private $settingsHelper;
 
 	/**
+	 * @var OrderHelper
+	 */
+	private $orderHelper;
+
+	/**
 	 * @param Application $app
 	 * @param SettingsHelper $settingsHelper
 	 */
-	public function __construct(Application $app, SettingsHelper $settingsHelper)
+	public function __construct(
+		Application $app,
+		Logger $logger,
+		SettingsHelper $settingsHelper,
+		OrderHelper $orderHelper)
 	{
 		$this->app = $app;
+		$this->logger = $logger;
 		$this->settingsHelper = $settingsHelper;
+		$this->orderHelper = $orderHelper;
 	}
 
 	/**
@@ -106,5 +124,53 @@ class AccountHelper
 	public function saveAccessToken($data)
 	{
 		$this->settingsHelper->save(SettingsHelper::SETTINGS_ACCESS_TOKEN, (string) json_encode($data));
+	}
+
+	/**
+	 * Validates the Etsy configuration settings.
+	 *
+	 * @return bool
+	 */
+	public function isValidConfig()
+	{
+		try
+		{
+			$tokenData = $this->getTokenData();
+			$shopId = $this->settingsHelper->getShopSettings('shopId');
+			$referrerId = $this->orderHelper->getReferrerId();
+
+			if(	$tokenData 	&& isset($tokenData['accessToken']) &&
+				$shopId 	&& $shopId > 0 &&
+				$referrerId && $referrerId > 0)
+			{
+				return true;
+			}
+		}
+		catch(\Exception $e)
+		{
+			$this->logger->log('Could not load configuration settings: ' . $e->getMessage());
+		}
+
+		return false;
+	}
+
+	/**
+	 * Checks whether the process for item export is active or not.
+	 *
+	 * @return bool
+	 */
+	public function isItemExportProcessActive()
+	{
+		return false;
+	}
+
+	/**
+	 * Checks whether the process for item update stock is active or not.
+	 *
+	 * @return bool
+	 */
+	public function isItemUpdateStockProcessActive()
+	{
+		return false;
 	}
 }
