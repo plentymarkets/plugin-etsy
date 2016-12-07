@@ -2,12 +2,11 @@
 
 namespace Etsy\Services\Shipping;
 
-use Etsy\Helper\SettingsHelper;
 use Plenty\Modules\Market\Settings\Contracts\SettingsRepositoryContract;
 use Plenty\Modules\Market\Settings\Factories\SettingsCorrelationFactory;
-use Plenty\Modules\Market\Settings\Models\Settings;
 use Plenty\Plugin\ConfigRepository;
 
+use Etsy\Helper\SettingsHelper;
 use Etsy\Logger\Logger;
 use Etsy\Api\Services\ShippingTemplateService;
 
@@ -72,7 +71,7 @@ class ShippingProfileImportService
 
 		foreach($shippingProfiles as $shippingProfile)
 		{
-			if(is_array($shippingProfile) && isset($shippingProfile['shipping_template_id']) && !$this->isImported($shippingProfile['shipping_template_id']))
+			if(is_array($shippingProfile) && isset($shippingProfile['shipping_template_id']))
 			{
 				$data = [
 					'id'                         => $shippingProfile['shipping_template_id'],
@@ -85,9 +84,18 @@ class ShippingProfileImportService
 					'upgrades'                   => $this->getShippingUpgrade($shippingProfile),
 				];
 
-				$settings = $this->settingsRepository->create('EtsyIntegrationPlugin', SettingsCorrelationFactory::TYPE_SHIPPING, $data);
+				if($this->isImported($shippingProfile['shipping_template_id']))
+				{
+					$settings = $this->currentShippingProfiles[ $shippingProfile['shipping_template_id'] ];
 
-				$this->currentShippingProfiles[$settings->settings['id']] = $settings;
+					$this->settingsRepository->update($data, $settings->id);
+				}
+				else
+				{
+					$settings = $this->settingsRepository->create('EtsyIntegrationPlugin', SettingsCorrelationFactory::TYPE_SHIPPING, $data);
+
+					$this->currentShippingProfiles[ $settings->settings['id'] ] = $settings;
+				}
 			}
 		}
 
@@ -105,7 +113,7 @@ class ShippingProfileImportService
 		{
 			foreach($shippingProfileSettings as $shippingProfileSetting)
 			{
-				$this->currentShippingProfiles[$shippingProfileSetting->settings['id']] = $shippingProfileSetting;
+				$this->currentShippingProfiles[ $shippingProfileSetting->settings['id'] ] = $shippingProfileSetting;
 			}
 		}
 	}
@@ -119,7 +127,7 @@ class ShippingProfileImportService
 	 */
 	private function isImported($id):bool
 	{
-		if(isset($this->currentShippingProfiles[$id]))
+		if(isset($this->currentShippingProfiles[ $id ]))
 		{
 			return true;
 		}
@@ -209,12 +217,12 @@ class ShippingProfileImportService
 
 		foreach($shippingProfiles as $shippingProfile)
 		{
-			$shippingProfileList[$shippingProfile['shipping_template_id']] = $shippingProfile;
+			$shippingProfileList[ $shippingProfile['shipping_template_id'] ] = $shippingProfile;
 		}
 
 		foreach($this->currentShippingProfiles as $id => $shippingProfileSetting)
 		{
-			if(!isset($shippingProfileList[$id]))
+			if(!isset($shippingProfileList[ $id ]))
 			{
 				$this->settingsRepository->delete($shippingProfileSetting->id);
 			}
