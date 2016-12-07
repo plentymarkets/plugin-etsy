@@ -385,6 +385,7 @@
       "processing_max": "int",
       "category_id": "int",
       "taxonomy_id": "int",
+      "currency_node": "string",
       "is_digital": "string",
       "should_auto_renew": "string",
       "tags": "string",
