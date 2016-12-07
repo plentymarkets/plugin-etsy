@@ -100,6 +100,14 @@ class OrderCreateService
 			'externalId' => $data['buyer_user_id'],
 			'firstName'  => $name['firstName'],
 			'lastName'   => $name['lastName'],
+			'options'    => [
+				[
+					'typeId'    => 10,
+					'subTypeId' => 11,
+					'priority'  => 0,
+					'value'     => '1',
+				]
+			],
 		];
 
 		if(isset($data['buyer_email']) && strlen($data['buyer_email']))
@@ -162,7 +170,7 @@ class OrderCreateService
 	private function createOrder(array $data, $addressId, $contactId):Order
 	{
 		// TODO add also the message_from_buyer(string) to the order
-		
+
 		$orderData = [
 			'typeId'     => 1,
 			'referrerId' => $this->orderHelper->getReferrerId(),

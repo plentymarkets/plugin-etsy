@@ -129,6 +129,8 @@ class OrderHelper
 	}
 
 	/**
+	 * Extract house number and street from address line.
+	 *
 	 * @param string $address
 	 *
 	 * @return array
@@ -137,19 +139,56 @@ class OrderHelper
 	{
 		$address = trim($address);
 
-		$matches = [];
+		$reEx = '/(?<ad>(.*?)[\D]{3}[\s,.])(?<no>';
+		$reEx .= '|[0-9]{1,3}[ a-zA-Z-\/\.]{0,6}'; // e.g. "Rosenstr. 14"
+		$reEx .= '|[0-9]{1,3}[ a-zA-Z-\/\.]{1,6}[0-9]{1,3}[ a-zA-Z-\/\.]{0,6}[0-9]{0,3}[ a-zA-Z-\/\.]{0,6}[0-9]{0,3}'; // e.g "Straße in Österreich 30/4/12.2"
+		$reEx .= ')$/';
+		$reExForeign = '/^(?<no>[0-9]{1,4}([\D]{0,2}([\s]|[^a-zA-Z0-9])))(?<ad>([\D]+))$/';    //e.g. "16 Bellevue Road"
 
-		if(preg_match("/(^.*)([0-9]{1,}$|[0-9]{1,}[a-z]?.*?$)/i", $address, $matches) != 1)
+		/*
+		if (strripos($address, 'POSTFILIALE') !== false)
 		{
-			$matches = [
-				1 => $address
-			];
+			if (preg_match("/([\D].*?)(([\d]{4,})|(?<id>[\d]{3}))([\D]*?)/i", $address, $matches) > 0)
+			{
+				$id = $matches['id'];
+
+				$address = preg_replace("/([\D].*?)" . $matches['id'] . "([\D]*)/i", '\1\2', $address);
+
+				if ($id && preg_match("/(?<id>[\d\s]{6,14})/i", $address, $matches) > 0
+				)
+				{
+					$street = preg_replace("/\s/", '', $matches['id']) . ' ' . 'POSTFILIALE';
+					$houseNumber = $id;
+
+					return array(
+						'street'      => $street,
+						'houseNumber' => $houseNumber,
+					);
+				}
+			}
+		}
+		*/
+
+		if (preg_match($reExForeign, $address, $matches) > 0)
+		{
+			$street = trim($matches['ad']);
+			$houseNumber = trim($matches['no']);
+		}
+		else if (preg_match($reEx, $address, $matches) > 0)
+		{
+			$street = trim($matches['ad']);
+			$houseNumber = trim($matches['no']);
+		}
+		else
+		{
+			$street = $address;
+			$houseNumber = '';
 		}
 
-		return [
-			'street'      => isset($matches[1]) ? $matches[1] : '',
-			'houseNumber' => isset($matches[2]) ? $matches[2] : '',
-		];
+		return array(
+			'street'      => $street,
+			'houseNumber' => $houseNumber,
+		);
 	}
 
 	/**
