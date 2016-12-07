@@ -21,9 +21,9 @@
       "entryPoint": "index.html?action=shipping"
     },
     {
-      "label": "Taxonomies",
+      "label": "Categories",
       "menu": "settings/markets/etsy",
-      "urlKey": "taxonomies",
+      "urlKey": "categories",
       "entryPoint": "index.html?action=taxonomies"
     },
     {

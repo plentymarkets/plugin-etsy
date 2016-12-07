@@ -21,10 +21,10 @@
   "processStockUpdate": "Bestandsabgleich",
   "processOrderimport": "Auftragsimport",
 
-  "taxonomyCorrelations": "Taxonomie-Verknüpfungen",
+  "taxonomyCorrelations": "Kategorie-Verknüpfungen",
   "categories": "Kategorien",
   "category": "Kategorie",
-  "taxonomy": "Etsy-Taxonomie",
+  "taxonomy": "Etsy-Kategorie",
 
   "shippingProfilesCorrelations": "Versandprofilverknüpfungen",
   "parcelServicePreset": "plentymarkets Versandprofil",
@@ -50,14 +50,20 @@
   "errorLoadShippingProfileSettingsList": "Liste der Versandprofileinstllugen nicht geladen.",
   "errorSaveShippingProfileCorrelations": "Versandprofilverknüpfungen nicht gespeichert.",
   "errorImportShippingProfiles": "Versandprofile nicht importiert.",
-  "errorLoadTaxonomies": "Taxonomies nicht geladen.",
-  "errorLoadTaxonomyCorrelations": "Taxonomie-Verknüpfungen nicht geladen.",
+  "errorLoadTaxonomies": "Etsy-Kategorien nicht geladen.",
+  "errorLoadTaxonomyCorrelations": "Kategorie-Verknüpfungen nicht geladen.",
   "errorLoadCategories": "Kategorien nicht geladen.",
-  "errorSaveTaxonomyCorrelations": "Taxonomie-Verknüpfungen nicht gespeichert.",
+  "errorSaveTaxonomyCorrelations": "Kategorie-Verknüpfungen nicht gespeichert.",
+  "errorLoadProperties": "Merkmale nicht geladen.",
+  "errorLoadMarketProperties": "Marktplatzmerkmale nicht geladen.",
+  "errorLoadPropertyCorrelations": "Merkmalverknüpfungen nicht geladen.",
+  "errorSavePropertyCorrelations": "Merkmalverknüpfungen nicht gespeichert.",
+  "errorImportProperties": "Marktplatzmerkmale nicht importiert.",
 
-
+  "successSavePropertyCorrelations": "Markmalverknüpfungen gespeichert.",
+  "successImportProperties": "Marktplatzmerkmale importiert.",
   "successSaveSettings": "Einstellungen gespeichert.",
   "successSaveShippingProfileCorrelations": "Versandprofilverknüpfungen gespeichert.",
   "successImportShippingProfiles": "Versandprofile importiert.",
-  "successSaveTaxonomyCorrelations": "Taxonomie-Verknüpfungen gespeichert."
+  "successSaveTaxonomyCorrelations": "Kategorie-Verknüpfungen gespeichert."
 }
