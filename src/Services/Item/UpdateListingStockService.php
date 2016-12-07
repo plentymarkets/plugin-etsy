@@ -65,7 +65,7 @@ class UpdateListingStockService
 			try
 			{
 				$data = [
-					'listing_id' => $listingId,
+					'listing_id' => (int) $listingId,
 					'state'      => $this->isVariationAvailable($record) ? ListingService::STATE_ACTIVE : ListingService::STATE_INACTIVE,
 					'quantity'   => $this->itemHelper->getStock($record) > 0 ? $this->itemHelper->getStock($record) : 1,
 				];
