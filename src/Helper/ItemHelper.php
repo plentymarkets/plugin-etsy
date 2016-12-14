@@ -2,6 +2,7 @@
 
 namespace Etsy\Helper;
 
+use Plenty\Modules\Market\Helper\Contracts\MarketAttributeHelperRepositoryContract;
 use Plenty\Modules\Market\Settings\Contracts\SettingsRepositoryContract;
 use Plenty\Modules\Market\Settings\Factories\SettingsCorrelationFactory;
 use Plenty\Modules\Market\Settings\Models\Settings;
@@ -233,5 +234,21 @@ class ItemHelper
 		}
 
 		return null;
+	}
+
+	/**
+	 * Get variation name with attributes.
+	 *
+	 * @param Record    $record
+	 * @param string    $language
+	 *
+	 * @return string
+	 */
+	public function getVariationWithAttributesName($record, $language)
+	{
+		/** @var MarketAttributeHelperRepositoryContract $marketAttributeHelperRepository */
+		$marketAttributeHelperRepository = pluginApp(MarketAttributeHelperRepositoryContract::class);
+
+		return $marketAttributeHelperRepository->getVariationNameAndAttributeNameAndValueCombination($record, $language);
 	}
 }

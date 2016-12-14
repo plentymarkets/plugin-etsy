@@ -111,10 +111,11 @@ class ItemUpdateDataProvider implements ItemDataProviderContract
 	private function filters()
 	{
 		return [
-			'variationStock.wasUpdatedBetween'       => [
+			'variationBase.stockOrPriceWasUpdatedBetween' => [
 				'timestampFrom' => (time() - self::LAST_UPDATE),
 				'timestampTo'   => time(),
 			],
+
 			'variationMarketStatus.hasMarketStatus?' => [
 				'marketplace' => $this->orderHelper->getReferrerId()
 			]

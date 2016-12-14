@@ -105,6 +105,7 @@ class ItemExportDataProvider implements ItemDataProviderContract
 				'lengthMm',
 				'widthMm',
 				'heightMm',
+				'attributeValueSetId',
 			],
 
 			'variationRetailPrice' => [
@@ -137,6 +138,11 @@ class ItemExportDataProvider implements ItemDataProviderContract
 				'characterValueType',
 				'isOrderCharacter',
 				'characterOrderMarkup'
+			],
+
+			'variationAttributeValueList' => [
+				'attributeId',
+				'attributeValueId'
 			],
 
 			'variationImageList' => [

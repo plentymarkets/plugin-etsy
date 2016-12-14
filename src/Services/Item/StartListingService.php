@@ -128,9 +128,9 @@ class StartListingService
 	 */
 	private function createListing(Record $record)
 	{
-		$language = $this->settingsHelper->getShopSettings('mainLanguage', 'de');
+		$language    = $this->settingsHelper->getShopSettings('mainLanguage', 'de');
 
-		$title       = $record->itemDescription[ $language ]['name1'];
+		$title       = $this->itemHelper->getVariationWithAttributesName($record, $language);
 		$description = strip_tags($record->itemDescription[ $language ]['description']);
 
 		$data = [
