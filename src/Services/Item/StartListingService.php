@@ -9,7 +9,6 @@ use Etsy\Helper\SettingsHelper;
 use Etsy\Api\Services\ListingService;
 use Etsy\Api\Services\ListingImageService;
 use Etsy\Helper\ItemHelper;
-use Etsy\Logger\Logger;
 use Etsy\Api\Services\ListingTranslationService;
 
 /**
@@ -21,11 +20,6 @@ class StartListingService
 	 * @var ItemHelper
 	 */
 	private $itemHelper;
-
-	/**
-	 * @var Logger
-	 */
-	private $logger;
 
 	/**
 	 * @var ListingService
@@ -62,7 +56,6 @@ class StartListingService
 	 * @param ListingService            $listingService
 	 * @param DeleteListingService      $deleteListingService
 	 * @param ListingImageService       $listingImageService
-	 * @param Logger                    $logger
 	 * @param ListingTranslationService $listingTranslationService
 	 * @param SettingsHelper            $settingsHelper
 	 * @param ImageHelper               $imageHelper
@@ -72,13 +65,11 @@ class StartListingService
 		ListingService $listingService,
 		DeleteListingService $deleteListingService,
 		ListingImageService $listingImageService,
-		Logger $logger,
 		ListingTranslationService $listingTranslationService,
 		SettingsHelper $settingsHelper,
 		ImageHelper $imageHelper)
 	{
 		$this->itemHelper                = $itemHelper;
-		$this->logger                    = $logger;
 		$this->listingTranslationService = $listingTranslationService;
 		$this->listingService            = $listingService;
 		$this->deleteListingService      = $deleteListingService;
@@ -110,12 +101,12 @@ class StartListingService
 			{
 				$this->deleteListingService->delete($listingId);
 
-				$this->logger->log('Could not start listing for variation ID ' . $record->variationBase->id . ': ' . $ex->getMessage());
+				// $this->logger->log('Could not start listing for variation ID ' . $record->variationBase->id . ': ' . $ex->getMessage());
 			}
 		}
 		else
 		{
-			$this->logger->log('Could not start listing for variation ID ' . $record->variationBase->id);
+			// $this->logger->log('Could not start listing for variation ID ' . $record->variationBase->id);
 		}
 	}
 
@@ -275,7 +266,7 @@ class StartListingService
 				}
 				catch(\Exception $ex)
 				{
-					$this->logger->log('Could not upload translation for listing ID ' . $listingId . ': ' . $ex->getMessage());
+					// $this->logger->log('Could not upload translation for listing ID ' . $listingId . ': ' . $ex->getMessage());
 				}
 			}
 		}

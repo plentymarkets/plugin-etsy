@@ -3,7 +3,6 @@
 namespace Etsy\Api\Services;
 
 use Etsy\Api\Client;
-use Etsy\Logger\Logger;
 use Plenty\Modules\Item\DataLayer\Models\ItemDescription;
 
 /**
@@ -17,18 +16,11 @@ class ListingTranslationService
 	private $client;
 
 	/**
-	 * @var Logger
-	 */
-	private $logger;
-
-	/**
 	 * @param Client $client
-	 * @param Logger $logger
 	 */
-	public function __construct(Client $client, Logger $logger)
+	public function __construct(Client $client)
 	{
 		$this->client = $client;
-		$this->logger = $logger;
 	}
 
 	/**

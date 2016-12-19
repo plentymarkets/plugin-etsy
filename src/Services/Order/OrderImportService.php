@@ -8,7 +8,6 @@ use Plenty\Exceptions\ValidationException;
 use Plenty\Plugin\ConfigRepository;
 
 use Etsy\Api\Services\ReceiptService;
-use Etsy\Logger\Logger;
 use Etsy\Services\Order\OrderCreateService;
 use Etsy\Validators\EtsyReceiptValidator;
 
@@ -18,11 +17,6 @@ use Etsy\Validators\EtsyReceiptValidator;
  */
 class OrderImportService
 {
-	/**
-	 * @var Logger
-	 */
-	private $logger;
-
 	/**
 	 * @var ConfigRepository
 	 */
@@ -49,23 +43,14 @@ class OrderImportService
 	private $orderHelper;
 
 	/**
-	 * @param Logger             $logger
 	 * @param OrderCreateService $orderCreateService
 	 * @param ConfigRepository   $config
 	 * @param ReceiptService     $receiptService
 	 * @param SettingsHelper     $settingsHelper
 	 * @param OrderHelper        $orderHelper
 	 */
-	public function __construct(
-		Logger $logger,
-		OrderCreateService $orderCreateService,
-		ConfigRepository $config,
-		ReceiptService $receiptService,
-		SettingsHelper $settingsHelper,
-		OrderHelper $orderHelper
-	)
+	public function __construct(OrderCreateService $orderCreateService, ConfigRepository $config, ReceiptService $receiptService, SettingsHelper $settingsHelper, OrderHelper $orderHelper)
 	{
-		$this->logger             = $logger;
 		$this->orderCreateService = $orderCreateService;
 		$this->config             = $config;
 		$this->receiptService     = $receiptService;
@@ -104,12 +89,12 @@ class OrderImportService
 
 					if(!is_null($messageBag))
 					{
-						$this->logger->log('Can not import order.'); // TODO show the message bag
+						// $this->logger->log('Can not import order.'); // TODO show the message bag
 					}
 				}
 				catch(\Exception $ex)
 				{
-					$this->logger->log('Can not import order: ' . $ex->getMessage());
+					// $this->logger->log('Can not import order: ' . $ex->getMessage());
 				}
 			}
 		}

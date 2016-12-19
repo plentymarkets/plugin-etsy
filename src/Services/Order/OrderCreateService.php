@@ -15,7 +15,6 @@ use Plenty\Plugin\Application;
 use Plenty\Modules\Order\Contracts\OrderRepositoryContract;
 use Plenty\Modules\Item\VariationSku\Contracts\VariationSkuRepositoryContract;
 
-use Etsy\Logger\Logger;
 use Etsy\Api\Services\PaymentService;
 use Etsy\Helper\PaymentHelper;
 use Etsy\Helper\SettingsHelper;
@@ -42,22 +41,15 @@ class OrderCreateService
 	private $settingsHelper;
 
 	/**
-	 * @var Logger
-	 */
-	private $logger;
-
-	/**
 	 * @param Application    $app
 	 * @param OrderHelper    $orderHelper
 	 * @param SettingsHelper $settingsHelper
-	 * @param Logger         $logger
 	 */
-	public function __construct(Application $app, OrderHelper $orderHelper, SettingsHelper $settingsHelper, Logger $logger)
+	public function __construct(Application $app, OrderHelper $orderHelper, SettingsHelper $settingsHelper)
 	{
 		$this->app            = $app;
 		$this->orderHelper    = $orderHelper;
 		$this->settingsHelper = $settingsHelper;
-		$this->logger         = $logger;
 	}
 
 	/**
@@ -357,7 +349,7 @@ class OrderCreateService
 		}
 		catch(\Exception $ex)
 		{
-			$this->logger->log('Can not add payment: ' . $ex->getMessage());
+			// $this->logger->log('Can not add payment: ' . $ex->getMessage());
 		}
 	}
 

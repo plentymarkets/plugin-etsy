@@ -6,7 +6,6 @@ use Plenty\Modules\EventProcedures\Events\EventProceduresTriggered;
 use Plenty\Modules\Order\Models\Legacy\Order;
 
 use Etsy\Api\Services\ReceiptService;
-use Etsy\Logger\Logger;
 
 /**
  * Class PaymentNotificationEventProcedure
@@ -14,22 +13,15 @@ use Etsy\Logger\Logger;
 class PaymentNotificationEventProcedure
 {
 	/**
-	 * @var Logger
-	 */
-	private $logger;
-
-	/**
 	 * @var ReceiptService
 	 */
 	private $receiptService;
 
 	/**
-	 * @param Logger         $logger
 	 * @param ReceiptService $receiptService
 	 */
-	public function __construct(Logger $logger, ReceiptService $receiptService)
+	public function __construct(ReceiptService $receiptService)
 	{
-		$this->logger         = $logger;
 		$this->receiptService = $receiptService;
 	}
 

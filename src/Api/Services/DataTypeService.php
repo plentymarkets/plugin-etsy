@@ -3,7 +3,6 @@
 namespace Etsy\Api\Services;
 
 use Etsy\Api\Client;
-use Etsy\Logger\Logger;
 
 /**
  * Class DataTypeService
@@ -16,18 +15,11 @@ class DataTypeService
 	private $client;
 
 	/**
-	 * @var Logger
-	 */
-	private $logger;
-
-	/**
 	 * @param Client $client
-	 * @param Logger $logger
 	 */
-	public function __construct(Client $client, Logger $logger)
+	public function __construct(Client $client)
 	{
 		$this->client = $client;
-		$this->logger = $logger;
 	}
 
 	/**

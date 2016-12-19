@@ -10,18 +10,12 @@ use Plenty\Modules\Order\Shipping\Contracts\ParcelServicePresetRepositoryContrac
 use Etsy\Api\Services\ReceiptService;
 use Etsy\Helper\SettingsHelper;
 use Etsy\Helper\ShippingHelper;
-use Etsy\Logger\Logger;
 
 /**
  * Class ShippingNotificationEventProcedure
  */
 class ShippingNotificationEventProcedure
 {
-	/**
-	 * @var Logger
-	 */
-	private $logger;
-
 	/**
 	 * @var ReceiptService
 	 */
@@ -38,14 +32,12 @@ class ShippingNotificationEventProcedure
 	private $settingsHelper;
 
 	/**
-	 * @param Logger         $logger
 	 * @param ReceiptService $receiptService
 	 * @param ShippingHelper $shippingHelper
 	 * @param SettingsHelper $settingsHelper
 	 */
-	public function __construct(Logger $logger, ReceiptService $receiptService, ShippingHelper $shippingHelper, SettingsHelper $settingsHelper)
+	public function __construct(ReceiptService $receiptService, ShippingHelper $shippingHelper, SettingsHelper $settingsHelper)
 	{
-		$this->logger         = $logger;
 		$this->receiptService = $receiptService;
 		$this->shippingHelper = $shippingHelper;
 		$this->settingsHelper = $settingsHelper;
@@ -114,7 +106,7 @@ class ShippingNotificationEventProcedure
 		}
 		catch(\Exception $ex)
 		{
-			$this->logger->log('Can not get tracking code for order id ' . $order->id . ': ' . $ex->getMessage());
+			// $this->logger->log('Can not get tracking code for order id ' . $order->id . ': ' . $ex->getMessage());
 		}
 
 		return null;
@@ -140,7 +132,7 @@ class ShippingNotificationEventProcedure
 		}
 		catch(\Exception $ex)
 		{
-			$this->logger->log('Can not get carrier name for order id ' . $order->id . ': ' . $ex->getMessage());
+			// $this->logger->log('Can not get carrier name for order id ' . $order->id . ': ' . $ex->getMessage());
 		}
 
 		return null;

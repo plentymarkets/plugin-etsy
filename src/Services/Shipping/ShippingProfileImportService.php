@@ -7,7 +7,6 @@ use Plenty\Modules\Market\Settings\Factories\SettingsCorrelationFactory;
 use Plenty\Plugin\ConfigRepository;
 
 use Etsy\Helper\SettingsHelper;
-use Etsy\Logger\Logger;
 use Etsy\Api\Services\ShippingTemplateService;
 
 /**
@@ -19,10 +18,6 @@ class ShippingProfileImportService
 	 * @var SettingsRepositoryContract $settingsRepository
 	 */
 	private $settingsRepository;
-	/**
-	 * @var Logger
-	 */
-	private $logger;
 
 	/**
 	 * @var ConfigRepository
@@ -46,15 +41,13 @@ class ShippingProfileImportService
 
 	/**
 	 * @param SettingsRepositoryContract $settingsRepository
-	 * @param Logger                     $logger
 	 * @param ConfigRepository           $config
 	 * @param ShippingTemplateService    $shippingTemplateService
 	 * @param SettingsHelper             $settingsHelper
 	 */
-	public function __construct(SettingsRepositoryContract $settingsRepository, Logger $logger, ConfigRepository $config, ShippingTemplateService $shippingTemplateService, SettingsHelper $settingsHelper)
+	public function __construct(SettingsRepositoryContract $settingsRepository, ConfigRepository $config, ShippingTemplateService $shippingTemplateService, SettingsHelper $settingsHelper)
 	{
 		$this->settingsRepository      = $settingsRepository;
-		$this->logger                  = $logger;
 		$this->config                  = $config;
 		$this->shippingTemplateService = $shippingTemplateService;
 		$this->settingsHelper          = $settingsHelper;

@@ -6,7 +6,6 @@ use Plenty\Modules\Item\DataLayer\Models\Record;
 
 use Etsy\Api\Services\ListingService;
 use Etsy\Helper\ItemHelper;
-use Etsy\Logger\Logger;
 
 /**
  * Class UpdateListingService
@@ -24,11 +23,6 @@ class UpdateListingService
 	private $itemHelper;
 
 	/**
-	 * @var Logger
-	 */
-	private $logger;
-
-	/**
 	 * @var ListingService
 	 */
 	private $listingService;
@@ -37,17 +31,11 @@ class UpdateListingService
 	 * @param ItemHelper       $itemHelper
 	 * @param ConfigRepository $config
 	 * @param ListingService   $listingService
-	 * @param Logger           $logger
 	 */
-	public function __construct(
-		ItemHelper $itemHelper,
-		ConfigRepository $config,
-		ListingService $listingService,
-		Logger $logger)
+	public function __construct(ItemHelper $itemHelper, ConfigRepository $config, ListingService $listingService)
 	{
 		$this->itemHelper     = $itemHelper;
 		$this->config         = $config;
-		$this->logger         = $logger;
 		$this->listingService = $listingService;
 	}
 
@@ -64,7 +52,7 @@ class UpdateListingService
 		}
 		else
 		{
-			$this->logger->log('Could not start listing for variation id: ' . $record->variationBase->id);
+			// $this->logger->log('Could not start listing for variation id: ' . $record->variationBase->id);
 		}
 
 	}

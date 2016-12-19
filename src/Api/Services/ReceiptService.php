@@ -2,7 +2,6 @@
 
 namespace Etsy\Api\Services;
 
-use Etsy\Logger\Logger;
 use Etsy\Api\Client;
 
 /**
@@ -15,15 +14,9 @@ class ReceiptService
 	 */
 	private $client;
 
-	/**
-	 * @var Logger
-	 */
-	private $logger;
-
-	public function __construct(Client $client, Logger $logger)
+	public function __construct(Client $client)
 	{
 		$this->client = $client;
-		$this->logger = $logger;
 	}
 
 	/**

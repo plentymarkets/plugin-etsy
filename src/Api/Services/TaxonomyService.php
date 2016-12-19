@@ -2,7 +2,6 @@
 
 namespace Etsy\Api\Services;
 
-use Etsy\Logger\Logger;
 use Etsy\Api\Client;
 
 /**
@@ -16,18 +15,11 @@ class TaxonomyService
 	private $client;
 
 	/**
-	 * @var Logger
-	 */
-	private $logger;
-
-	/**
 	 * @param Client $client
-	 * @param Logger $logger
 	 */
-	public function __construct(Client $client, Logger $logger)
+	public function __construct(Client $client)
 	{
 		$this->client = $client;
-		$this->logger = $logger;
 	}
 
 	/**

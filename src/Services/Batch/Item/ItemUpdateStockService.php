@@ -12,7 +12,6 @@ use Etsy\Helper\AccountHelper;
 use Etsy\Helper\OrderHelper;
 use Etsy\Services\Item\DeleteListingService;
 use Etsy\Services\Item\UpdateListingStockService;
-use Etsy\Logger\Logger;
 use Etsy\Services\Batch\AbstractBatchService;
 use Etsy\Factories\ItemDataProviderFactory;
 
@@ -21,11 +20,6 @@ use Etsy\Factories\ItemDataProviderFactory;
  */
 class ItemUpdateStockService extends AbstractBatchService
 {
-	/**
-	 * @var Logger
-	 */
-	private $logger;
-
 	/**
 	 * @var UpdateListingStockService
 	 */
@@ -47,7 +41,6 @@ class ItemUpdateStockService extends AbstractBatchService
 	private $orderHelper;
 
 	/**
-	 * @param Logger                         $logger
 	 * @param ItemDataProviderFactory        $itemDataProviderFactory
 	 * @param UpdateListingStockService      $updateListingStockService
 	 * @param DeleteListingService           $deleteListingService
@@ -55,14 +48,12 @@ class ItemUpdateStockService extends AbstractBatchService
 	 * @param OrderHelper                    $orderHelper
 	 */
 	public function __construct(
-		Logger $logger,
 		ItemDataProviderFactory $itemDataProviderFactory,
 		UpdateListingStockService $updateListingStockService,
 		DeleteListingService $deleteListingService,
 		AccountHelper $accountHelper,
 		OrderHelper $orderHelper)
 	{
-		$this->logger                    = $logger;
 		$this->updateListingStockService = $updateListingStockService;
 		$this->deleteListingService      = $deleteListingService;
 		$this->accountHelper             = $accountHelper;
@@ -107,7 +98,7 @@ class ItemUpdateStockService extends AbstractBatchService
 
 				if(!is_null($messageBag))
 				{
-					$this->logger->log('Can not update stock for variation ID ' . $record->variationBase->id . ' ... ');
+					// $this->logger->log('Can not update stock for variation ID ' . $record->variationBase->id . ' ... ');
 				}
 			}
 		}

@@ -3,7 +3,6 @@
 namespace Etsy\Api\Services;
 
 use Etsy\Api\Client;
-use Etsy\Logger\Logger;
 
 /**
  * Class PaymentService
@@ -15,15 +14,9 @@ class PaymentService
 	 */
 	private $client;
 
-	/**
-	 * @var Logger
-	 */
-	private $logger;
-
-	public function __construct(Client $client, Logger $logger)
+	public function __construct(Client $client)
 	{
 		$this->client = $client;
-		$this->logger = $logger;
 	}
 
 	/**

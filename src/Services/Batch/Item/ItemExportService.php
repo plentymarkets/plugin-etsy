@@ -8,7 +8,6 @@ use Plenty\Exceptions\ValidationException;
 use Plenty\Modules\Item\DataLayer\Models\RecordList;
 
 use Etsy\Services\Item\UpdateListingService;
-use Etsy\Logger\Logger;
 use Etsy\Services\Batch\AbstractBatchService;
 use Etsy\Factories\ItemDataProviderFactory;
 use Etsy\Services\Item\StartListingService;
@@ -24,11 +23,6 @@ class ItemExportService extends AbstractBatchService
 	private $app;
 
 	/**
-	 * @var Logger
-	 */
-	private $logger;
-
-	/**
 	 * @var StartListingService
 	 */
 	private $startService;
@@ -40,21 +34,18 @@ class ItemExportService extends AbstractBatchService
 
 	/**
 	 * @param Application             $app
-	 * @param Logger                  $logger
 	 * @param ItemDataProviderFactory $itemDataProviderFactory
 	 * @param StartListingService     $startService
 	 * @param UpdateListingService    $updateService
 	 */
 	public function __construct(
 		Application $app,
-		Logger $logger,
 		ItemDataProviderFactory $itemDataProviderFactory,
 		StartListingService $startService,
 		UpdateListingService $updateService
 	)
 	{
 		$this->app     = $app;
-		$this->logger  = $logger;
 		$this->startService = $startService;
 		$this->updateService = $updateService;
 
@@ -87,7 +78,7 @@ class ItemExportService extends AbstractBatchService
 
 				if(!is_null($messageBag))
 				{
-					$this->logger->log('Can not start listing: ...');
+					// $this->logger->log('Can not start listing: ...');
 				}
 			}
 		}

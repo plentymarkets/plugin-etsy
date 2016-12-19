@@ -6,7 +6,6 @@ use Plenty\Modules\Item\DataLayer\Models\Record;
 use Etsy\Helper\OrderHelper;
 use Etsy\Api\Services\ListingService;
 use Etsy\Helper\ItemHelper;
-use Etsy\Logger\Logger;
 
 /**
  * Class UpdateListingStockService
@@ -29,26 +28,15 @@ class UpdateListingStockService
 	private $listingService;
 
 	/**
-	 * @var Logger
+	 * @param ItemHelper     $itemHelper
+	 * @param OrderHelper    $orderHelper
+	 * @param ListingService $listingService
 	 */
-	private $logger;
-
-	/**
-	 * @param ItemHelper       $itemHelper
-	 * @param OrderHelper      $orderHelper
-	 * @param ListingService   $listingService
-	 * @param Logger           $logger
-	 */
-	public function __construct(
-		ItemHelper $itemHelper,
-		OrderHelper $orderHelper,
-		ListingService $listingService,
-		Logger $logger)
+	public function __construct(ItemHelper $itemHelper, OrderHelper $orderHelper, ListingService $listingService)
 	{
 		$this->itemHelper     = $itemHelper;
 		$this->orderHelper    = $orderHelper;
 		$this->listingService = $listingService;
-		$this->logger         = $logger;
 	}
 
 	/**
@@ -75,12 +63,12 @@ class UpdateListingStockService
 			}
 			catch(\Exception $e)
 			{
-				$this->logger->log('Could not update listing stock for variation id ' . $record->variationBase->id . ': ' . $e->getMessage());
+				// $this->logger->log('Could not update listing stock for variation id ' . $record->variationBase->id . ': ' . $e->getMessage());
 			}
 		}
 		else
 		{
-			$this->logger->log('Could not update listing stock for variation id: ' . $record->variationBase->id);
+			// $this->logger->log('Could not update listing stock for variation id: ' . $record->variationBase->id);
 		}
 	}
 
