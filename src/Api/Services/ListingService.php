@@ -51,9 +51,7 @@ class ListingService
 	 */
 	public function updateListing($id, $data)
 	{
-		$this->client->call('updateListing', [
-			'listing_id' => $id,
-		], $data);
+		$this->client->call('updateListing', ['listing_id' => $id], $data);
 
 		return true;
 	}
@@ -67,9 +65,7 @@ class ListingService
 	 */
 	public function deleteListing($id)
 	{
-		$this->client->call('deleteListing', [
-			'listing_id' => $id
-		]);
+		$this->client->call('deleteListing', ['listing_id' => $id]);
 
 		return true;
 	}
