@@ -151,7 +151,7 @@ Richten Sie eine Ereignisaktion ein, um Zahlungsbestätigungen automatisch an Et
       </tr>
 </tbody>
 	<caption>
-		Table 2: Ereignisaktion zum automatischen Senden von Versandbestätigungen an Etsy
+		Table 2: Ereignisaktion zum automatischen Senden von Zahlungsbestätigungen an Etsy
 	</caption>
 </table>
 
