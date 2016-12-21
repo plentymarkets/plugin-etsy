@@ -104,7 +104,7 @@ Im Menü **Einstellungen » Märkte » Etsy » Versandprofilverknüpfungen** ver
 
 Richten Sie eine Ereignisaktion ein, um Zahlungsbestätigungen automatisch an Etsy zu senden, nachdem ein Zahlungseingang gebucht wurde.
 
-## Ereignisaktion einrichten:
+##### Ereignisaktion einrichten:
 
 1. Öffnen Sie das Menü **Einstellungen » Aufträge » Ereignisaktionen**.
 2. Klicken Sie auf **Ereignisaktion hinzufügen**.
@@ -159,7 +159,7 @@ Richten Sie eine Ereignisaktion ein, um Zahlungsbestätigungen automatisch an Et
 
 Richten Sie eine Ereignisaktion ein, um Versandbestätigungen automatisch an Etsy zu senden, nachdem ein Warenausgang gebucht wurde.
 
-## Ereignisaktion einrichten:
+##### Ereignisaktion einrichten:
 
 1. Öffnen Sie das Menü **Einstellungen » Aufträge » Ereignisaktionen**.
 2. Klicken Sie auf **Ereignisaktion hinzufügen**.
