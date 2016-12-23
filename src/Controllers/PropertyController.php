@@ -2,8 +2,8 @@
 
 namespace Etsy\Controllers;
 
-use Plenty\Modules\Item\Property\Contracts\PropertyItemRepositoryContract;
-use Plenty\Modules\Item\Property\Models\PropertyItem;
+use Plenty\Modules\Item\Property\Contracts\PropertyRepositoryContract;
+use Plenty\Modules\Item\Property\Models\Property;
 use Plenty\Modules\Market\Settings\Contracts\SettingsRepositoryContract;
 use Plenty\Modules\Market\Settings\Factories\SettingsCorrelationFactory;
 use Plenty\Modules\Market\Settings\Models\Settings;
@@ -98,8 +98,8 @@ class PropertyController extends Controller
 	 */
 	public function properties()
 	{
-		/** @var PropertyItemRepositoryContract $propertyItemRepository */
-		$propertyItemRepository = pluginApp(PropertyItemRepositoryContract::class);
+		/** @var PropertyRepositoryContract $propertyRepo */
+		$propertyRepo = pluginApp(PropertyRepositoryContract::class);
 
 		$list    = [];
 		$page    = 0;
@@ -110,9 +110,9 @@ class PropertyController extends Controller
 			$page ++;
 
 			/** @var PaginatedResult $result */
-			$result = $propertyItemRepository->all(['*'], $perPage, $page);
+			$result = $propertyRepo->all(['*'], $perPage, $page);
 
-			/** @var PropertyItem $propertyItem */
+			/** @var Property $property */
 			foreach($result->getResult() as $propertyItem)
 			{
 				$list[] = [
