@@ -95,10 +95,9 @@ class UpdateListingService
 		$description = strip_tags($record->itemDescription[ $language ]['description']);
 
 		$data = [
-			'listing_id'           => $listingId,
+			'listing_id'           => (int) $listingId,
 			'title'                => $title,
 			'description'          => $description,
-			'currency_code'        => $record->variationRetailPrice->currency,
 			'shipping_template_id' => $this->itemHelper->getShippingTemplateId($record),
 			'taxonomy_id'          => $this->itemHelper->getTaxonomyId($record),
 			// TODO: Pictures with dynamodb
@@ -158,7 +157,7 @@ class UpdateListingService
 			$data['item_dimensions_unit'] = 'mm';
 		}
 
-		$this->listingService->updateListing($listingId, $data);
+		$this->listingService->updateListing($listingId, $data, $language);
 	}
 
 	/**
