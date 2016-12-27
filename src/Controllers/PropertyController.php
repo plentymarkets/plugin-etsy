@@ -2,6 +2,7 @@
 
 namespace Etsy\Controllers;
 
+use Plenty\Modules\Item\Property\Contracts\PropertyGroupRepositoryContract;
 use Plenty\Modules\Item\Property\Contracts\PropertyRepositoryContract;
 use Plenty\Modules\Item\Property\Models\Property;
 use Plenty\Modules\Market\Settings\Contracts\SettingsRepositoryContract;
@@ -119,7 +120,7 @@ class PropertyController extends Controller
 					'id'        => $propertyItem->id,
 					'name'      => $propertyItem->backendName,
 					'groupId'   => $propertyItem->propertyGroupId,
-					'groupName' => $propertyItem->propertyGroupId, // TODO get group name
+					'groupName' => $this->getPropertyGroupName($propertyItem->propertyGroupId),
 				];
 			}
 		} while(($result->getTotalCount()) > 0 && $page < ($result->getTotalCount() / $perPage));
@@ -180,5 +181,28 @@ class PropertyController extends Controller
 		}
 
 		return $found;
+	}
+
+	/**
+	 * Get the property group backend name.
+	 *
+	 * @param int $propertyGroupId
+	 * @return string
+	 */
+	private function getPropertyGroupName($propertyGroupId)
+	{
+		try
+		{
+			/** @var PropertyGroupRepositoryContract $propertyGroupRepo */
+			$propertyGroupRepo = pluginApp(PropertyGroupRepositoryContract::class);
+
+			$propertyGroup = $propertyGroupRepo->findById($propertyGroupId);
+
+			return $propertyGroup->backendName;
+		}
+		catch(\Exception $ex)
+		{
+			return $propertyGroupId;
+		}
 	}
 }

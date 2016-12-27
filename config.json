@@ -1,12 +1,19 @@
 [
   {
-    "tab": "General",
-    "key": "logName",
-    "label": "API Log Name",
+    "tab": "Etsy App Settings",
+    "key": "customerKey",
+    "label": "Customer Key",
     "type": "text",
-    "default": "Etsy"
+    "default": ""
   },
 
+  {
+    "tab": "Etsy App Settings",
+    "key": "customerSecret",
+    "label": "Customer Secret",
+    "type": "text",
+    "default": ""
+  },
   {
     "tab": "General",
     "key": "readCapacityUnits",
@@ -21,63 +28,5 @@
     "label": "Write Capacity Units",
     "type": "text",
     "default": "2"
-  },
-
-  {
-    "tab": "Payment Method",
-    "key": "paymentMethod.name",
-    "label": "Name",
-    "type": "text",
-    "default": "Etsy Direct Checkout"
-  },
-  {
-    "tab": "Payment Method",
-    "key": "paymentMethod.infoPage.type",
-    "label": "Information page",
-    "type": "dropdown",
-    "possibleValues": {
-      "0": "None",
-      "1": "External content",
-      "2": "Internal content"
-    },
-    "default": "0"
-  },
-  {
-    "tab": "Payment Method",
-    "key": "paymentMethod.infoPage.intern",
-    "label": "Internal information page",
-    "type": "category_select"
-  },
-  {
-    "tab": "Payment Method",
-    "key": "paymentMethod.infoPage.extern",
-    "label": "External information page",
-    "type": "text",
-    "default": ""
-  },
-  {
-    "tab": "Payment Method",
-    "key": "paymentMethod.logo",
-    "label": "Logo",
-    "type": "dropdown",
-    "possibleValues": {
-      "0": "None",
-      "1": "Logo URL"
-    },
-    "default": "0"
-  },
-  {
-    "tab": "Payment Method",
-    "key": "paymentMethod.logo.url",
-    "label": "Logo URL",
-    "type": "text",
-    "default": ""
-  },
-  {
-    "tab": "Payment Method",
-    "key": "paymentMethod.shippingProfileId",
-    "label": "Shipping profile ID",
-    "type": "text",
-    "default": ""
   }
 ]

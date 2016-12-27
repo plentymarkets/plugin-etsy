@@ -6,6 +6,7 @@ use Plenty\Plugin\Application;
 
 use Etsy\Helper\OrderHelper;
 use Etsy\Helper\SettingsHelper;
+use Plenty\Plugin\ConfigRepository;
 
 /**
  * Class AccountHelper
@@ -28,14 +29,22 @@ class AccountHelper
 	private $orderHelper;
 
 	/**
-	 * @param Application    $app
-	 * @param SettingsHelper $settingsHelper
+	 * @var ConfigRepository
 	 */
-	public function __construct(Application $app, SettingsHelper $settingsHelper, OrderHelper $orderHelper)
+	private $config;
+
+	/**
+	 * @param Application      $app
+	 * @param SettingsHelper   $settingsHelper
+	 * @param OrderHelper      $orderHelper
+	 * @param ConfigRepository $config
+	 */
+	public function __construct(Application $app, SettingsHelper $settingsHelper, OrderHelper $orderHelper, ConfigRepository $config)
 	{
 		$this->app            = $app;
 		$this->settingsHelper = $settingsHelper;
 		$this->orderHelper    = $orderHelper;
+		$this->config         = $config;
 	}
 
 	/**
@@ -63,9 +72,9 @@ class AccountHelper
 	 *
 	 * @return string
 	 */
-	public function getConsumerKey()
+	public function getConsumerKey():string
 	{
-		return '6d6s53b0qd09nhw37253ero8';
+		return (string) $this->config->get('EtsyIntegrationPlugin.customerKey');
 	}
 
 	/**
@@ -73,9 +82,9 @@ class AccountHelper
 	 *
 	 * @return string
 	 */
-	public function getConsumerSecret()
+	public function getConsumerSecret():string
 	{
-		return 'dzi5pnxwxm';
+		return (string) $this->config->get('EtsyIntegrationPlugin.customerSecret');
 	}
 
 	/**
