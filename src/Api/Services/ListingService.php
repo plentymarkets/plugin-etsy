@@ -52,8 +52,6 @@ class ListingService
 	 */
 	public function updateListing($id, $data, $language = '')
 	{
-		$params = [];
-
 		$params['listing_id'] = $id;
 
 		if(strlen($language) > 0)

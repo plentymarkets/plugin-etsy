@@ -707,7 +707,10 @@
     "uri": "/listings/:listing_id/translations/:language",
     "params": {
       "listing_id": "int",
-      "language": "language"
+      "language": "language",
+      "title": "string",
+      "description": "text",
+      "tags": "string"
     },
     "defaults": null,
     "type": "ListingTranslation",

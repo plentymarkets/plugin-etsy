@@ -123,12 +123,12 @@ class UpdateListingService
 			$data['when_made'] = $whenMade;
 		}
 
-		if($occasion = $this->itemHelper->getProperty($record, 'occasion', 'en'))
+		if($occasion = $this->itemHelper->getProperty($record, 'occasion', $language))
 		{
 			$data['occasion'] = $occasion;
 		}
 
-		if($recipient = $this->itemHelper->getProperty($record, 'recipient', 'en'))
+		if($recipient = $this->itemHelper->getProperty($record, 'recipient', $language))
 		{
 			$data['recipient'] = $recipient;
 		}
@@ -184,7 +184,7 @@ class UpdateListingService
 						$data['tags'] = $record->itemDescription[ $language ]['keywords'];
 					}
 
-					$this->listingTranslationService->createListingTranslation($listingId, $language, $data);
+					$this->listingTranslationService->updateListingTranslation($listingId, $language, $data);
 				}
 				catch(\Exception $ex)
 				{

@@ -40,4 +40,22 @@ class ListingTranslationService
 			'language'   => $language,
 		], $data);
 	}
+
+	/**
+	 * Updates a ListingTranslation by listing_id and language
+	 *
+	 * @param int    $listingId
+	 * @param string $language
+	 * @param array  $data
+	 *
+	 * @return array
+	 * @throws \Exception
+	 */
+	public function updateListingTranslation($listingId, $language, array $data)
+	{
+		return $this->client->call('updateListingTranslation', [
+			'listing_id' => $listingId,
+			'language'   => $language,
+		], $data);
+	}
 }
