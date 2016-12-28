@@ -63,6 +63,8 @@ class AccountHelper
 			return [
 				'accessToken'       => isset($data['accessToken']) ? $data['accessToken'] : '',
 				'accessTokenSecret' => isset($data['accessTokenSecret']) ? $data['accessTokenSecret'] : '',
+				'consumerKey'       => isset($data['consumerKey']) ? $data['consumerKey'] : '',
+				'consumerSecret'    => isset($data['consumerSecret']) ? $data['consumerSecret'] : '',
 			];
 		}
 	}
@@ -74,7 +76,7 @@ class AccountHelper
 	 */
 	public function getConsumerKey():string
 	{
-		return (string) $this->config->get('EtsyIntegrationPlugin.customerKey');
+		return (string) $this->config->get('EtsyIntegrationPlugin.consumerKey');
 	}
 
 	/**
@@ -84,7 +86,7 @@ class AccountHelper
 	 */
 	public function getConsumerSecret():string
 	{
-		return (string) $this->config->get('EtsyIntegrationPlugin.customerSecret');
+		return (string) $this->config->get('EtsyIntegrationPlugin.consumerSecret');
 	}
 
 	/**

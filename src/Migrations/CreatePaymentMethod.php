@@ -37,11 +37,11 @@ class CreatePaymentMethod
 	{
 		if(is_null($this->paymentHelper->getPaymentMethodId()))
 		{
-			$paymentMethodData = array(
+			$paymentMethodData = [
 				'pluginKey'  => PaymentHelper::PLUGIN_KEY,
 				'paymentKey' => PaymentHelper::PAYMENT_KEY,
-				'name'       => 'Etsy Payment'
-			);
+				'name'       => 'Etsy Direct Checkout',
+			];
 
 			$this->paymentMethodRepository->createPaymentMethod($paymentMethodData);
 		}

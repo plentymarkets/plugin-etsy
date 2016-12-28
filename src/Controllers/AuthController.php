@@ -6,6 +6,7 @@ use Etsy\Api\Services\AuthService;
 use Etsy\Helper\AccountHelper;
 use Plenty\Modules\Helper\Services\WebstoreHelper;
 use Plenty\Modules\System\Models\WebstoreConfiguration;
+use Plenty\Plugin\ConfigRepository;
 use Plenty\Plugin\Controller;
 use Plenty\Plugin\Http\Request;
 
@@ -43,10 +44,16 @@ class AuthController extends Controller
 	{
 		$tokenData = $this->accountHelper->getTokenData();
 
+		/** @var ConfigRepository $configRepo */
+		$configRepo = pluginApp(ConfigRepository::class);
+
 		$status = false;
 
 		if( isset($tokenData['accessToken']) && strlen($tokenData['accessToken']) &&
-			isset($tokenData['accessTokenSecret']) && strlen($tokenData['accessTokenSecret']))
+		    isset($tokenData['accessTokenSecret']) && strlen($tokenData['accessTokenSecret']) &&
+		    isset($tokenData['consumerKey']) && strlen($tokenData['consumerKey']) && ($configRepo->get('EtsyIntegrationPlugin.consumerKey', '') == $tokenData['consumerKey']) &&
+		    isset($tokenData['consumerSecret']) && strlen($tokenData['consumerSecret']) && ($configRepo->get('EtsyIntegrationPlugin.consumerSecret', '') == $tokenData['consumerSecret'])
+		)
 		{
 			$status = true;
 		}
@@ -69,7 +76,14 @@ class AuthController extends Controller
 		/** @var WebstoreConfiguration $webstoreConfig */
 		$webstore = $webstoreHelper->getCurrentWebstoreConfiguration();
 
-		$data = $this->service->getRequestToken($webstore->domainSsl . '/etsy/auth/access-token');
+		try
+		{
+			$data = $this->service->getRequestToken($webstore->domainSsl . '/etsy/auth/access-token');
+		}
+		catch(\Exception $ex)
+		{
+			$data = $this->service->getRequestToken($webstore->domainSsl . '/etsy/auth/access-token');
+		}
 
 		if(isset($data['error']))
 		{

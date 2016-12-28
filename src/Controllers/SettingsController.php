@@ -51,7 +51,6 @@ class SettingsController extends Controller
 	{
 		$this->settingsHelper->save(SettingsHelper::SETTINGS_SETTINGS, (string) json_encode([
 			                                                                'shop'    => pluginApp(Request::class)->get('shop', []),
-			                                                                'payment' => pluginApp(Request::class)->get('payment', []),
 		                                                                ]));
 
 		return pluginApp(Response::class)->make('', 204);
