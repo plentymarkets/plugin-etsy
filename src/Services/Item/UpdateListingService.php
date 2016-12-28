@@ -1,11 +1,12 @@
 <?php
 namespace Etsy\Services\Item;
 
+use Etsy\Api\Services\ListingTranslationService;
 use Plenty\Plugin\ConfigRepository;
 use Plenty\Modules\Item\DataLayer\Models\Record;
-
 use Etsy\Api\Services\ListingService;
 use Etsy\Helper\ItemHelper;
+use Etsy\Helper\SettingsHelper;
 
 /**
  * Class UpdateListingService
@@ -18,6 +19,11 @@ class UpdateListingService
 	private $config;
 
 	/**
+	 * @var SettingsHelper
+	 */
+	private $settingsHelper;
+
+	/**
 	 * @var ItemHelper
 	 */
 	private $itemHelper;
@@ -28,15 +34,24 @@ class UpdateListingService
 	private $listingService;
 
 	/**
-	 * @param ItemHelper       $itemHelper
-	 * @param ConfigRepository $config
-	 * @param ListingService   $listingService
+	 * @var ListingTranslationService
 	 */
-	public function __construct(ItemHelper $itemHelper, ConfigRepository $config, ListingService $listingService)
+	private $listingTranslationService;
+
+	/**
+	 * @param ItemHelper                 $itemHelper
+	 * @param ConfigRepository           $config
+	 * @param ListingService             $listingService
+	 * @param SettingsHelper             $settingsHelper
+	 * @param ListingTranslationService  $listingTranslationService
+	 */
+	public function __construct(ItemHelper $itemHelper, ConfigRepository $config, ListingService $listingService, SettingsHelper $settingsHelper, ListingTranslationService $listingTranslationService)
 	{
-		$this->itemHelper     = $itemHelper;
-		$this->config         = $config;
-		$this->listingService = $listingService;
+		$this->config                    = $config;
+		$this->settingsHelper            = $settingsHelper;
+		$this->itemHelper                = $itemHelper;
+		$this->listingService            = $listingService;
+		$this->listingTranslationService = $listingTranslationService;
 	}
 
 	/**
@@ -48,13 +63,24 @@ class UpdateListingService
 
 		if(!is_null($listingId))
 		{
-			$this->updateListing($record, $listingId);
+			try
+			{
+				$this->updateListing($record, $listingId);
+
+				// TODO: Pictures in later sprints
+//				$this->addPictures($record, $listingId);
+
+				$this->addTranslations($record, $listingId);
+			}
+			catch(\Exception $e)
+			{
+				// $this->logger->log('Could not update listing for variation id ' . $record->variationBase->id . ': ' . $e->getMessage());
+			}
 		}
 		else
 		{
-			// $this->logger->log('Could not start listing for variation id: ' . $record->variationBase->id);
+			// $this->logger->log('Could not update listing for variation id: ' . $record->variationBase->id);
 		}
-
 	}
 
 	/**
@@ -63,12 +89,108 @@ class UpdateListingService
 	 */
 	private function updateListing(Record $record, $listingId)
 	{
+		$language    = $this->settingsHelper->getShopSettings('mainLanguage', 'de');
+
+		$title       = $this->itemHelper->getVariationWithAttributesName($record, $language);
+		$description = strip_tags($record->itemDescription[ $language ]['description']);
+
 		$data = [
-			'listing_id' => $listingId,
-			'quantity'   => $this->itemHelper->getStock($record),
-			'price'      => $record->variationRetailPrice->price
+			'listing_id'           => (int) $listingId,
+			'title'                => $title,
+			'description'          => $description,
+			'shipping_template_id' => $this->itemHelper->getShippingTemplateId($record),
+			'taxonomy_id'          => $this->itemHelper->getTaxonomyId($record),
+			// TODO: Pictures with dynamodb
 		];
 
-		$this->listingService->updateListing($listingId, $data);
+		if($isSupply = $this->itemHelper->getProperty($record, 'is_supply', $language))
+		{
+			$data['is_supply'] = $isSupply;
+		}
+
+		if(strlen($record->itemDescription[ $language ]['keywords']))
+		{
+			$data['tags'] = $record->itemDescription[ $language ]['keywords'];
+		}
+
+		if($whoMade = $this->itemHelper->getProperty($record, 'who_made', 'en'))
+		{
+			$data['who_made'] = $whoMade;
+		}
+
+		if($whenMade = $this->itemHelper->getProperty($record, 'when_made', 'en'))
+		{
+			$data['when_made'] = $whenMade;
+		}
+
+		if($occasion = $this->itemHelper->getProperty($record, 'occasion', $language))
+		{
+			$data['occasion'] = $occasion;
+		}
+
+		if($recipient = $this->itemHelper->getProperty($record, 'recipient', $language))
+		{
+			$data['recipient'] = $recipient;
+		}
+
+		if($itemWeight = $record->variationBase->weightG)
+		{
+			$data['item_weight']       = $itemWeight;
+			$data['item_weight_units'] = 'g';
+		}
+
+		if($itemHeight = $record->variationBase->heightMm)
+		{
+			$data['item_height']          = $itemHeight;
+			$data['item_dimensions_unit'] = 'mm';
+		}
+
+		if($itemLength = $record->variationBase->lengthMm)
+		{
+			$data['item_length']          = $itemLength;
+			$data['item_dimensions_unit'] = 'mm';
+		}
+
+		if($itemWidth = $record->variationBase->widthMm)
+		{
+			$data['item_width']           = $itemWidth;
+			$data['item_dimensions_unit'] = 'mm';
+		}
+
+		$this->listingService->updateListing($listingId, $data, $language);
+	}
+
+	/**
+	 * Add translations to listing.
+	 *
+	 * @param Record $record
+	 * @param int    $listingId
+	 */
+	private function addTranslations(Record $record, $listingId)
+	{
+		foreach($this->settingsHelper->getShopSettings('exportLanguages', [$this->settingsHelper->getShopSettings('mainLanguage', 'de')]) as $language)
+		{
+			if($language != $this->settingsHelper->getShopSettings('mainLanguage', 'de') && $record->itemDescription[ $language ]['name1'] && strip_tags($record->itemDescription[ $language ]['description']))
+			{
+				try
+				{
+					$data = [
+						'title'       => $record->itemDescription[ $language ]['name1'],
+						'description' => strip_tags($record->itemDescription[ $language ]['description']),
+					];
+
+					if($record->itemDescription[ $language ]['keywords'])
+					{
+						$data['tags'] = $record->itemDescription[ $language ]['keywords'];
+					}
+
+					$this->listingTranslationService->updateListingTranslation($listingId, $language, $data);
+				}
+				catch(\Exception $ex)
+				{
+					// $this->logger->log('Could not upload translation for listing ID ' . $listingId . ': ' . $ex->getMessage());
+				}
+			}
+		}
 	}
 }

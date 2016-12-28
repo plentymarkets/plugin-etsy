@@ -44,16 +44,22 @@ class ListingService
 	/**
 	 * Performs an updateListing call to Etsy.
 	 *
-	 * @param int   $id
-	 * @param array $data
+	 * @param int    $id
+	 * @param array  $data
+	 * @param string $language
 	 *
 	 * @return bool
 	 */
-	public function updateListing($id, $data)
+	public function updateListing($id, $data, $language = '')
 	{
-		$this->client->call('updateListing', [
-			'listing_id' => $id,
-		], $data);
+		$params['listing_id'] = $id;
+
+		if(strlen($language) > 0)
+		{
+			$params['language'] = $language;
+		}
+
+		$this->client->call('updateListing', $params, $data);
 
 		return true;
 	}
@@ -67,9 +73,7 @@ class ListingService
 	 */
 	public function deleteListing($id)
 	{
-		$this->client->call('deleteListing', [
-			'listing_id' => $id
-		]);
+		$this->client->call('deleteListing', ['listing_id' => $id]);
 
 		return true;
 	}

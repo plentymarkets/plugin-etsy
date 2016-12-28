@@ -63,7 +63,7 @@ class ItemExportService extends AbstractBatchService
 		{
 			try
 			{
-				if($this->listingIsCreated($record))
+				if($this->isListingCreated($record))
 				{
 					$this->updateService->update($record);
 				}
@@ -91,7 +91,7 @@ class ItemExportService extends AbstractBatchService
 	 *
 	 * @return bool
 	 */
-	private function listingIsCreated(Record $record):bool
+	private function isListingCreated(Record $record):bool
 	{
 		if(strlen((string) $record->variationMarketStatus->sku) > 0)
 		{
