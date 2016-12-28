@@ -1,16 +1,16 @@
 [
   {
     "tab": "Etsy App Settings",
-    "key": "customerKey",
-    "label": "Customer Key",
+    "key": "consumerKey",
+    "label": "Keystring",
     "type": "text",
     "default": ""
   },
 
   {
     "tab": "Etsy App Settings",
-    "key": "customerSecret",
-    "label": "Customer Secret",
+    "key": "consumerSecret",
+    "label": "Shared secret",
     "type": "text",
     "default": ""
   },
