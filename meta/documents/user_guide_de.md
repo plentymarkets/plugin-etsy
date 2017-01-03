@@ -7,24 +7,23 @@
 
 **Etsy** ist ein amerikanischer Marktplatz für den Kauf und Verkauf von handgemachten Produkten, Vintage und Künstlerbedarf. Um das Plugin für Etsy einzurichten, registrieren Sie sich zunächst als Händler bei Etsy. Sie erhalten die nötigen Zugangsdaten, die Sie für die Einstellungen in plentymarkets benötigen.
 
-## Getting started and requirements
+## Erste Schritte und Anforderungen
 
-In this step, you have to clone the Git repository into your plentymarkets inbox. You will need the remote URL from GitHub as well as your login details.
+In diesem Schritt kopieren Sie das Git Repository in Ihre plentymarkets Inbox. Dafür benötigen Sie die Remote-URL von GitHub sowie Ihre Logindaten.
 
-1. Go to **Start » Plugins**.
-2. Click on **Add plugin**.
-→ The New plugin window will open.
-3. Click on **Git**.
-→ The **Settings** window will open.
-4. Enter the remote URL.
-→ You can copy the URL by clicking on Clone or download in the repository on GitHub.
-5. Enter your user name and password.
-6. Click on **Test connection**.
-→ Connectivity to the Git repository is checked and established and the drop-down menu Branch can be selected.
-7. Select the branch of the repository that you want to clone and edit.
-→ In our case, Master is set by default.
-8. Save the settings.
-→ The plugin repository is cloned to the plentymarkets inbox and the plugin is added to the plugin list.
+1. Öffnen Sie das Menü **Start » Plugins**.
+2. Klicken Sie auf **Add plugin**.
+→ Das neue Plugin-Fenster wird geöffnet.
+3. Klicken Sie auf **Git**.
+→ Das Fenster **Settings** wird geöffnet.
+4. Tragen Sie die Remote-URL ein.
+→ Sie können die URL mit einem Klick auf Clone oder download in der Repository auf Github kopieren.
+5. Tragen Sie Ihren User-Namen und das Password ein.
+6. Klicken SIe auf **Test connection**.
+→ Die Verbindung zu dem Git Repository wird überprüft und hergestellt und das Dropdown-Menü Branch kann gewählt werden.
+7. Wählen Sie den Branch des Repository, das Sie kopieren und bearbeiten möchten.
+8. Speichern Sie die Einstellungen.
+→ Das Plugin Repository wurde in Ihre plentymarkets Inbox kopiert und das Plugin zu der Plugin-Liste hinzugefügt.
 
 
 ## Etsy in plentymarkets einrichten
