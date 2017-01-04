@@ -73,13 +73,14 @@ class TaxonomyController extends Controller
 
 				if(isset($categoryBranchData[$key]) && is_int($categoryBranchData[$key]))
 				{
-					$name = $this->getCategoryName($categoryBranchData[$key]);
+					$categoryName = $this->getCategoryName($categoryBranchData[$key], $this->request->get('lang', 'de'));
 
-					if(strlen($name))
+					if(strlen($categoryName) <= 0)
 					{
-						$categoryBranch[] = $name;
+						$categoryName = $this->getCategoryName($categoryBranchData[$key], 'de');
 					}
 
+					$categoryBranch[] = $categoryName;
 				}
 			}
 
@@ -195,6 +196,11 @@ class TaxonomyController extends Controller
 		/** @var Category $category */
 		$category = $categoryRepo->get($id, $lang);
 
-		return $category->details->first()->name;
+		if($category->details->first()->name)
+		{
+			return $category->details->first()->name;
+		}
+
+		return '';
 	}
 }
