@@ -51,8 +51,8 @@ class AuthController extends Controller
 
 		if( isset($tokenData['accessToken']) && strlen($tokenData['accessToken']) &&
 		    isset($tokenData['accessTokenSecret']) && strlen($tokenData['accessTokenSecret']) &&
-		    isset($tokenData['consumerKey']) && strlen($tokenData['consumerKey']) && ($configRepo->get('EtsyIntegrationPlugin.consumerKey', '') == $tokenData['consumerKey']) &&
-		    isset($tokenData['consumerSecret']) && strlen($tokenData['consumerSecret']) && ($configRepo->get('EtsyIntegrationPlugin.consumerSecret', '') == $tokenData['consumerSecret'])
+		    isset($tokenData['consumerKey']) && strlen($tokenData['consumerKey']) && ($configRepo->get('Etsy.consumerKey', '') == $tokenData['consumerKey']) &&
+		    isset($tokenData['consumerSecret']) && strlen($tokenData['consumerSecret']) && ($configRepo->get('Etsy.consumerSecret', '') == $tokenData['consumerSecret'])
 		)
 		{
 			$status = true;

@@ -1,6 +1,8 @@
 <?php
 namespace Etsy\Migrations;
 
+use Cache\Datatype\Set;
+use Etsy\Helper\SettingsHelper;
 use Plenty\Modules\Market\Settings\Contracts\SettingsRepositoryContract;
 use Plenty\Modules\Market\Settings\Factories\SettingsCorrelationFactory;
 
@@ -14,9 +16,9 @@ class CreateMarketPropertySettings
 	 */
 	public function run(SettingsCorrelationFactory $settingsCorrelationFactory)
 	{
-		pluginApp(SettingsRepositoryContract::class)->deleteAll('EtsyIntegrationPlugin', SettingsCorrelationFactory::TYPE_PROPERTY);
+		pluginApp(SettingsRepositoryContract::class)->deleteAll(SettingsHelper::PLUGIN_NAME, SettingsCorrelationFactory::TYPE_PROPERTY);
 
-		$settingsCorrelationFactory->type(SettingsCorrelationFactory::TYPE_PROPERTY)->clear('EtsyIntegrationPlugin');
+		$settingsCorrelationFactory->type(SettingsCorrelationFactory::TYPE_PROPERTY)->clear(SettingsHelper::PLUGIN_NAME);
 
 		$map = $this->getPropertyMap();
 
@@ -24,7 +26,7 @@ class CreateMarketPropertySettings
 		{
 			foreach($propertyValues as $propertyValue)
 			{
-				pluginApp(SettingsRepositoryContract::class)->create('EtsyIntegrationPlugin', SettingsCorrelationFactory::TYPE_PROPERTY, [
+				pluginApp(SettingsRepositoryContract::class)->create(SettingsHelper::PLUGIN_NAME, SettingsCorrelationFactory::TYPE_PROPERTY, [
 					'propertyName' => $propertyName,
 					'propertyValue' => $propertyValue,
 				]);

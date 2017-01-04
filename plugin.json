@@ -1,5 +1,5 @@
 {
-  "name": "EtsyIntegrationPlugin",
+  "name": "Etsy",
   "description": "Plentymarkets integration for the Etsy marketplace",
   "namespace": "Etsy",
   "author": "plentymarkets",

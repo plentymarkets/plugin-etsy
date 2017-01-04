@@ -1,6 +1,7 @@
 <?php
 namespace Etsy\Migrations;
 
+use Etsy\Helper\SettingsHelper;
 use Plenty\Modules\Plugin\DynamoDb\Contracts\DynamoDbRepositoryContract;
 use Plenty\Plugin\ConfigRepository;
 
@@ -17,7 +18,7 @@ class CreateVariationImageTable
 	 */
 	public function run(DynamoDbRepositoryContract $dynamoDbRepository, ConfigRepository $config)
 	{
-		$dynamoDbRepository->createTable('EtsyIntegrationPlugin', ImageHelper::TABLE_NAME, [
+		$dynamoDbRepository->createTable(SettingsHelper::PLUGIN_NAME, ImageHelper::TABLE_NAME, [
 			[
 				'AttributeName' => 'id',
 				'AttributeType' => DynamoDbRepositoryContract::FIELD_TYPE_STRING
@@ -27,6 +28,6 @@ class CreateVariationImageTable
 				                                 'AttributeName' => 'id',
 				                                 'KeyType'       => 'HASH',
 			                                 ],
-		                                 ], (int) $config->get('EtsyIntegrationPlugin.readCapacityUnits', 3), (int) $config->get('EtsyIntegrationPlugin.readCapacityUnits', 2));
+		                                 ], (int) $config->get(SettingsHelper::PLUGIN_NAME . '.readCapacityUnits', 3), (int) $config->get(SettingsHelper::PLUGIN_NAME . '.readCapacityUnits', 2));
 	}
 }

@@ -1,6 +1,7 @@
 <?php //strict
 namespace Etsy\Controllers;
 
+use Etsy\Helper\SettingsHelper;
 use Plenty\Modules\Category\Contracts\CategoryBranchRepositoryContract;
 use Plenty\Modules\Category\Contracts\CategoryRepositoryContract;
 use Plenty\Modules\Category\Models\Category;
@@ -108,7 +109,7 @@ class TaxonomyController extends Controller
 	{
 		$list = [];
 
-		$correlations = $settingsCorrelationFactory->type(SettingsCorrelationFactory::TYPE_CATEGORY)->all('EtsyIntegrationPlugin');
+		$correlations = $settingsCorrelationFactory->type(SettingsCorrelationFactory::TYPE_CATEGORY)->all(SettingsHelper::PLUGIN_NAME);
 
 		foreach($correlations as $correlationData)
 		{
@@ -133,9 +134,9 @@ class TaxonomyController extends Controller
 	 */
 	public function correlate(SettingsCorrelationFactory $settingsCorrelationFactory)
 	{
-		pluginApp(SettingsRepositoryContract::class)->deleteAll('EtsyIntegrationPlugin', SettingsCorrelationFactory::TYPE_CATEGORY);
+		pluginApp(SettingsRepositoryContract::class)->deleteAll(SettingsHelper::PLUGIN_NAME, SettingsCorrelationFactory::TYPE_CATEGORY);
 
-		$settingsCorrelationFactory->type(SettingsCorrelationFactory::TYPE_CATEGORY)->clear('EtsyIntegrationPlugin');
+		$settingsCorrelationFactory->type(SettingsCorrelationFactory::TYPE_CATEGORY)->clear(SettingsHelper::PLUGIN_NAME);
 
 		foreach($this->request->get('correlations', []) as $correlationData)
 		{
@@ -143,7 +144,7 @@ class TaxonomyController extends Controller
 			{
 				$taxonomyData = $this->getTaxonomyData($correlationData['taxonomyId'], $this->request->get('lang', 'de'));
 
-				$settings = pluginApp(SettingsRepositoryContract::class)->create('EtsyIntegrationPlugin', SettingsCorrelationFactory::TYPE_CATEGORY, $taxonomyData);
+				$settings = pluginApp(SettingsRepositoryContract::class)->create(SettingsHelper::PLUGIN_NAME, SettingsCorrelationFactory::TYPE_CATEGORY, $taxonomyData);
 
 				$settingsCorrelationFactory->type(SettingsCorrelationFactory::TYPE_CATEGORY)->createRelation($settings->id, $correlationData['categoryId']);
 			}

@@ -85,7 +85,7 @@ class ShippingProfileImportService
 				}
 				else
 				{
-					$settings = $this->settingsRepository->create('EtsyIntegrationPlugin', SettingsCorrelationFactory::TYPE_SHIPPING, $data);
+					$settings = $this->settingsRepository->create(SettingsHelper::PLUGIN_NAME, SettingsCorrelationFactory::TYPE_SHIPPING, $data);
 
 					$this->currentShippingProfiles[ $settings->settings['id'] ] = $settings;
 				}
@@ -100,7 +100,7 @@ class ShippingProfileImportService
 	 */
 	private function loadAllShippingProfiles()
 	{
-		$shippingProfileSettings = $this->settingsRepository->find('EtsyIntegrationPlugin', SettingsCorrelationFactory::TYPE_SHIPPING);
+		$shippingProfileSettings = $this->settingsRepository->find(SettingsHelper::PLUGIN_NAME, SettingsCorrelationFactory::TYPE_SHIPPING);
 
 		if(count($shippingProfileSettings))
 		{

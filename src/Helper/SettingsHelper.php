@@ -9,6 +9,8 @@ use Plenty\Modules\Plugin\DynamoDb\Contracts\DynamoDbRepositoryContract;
  */
 class SettingsHelper
 {
+	const PLUGIN_NAME = 'Etsy';
+
 	const TABLE_NAME = 'settings';
 
 	const SETTINGS_TOKEN_REQUEST = 'token_request';
@@ -49,7 +51,7 @@ class SettingsHelper
 	 */
 	public function save($name, $value)
 	{
-		return $this->dynamoDbRepo->putItem('EtsyIntegrationPlugin', self::TABLE_NAME, [
+		return $this->dynamoDbRepo->putItem(self::PLUGIN_NAME, self::TABLE_NAME, [
 			'name'  => [
 				DynamoDbRepositoryContract::FIELD_TYPE_STRING => (string) $name,
 			],
@@ -69,7 +71,7 @@ class SettingsHelper
 	 */
 	public function get($name, $default = null)
 	{
-		$data = $this->dynamoDbRepo->getItem('EtsyIntegrationPlugin', self::TABLE_NAME, true, [
+		$data = $this->dynamoDbRepo->getItem(self::PLUGIN_NAME, self::TABLE_NAME, true, [
 			'name' => [DynamoDbRepositoryContract::FIELD_TYPE_STRING => $name]
 		]);
 

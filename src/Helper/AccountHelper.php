@@ -76,7 +76,7 @@ class AccountHelper
 	 */
 	public function getConsumerKey():string
 	{
-		return (string) $this->config->get('EtsyIntegrationPlugin.consumerKey');
+		return (string) $this->config->get('Etsy.consumerKey');
 	}
 
 	/**
@@ -86,7 +86,7 @@ class AccountHelper
 	 */
 	public function getConsumerSecret():string
 	{
-		return (string) $this->config->get('EtsyIntegrationPlugin.consumerSecret');
+		return (string) $this->config->get('Etsy.consumerSecret');
 	}
 
 	/**

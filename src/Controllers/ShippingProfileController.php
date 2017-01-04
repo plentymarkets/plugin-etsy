@@ -2,6 +2,7 @@
 
 namespace Etsy\Controllers;
 
+use Etsy\Helper\SettingsHelper;
 use Plenty\Modules\Market\Settings\Contracts\SettingsRepositoryContract;
 use Plenty\Modules\Market\Settings\Factories\SettingsCorrelationFactory;
 use Plenty\Modules\Market\Settings\Models\Settings;
@@ -42,7 +43,7 @@ class ShippingProfileController extends Controller
 		/** @var SettingsRepositoryContract $marketSettingsRepository */
 		$marketSettingsRepository = pluginApp(SettingsRepositoryContract::class);
 
-		$list = $marketSettingsRepository->find('EtsyIntegrationPlugin', SettingsCorrelationFactory::TYPE_SHIPPING);
+		$list = $marketSettingsRepository->find(SettingsHelper::PLUGIN_NAME, SettingsCorrelationFactory::TYPE_SHIPPING);
 
 		if(count($list))
 		{
@@ -85,7 +86,7 @@ class ShippingProfileController extends Controller
 	 */
 	public function correlations(SettingsCorrelationFactory $settingsCorrelationFactory)
 	{
-		$correlations = $settingsCorrelationFactory->type(SettingsCorrelationFactory::TYPE_SHIPPING)->all('EtsyIntegrationPlugin');
+		$correlations = $settingsCorrelationFactory->type(SettingsCorrelationFactory::TYPE_SHIPPING)->all(SettingsHelper::PLUGIN_NAME);
 
 		return $correlations;
 	}
@@ -126,7 +127,7 @@ class ShippingProfileController extends Controller
 	 */
 	public function correlate(SettingsCorrelationFactory $settingsCorrelationFactory)
 	{
-		$settingsCorrelationFactory->type(SettingsCorrelationFactory::TYPE_SHIPPING)->clear('EtsyIntegrationPlugin');
+		$settingsCorrelationFactory->type(SettingsCorrelationFactory::TYPE_SHIPPING)->clear(SettingsHelper::PLUGIN_NAME);
 
 		foreach($this->request->get('correlations', []) as $correlationData)
 		{
