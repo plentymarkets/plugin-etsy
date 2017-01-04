@@ -195,6 +195,6 @@ class TaxonomyController extends Controller
 		/** @var Category $category */
 		$category = $categoryRepo->get($id, $lang);
 
-		return utf8_decode($category->details->first()->name);
+		return $category->details->first()->name;
 	}
 }
