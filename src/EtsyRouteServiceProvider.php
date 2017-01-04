@@ -84,15 +84,18 @@ class EtsyRouteServiceProvider extends RouteServiceProvider
 
 		/** Auth */
 		$router->get('etsy/auth/login-url', [
-			'uses' => 'Etsy\Controllers\AuthController@getLoginUrl'
+			'middleware' => 'oauth',
+			'uses'       => 'Etsy\Controllers\AuthController@getLoginUrl'
 		]);
 
 		$router->get('etsy/auth/access-token', [
-			'uses' => 'Etsy\Controllers\AuthController@getAccessToken'
+			'middleware' => 'oauth',
+			'uses'       => 'Etsy\Controllers\AuthController@getAccessToken'
 		]);
 
 		$router->get('etsy/auth/status', [
-			'uses' => 'Etsy\Controllers\AuthController@status'
+			'middleware' => 'oauth',
+			'uses'       => 'Etsy\Controllers\AuthController@status'
 		]);
 
 		/** Settings */
