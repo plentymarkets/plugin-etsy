@@ -89,7 +89,6 @@ class EtsyRouteServiceProvider extends RouteServiceProvider
 		]);
 
 		$router->get('etsy/auth/access-token', [
-			'middleware' => 'oauth',
 			'uses'       => 'Etsy\Controllers\AuthController@getAccessToken'
 		]);
 
