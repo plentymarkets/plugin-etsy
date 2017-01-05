@@ -3,6 +3,7 @@
 namespace Etsy\Migrations;
 
 use Etsy\Helper\PaymentHelper;
+use Etsy\Helper\SettingsHelper;
 use Plenty\Modules\Payment\Method\Contracts\PaymentMethodRepositoryContract;
 
 /**
@@ -38,7 +39,7 @@ class CreatePaymentMethod
 		if(is_null($this->paymentHelper->getPaymentMethodId()))
 		{
 			$paymentMethodData = [
-				'pluginKey'  => PaymentHelper::PLUGIN_KEY,
+				'pluginKey'  => SettingsHelper::PLUGIN_NAME,
 				'paymentKey' => PaymentHelper::PAYMENT_KEY,
 				'name'       => 'Etsy Direct Checkout',
 			];
