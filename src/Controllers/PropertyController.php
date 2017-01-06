@@ -2,6 +2,7 @@
 
 namespace Etsy\Controllers;
 
+use Etsy\Helper\SettingsHelper;
 use Plenty\Modules\Item\Property\Contracts\PropertyGroupRepositoryContract;
 use Plenty\Modules\Item\Property\Contracts\PropertyRepositoryContract;
 use Plenty\Modules\Item\Property\Models\Property;
@@ -70,7 +71,7 @@ class PropertyController extends Controller
 		/** @var SettingsRepositoryContract $settingsRepository */
 		$settingsRepository = pluginApp(SettingsRepositoryContract::class);
 
-		$list = $settingsRepository->find('EtsyIntegrationPlugin', SettingsCorrelationFactory::TYPE_PROPERTY);
+		$list = $settingsRepository->find(SettingsHelper::PLUGIN_NAME, SettingsCorrelationFactory::TYPE_PROPERTY);
 
 		if(count($list))
 		{
@@ -135,7 +136,7 @@ class PropertyController extends Controller
 	 */
 	public function correlate(SettingsCorrelationFactory $settingsCorrelationFactory)
 	{
-		$settingsCorrelationFactory->type(SettingsCorrelationFactory::TYPE_PROPERTY)->clear('EtsyIntegrationPlugin');
+		$settingsCorrelationFactory->type(SettingsCorrelationFactory::TYPE_PROPERTY)->clear(SettingsHelper::PLUGIN_NAME);
 
 		foreach($this->request->get('correlations', []) as $correlationData)
 		{
@@ -157,7 +158,7 @@ class PropertyController extends Controller
 	 */
 	public function correlations(SettingsCorrelationFactory $settingsCorrelationFactory)
 	{
-		$correlations = $settingsCorrelationFactory->type(SettingsCorrelationFactory::TYPE_PROPERTY)->all('EtsyIntegrationPlugin');
+		$correlations = $settingsCorrelationFactory->type(SettingsCorrelationFactory::TYPE_PROPERTY)->all(SettingsHelper::PLUGIN_NAME);
 
 		return $correlations;
 	}

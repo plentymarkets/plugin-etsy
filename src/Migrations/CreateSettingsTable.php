@@ -16,7 +16,7 @@ class CreateSettingsTable
 	 */
 	public function run(DynamoDbRepositoryContract $dynamoDbRepository, ConfigRepository $config)
 	{
-		$dynamoDbRepository->createTable('EtsyIntegrationPlugin', SettingsHelper::TABLE_NAME, [
+		$dynamoDbRepository->createTable(SettingsHelper::PLUGIN_NAME, SettingsHelper::TABLE_NAME, [
 			[
 				'AttributeName' => 'name',
 				'AttributeType' => DynamoDbRepositoryContract::FIELD_TYPE_STRING
@@ -26,6 +26,6 @@ class CreateSettingsTable
 				                                 'AttributeName' => 'name',
 				                                 'KeyType'       => 'HASH',
 			                                 ],
-		                                 ], (int) $config->get('EtsyIntegrationPlugin.readCapacityUnits', 3), (int) $config->get('EtsyIntegrationPlugin.readCapacityUnits', 2));
+		                                 ], (int) $config->get(SettingsHelper::PLUGIN_NAME . '.readCapacityUnits', 3), (int) $config->get(SettingsHelper::PLUGIN_NAME . '.readCapacityUnits', 2));
 	}
 }

@@ -2,6 +2,7 @@
 
 namespace Etsy\Helper;
 
+use Etsy\Helper\SettingsHelper;
 use Plenty\Modules\Payment\Method\Contracts\PaymentMethodRepositoryContract;
 
 /**
@@ -9,7 +10,6 @@ use Plenty\Modules\Payment\Method\Contracts\PaymentMethodRepositoryContract;
  */
 class PaymentHelper
 {
-	const PLUGIN_KEY = 'EtsyIntegrationPlugin';
 	const PAYMENT_KEY = 'PAYMENT_ETSY';
 
 	/**
@@ -31,7 +31,7 @@ class PaymentHelper
 	 */
 	public function getPaymentMethodId()
 	{
-		$paymentMethods = $this->paymentMethodRepository->allForPlugin(self::PLUGIN_KEY);
+		$paymentMethods = $this->paymentMethodRepository->allForPlugin(SettingsHelper::PLUGIN_NAME);
 
 		foreach($paymentMethods as $paymentMethod)
 		{

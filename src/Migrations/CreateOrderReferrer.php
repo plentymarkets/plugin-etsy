@@ -34,7 +34,7 @@ class CreateOrderReferrer
 			                                            'editable'    => false,
 			                                            'backendName' => 'Etsy',
 			                                            'name'        => 'Etsy',
-			                                            'origin'      => 'EtsyIntegrationPlugin',
+			                                            'origin'      => 'Etsy',
 		                                            ]);
 		$retries = 0;
 

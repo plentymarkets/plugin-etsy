@@ -2,6 +2,7 @@
 
 namespace Etsy\Services\Property;
 
+use Etsy\Helper\SettingsHelper;
 use Plenty\Modules\Market\Settings\Contracts\SettingsRepositoryContract;
 use Plenty\Modules\Market\Settings\Factories\SettingsCorrelationFactory;
 
@@ -56,7 +57,7 @@ class PropertyImportService
 	{
 		if($force)
 		{
-			$this->settingsRepository->deleteAll('EtsyIntegrationPlugin', SettingsCorrelationFactory::TYPE_PROPERTY);
+			$this->settingsRepository->deleteAll(SettingsHelper::PLUGIN_NAME, SettingsCorrelationFactory::TYPE_PROPERTY);
 		}
 
 		$this->loadAllProperties();
@@ -123,7 +124,7 @@ class PropertyImportService
 	 */
 	private function loadAllProperties()
 	{
-		$propertySettings = $this->settingsRepository->find('EtsyIntegrationPlugin', SettingsCorrelationFactory::TYPE_PROPERTY);
+		$propertySettings = $this->settingsRepository->find(SettingsHelper::PLUGIN_NAME, SettingsCorrelationFactory::TYPE_PROPERTY);
 
 		if(count($propertySettings))
 		{
@@ -202,7 +203,7 @@ class PropertyImportService
 
 				if(!$currentProperty)
 				{
-					$this->settingsRepository->create('EtsyIntegrationPlugin', SettingsCorrelationFactory::TYPE_PROPERTY, $data);
+					$this->settingsRepository->create(SettingsHelper::PLUGIN_NAME, SettingsCorrelationFactory::TYPE_PROPERTY, $data);
 				}
 				else
 				{

@@ -2,6 +2,8 @@
 
 namespace Etsy\Helper;
 
+use Etsy\Helper\SettingsHelper;
+use Plenty\Modules\Market\Settings\Models\Settings;
 use Plenty\Modules\Plugin\DynamoDb\Contracts\DynamoDbRepositoryContract;
 
 /**
@@ -34,7 +36,7 @@ class ImageHelper
 	 */
 	public function save($id, $value)
 	{
-		return $this->dynamoDbRepo->putItem('EtsyIntegrationPlugin', self::TABLE_NAME, [
+		return $this->dynamoDbRepo->putItem(SettingsHelper::PLUGIN_NAME, self::TABLE_NAME, [
 			'id'    => [
 				DynamoDbRepositoryContract::FIELD_TYPE_STRING => (string) $id,
 			],
@@ -54,7 +56,7 @@ class ImageHelper
 	 */
 	public function get($id, $default = null)
 	{
-		$data = $this->dynamoDbRepo->getItem('EtsyIntegrationPlugin', self::TABLE_NAME, true, [
+		$data = $this->dynamoDbRepo->getItem(SettingsHelper::PLUGIN_NAME, self::TABLE_NAME, true, [
 			'id' => [
 				DynamoDbRepositoryContract::FIELD_TYPE_STRING => $id
 			]

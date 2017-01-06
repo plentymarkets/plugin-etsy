@@ -12,6 +12,7 @@ use Plenty\Plugin\ConfigRepository;
 use Plenty\Modules\Helper\Contracts\UrlBuilderRepositoryContract;
 use Plenty\Modules\Item\DataLayer\Models\Record;
 use Plenty\Modules\Item\VariationSku\Contracts\VariationSkuRepositoryContract;
+use Etsy\Helper\SettingsHelper;
 
 /**
  * Class ItemHelper
@@ -134,7 +135,7 @@ class ItemHelper
 
 		foreach($record->itemPropertyList as $itemProperty)
 		{
-			$settings = $settingsCorrelationFactory->type(SettingsCorrelationFactory::TYPE_PROPERTY)->getSettingsByCorrelation('EtsyIntegrationPlugin', $itemProperty['propertyId']);
+			$settings = $settingsCorrelationFactory->type(SettingsCorrelationFactory::TYPE_PROPERTY)->getSettingsByCorrelation(SettingsHelper::PLUGIN_NAME, $itemProperty['propertyId']);
 
 			if($settings instanceof Settings && isset($settings->settings['mainPropertyKey']) && isset($settings->settings['propertyKey']) && isset($settings->settings['propertyKey'][ $lang ]) && $settings->settings['mainPropertyKey'] == $propertyKey)
 			{
@@ -203,7 +204,7 @@ class ItemHelper
 
 		$settingsCorrelationFactory = pluginApp(SettingsCorrelationFactory::class);
 
-		$settings = $settingsCorrelationFactory->type(SettingsCorrelationFactory::TYPE_SHIPPING)->getSettingsByCorrelation('EtsyIntegrationPlugin', $parcelServicePresetId);
+		$settings = $settingsCorrelationFactory->type(SettingsCorrelationFactory::TYPE_SHIPPING)->getSettingsByCorrelation(SettingsHelper::PLUGIN_NAME, $parcelServicePresetId);
 
 		if($settings instanceof Settings && isset($settings->settings['id']))
 		{
@@ -226,7 +227,7 @@ class ItemHelper
 
 		$settingsCorrelationFactory = pluginApp(SettingsCorrelationFactory::class);
 
-		$settings = $settingsCorrelationFactory->type(SettingsCorrelationFactory::TYPE_CATEGORY)->getSettingsByCorrelation('EtsyIntegrationPlugin', $categoryId);
+		$settings = $settingsCorrelationFactory->type(SettingsCorrelationFactory::TYPE_CATEGORY)->getSettingsByCorrelation(SettingsHelper::PLUGIN_NAME, $categoryId);
 
 		if($settings instanceof Settings && isset($settings->settings['id']))
 		{

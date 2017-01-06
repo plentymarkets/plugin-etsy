@@ -3,6 +3,7 @@
 namespace Etsy\Api;
 
 use Etsy\Helper\AccountHelper;
+use Etsy\Helper\SettingsHelper;
 use Plenty\Modules\Plugin\Libs\Contracts\LibraryCallContract;
 use Plenty\Plugin\ConfigRepository;
 
@@ -54,7 +55,7 @@ class Client
 	{
 		$tokenData = $this->accountHelper->getTokenData();
 
-		$response = $this->library->call('EtsyIntegrationPlugin::etsy_sdk', [
+		$response = $this->library->call(SettingsHelper::PLUGIN_NAME . '::etsy_sdk', [
 			'consumerKey'       => $this->accountHelper->getConsumerKey(),
 			'consumerSecret'    => $this->accountHelper->getConsumerSecret(),
 			'accessToken'       => $tokenData['accessToken'],
