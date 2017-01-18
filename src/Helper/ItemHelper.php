@@ -2,6 +2,8 @@
 
 namespace Etsy\Helper;
 
+use Plenty\Modules\Item\Variation\Models\Variation;
+use Plenty\Modules\Item\VariationSku\Models\VariationSku;
 use Plenty\Modules\Market\Helper\Contracts\MarketAttributeHelperRepositoryContract;
 use Plenty\Modules\Market\Settings\Contracts\SettingsRepositoryContract;
 use Plenty\Modules\Market\Settings\Factories\SettingsCorrelationFactory;
@@ -116,7 +118,17 @@ class ItemHelper
 	 */
 	public function generateSku($sku, $variationId)
 	{
-		$this->variationSkuRepository->generateSku($variationId, $this->orderHelper->getReferrerId(), 0, $sku);
+		/** @var VariationSku $sku */
+		$variationSku = $this->variationSkuRepository->generateSku($variationId, $this->orderHelper->getReferrerId(), 0, $sku, true, true);
+
+		if($variationSku instanceof VariationSku)
+		{
+			$this->variationSkuRepository->update([
+				                                      'additionalInformation' => $sku,
+				                                      'status'                => 'ACTIVE',
+			                                      ], $variationSku->id);
+		}
+
 	}
 
 	/**
@@ -162,7 +174,7 @@ class ItemHelper
 		{
 			if(is_array($image) && array_key_exists('path', $image))
 			{
-				$imageList[$image['imageId']] = $this->urlBuilderRepository->getImageUrl((string) $image['path'], null, $imageSize, $image['fileType'], $image['type'] == 'external');
+				$imageList[ $image['imageId'] ] = $this->urlBuilderRepository->getImageUrl((string) $image['path'], null, $imageSize, $image['fileType'], $image['type'] == 'external');
 			}
 		}
 
@@ -240,8 +252,8 @@ class ItemHelper
 	/**
 	 * Get variation name with attributes.
 	 *
-	 * @param Record    $record
-	 * @param string    $language
+	 * @param Record $record
+	 * @param string $language
 	 *
 	 * @return string
 	 */

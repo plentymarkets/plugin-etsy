@@ -46,7 +46,7 @@ class UpdateListingStockService
 	 */
 	public function updateStock(Record $record)
 	{
-		$listingId = $record->variationMarketStatus->sku;
+		$listingId = $record->variationMarketStatus->additionalInformation;
 
 		if(!is_null($listingId))
 		{

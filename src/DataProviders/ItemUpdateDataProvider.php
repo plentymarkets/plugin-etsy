@@ -76,7 +76,9 @@ class ItemUpdateDataProvider implements ItemDataProviderContract
 					'marketId' => $this->orderHelper->getReferrerId()
 				],
 				'fields' => [
-					'sku'
+					'sku',
+					'marketStatus',
+					'additionalInformation',
 				]
 			],
 

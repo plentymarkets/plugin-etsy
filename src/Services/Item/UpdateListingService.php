@@ -59,7 +59,7 @@ class UpdateListingService
 	 */
 	public function update(Record $record)
 	{
-		$listingId = $record->variationMarketStatus->sku;
+		$listingId = $record->variationMarketStatus->additionalInformation;
 
 		if(!is_null($listingId))
 		{

@@ -121,9 +121,9 @@ class ItemUpdateStockService extends AbstractBatchService
 		/** @var VariationSku $variationSku */
 		foreach($variationSkuList as $variationSku)
 		{
-			if($variationSku->deletedTimestamp)
+			if($variationSku->deletedAt)
 			{
-				if($this->deleteListingService->delete($variationSku->variationSku))
+				if($this->deleteListingService->delete($variationSku->sku))
 				{
 					$variationSkuRepo->delete((int) $variationSku->id);
 				}

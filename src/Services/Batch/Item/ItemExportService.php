@@ -93,7 +93,10 @@ class ItemExportService extends AbstractBatchService
 	 */
 	private function isListingCreated(Record $record):bool
 	{
-		if(strlen((string) $record->variationMarketStatus->sku) > 0)
+		$additionalInformation = (string) $record->variationMarketStatus->additionalInformation;
+		$status = (string) $record->variationMarketStatus->marketStatus;
+
+		if(strlen($additionalInformation) && $status == 'ACTIVE')
 		{
 			return true;
 		}

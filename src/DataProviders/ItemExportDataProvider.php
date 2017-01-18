@@ -94,7 +94,9 @@ class ItemExportDataProvider implements ItemDataProviderContract
 					'marketId' => $this->orderHelper->getReferrerId()
 				],
 				'fields' => [
-					'sku'
+					'sku',
+					'marketStatus',
+					'additionalInformation',
 				]
 			],
 
@@ -187,7 +189,7 @@ class ItemExportDataProvider implements ItemDataProviderContract
 	}
 
 	/**
-	 * Get the filters based on which we neeed to grab results.
+	 * Get the filters based on which we need to grab results.
 	 *
 	 * @return array
 	 */
