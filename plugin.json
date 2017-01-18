@@ -1,8 +1,9 @@
 {
+  "version": 0.1,
   "name": "Etsy",
   "description": "Plentymarkets integration for the Etsy marketplace",
   "namespace": "Etsy",
-  "author": "plentymarkets",
+  "author": "plentymarkets GmbH",
   "type": "general",
   "serviceProvider": "Etsy\\EtsyServiceProvider",
   "dependencies": {
