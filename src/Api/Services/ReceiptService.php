@@ -31,10 +31,11 @@ class ReceiptService
 	public function findAllShopReceipts($shopId, $from, $to)
 	{
 		$response = $this->client->call('findAllShopReceipts', [
-			'shop_id'     => $shopId,
-			'min_created' => $from,
-			'max_created' => $to,
-		], [], [], [
+			'shop_id' => $shopId,
+		], [
+			                                'min_created' => strtotime($from),
+			                                'max_created' => strtotime($to),
+		                                ], [], [
 			                                'Transactions' => 'Transactions',
 			                                'Buyer'        => 'Buyer',
 		                                ]);
