@@ -8,6 +8,8 @@ use Plenty\Modules\Accounting\Contracts\AccountingServiceContract;
 use Plenty\Modules\Accounting\Vat\Contracts\VatInitContract;
 use Plenty\Modules\Accounting\Vat\Models\Vat;
 use Plenty\Modules\Order\Models\Order;
+use Plenty\Modules\Order\Models\OrderType;
+use Plenty\Modules\Order\Property\Models\OrderPropertyType;
 use Plenty\Modules\Payment\Contracts\PaymentOrderRelationRepositoryContract;
 use Plenty\Modules\Payment\Contracts\PaymentRepositoryContract;
 use Plenty\Modules\Payment\Models\Payment;
@@ -172,18 +174,13 @@ class OrderCreateService
 		];
 
 		$orderData['properties'] = [
-
-			// method of payment
 			[
-				'typeId'    => 13,
-				'subTypeId' => 1,
+				'typeId'    => OrderPropertyType::PAYMENT_METHOD,
 				'value'     => (string) $this->orderHelper->getPaymentMethodId((string) $data['payment_method']),
 			],
 
-			// external order id
 			[
-				'typeId'    => 14,
-				'subTypeId' => 6,
+				'typeId'    => OrderPropertyType::EXTERNAL_ORDER_ID,
 				'value'     => (string) $data['receipt_id'],
 			],
 		];
@@ -207,7 +204,6 @@ class OrderCreateService
 				'relation'      => 'receiver',
 			]
 		];
-
 
 		$orderData['orderItems'] = $this->getOrderItems($data);
 
