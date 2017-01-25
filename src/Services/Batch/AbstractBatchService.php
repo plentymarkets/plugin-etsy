@@ -24,12 +24,24 @@ abstract class AbstractBatchService
 		$this->itemDataProvider = $itemDataProvider;
 	}
 
-	final public function run()
+	/**
+	 * Run the batch service.
+	 *
+	 * @param array $params The params needed by the data provider. Eg. the last run.
+	 */
+	final public function run(array $params = [])
 	{
-		$result = $this->itemDataProvider->fetch();
+		$result = $this->itemDataProvider->fetch($params);
 
 		$this->export($result);
 	}
 
+	/**
+	 * Execute the export process.
+	 *
+	 * @param RecordList $recordList
+	 *
+	 * @return void
+	 */
 	protected abstract function export(RecordList $recordList);
 }

@@ -2,6 +2,7 @@
 
 namespace Etsy\DataProviders;
 
+use EbaySdk\Api\Analytics\Types\Record;
 use Plenty\Plugin\Application;
 use Plenty\Plugin\ConfigRepository;
 use Plenty\Modules\Item\DataLayer\Models\RecordList;
@@ -53,11 +54,14 @@ class ItemExportDataProvider implements ItemDataProviderContract
 
 	/**
 	 * Fetch data using data layer.
+	 *
+	 * @param array $params
+	 *
 	 * @return RecordList
 	 */
-	public function fetch()
+	public function fetch(array $params = []):RecordList
 	{
-		return $this->itemDataLayerRepository->search($this->resultFields(), $this->filters(), $this->params());
+		return $this->itemDataLayerRepository->search($this->resultFields(), $this->filters($params), $this->params());
 	}
 
 	/**
@@ -191,11 +195,13 @@ class ItemExportDataProvider implements ItemDataProviderContract
 	/**
 	 * Get the filters based on which we need to grab results.
 	 *
+	 * @param array $params
+	 *
 	 * @return array
 	 */
-	private function filters()
+	private function filters($params)
 	{
-		return [
+		$filters = [
 			'variationBase.isActive?'                     => [],
 			'variationVisibility.isVisibleForMarketplace' => [
 				'mandatoryOneMarketplace' => [],
@@ -203,10 +209,20 @@ class ItemExportDataProvider implements ItemDataProviderContract
 					$this->orderHelper->getReferrerId()
 				]
 			],
-			'variationStock.netPositive' => [
+			'variationStock.netPositive'                  => [
 				'warehouse' => 'virtual',
 			],
 		];
+
+		if(isset($params['lastRun']) && !is_null($params['lastRun']))
+		{
+			$filters['itemBase.wasUpdatedBetween'] = [
+				'timestampFrom' => strtotime($params['lastRun']),
+				'timestampTo'   => time(),
+			];
+		}
+
+		return $filters;
 	}
 
 	/**

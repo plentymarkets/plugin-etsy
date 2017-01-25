@@ -10,7 +10,9 @@ use Plenty\Modules\Item\DataLayer\Models\RecordList;
 interface ItemDataProviderContract
 {
 	/**
+	 * @param $params
+	 *
 	 * @return RecordList
 	 */
-	public function fetch();
+	public function fetch(array $params = []):RecordList;
 }

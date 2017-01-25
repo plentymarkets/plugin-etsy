@@ -47,11 +47,13 @@ class ItemUpdateDataProvider implements ItemDataProviderContract
 	/**
 	 * Fetch data using data layer.
 	 *
+	 * @param array $params
+	 *
 	 * @return RecordList
 	 */
-	public function fetch()
+	public function fetch(array $params = []):RecordList
 	{
-		return $this->itemDataLayerRepository->search($this->resultFields(), $this->filters());
+		return $this->itemDataLayerRepository->search($this->resultFields(), $this->filters($params));
 	}
 
 	/**
@@ -108,13 +110,22 @@ class ItemUpdateDataProvider implements ItemDataProviderContract
 	/**
 	 * Get the filters based on which we need to grab results.
 	 *
+	 * @param array $params
+	 *
 	 * @return array
 	 */
-	private function filters()
+	private function filters(array $params)
 	{
+		$lastUpdate = time() - self::LAST_UPDATE;
+
+		if(isset($params['lastRun']) && !is_null($params['lastRun']))
+		{
+			$lastUpdate = strtotime($params['lastRun']);
+		}
+
 		return [
 			'variationBase.stockOrPriceWasUpdatedBetween' => [
-				'timestampFrom' => (time() - self::LAST_UPDATE),
+				'timestampFrom' => $lastUpdate,
 				'timestampTo'   => time(),
 			],
 

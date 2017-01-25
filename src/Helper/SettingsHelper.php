@@ -18,6 +18,8 @@ class SettingsHelper
 	const SETTINGS_SETTINGS = 'settings';
 	const SETTINGS_ORDER_REFERRER = 'order_referrer';
 	const SETTINGS_LAST_ORDER_IMPORT = "last_order_import";
+	const SETTINGS_LAST_ITEM_EXPORT = "last_item_export";
+	const SETTINGS_LAST_STOCK_UPDATE = "last_stock_update";
 
 	const SETTINGS_PROCESS_ITEM_EXPORT = 'item_export';
 	const SETTINGS_PROCESS_STOCK_UPDATE = 'stock_update';

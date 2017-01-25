@@ -15,6 +15,9 @@ class OrderImportCron extends Cron
 {
 	const MAX_DAYS = 3;
 
+	/**
+	 * @var SettingsHelper
+	 */
 	private $settingsHelper;
 
 	/**
