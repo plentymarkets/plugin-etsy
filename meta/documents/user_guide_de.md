@@ -30,6 +30,14 @@ In diesem Schritt kopieren Sie das Git Repository in Ihre plentymarkets Inbox. D
 
 Um Artikel auf Etsy anzubieten, richten Sie Etsy in plentymarkets ein. Gehen Sie dazu wie im Folgenden beschrieben vor.
 
+### Berechtigung erteilen
+
+Im Menü **Einstellungen » Märkte » Etsy » Authentifizierung** muss zunächst die Schnittstelle freigeschalten werden. Klicken Sie dazu auf **Etsy-Login**. Sie werden direkt zu Etsy weitergeleitet, wo Sie die Schnittstelle freischalten.
+
+### Etsy einrichten
+
+Im Menü **Einstellungen » Märkte » Etsy » Einstellungen** geben Sie u.a. Ihre Shop-ID ein und aktivieren den Artikelexport, Bestandsabgleich und Auftragsimport.
+
 ## Artikelverfügbarkeit einstellen
 
 Artikel, die Sie auf Etsy verkaufen möchten, müssen im Menü **Artikel » Artikel bearbeiten » Artikel öffnen » Tab: Varianten-ID** im Tab **Verfügbarkeit** aktiviert werden.
