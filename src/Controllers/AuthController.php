@@ -78,11 +78,11 @@ class AuthController extends Controller
 
 		try
 		{
-			$data = $this->service->getRequestToken($webstore->domainSsl . '/etsy/auth/access-token');
+			$data = $this->service->getRequestToken($webstore->domainSsl . '/markets/etsy/auth/access-token');
 		}
 		catch(\Exception $ex)
 		{
-			$data = $this->service->getRequestToken($webstore->domainSsl . '/etsy/auth/access-token');
+			$data = $this->service->getRequestToken($webstore->domainSsl . '/markets/etsy/auth/access-token');
 		}
 
 		if(isset($data['error']))
