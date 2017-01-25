@@ -282,7 +282,7 @@ class StartListingService
 			'state' => 'active',
 		];
 
-		// $this->listingService->updateListing($listingId, $data);
+		$this->listingService->updateListing($listingId, $data);
 
 		$this->itemHelper->generateSku($listingId, $variationId);
 	}
