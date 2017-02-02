@@ -208,3 +208,8 @@ Set up an event procedure to automatically send shipping confirmations to Etsy w
 		Table 2: event procedure for sending automatic shipping confirmations to Etsy
 	</caption>
 </table>
+
+
+## License
+ 
+This project is licensed under the GNU AFFERO GENERAL PUBLIC LICENSE - see the [LICENSE.md](/LICENSE.md) file for details.

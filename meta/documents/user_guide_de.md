@@ -217,3 +217,7 @@ Richten Sie eine Ereignisaktion ein, um Versandbestätigungen automatisch an Ets
 		Table 2: Ereignisaktion zum automatischen Senden von Versandbestätigungen an Etsy
 	</caption>
 </table>
+
+## Lizenz
+
+Das gesamte Projekt unterliegt der GNU AFFERO GENERAL PUBLIC LICENSE – weitere Informationen finden Sie in der [LICENSE.md](/LICENSE.md).

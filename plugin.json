@@ -1,5 +1,5 @@
 {
-  "version": "0.0.1",
+  "version": "0.0.2",
   "name": "Etsy",
   "description": "Plentymarkets integration for the Etsy marketplace",
   "namespace": "Etsy",
@@ -7,6 +7,8 @@
   "author": "plentymarkets GmbH",
   "email":"support@plentymarkets.eu",
   "authorIcon":"icon_author_xs.png",
+  "shortDescription": "Etsy marketplace integration for plentymarkets.",
+  "license":"AGPL-3.0",
   "price":0.00,
   "type": "general",
   "serviceProvider": "Etsy\\EtsyServiceProvider",
