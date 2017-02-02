@@ -1,6 +1,7 @@
 <?php
 namespace Etsy;
 
+use Plenty\Log\Services\ReferenceContainer;
 use Plenty\Modules\Cron\Services\CronContainer;
 use Plenty\Modules\EventProcedures\Services\Entries\ProcedureEntry;
 use Plenty\Modules\EventProcedures\Services\EventProceduresService;
@@ -42,8 +43,10 @@ class EtsyServiceProvider extends ServiceProvider
 	 * @param CronContainer          $container
 	 * @param EventProceduresService $eventProceduresService
 	 */
-	public function boot(CronContainer $container, EventProceduresService $eventProceduresService)
+	public function boot(CronContainer $container, EventProceduresService $eventProceduresService, ReferenceContainer $referenceContainer)
 	{
+		$referenceContainer->add(['etsyListingId' => 'etsyListingId']);
+
 		// register crons
 		$container->add(CronContainer::DAILY, ItemExportCron::class);
 		$container->add(CronContainer::DAILY, StockUpdateCron::class);

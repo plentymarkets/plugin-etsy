@@ -76,6 +76,11 @@ class AuthController extends Controller
 	 */
 	public function getLoginUrl(WebstoreHelper $webstoreHelper)
 	{
+		$this->getLogger(__FUNCTION__)
+			->setReferenceType('etsyListingId')
+			->setReferenceValue(123)
+			->error('Etsy::authentication.cannot_authenticate');
+
 		/** @var WebstoreConfiguration $webstoreConfig */
 		$webstore = $webstoreHelper->getCurrentWebstoreConfiguration();
 
