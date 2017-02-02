@@ -9,12 +9,15 @@ use Plenty\Modules\System\Models\WebstoreConfiguration;
 use Plenty\Plugin\ConfigRepository;
 use Plenty\Plugin\Controller;
 use Plenty\Plugin\Http\Request;
+use Plenty\Plugin\Log\Loggable;
 
 /**
  * Class AuthController
  */
 class AuthController extends Controller
 {
+	use Loggable;
+
 	/**
 	 * @var AuthService
 	 */
@@ -82,12 +85,14 @@ class AuthController extends Controller
 		}
 		catch(\Exception $ex)
 		{
+			$this->getLogger(__FUNCTION__)->error('Etsy::authentication.cannot_authenticate', $ex);
+
 			$data = $this->service->getRequestToken($webstore->domainSsl . '/markets/etsy/auth/access-token');
 		}
 
 		if(isset($data['error']))
 		{
-			throw new \Exception($data['error']);
+			throw new \Exception($data['error_msg']);
 		}
 
 		$this->accountHelper->saveTokenRequest($data);
