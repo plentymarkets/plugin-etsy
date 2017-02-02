@@ -112,7 +112,7 @@ class ShippingNotificationEventProcedure
 			$this->getLogger(__FUNCTION__)
 				->setReferenceType('orderId')
 				->setReferenceValue($order->id)
-				->error('Etsy::order.trackingCodeError', $ex);
+				->error('Etsy::order.trackingCodeError', $ex->getMessage());
 		}
 
 		return null;
@@ -141,7 +141,7 @@ class ShippingNotificationEventProcedure
 			$this->getLogger(__FUNCTION__)
 				->setReferenceType('orderId')
 				->setReferenceValue($order->id)
-				->error('Etsy::order.carrierNameError', $ex);
+				->error('Etsy::order.carrierNameError', $ex->getMessage());
 		}
 
 		return null;

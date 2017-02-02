@@ -116,7 +116,7 @@ class PropertyImportService
 				}
 				catch(\Exception $ex)
 				{
-					$this->getLogger(__FUNCTION__)->error('Etsy::order.propertyImportError', $ex);
+					$this->getLogger(__FUNCTION__)->error('Etsy::order.propertyImportError', $ex->getMessage());
 				}
 			}
 		}

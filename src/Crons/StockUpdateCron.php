@@ -50,7 +50,7 @@ class StockUpdateCron extends Cron
 		}
 		catch(\Exception $ex)
 		{
-			$this->getLogger(__FUNCTION__)->error('Etsy::item.stockUpdateError', $ex);
+			$this->getLogger(__FUNCTION__)->error('Etsy::item.stockUpdateError', $ex->getMessage());
 		}
 	}
 

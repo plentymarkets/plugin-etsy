@@ -348,7 +348,7 @@ class OrderCreateService
 		}
 		catch(\Exception $ex)
 		{
-			$this->getLogger(__FUNCTION__)->error('Etsy::order.paymentError', $ex);
+			$this->getLogger(__FUNCTION__)->error('Etsy::order.paymentError', $ex->getMessage());
 		}
 	}
 

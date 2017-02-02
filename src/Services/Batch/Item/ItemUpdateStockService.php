@@ -100,7 +100,7 @@ class ItemUpdateStockService extends AbstractBatchService
 				$this->getLogger(__FUNCTION__)
 					->setReferenceType('variationId')
 					->setReferenceValue($record->variationBase->id)
-					->error('Etsy::item.stockUpdateError', $ex);
+					->error('Etsy::item.stockUpdateError', $ex->getMessage());
 			}
 		}
 	}

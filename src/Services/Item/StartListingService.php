@@ -107,7 +107,7 @@ class StartListingService
 				$this->getLogger(__FUNCTION__)
 					->setReferenceType('variationId')
 					->setReferenceValue($record->variationBase->id)
-					->error('Etsy::item.startListingError', $ex);
+					->error('Etsy::item.startListingError', $ex->getMessage());
 			}
 		}
 		else
@@ -278,7 +278,7 @@ class StartListingService
 					$this->getLogger(__FUNCTION__)
 						->setReferenceType('listingId')
 						->setReferenceValue($listingId)
-						->error('Etsy::item.translationUpdateError', $ex);
+						->error('Etsy::item.translationUpdateError', $ex->getMessage());
 				}
 			}
 		}

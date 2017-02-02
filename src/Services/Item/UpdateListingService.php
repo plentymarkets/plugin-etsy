@@ -80,7 +80,7 @@ class UpdateListingService
 				$this->getLogger(__FUNCTION__)
 					->setReferenceType('variationId')
 					->setReferenceValue($record->variationBase->id)
-					->error('Etsy::item.updateListingError', $ex);
+					->error('Etsy::item.updateListingError', $ex->getMessage());
 			}
 		}
 		else
@@ -200,7 +200,7 @@ class UpdateListingService
 					$this->getLogger(__FUNCTION__)
 						->setReferenceType('listingId')
 						->setReferenceValue($listingId)
-						->error('Etsy::item.translationUpdateError', $ex);
+						->error('Etsy::item.translationUpdateError', $ex->getMessage());
 				}
 			}
 		}

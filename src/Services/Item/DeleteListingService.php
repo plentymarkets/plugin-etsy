@@ -46,7 +46,7 @@ class DeleteListingService
 				$this->getLogger(__FUNCTION__)
 					->setReferenceType('listingId')
 					->setReferenceValue($listingId)
-					->error('Etsy::item.deleteListingError', $ex);
+					->error('Etsy::item.deleteListingError', $ex->getMessage());
 			}
 		}
 		else

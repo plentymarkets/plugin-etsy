@@ -149,7 +149,7 @@ class AccountHelper
 		}
 		catch(\Exception $ex)
 		{
-			$this->getLogger(__FUNCTION__)->error('Etsy::authentication.configValidationError', $ex);
+			$this->getLogger(__FUNCTION__)->error('Etsy::authentication.configValidationError', $ex->getMessage());
 		}
 
 		return false;

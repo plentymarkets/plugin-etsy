@@ -77,7 +77,7 @@ class ItemExportService extends AbstractBatchService
 			}
 			catch(\Exception $ex)
 			{
-				$this->getLogger(__FUNCTION__)->error('Etsy::item.startListingError', $ex);
+				$this->getLogger(__FUNCTION__)->error('Etsy::item.startListingError', $ex->getMessage());
 			}
 		}
 	}

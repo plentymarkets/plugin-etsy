@@ -213,7 +213,7 @@ class ItemHelper
 			}
 			catch(\Exception $ex)
 			{
-				$this->getLogger(__FUNCTION__)->debug('Etsy::item.shippingTemplateError', $ex);
+				$this->getLogger(__FUNCTION__)->debug('Etsy::item.shippingTemplateError', $ex->getMessage());
 			}
 		}
 

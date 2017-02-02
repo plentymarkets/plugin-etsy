@@ -50,7 +50,7 @@ class OrderImportCron extends Cron
 		}
 		catch(\Exception $ex)
 		{
-			$this->getLogger(__FUNCTION__)->error('Etsy::order.orderImportError', $ex);
+			$this->getLogger(__FUNCTION__)->error('Etsy::order.orderImportError', $ex->getMessage());
 		}
 	}
 
