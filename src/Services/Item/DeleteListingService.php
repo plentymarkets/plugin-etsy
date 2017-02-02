@@ -3,12 +3,15 @@ namespace Etsy\Services\Item;
 
 use Plenty\Plugin\ConfigRepository;
 use Etsy\Api\Services\ListingService;
+use Plenty\Plugin\Log\Loggable;
 
 /**
  * Class DeleteListingService
  */
 class DeleteListingService
 {
+	use Loggable;
+
 	/**
 	 * @var ListingService
 	 */
@@ -38,14 +41,20 @@ class DeleteListingService
 			{
 				return $this->listingService->deleteListing($listingId);
 			}
-			catch(\Exception $e)
+			catch(\Exception $ex)
 			{
-				// $this->logger->log('Could not delete listing ID ' . $listingId . ': ' . $e->getMessage());
+				$this->getLogger(__FUNCTION__)
+					->setReferenceType('listingId')
+					->setReferenceValue($listingId)
+					->error('Etsy::item.deleteListingError', $ex);
 			}
 		}
 		else
 		{
-			// $this->logger->log('Could not delete listing ID ' . $listingId);
+			$this->getLogger(__FUNCTION__)
+				->setReferenceType('listingId')
+				->setReferenceValue($listingId)
+				->info('Etsy::item.deleteListingError');
 		}
 
 		return false;

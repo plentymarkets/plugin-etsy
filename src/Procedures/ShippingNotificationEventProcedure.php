@@ -10,12 +10,15 @@ use Plenty\Modules\Order\Shipping\Contracts\ParcelServicePresetRepositoryContrac
 use Etsy\Api\Services\ReceiptService;
 use Etsy\Helper\SettingsHelper;
 use Etsy\Helper\ShippingHelper;
+use Plenty\Plugin\Log\Loggable;
 
 /**
  * Class ShippingNotificationEventProcedure
  */
 class ShippingNotificationEventProcedure
 {
+	use Loggable;
+
 	/**
 	 * @var ReceiptService
 	 */
@@ -106,7 +109,10 @@ class ShippingNotificationEventProcedure
 		}
 		catch(\Exception $ex)
 		{
-			// $this->logger->log('Can not get tracking code for order id ' . $order->id . ': ' . $ex->getMessage());
+			$this->getLogger(__FUNCTION__)
+				->setReferenceType('orderId')
+				->setReferenceValue($order->id)
+				->error('Etsy::order.trackingCodeError', $ex);
 		}
 
 		return null;
@@ -132,7 +138,10 @@ class ShippingNotificationEventProcedure
 		}
 		catch(\Exception $ex)
 		{
-			// $this->logger->log('Can not get carrier name for order id ' . $order->id . ': ' . $ex->getMessage());
+			$this->getLogger(__FUNCTION__)
+				->setReferenceType('orderId')
+				->setReferenceValue($order->id)
+				->error('Etsy::order.carrierNameError', $ex);
 		}
 
 		return null;

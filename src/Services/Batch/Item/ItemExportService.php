@@ -11,12 +11,15 @@ use Etsy\Services\Item\UpdateListingService;
 use Etsy\Services\Batch\AbstractBatchService;
 use Etsy\Factories\ItemDataProviderFactory;
 use Etsy\Services\Item\StartListingService;
+use Plenty\Plugin\Log\Loggable;
 
 /**
  * Class ItemExportService
  */
 class ItemExportService extends AbstractBatchService
 {
+	use Loggable;
+
 	/**
 	 * @var Application
 	 */
@@ -72,14 +75,9 @@ class ItemExportService extends AbstractBatchService
 					$this->startService->start($record);
 				}
 			}
-			catch(ValidationException $ex)
+			catch(\Exception $ex)
 			{
-				$messageBag = $ex->getMessageBag();
-
-				if(!is_null($messageBag))
-				{
-					// $this->logger->log('Can not start listing: ...');
-				}
+				$this->getLogger(__FUNCTION__)->error('Etsy::item.startListingError', $ex);
 			}
 		}
 	}

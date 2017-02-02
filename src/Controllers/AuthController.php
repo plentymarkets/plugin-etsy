@@ -85,7 +85,7 @@ class AuthController extends Controller
 		}
 		catch(\Exception $ex)
 		{
-			$this->getLogger(__FUNCTION__)->error('Etsy::authentication.cannot_authenticate', $ex);
+			$this->getLogger(__FUNCTION__)->error('Etsy::authentication.authenticateError', $ex);
 
 			$data = $this->service->getRequestToken($webstore->domainSsl . '/markets/etsy/auth/access-token');
 		}

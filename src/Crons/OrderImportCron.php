@@ -7,12 +7,15 @@ use Plenty\Modules\Cron\Contracts\CronHandler as Cron;
 use Etsy\Helper\SettingsHelper;
 use Etsy\Helper\AccountHelper;
 use Etsy\Services\Order\OrderImportService;
+use Plenty\Plugin\Log\Loggable;
 
 /**
  * Class OrderImportCron
  */
 class OrderImportCron extends Cron
 {
+	use Loggable;
+
 	const MAX_DAYS = 3;
 
 	/**
@@ -47,7 +50,7 @@ class OrderImportCron extends Cron
 		}
 		catch(\Exception $ex)
 		{
-			// TODO Log exception
+			$this->getLogger(__FUNCTION__)->error('Etsy::order.orderImportError', $ex);
 		}
 	}
 

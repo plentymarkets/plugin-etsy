@@ -6,12 +6,15 @@ use Plenty\Modules\Item\DataLayer\Models\Record;
 use Etsy\Helper\OrderHelper;
 use Etsy\Api\Services\ListingService;
 use Etsy\Helper\ItemHelper;
+use Plenty\Plugin\Log\Loggable;
 
 /**
  * Class UpdateListingStockService
  */
 class UpdateListingStockService
 {
+	use Loggable;
+
 	/**
 	 * @var ItemHelper
 	 */
@@ -61,14 +64,20 @@ class UpdateListingStockService
 
 				$this->listingService->updateListing($listingId, $data);
 			}
-			catch(\Exception $e)
+			catch(\Exception $ex)
 			{
-				// $this->logger->log('Could not update listing stock for variation id ' . $record->variationBase->id . ': ' . $e->getMessage());
+				$this->getLogger(__FUNCTION__)
+					->setReferenceType('variationId')
+					->setReferenceValue($record->variationBase->id)
+					->error('Etsy::item.stockUpdateError', $ex);
 			}
 		}
 		else
 		{
-			// $this->logger->log('Could not update listing stock for variation id: ' . $record->variationBase->id);
+			$this->getLogger(__FUNCTION__)
+				->setReferenceType('variationId')
+				->setReferenceValue($record->variationBase->id)
+				->info('Etsy::item.stockUpdateError');
 		}
 	}
 

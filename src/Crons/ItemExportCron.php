@@ -7,12 +7,15 @@ use Plenty\Modules\Cron\Contracts\CronHandler as Cron;
 use Etsy\Services\Batch\Item\ItemExportService;
 use Etsy\Helper\AccountHelper;
 use Etsy\Helper\SettingsHelper;
+use Plenty\Plugin\Log\Loggable;
 
 /**
  * Class ItemExportCron
  */
 class ItemExportCron extends Cron
 {
+	use Loggable;
+
 	/**
 	 * @var SettingsHelper
 	 */
@@ -47,7 +50,7 @@ class ItemExportCron extends Cron
 		}
 		catch(\Exception $ex)
 		{
-			// TODO Log exception
+			$this->getLogger(__FUNCTION__)->error('Etsy::item.itemExportError', $ex);
 		}
 	}
 
