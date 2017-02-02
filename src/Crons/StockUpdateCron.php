@@ -7,12 +7,15 @@ use Plenty\Modules\Cron\Contracts\CronHandler as Cron;
 use Etsy\Services\Batch\Item\ItemUpdateStockService;
 use Etsy\Helper\AccountHelper;
 use Etsy\Helper\SettingsHelper;
+use Plenty\Plugin\Log\Loggable;
 
 /**
  * Class StockUpdateCron
  */
 class StockUpdateCron extends Cron
 {
+	use Loggable;
+
 	/**
 	 * @var SettingsHelper
 	 */
@@ -47,7 +50,7 @@ class StockUpdateCron extends Cron
 		}
 		catch(\Exception $ex)
 		{
-			// TODO Log exception
+			$this->getLogger(__FUNCTION__)->error('Etsy::item.stockUpdateError', $ex->getMessage());
 		}
 	}
 

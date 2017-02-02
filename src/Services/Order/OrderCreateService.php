@@ -21,12 +21,15 @@ use Etsy\Api\Services\PaymentService;
 use Etsy\Helper\PaymentHelper;
 use Etsy\Helper\SettingsHelper;
 use Etsy\Helper\OrderHelper;
+use Plenty\Plugin\Log\Loggable;
 
 /**
  * Class OrderCreateService
  */
 class OrderCreateService
 {
+	use Loggable;
+
 	/**
 	 * @var Application
 	 */
@@ -345,7 +348,7 @@ class OrderCreateService
 		}
 		catch(\Exception $ex)
 		{
-			// $this->logger->log('Can not add payment: ' . $ex->getMessage());
+			$this->getLogger(__FUNCTION__)->error('Etsy::order.paymentError', $ex->getMessage());
 		}
 	}
 

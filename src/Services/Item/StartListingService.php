@@ -10,12 +10,15 @@ use Etsy\Api\Services\ListingService;
 use Etsy\Api\Services\ListingImageService;
 use Etsy\Helper\ItemHelper;
 use Etsy\Api\Services\ListingTranslationService;
+use Plenty\Plugin\Log\Loggable;
 
 /**
  * Class StartListingService
  */
 class StartListingService
 {
+	use Loggable;
+
 	/**
 	 * @var ItemHelper
 	 */
@@ -101,12 +104,18 @@ class StartListingService
 			{
 				$this->deleteListingService->delete($listingId);
 
-				// $this->logger->log('Could not start listing for variation ID ' . $record->variationBase->id . ': ' . $ex->getMessage());
+				$this->getLogger(__FUNCTION__)
+					->setReferenceType('variationId')
+					->setReferenceValue($record->variationBase->id)
+					->error('Etsy::item.startListingError', $ex->getMessage());
 			}
 		}
 		else
 		{
-			// $this->logger->log('Could not start listing for variation ID ' . $record->variationBase->id);
+			$this->getLogger(__FUNCTION__)
+				->setReferenceType('variationId')
+				->setReferenceValue($record->variationBase->id)
+				->info('Etsy::item.startListingError');
 		}
 	}
 
@@ -266,7 +275,10 @@ class StartListingService
 				}
 				catch(\Exception $ex)
 				{
-					// $this->logger->log('Could not upload translation for listing ID ' . $listingId . ': ' . $ex->getMessage());
+					$this->getLogger(__FUNCTION__)
+						->setReferenceType('listingId')
+						->setReferenceValue($listingId)
+						->error('Etsy::item.translationUpdateError', $ex->getMessage());
 				}
 			}
 		}

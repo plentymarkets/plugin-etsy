@@ -10,6 +10,7 @@ use Plenty\Plugin\ConfigRepository;
 use Etsy\Api\Services\ReceiptService;
 use Etsy\Services\Order\OrderCreateService;
 use Etsy\Validators\EtsyReceiptValidator;
+use Plenty\Plugin\Log\Loggable;
 
 /**
  * Class OrderImportService
@@ -17,6 +18,8 @@ use Etsy\Validators\EtsyReceiptValidator;
  */
 class OrderImportService
 {
+	use Loggable;
+
 	/**
 	 * @var ConfigRepository
 	 */
@@ -89,12 +92,12 @@ class OrderImportService
 
 					if(!is_null($messageBag))
 					{
-						// $this->logger->log('Can not import order.'); // TODO show the message bag
+						$this->getLogger(__FUNCTION__)->info('Etsy::order.paymentError', $messageBag);
 					}
 				}
 				catch(\Exception $ex)
 				{
-					// $this->logger->log('Can not import order: ' . $ex->getMessage());
+					$this->getLogger(__FUNCTION__)->error('Etsy::order.orderImportError', $ex->getMessage());
 				}
 			}
 		}

@@ -9,12 +9,15 @@ use Plenty\Modules\Market\Settings\Factories\SettingsCorrelationFactory;
 use Etsy\Api\Services\DataTypeService;
 use Etsy\Api\Services\StyleService;
 use Plenty\Modules\Market\Settings\Models\Settings;
+use Plenty\Plugin\Log\Loggable;
 
 /**
  * Class PropertyImportService
  */
 class PropertyImportService
 {
+	use Loggable;
+
 	/**
 	 * @var DataTypeService
 	 */
@@ -113,7 +116,7 @@ class PropertyImportService
 				}
 				catch(\Exception $ex)
 				{
-					// TODO maybe log?
+					$this->getLogger(__FUNCTION__)->error('Etsy::order.propertyImportError', $ex->getMessage());
 				}
 			}
 		}

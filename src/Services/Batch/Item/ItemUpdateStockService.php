@@ -14,12 +14,15 @@ use Etsy\Services\Item\DeleteListingService;
 use Etsy\Services\Item\UpdateListingStockService;
 use Etsy\Services\Batch\AbstractBatchService;
 use Etsy\Factories\ItemDataProviderFactory;
+use Plenty\Plugin\Log\Loggable;
 
 /**
  * Class ItemUpdateStockService
  */
 class ItemUpdateStockService extends AbstractBatchService
 {
+	use Loggable;
+
 	/**
 	 * @var UpdateListingStockService
 	 */
@@ -92,14 +95,12 @@ class ItemUpdateStockService extends AbstractBatchService
 			{
 				$this->updateListingStockService->updateStock($record);
 			}
-			catch(ValidationException $ex)
+			catch(\Exception $ex)
 			{
-				$messageBag = $ex->getMessageBag();
-
-				if(!is_null($messageBag))
-				{
-					// $this->logger->log('Can not update stock for variation ID ' . $record->variationBase->id . ' ... ');
-				}
+				$this->getLogger(__FUNCTION__)
+					->setReferenceType('variationId')
+					->setReferenceValue($record->variationBase->id)
+					->error('Etsy::item.stockUpdateError', $ex->getMessage());
 			}
 		}
 	}

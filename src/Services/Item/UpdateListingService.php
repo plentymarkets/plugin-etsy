@@ -7,12 +7,15 @@ use Plenty\Modules\Item\DataLayer\Models\Record;
 use Etsy\Api\Services\ListingService;
 use Etsy\Helper\ItemHelper;
 use Etsy\Helper\SettingsHelper;
+use Plenty\Plugin\Log\Loggable;
 
 /**
  * Class UpdateListingService
  */
 class UpdateListingService
 {
+	use Loggable;
+
 	/**
 	 * @var ConfigRepository
 	 */
@@ -72,14 +75,20 @@ class UpdateListingService
 
 				$this->addTranslations($record, $listingId);
 			}
-			catch(\Exception $e)
+			catch(\Exception $ex)
 			{
-				// $this->logger->log('Could not update listing for variation id ' . $record->variationBase->id . ': ' . $e->getMessage());
+				$this->getLogger(__FUNCTION__)
+					->setReferenceType('variationId')
+					->setReferenceValue($record->variationBase->id)
+					->error('Etsy::item.updateListingError', $ex->getMessage());
 			}
 		}
 		else
 		{
-			// $this->logger->log('Could not update listing for variation id: ' . $record->variationBase->id);
+			$this->getLogger(__FUNCTION__)
+				->setReferenceType('variationId')
+				->setReferenceValue($record->variationBase->id)
+				->info('Etsy::item.updateListingError');
 		}
 	}
 
@@ -188,7 +197,10 @@ class UpdateListingService
 				}
 				catch(\Exception $ex)
 				{
-					// $this->logger->log('Could not upload translation for listing ID ' . $listingId . ': ' . $ex->getMessage());
+					$this->getLogger(__FUNCTION__)
+						->setReferenceType('listingId')
+						->setReferenceValue($listingId)
+						->error('Etsy::item.translationUpdateError', $ex->getMessage());
 				}
 			}
 		}

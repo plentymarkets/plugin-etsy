@@ -7,12 +7,15 @@ use Plenty\Plugin\Application;
 use Etsy\Helper\OrderHelper;
 use Etsy\Helper\SettingsHelper;
 use Plenty\Plugin\ConfigRepository;
+use Plenty\Plugin\Log\Loggable;
 
 /**
  * Class AccountHelper
  */
 class AccountHelper
 {
+	use Loggable;
+
 	/**
 	 * @var Application
 	 */
@@ -144,9 +147,9 @@ class AccountHelper
 				return true;
 			}
 		}
-		catch(\Exception $e)
+		catch(\Exception $ex)
 		{
-			//
+			$this->getLogger(__FUNCTION__)->error('Etsy::authentication.configValidationError', $ex->getMessage());
 		}
 
 		return false;

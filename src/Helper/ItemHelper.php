@@ -15,12 +15,15 @@ use Plenty\Modules\Helper\Contracts\UrlBuilderRepositoryContract;
 use Plenty\Modules\Item\DataLayer\Models\Record;
 use Plenty\Modules\Item\VariationSku\Contracts\VariationSkuRepositoryContract;
 use Etsy\Helper\SettingsHelper;
+use Plenty\Plugin\Log\Loggable;
 
 /**
  * Class ItemHelper
  */
 class ItemHelper
 {
+	use Loggable;
+
 	/**
 	 * @var Application
 	 */
@@ -210,7 +213,7 @@ class ItemHelper
 			}
 			catch(\Exception $ex)
 			{
-				// do nothing, move to next one
+				$this->getLogger(__FUNCTION__)->debug('Etsy::item.shippingTemplateError', $ex->getMessage());
 			}
 		}
 
