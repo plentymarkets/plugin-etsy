@@ -7,25 +7,6 @@
 
 **Etsy** ist ein amerikanischer Marktplatz für den Kauf und Verkauf von handgemachten Produkten, Vintage und Künstlerbedarf. Um das Plugin für Etsy einzurichten, registrieren Sie sich zunächst als Händler bei Etsy. Sie erhalten die nötigen Zugangsdaten, die Sie für die Einstellungen in plentymarkets benötigen.
 
-## Erste Schritte und Anforderungen
-
-In diesem Schritt kopieren Sie das Git Repository in Ihre plentymarkets Inbox. Dafür benötigen Sie die Remote-URL von GitHub sowie Ihre Logindaten.
-
-1. Öffnen Sie das Menü **Start » Plugins**.
-2. Klicken Sie auf **Add plugin**.
-→ Das neue Plugin-Fenster wird geöffnet.
-3. Klicken Sie auf **Git**.
-→ Das Fenster **Settings** wird geöffnet.
-4. Tragen Sie die Remote-URL ein.
-→ Sie können die URL mit einem Klick auf Clone oder download in der Repository auf Github kopieren.
-5. Tragen Sie Ihren User-Namen und das Password ein.
-6. Klicken SIe auf **Test connection**.
-→ Die Verbindung zu dem Git Repository wird überprüft und hergestellt und das Dropdown-Menü Branch kann gewählt werden.
-7. Wählen Sie den Branch des Repository, das Sie kopieren und bearbeiten möchten.
-8. Speichern Sie die Einstellungen.
-→ Das Plugin Repository wurde in Ihre plentymarkets Inbox kopiert und das Plugin zu der Plugin-Liste hinzugefügt.
-
-
 ## Etsy in plentymarkets einrichten
 
 Um Artikel auf Etsy anzubieten, richten Sie Etsy in plentymarkets ein. Gehen Sie dazu wie im Folgenden beschrieben vor.
