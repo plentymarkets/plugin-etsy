@@ -35,7 +35,7 @@ class ShippingTemplateService
 		], [], [], [
             'Entries'  => 'Entries',
             'Upgrades' => 'Upgrades',
-        ], true);
+        ]);
 
 		$results = $response['results'];
 
