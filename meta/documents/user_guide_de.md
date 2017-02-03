@@ -5,30 +5,11 @@
 
 ## Bei Etsy registrieren
 
-**Etsy** ist ein amerikanischer Marktplatz für den Kauf und Verkauf von handgemachten Produkten, Vintage und Künstlerbedarf. Um das Plugin für Etsy einzurichten, registrieren Sie sich zunächst als Händler bei Etsy. Sie erhalten die nötigen Zugangsdaten, die Sie für die Einstellungen in plentymarkets benötigen.
+**Etsy** ist ein amerikanischer Marktplatz für den Kauf und Verkauf von handgemachten Produkten, Vintage und Künstlerbedarf. Um das Plugin für Etsy einzurichten, registrieren Sie sich zunächst als Händler und erstellen Sie eine neue App bei Etsy. Sie erhalten die nötigen Zugangsdaten, die Sie für die Einstellungen in plentymarkets benötigen.
 
-## Erste Schritte und Anforderungen
+## Etsy in plentymarkets installieren
 
-In diesem Schritt kopieren Sie das Git Repository in Ihre plentymarkets Inbox. Dafür benötigen Sie die Remote-URL von GitHub sowie Ihre Logindaten.
-
-1. Öffnen Sie das Menü **Start » Plugins**.
-2. Klicken Sie auf **Add plugin**.
-→ Das neue Plugin-Fenster wird geöffnet.
-3. Klicken Sie auf **Git**.
-→ Das Fenster **Settings** wird geöffnet.
-4. Tragen Sie die Remote-URL ein.
-→ Sie können die URL mit einem Klick auf Clone oder download in der Repository auf Github kopieren.
-5. Tragen Sie Ihren User-Namen und das Password ein.
-6. Klicken SIe auf **Test connection**.
-→ Die Verbindung zu dem Git Repository wird überprüft und hergestellt und das Dropdown-Menü Branch kann gewählt werden.
-7. Wählen Sie den Branch des Repository, das Sie kopieren und bearbeiten möchten.
-8. Speichern Sie die Einstellungen.
-→ Das Plugin Repository wurde in Ihre plentymarkets Inbox kopiert und das Plugin zu der Plugin-Liste hinzugefügt.
-
-
-## Etsy in plentymarkets einrichten
-
-Um Artikel auf Etsy anzubieten, richten Sie Etsy in plentymarkets ein. Gehen Sie dazu wie im Folgenden beschrieben vor.
+Nachdem Sie das Etsy-Plugin im plentymarkets Marketplace gekauft haben, installieren Sie den Marktplatz im Menü **Start » Plugins » Tab: Einkäufe**. Wechseln Sie anschließend in das Tab **Plugins** und öffnen Sie **Etsy**. Geben Sie nun unter **Konfiguration** den Keystring und das Shared secret ein. Beides sollten Sie bei der Erstellung der App in Etsy erhalten haben. Speichern Sie die Einstellung.
 
 ### Berechtigung erteilen
 
@@ -37,10 +18,11 @@ Im Menü **Einstellungen » Märkte » Etsy » Authentifizierung** muss zunächs
 ### Etsy einrichten
 
 Im Menü **Einstellungen » Märkte » Etsy » Einstellungen** geben Sie u.a. Ihre Shop-ID ein und aktivieren den Artikelexport, Bestandsabgleich und Auftragsimport.
+Etsy erlaubt 500 Calls am Tag. Sollten mehr Calls benötigt werden, setzen Sie sich direkt mit Etsy in Verbindung.
 
 ## Artikelverfügbarkeit einstellen
 
-Artikel, die Sie auf Etsy verkaufen möchten, müssen im Menü **Artikel » Artikel bearbeiten » Artikel öffnen » Tab: Varianten-ID** im Tab **Verfügbarkeit** aktiviert werden.
+Artikel, die Sie auf Etsy verkaufen möchten, müssen im Menü **Artikel » Artikel bearbeiten » Artikel öffnen » Tab: Varianten-ID** im Tab **Verfügbarkeit** aktiviert werden. Da keine Varianten zu Etsy übertragen werden können, werden Variantenartikel als Hauptartikel übertragen.
 
 ##### Artikelverfügbarkeit für Etsy einstellen:
 

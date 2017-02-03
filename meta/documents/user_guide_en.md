@@ -7,23 +7,6 @@
 ## Registering with Etsy
 
 **Etsy** is an e-commerce website focused on handmade, vintage and unique factory-manufactured items. You need to register with Etsy before setting up the Etsy plugin in plentymarkets. You will then receive the access data that you need for the configuration in plentymarkets.
-## Getting started and requirements
-
-In this step, you have to clone the Git repository into your plentymarkets inbox. You will need the remote URL from GitHub as well as your login details. 
-
-1. Go to **Start » Plugins**.
-2. Click on **Add plugin**.
-→ The **New plugin** window will open. .
-3. Click on **Git**.
-→ The **Settings** window will open.
-4. Enter the remote URL.
-→ You can copy the URL by clicking on **Clone or download** in the repository on GitHub. 
-5. Enter your user name and password.
-6. Click on **Test connection**.
-→ Connectivity to the Git repository is checked and established and the drop-down menu **Branch** can be selected. 
-7. Select the branch of the repository that you want to clone and edit.
-8. **Save** the settings.
-→ The plugin repository is cloned to the plentymarkets inbox and the plugin is added to the plugin list. 
 
 
 ## Setting up Etsy in plentymarkets
