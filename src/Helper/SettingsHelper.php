@@ -16,6 +16,7 @@ class SettingsHelper
 	const SETTINGS_TOKEN_REQUEST = 'token_request';
 	const SETTINGS_ACCESS_TOKEN = 'access_token';
 	const SETTINGS_SETTINGS = 'settings';
+	const SETTINGS_ETSY_SHOPS = 'etsy_shops';
 	const SETTINGS_ORDER_REFERRER = 'order_referrer';
 	const SETTINGS_LAST_ORDER_IMPORT = "last_order_import";
 	const SETTINGS_LAST_ITEM_EXPORT = "last_item_export";

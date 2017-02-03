@@ -55,4 +55,22 @@ class SettingsController extends Controller
 
 		return pluginApp(Response::class)->make('', 204);
 	}
+
+	/**
+	 * Get all Etsy shops.
+	 *
+	 * @return array
+	 * @throws \Exception
+	 */
+	public function getShops()
+	{
+		$data = $this->settingsHelper->get(SettingsHelper::SETTINGS_ETSY_SHOPS);
+
+		if($data)
+		{
+			return json_decode($data, true);
+		}
+
+		return [];
+	}
 }

@@ -35,7 +35,7 @@ class ShippingTemplateService
 		], [], [], [
             'Entries'  => 'Entries',
             'Upgrades' => 'Upgrades',
-        ], true);
+        ]);
 
 		$results = $response['results'];
 
@@ -48,7 +48,7 @@ class ShippingTemplateService
 	}
 
 	/**
-	 * @param int    $userId
+	 * @param int|string    $userId
 	 * @param string $language
 	 * @return array
 	 */

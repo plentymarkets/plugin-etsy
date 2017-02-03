@@ -12,11 +12,14 @@ export declare class SettingsComponent extends Locale implements OnInit {
     private exportLanguages;
     private processes;
     private availableLanguages;
+    private availableShops;
     constructor(service: SettingsService, etsyComponent: EtsyComponent, locale: LocaleService, localization: LocalizationService);
     ngOnInit(): void;
     private loadSettings();
     private mapSettings(response);
+    private loadShops(shopId);
     private saveSettings();
     private getSelectedExportLanguages();
     private getSelectedProcesses();
+    private getShopList();
 }

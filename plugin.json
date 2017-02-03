@@ -1,5 +1,5 @@
 {
-  "version": "0.0.2",
+  "version": "0.0.3",
   "name": "Etsy",
   "description": "Plentymarkets integration for the Etsy marketplace",
   "namespace": "Etsy",
@@ -7,8 +7,9 @@
   "author": "plentymarkets GmbH",
   "email":"support@plentymarkets.eu",
   "authorIcon":"icon_author_xs.png",
-  "shortDescription": "Etsy marketplace integration for plentymarkets.",
+  "shortDescription": "Plugin für Etsy-Marktplatzintegartion. Um Etsy in plentymarkets nutzen zu können, ist eine Händlerregistrierung bei Etsy nötig.",
   "license":"AGPL-3.0",
+  "categories": ["Plugins/Backend"],
   "price":0.00,
   "type": "general",
   "serviceProvider": "Etsy\\EtsyServiceProvider",

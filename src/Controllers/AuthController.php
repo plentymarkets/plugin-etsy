@@ -4,6 +4,7 @@ namespace Etsy\Controllers;
 
 use Etsy\Api\Services\AuthService;
 use Etsy\Helper\AccountHelper;
+use Etsy\Services\Shop\ShopImportService;
 use Plenty\Modules\Helper\Services\WebstoreHelper;
 use Plenty\Modules\System\Models\WebstoreConfiguration;
 use Plenty\Plugin\ConfigRepository;
@@ -76,11 +77,6 @@ class AuthController extends Controller
 	 */
 	public function getLoginUrl(WebstoreHelper $webstoreHelper)
 	{
-		$this->getLogger(__FUNCTION__)
-			->setReferenceType('etsyListingId')
-			->setReferenceValue(123)
-			->error('Etsy::authentication.cannot_authenticate');
-
 		/** @var WebstoreConfiguration $webstoreConfig */
 		$webstore = $webstoreHelper->getCurrentWebstoreConfiguration();
 
@@ -125,12 +121,13 @@ class AuthController extends Controller
 
 			$this->accountHelper->saveAccessToken($accessTokenData);
 
+			pluginApp(ShopImportService::class)->run();
+
 			return 'Login was successful. This window will close automatically.<script>window.close();</script>';
 		}
 		catch(\Exception $e)
 		{
 			throw new \Exception($e->getMessage(), $e->getCode());
 		}
-
 	}
 }

@@ -123,6 +123,11 @@ class EtsyRouteServiceProvider extends RouteServiceProvider
 			'uses'       => 'Etsy\Controllers\SettingsController@all'
 		]);
 
+		$router->get('markets/etsy/settings/shops', [
+			'middleware' => 'oauth',
+			'uses'       => 'Etsy\Controllers\SettingsController@getShops'
+		]);
+
 		/** Shipping Profiles */
 		$router->get('markets/etsy/shipping-profiles/imported', [
 			'middleware' => 'oauth',
