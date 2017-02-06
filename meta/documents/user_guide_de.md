@@ -39,6 +39,8 @@ Artikel, die Sie auf Etsy verkaufen möchten, müssen im Menü **Artikel » Arti
 
 Die Verfügbarkeit für Varianten kann im Menü **Artikel » Artikel bearbeiten » Artikel öffnen » Tab: Varianten » Variante öffnen » Tab: Varianten-ID » Tab: Verfügbarkeit** individuell angepasst werden.
 
+Wenn Sie berets auf Etsy listen, hinterlegen Sie die Etsy Listing-ID im Menü **Artikel » Artikel bearbeiten » Artikel öffnen » Tab: Varianten-ID » Tab: Einstellungen » Tab: Verfügbarkeit** als SKU für die Herkunft **Etsy**, damit Artikel beim Artikelexport den bereits auf Etsy gelisteten Artikel zugewiesen werden können und somit keine Überverkäufe entstehen.
+
 ## Verkaufspreis festlegen
 
 Gehen Sie wie im Folgenden beschrieben vor, um für die Auftragsherkunft Etsy einen Verkaufspreis festzulegen. Dieser Preis wird auf Etsy angezeigt. 
