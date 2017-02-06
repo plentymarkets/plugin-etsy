@@ -34,6 +34,8 @@ Items have to be available for Etsy. This is done in the **Availability** tab of
 
 The availability for variations can be individually edit in the **Item » Edit item » Open item » Tab: Variation ID » Open variation » Tab: Availability** menu.
 
+If you are already selling on Etsy, save Etsy's listing IDs as SKUs in the menu **Item » Edit item » Open item » Tab: Variation ID » Tab: Settings »Tab: Availability** for the referrer **Etsy**. By doing so, items will be assigned during the item export to the items already listed on Etsy in order to prevent overselling.
+
 ## Defining a sales price
 
 Proceed as described below to define a sales price for the order referrer Etsy. This price will be displayed on Etsy. 
