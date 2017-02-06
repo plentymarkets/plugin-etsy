@@ -59,7 +59,7 @@ class UpdateListingStockService
 					'listing_id' => (int) $listingId,
 					'state'      => $this->isVariationAvailable($record) ? ListingService::STATE_ACTIVE : ListingService::STATE_INACTIVE,
 					'quantity'   => $this->itemHelper->getStock($record) > 0 ? $this->itemHelper->getStock($record) : 1,
-					'price'      => $record->variationRetailPrice->price,
+					'price'      => number_format($record->variationRetailPrice->price, 2),
 				];
 
 				$this->listingService->updateListing($listingId, $data);
