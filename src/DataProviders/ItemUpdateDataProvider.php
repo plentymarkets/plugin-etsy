@@ -51,9 +51,9 @@ class ItemUpdateDataProvider implements ItemDataProviderContract
 	 *
 	 * @return RecordList
 	 */
-	public function fetch(array $params = []):RecordList
+	public function fetch(array $params = []): RecordList
 	{
-		return $this->itemDataLayerRepository->search($this->resultFields(), $this->filters($params));
+		return $this->itemDataLayerRepository->search($this->resultFields(), $this->filters($params), $this->params());
 	}
 
 	/**
@@ -132,6 +132,18 @@ class ItemUpdateDataProvider implements ItemDataProviderContract
 			'variationMarketStatus.hasMarketStatus?' => [
 				'marketplace' => $this->orderHelper->getReferrerId()
 			]
+		];
+	}
+
+	/**
+	 * Other parameters needed by the data layer to grab results.
+	 *
+	 * @return array
+	 */
+	private function params()
+	{
+		return [
+			'referrerId' => $this->orderHelper->getReferrerId(),
 		];
 	}
 }

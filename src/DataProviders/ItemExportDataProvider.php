@@ -59,7 +59,7 @@ class ItemExportDataProvider implements ItemDataProviderContract
 	 *
 	 * @return RecordList
 	 */
-	public function fetch(array $params = []):RecordList
+	public function fetch(array $params = []): RecordList
 	{
 		return $this->itemDataLayerRepository->search($this->resultFields(), $this->filters($params), $this->params());
 	}
@@ -68,7 +68,7 @@ class ItemExportDataProvider implements ItemDataProviderContract
 	 * Get the result fields needed.
 	 * @return array
 	 */
-	private function resultFields():array
+	private function resultFields(): array
 	{
 		$resultFields = [
 			'itemBase' => [
@@ -233,6 +233,7 @@ class ItemExportDataProvider implements ItemDataProviderContract
 	private function params()
 	{
 		return [
+			'referrerId' => $this->orderHelper->getReferrerId(),
 		];
 	}
 
