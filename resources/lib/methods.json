@@ -436,7 +436,7 @@
       "quantity": "int",
       "title": "string",
       "description": "text",
-      "price": "float",
+      "price": "string",
       "materials": "array(string)",
       "renew": "boolean",
       "shipping_template_id": "int",
