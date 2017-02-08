@@ -131,7 +131,7 @@ class StartListingService
 		$language    = $this->settingsHelper->getShopSettings('mainLanguage', 'de');
 
 		$title       = $this->itemHelper->getVariationWithAttributesName($record, $language);
-		$description = strip_tags($record->itemDescription[ $language ]['description']);
+		$description = html_entity_decode(strip_tags($record->itemDescription[ $language ]['description']));
 
 		$data = [
 			'state'                => 'draft',
@@ -263,7 +263,7 @@ class StartListingService
 				{
 					$data = [
 						'title'       => $record->itemDescription[ $language ]['name1'],
-						'description' => strip_tags($record->itemDescription[ $language ]['description']),
+						'description' => html_entity_decode(strip_tags($record->itemDescription[ $language ]['description'])),
 					];
 
 					if($record->itemDescription[ $language ]['keywords'])

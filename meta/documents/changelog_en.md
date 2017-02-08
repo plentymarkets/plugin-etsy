@@ -1,5 +1,14 @@
 # Release Notes for Etsy
 
+## v0.0.4 (2017-02-08)
+  
+### Fixed
+- Exported prices consider now the Etsy referrer.
+- Price is now formatted with decimals
+- Decode html entities in description
+- Updated license 
+- Updated user guide
+ 
 ## v0.0.3 (2017-02-03)
   
 ### Added

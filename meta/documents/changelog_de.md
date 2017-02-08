@@ -1,5 +1,14 @@
 # Release Notes für Etsy
 
+## v0.0.4 (2017-02-08)
+  
+### Fixed
+- Exportierte Preise berücksichtigen jetzt die Etsy Herkunft
+- Preis ist jetzt als Dezimalzahl formatiert
+- Dekodieren von HTML Instanzen in der Beschriebung
+- Lizenz aktualisiert
+- User Guide aktualisiert
+
 ## v0.0.3 (2017-02-03)
   
 ### Added
