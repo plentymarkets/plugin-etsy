@@ -1,5 +1,5 @@
 
-# Etsy Plugin Userguide
+# User Guide für das Etsy-Plugin
 
 <div class="container-toc"></div>
 
