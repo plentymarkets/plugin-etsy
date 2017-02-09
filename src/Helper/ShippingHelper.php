@@ -1124,7 +1124,16 @@ class ShippingHelper
 	 */
 	public function getCarrierCode($parcelServiceType)
 	{
-		$locationId = pluginApp(AccountingServiceContract::class)->detectLocationId(pluginApp(Application::class)->getPlentyId());
+		$plentyId = pluginApp(Application::class)->getPlentyId();
+
+		$accountingService = pluginApp(AccountingServiceContract::class);
+
+		if(!$accountingService instanceof AccountingServiceContract)
+		{
+			return null;
+		}
+
+		$locationId = $accountingService->detectLocationId($plentyId);
 
 		switch($parcelServiceType)
 		{

@@ -10,6 +10,7 @@ use Plenty\Modules\Order\Shipping\Contracts\ParcelServicePresetRepositoryContrac
 use Etsy\Api\Services\ReceiptService;
 use Etsy\Helper\SettingsHelper;
 use Etsy\Helper\ShippingHelper;
+use Plenty\Modules\Order\Shipping\ParcelService\Models\ParcelServicePreset;
 use Plenty\Plugin\Log\Loggable;
 
 /**
@@ -134,7 +135,10 @@ class ShippingNotificationEventProcedure
 
 			$parcelServicePreset = $parcelServicePresetRepo->getPresetById($order->shippingProfileId);
 
-			return $this->shippingHelper->getCarrierCode($parcelServicePreset->parcelService->parcel_service_type);
+			if($parcelServicePreset instanceof ParcelServicePreset)
+			{
+				return $this->shippingHelper->getCarrierCode($parcelServicePreset->parcelService->parcel_service_type);
+			}
 		}
 		catch(\Exception $ex)
 		{

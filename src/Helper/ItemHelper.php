@@ -205,7 +205,7 @@ class ItemHelper
 			{
 				$parcelServicePreset = $parcelServicePresetRepo->getPresetById($itemShippingProfile['id']);
 
-				if($parcelServicePreset->priority < $currentPriority && in_array($this->orderHelper->getReferrerId(), $parcelServicePreset->supportedReferer))
+				if($parcelServicePreset->priority < $currentPriority && in_array($this->orderHelper->getReferrerId(), $parcelServicePreset->supportedReferrer))
 				{
 					$currentPriority       = $parcelServicePreset->priority;
 					$parcelServicePresetId = $parcelServicePreset->id;

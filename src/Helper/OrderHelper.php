@@ -234,18 +234,24 @@ class OrderHelper
 		/** @var OrderRepositoryContract $orderRepo */
 		$orderRepo = pluginApp(OrderRepositoryContract::class);
 
-		$orderRepo->setFilters([
-			                       'externalOrderId' => $externalOrderId,
-			                       'referrerId'      => $this->getReferrerId(),
-			                       'orderType'       => OrderType::TYPE_SALES_ORDER,
-		                       ]);
-
-		/** @var PaginatedResult $paginatedResult */
-		$paginatedResult = $orderRepo->searchOrders();
-
-		if($paginatedResult->getTotalCount() > 0)
+		if($orderRepo instanceof OrderRepositoryContract)
 		{
-			return true;
+			$orderRepo->setFilters([
+				                       'externalOrderId' => $externalOrderId,
+				                       'referrerId'      => $this->getReferrerId(),
+				                       'orderType'       => OrderType::TYPE_SALES_ORDER,
+			                       ]);
+
+			/** @var PaginatedResult $paginatedResult */
+			$paginatedResult = $orderRepo->searchOrders();
+
+			if($paginatedResult instanceof PaginatedResult)
+			{
+				if($paginatedResult->getTotalCount() > 0)
+				{
+					return true;
+				}
+			}
 		}
 
 		return false;

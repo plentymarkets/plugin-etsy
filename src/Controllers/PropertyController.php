@@ -114,15 +114,18 @@ class PropertyController extends Controller
 			/** @var PaginatedResult $result */
 			$result = $propertyRepo->all(['*'], $perPage, $page);
 
-			/** @var Property $property */
-			foreach($result->getResult() as $propertyItem)
+			if($result instanceof PaginatedResult)
 			{
-				$list[] = [
-					'id'        => $propertyItem->id,
-					'name'      => $propertyItem->backendName,
-					'groupId'   => $propertyItem->propertyGroupId,
-					'groupName' => $this->getPropertyGroupName($propertyItem->propertyGroupId),
-				];
+				/** @var Property $property */
+				foreach($result->getResult() as $propertyItem)
+				{
+					$list[] = [
+						'id'        => $propertyItem->id,
+						'name'      => $propertyItem->backendName,
+						'groupId'   => $propertyItem->propertyGroupId,
+						'groupName' => $this->getPropertyGroupName($propertyItem->propertyGroupId),
+					];
+				}
 			}
 		} while(($result->getTotalCount()) > 0 && $page < ($result->getTotalCount() / $perPage));
 
