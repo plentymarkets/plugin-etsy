@@ -234,8 +234,8 @@ class OrderHelper
 		/** @var OrderRepositoryContract $orderRepo */
 		$orderRepo = pluginApp(OrderRepositoryContract::class);
 
-		if($orderRepo instanceof OrderRepositoryContract)
-		{
+		// if($orderRepo instanceof OrderRepositoryContract) TODO uncomment this as soon as setFilters is available
+		// {
 			$orderRepo->setFilters([
 				                       'externalOrderId' => $externalOrderId,
 				                       'referrerId'      => $this->getReferrerId(),
@@ -252,7 +252,7 @@ class OrderHelper
 					return true;
 				}
 			}
-		}
+		// }
 
 		return false;
 	}
