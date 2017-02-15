@@ -1,5 +1,11 @@
 # Release Notes für Etsy
 
+## v.0.1.0 (2017-02-15)
+
+# Changed
+- Autorisierung für benutzerdefinierte Bereiche
+- Nutzung des API-Routers anstelle des WEB-Routers für benutzerdefinierte Calls
+
 ## v0.0.4 (2017-02-08)
   
 ### Fixed

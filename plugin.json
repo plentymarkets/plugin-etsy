@@ -1,7 +1,7 @@
 {
-  "version": "0.0.4",
+  "version": "0.1.0",
   "name": "Etsy",
-  "description": "Plugin für Etsy-Marktplatzintegartion. Um Etsy in plentymarkets nutzen zu können, ist eine Händlerregistrierung bei Etsy nötig.",
+  "description": "Plugin für Etsy-Marktplatzintegration. Um Etsy in plentymarkets nutzen zu können, ist eine Händlerregistrierung bei Etsy nötig.",
   "namespace": "Etsy",
   "pluginIcon":"icon_plugin_xs.png",
   "author": "plentymarkets GmbH",
