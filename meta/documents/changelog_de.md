@@ -5,6 +5,7 @@
 # Changed
 - Autorisierung für benutzerdefinierte Bereiche
 - Nutzung des API-Routers anstelle des WEB-Routers für benutzerdefinierte Calls
+- Kleine UI Anpassungen
 
 ## v0.0.4 (2017-02-08)
   

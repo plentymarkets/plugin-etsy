@@ -5,6 +5,7 @@
 # Changed
 - Authorization for custom scopes
 - Using the API Router instead of WEB Router for custom calls. 
+- Small UI changes.
 
 ## v0.0.4 (2017-02-08)
   
