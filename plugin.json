@@ -7,7 +7,7 @@
   "author": "plentymarkets GmbH",
   "email":"support@plentymarkets.eu",
   "authorIcon":"icon_author_xs.png",
-  "shortDescription": "Plugin für Etsy-Marktplatzintegartion. Um Etsy in plentymarkets nutzen zu können, ist eine Händlerregistrierung bei Etsy nötig.",
+  "shortDescription": {"de":"Plugin für Etsy-Marktplatzintegartion. Um Etsy in plentymarkets nutzen zu können, ist eine Händlerregistrierung bei Etsy nötig.","en":"Plugin for integrating the market Etsy. An Etsy seller account is mandatory for setting up Etsy in plentymarkets."}
   "license":"AGPL-3.0",
   "categories": ["Plugins/Backend"],
   "price":0.00,
