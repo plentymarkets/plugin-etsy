@@ -41,7 +41,14 @@ class SettingsController extends Controller
 			return json_decode($data, true);
 		}
 
-		return [];
+		return [
+			'shop' => [
+				'shopId' => null,
+				'mainLanguage' => null,
+				'exportLanguages' => [],
+				'processes' => []
+			],
+		];
 	}
 
 	/**
