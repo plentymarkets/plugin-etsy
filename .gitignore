@@ -1,0 +1,4 @@
+# IDEs and editors
+/.idea
+/config/.idea
+/config/config.iml
