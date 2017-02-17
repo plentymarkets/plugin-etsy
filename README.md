@@ -2,7 +2,7 @@
 
 # Etsy plugin for plentymarkets 7.x
 
-This is the official Etsy plugin developed by plentymarkets. Integrate the market Etsy in your plentymarkets 7 system.
+This is the Etsy plugin developed by plentymarkets. Integrate the market Etsy in your plentymarkets 7 system.
 
 ## Requirements
 
