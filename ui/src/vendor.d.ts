@@ -8,4 +8,3 @@ import '@angular/router';
 import 'rxjs';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/mergeMap';
-import './app/assets/styles/icons.scss';

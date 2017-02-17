@@ -39,5 +39,6 @@ export declare class PropertiesComponent extends Locale implements OnInit {
     private addCorrelation();
     private removeCorrelation(item);
     private saveCorrelations();
+    private deleteCorrelations();
     private import();
 }
