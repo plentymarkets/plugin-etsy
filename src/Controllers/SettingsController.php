@@ -44,7 +44,7 @@ class SettingsController extends Controller
 		return [
 			'shop' => [
 				'shopId' => null,
-				'mainLanguage' => null,
+				'mainLanguage' => 'de',
 				'exportLanguages' => [],
 				'processes' => []
 			],
