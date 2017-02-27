@@ -13,6 +13,7 @@ use Plenty\Modules\Order\Property\Models\OrderPropertyType;
 use Plenty\Modules\Payment\Contracts\PaymentOrderRelationRepositoryContract;
 use Plenty\Modules\Payment\Contracts\PaymentRepositoryContract;
 use Plenty\Modules\Payment\Models\Payment;
+use Plenty\Modules\Payment\Models\PaymentProperty;
 use Plenty\Plugin\Application;
 use Plenty\Modules\Order\Contracts\OrderRepositoryContract;
 use Plenty\Modules\Item\VariationSku\Contracts\VariationSkuRepositoryContract;
@@ -337,6 +338,14 @@ class OrderCreateService
 					$payment->status          = 2;
 					$payment->transactionType = 2;
 
+					$paymentProperties = [];
+
+					$paymentProperties[] = $this->createPaymentProperty(PaymentProperty::TYPE_TRANSACTION_ID, $paymentData['payment_id']);
+
+					$paymentProperties[] = $this->createPaymentProperty(PaymentProperty::TYPE_ORIGIN, Payment::ORIGIN_PLUGIN);
+
+					$payment->properties = $paymentProperties;
+
 					$payment = $paymentRepo->createPayment($payment);
 
 					/** @var PaymentOrderRelationRepositoryContract $paymentOrderRelation */
@@ -377,5 +386,23 @@ class OrderCreateService
 		}
 
 		return 0;
+	}
+
+	/**
+	 * Create a payment property based on a given type ID and value.
+	 *
+	 * @param int $typeId
+	 * @param mixed $value
+	 *
+	 * @return PaymentProperty
+	 */
+	private function createPaymentProperty(int $typeId, $value):PaymentProperty
+	{
+		/** @var PaymentProperty $paymentProperty */
+		$paymentProperty = pluginApp(PaymentProperty::class );
+		$paymentProperty->typeId = $typeId;
+		$paymentProperty->value = $value;
+
+		return $paymentProperty;
 	}
 }
