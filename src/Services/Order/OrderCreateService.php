@@ -142,6 +142,17 @@ class OrderCreateService
 			'countryId'  => $this->orderHelper->getCountryIdByEtsyCountryId((int) $data['country_id']),
 		];
 
+        if( isset($addressData['countryId']) && $addressData['countryId'] > 0 &&
+            isset($data['state']) && strlen($data['state']))
+        {
+            $addressData['stateId'] = $this->orderHelper->getStateIdByCountryIdAndIsoCode($addressData['countryId'], $data['state']);
+        }
+
+        if(isset($data['second_line']) && strlen($data['second_line']))
+        {
+            $addressData['address3'] = $data['second_line'];
+        }
+
 		$addressData['options'] = [
 			[
 				'typeId' => 5,

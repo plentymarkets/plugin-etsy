@@ -4,6 +4,9 @@ namespace Etsy\Helper;
 
 use Plenty\Modules\Order\Contracts\OrderRepositoryContract;
 use Plenty\Modules\Order\Models\OrderType;
+use Plenty\Modules\Order\Shipping\Countries\Contracts\CountryRepositoryContract;
+use Plenty\Modules\Order\Shipping\Countries\Models\Country;
+use Plenty\Modules\Order\Shipping\Countries\Models\CountryState;
 use Plenty\Repositories\Models\PaginatedResult;
 
 /**
@@ -98,6 +101,36 @@ class OrderHelper
 		return $map[ $id ];
 	}
 
+    /**
+     * Get state ID by country ID and state ISO code.
+     *
+     * @param int $countryId
+     * @param string $stateIsoCode
+     * @return int|null
+     */
+	public function getStateIdByCountryIdAndIsoCode(int $countryId, string $stateIsoCode)
+    {
+        /** @var CountryRepositoryContract $countryRepo */
+        $countryRepo = pluginApp(CountryRepositoryContract::class);
+
+        if($countryRepo instanceof CountryRepositoryContract)
+        {
+            /** @var Country $country */
+            $country = $countryRepo->getCountryById($countryId);
+
+            /** @var CountryState $state */
+            foreach($country->states as $state)
+            {
+                if($state->isoCode === $stateIsoCode)
+                {
+                    return $state->id;
+                }
+            }
+        }
+
+        return null;
+    }
+
 	/**
 	 * @param string $paymentMethod
 	 *
@@ -143,7 +176,7 @@ class OrderHelper
 		$reEx .= '|[0-9]{1,3}[ a-zA-Z-\/\.]{0,6}'; // e.g. "Rosenstr. 14"
 		$reEx .= '|[0-9]{1,3}[ a-zA-Z-\/\.]{1,6}[0-9]{1,3}[ a-zA-Z-\/\.]{0,6}[0-9]{0,3}[ a-zA-Z-\/\.]{0,6}[0-9]{0,3}'; // e.g "Straße in Österreich 30/4/12.2"
 		$reEx .= ')$/';
-		$reExForeign = '/^(?<no>[0-9]{1,4}([\D]{0,2}([\s]|[^a-zA-Z0-9])))(?<ad>([\D]+))$/';    //e.g. "16 Bellevue Road"
+		$reExForeign = '/^(?<no>[0-9\s]{1,9}([\D]{0,2}([\s]|[^a-zA-Z0-9])))(?<ad>([\D]+))$/';    //e.g. "16 Bellevue Road"
 
 		/*
 		if (strripos($address, 'POSTFILIALE') !== false)
