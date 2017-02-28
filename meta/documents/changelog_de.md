@@ -1,7 +1,8 @@
 # Release Notes für Etsy
 
 ## v1.0.3 (2017-02-28)
-- An issue that caused that sometimes the external payment ID was not imported
+- Ein Problem, das in einigen Fällen dazu führte, dass die externe Payment-ID nicht importiert wurde
+- Zusätzliche Adressinformationen werden nun auch importiert
 
 ## v1.0.2 (2017-02-24)
 

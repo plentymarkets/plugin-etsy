@@ -2,6 +2,7 @@
 
 ## v1.0.3 (2017-02-28)
 - An issue that caused that sometimes the external payment ID was not imported
+- Additional address information is now also imported
 
 ## v1.0.2 (2017-02-24)
 
