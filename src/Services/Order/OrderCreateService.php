@@ -304,8 +304,8 @@ class OrderCreateService
 		$variationSkuRepo = pluginApp(VariationSkuRepositoryContract::class);
 
 		$result = $variationSkuRepo->search([
-			                                    'marketId'     => $this->orderHelper->getReferrerId(),
-			                                    'variationSku' => $sku,
+			                                    'marketId' => $this->orderHelper->getReferrerId(),
+			                                    'sku'      => $sku,
 		                                    ]);
 
 		foreach($result as $variationSku)
