@@ -1,5 +1,8 @@
 # Release Notes for Etsy
 
+## v1.0.4 (2017-03-03)
+- An error was fixed which caused that items were not correctly assigned during the item import.
+
 ## v1.0.3 (2017-02-28)
 - An issue that caused that sometimes the external payment ID was not imported
 - Additional address information is now also imported
