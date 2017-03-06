@@ -6,6 +6,7 @@ use Plenty\Modules\EventProcedures\Events\EventProceduresTriggered;
 use Plenty\Modules\Order\Models\Legacy\Order;
 
 use Etsy\Api\Services\ReceiptService;
+use Plenty\Modules\Order\Property\Models\OrderPropertyType;
 
 /**
  * Class PaymentNotificationEventProcedure
@@ -47,9 +48,9 @@ class PaymentNotificationEventProcedure
 	 */
 	private function getReceiptId($order)
 	{
-		if($order->properties->where('typeId', 14)->first())
+		if($order->properties->where('typeId', OrderPropertyType::EXTERNAL_ORDER_ID)->first())
 		{
-			return $order->properties->where('typeId', 14)->first()->value;
+			return $order->properties->where('typeId', OrderPropertyType::EXTERNAL_ORDER_ID)->first()->value;
 		}
 
 		return null;

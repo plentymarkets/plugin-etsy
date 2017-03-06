@@ -5,6 +5,7 @@ namespace Etsy\Procedures;
 use Plenty\Modules\EventProcedures\Events\EventProceduresTriggered;
 use Plenty\Modules\Order\Contracts\OrderRepositoryContract;
 use Plenty\Modules\Order\Models\Legacy\Order;
+use Plenty\Modules\Order\Property\Models\OrderPropertyType;
 use Plenty\Modules\Order\Shipping\Contracts\ParcelServicePresetRepositoryContract;
 
 use Etsy\Api\Services\ReceiptService;
@@ -79,9 +80,9 @@ class ShippingNotificationEventProcedure
 	 */
 	private function getReceiptId($order)
 	{
-		if($order->properties->where('typeId', 14)->first())
+		if($order->properties->where('typeId', OrderPropertyType::EXTERNAL_ORDER_ID)->first())
 		{
-			return $order->properties->where('typeId', 14)->first()->value;
+			return $order->properties->where('typeId', OrderPropertyType::EXTERNAL_ORDER_ID)->first()->value;
 		}
 
 		return null;

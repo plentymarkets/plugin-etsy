@@ -223,7 +223,7 @@ class StartListingService
 
 		$imageList = [];
 
-		$list = array_slice($list, 0, 5);
+		$list = array_reverse(array_slice($list, 0, 5));
 
 		foreach($list as $id => $image)
 		{
