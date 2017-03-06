@@ -1,5 +1,10 @@
 # Release Notes für Etsy
 
+## v1.0.5 (2017-03-06)
+- Ein Fehler, welcher Ereignisaktionen sporadisch nicht ausgeführt hat, konnte behoben werden
+- Bilder werden nun in der selben Reihenfolge wie im Artikel hochgeladen
+- Ein Fehler, der das Anlegen von Listings verhindert, wenn alle Versandprofile im Artikel aktiviert sind, wurde behoben
+
 ## v1.0.4 (2017-03-03)
 - Ein Problem, welches dazu führte, dass Artikel beim Auftragsimport falsch zugeordnet wurden, wurde behoben. 
 
