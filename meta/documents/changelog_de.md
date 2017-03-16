@@ -1,5 +1,9 @@
 # Release Notes für Etsy
 
+## v1.0.6 (2017-03-16)
+- Alle 244 Länder in Etsy können nun den Ländern in plentymarkets zugeordnet werden 
+- Etsy-Aufträge, die durch ein Kommunikationsproblem nicht importiert werden konnten, werden nachträglich importiert
+
 ## v1.0.5 (2017-03-06)
 - Ein Fehler, welcher Ereignisaktionen sporadisch nicht ausgeführt hat, konnte behoben werden
 - Bilder werden nun in der selben Reihenfolge wie im Artikel hochgeladen

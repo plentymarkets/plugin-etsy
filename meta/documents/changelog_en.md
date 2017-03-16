@@ -1,5 +1,9 @@
 # Release Notes for Etsy
 
+## v1.0.6 (2017-03-16)
+- All 244 Etsy countries can now be matched with the plentymarkets list of countries 
+- Etsy orders are imported since the last successful run if communication problems with Etsy occur
+
 ## v1.0.5 (2017-03-06)
 - An error was fixed which caused that sometimes the event actions did not work
 - Pictures are uploaded in the same order as provided in the item
