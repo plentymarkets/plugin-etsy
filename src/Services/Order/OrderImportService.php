@@ -66,14 +66,20 @@ class OrderImportService
 	 *
 	 * @param string $from
 	 * @param string $to
+	 *
+	 * @throws \Exception
 	 */
 	public function run($from, $to)
 	{
 		$receipts = $this->receiptService->findAllShopReceipts($this->settingsHelper->getShopSettings('shopId'), $from, $to);
 
-		if(is_array($receipts))
+		if(isset($receipts['error']) && $receipts['error'] === true)
 		{
-			foreach($receipts as $receiptData)
+			throw new \Exception($receipts['error_msg']);
+		}
+		elseif(isset($receipts['results']))
+		{
+			foreach($receipts['results'] as $receiptData)
 			{
 				try
 				{
@@ -92,7 +98,7 @@ class OrderImportService
 
 					if(!is_null($messageBag))
 					{
-						$this->getLogger(__FUNCTION__)->info('Etsy::order.paymentError', $messageBag);
+						$this->getLogger(__FUNCTION__)->info('Etsy::order.orderImportError', $messageBag);
 					}
 				}
 				catch(\Exception $ex)
