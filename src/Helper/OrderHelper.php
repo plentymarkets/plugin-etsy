@@ -86,50 +86,277 @@ class OrderHelper
 	public function getCountryIdByEtsyCountryId($id)
 	{
 		$map = [
-			91  => 1, // Germany
-			62  => 2, // Austria
-			80  => 4, // Switzerland
-			103 => 10, // France
-			105 => 12, // UK
-			209 => 28, // USA
-			128 => 15, // Italy
-			164 => 21, // Netherlands
-			65  => 3, // Belgium
-			99  => 8, // Spain
+			55  => 67,
+			57  => 52,
+			95  => 69,
+			250 => 70,
+			228 => 71,
+			56  => 72,
+			251 => 73,
+			252 => 75,
+			59  => 76,
+			60  => 51,
+			253 => 77,
+			61  => 29,
+			62  => 2,
+			63  => 78,
+			229 => 79,
+			232 => 80,
+			68  => 81,
+			237 => 82,
+			71  => 48,
+			65  => 3,
+			72  => 83,
+			66  => 84,
+			225 => 85,
+			76  => 86,
+			73  => 87,
+			70  => 88,
+			77  => 89,
+			254 => 90,
+			74  => 39,
+			255 => 91,
+			231 => 247,
+			75  => 92,
+			69  => 44,
+			67  => 93,
+			64  => 94,
+			135 => 95,
+			84  => 96,
+			79  => 30,
+			222 => 97,
+			247 => 98,
+			78  => 99,
+			196 => 100,
+			81  => 101,
+			82  => 31,
+			257 => 102,
+			258 => 103,
+			86  => 104,
+			259 => 105,
+			85  => 106,
+			260 => 108,
+			87  => 109,
+			118 => 54,
+			338 => 258,
+			89  => 5,
+			90  => 6,
+			93  => 7,
+			92  => 113,
+			261 => 114,
+			94  => 115,
+			96  => 116,
+			97  => 53,
+			187 => 117,
+			111 => 118,
+			98  => 119,
+			100 => 9,
+			101 => 120,
+			262 => 121,
+			241 => 122,
+			234 => 123,
+			102 => 11,
+			103 => 10,
+			115 => 124,
+			263 => 125,
+			264 => 126,
+			104 => 127,
+			109 => 128,
+			106 => 129,
+			91  => 1,
+			107 => 130,
+			226 => 131,
+			112 => 13,
+			113 => 132,
+			245 => 133,
+			265 => 61,
+			266 => 134,
+			114 => 135,
+			108 => 137,
+			110 => 138,
+			116 => 139,
+			119 => 140,
+			267 => 141,
+			268 => 142,
+			117 => 143,
+			219 => 57,
+			120 => 14,
+			126 => 144,
+			122 => 38,
+			121 => 145,
+			125 => 147,
+			123 => 16,
+			269 => 148,
+			127 => 59,
+			128 => 15,
+			83  => 37,
+			129 => 149,
+			131 => 32,
+			130 => 151,
+			132 => 47,
+			133 => 152,
+			270 => 153,
+			137 => 156,
+			134 => 46,
+			138 => 158,
+			146 => 18,
+			139 => 159,
+			143 => 160,
+			140 => 161,
+			141 => 162,
+			272 => 34,
+			144 => 33,
+			145 => 17,
+			273 => 163,
+			151 => 164,
+			149 => 165,
+			158 => 166,
+			159 => 56,
+			238 => 55,
+			152 => 168,
+			227 => 19,
+			274 => 169,
+			275 => 170,
+			157 => 171,
+			239 => 172,
+			276 => 173,
+			150 => 36,
+			277 => 174,
+			148 => 175,
+			278 => 35,
+			154 => 176,
+			155 => 177,
+			279 => 178,
+			147 => 50,
+			156 => 179,
+			153 => 180,
+			160 => 181,
+			280 => 182,
+			166 => 183,
+			243 => 184,
+			233 => 185,
+			167 => 66,
+			163 => 186,
+			161 => 187,
+			162 => 188,
+			281 => 189,
+			282 => 190,
+			283 => 191,
+			165 => 20,
+			168 => 192,
+			169 => 193,
+			284 => 194,
+			285 => 195,
+			170 => 196,
+			173 => 197,
+			178 => 198,
+			171 => 199,
+			172 => 200,
+			174 => 23,
+			177 => 22,
+			175 => 202,
+			179 => 203,
+			304 => 204,
+			180 => 41,
+			181 => 40,
+			182 => 205,
+			286 => 206,
+			287 => 207,
+			244 => 208,
+			289 => 209,
+			249 => 210,
+			290 => 211,
+			291 => 212,
+			292 => 213,
+			183 => 214,
+			185 => 215,
+			189 => 216,
+			293 => 217,
+			186 => 218,
+			220 => 25,
+			337 => 259,
+			191 => 26,
+			192 => 27,
+			242 => 219,
+			188 => 220,
+			215 => 221,
+			294 => 222,
+			136 => 155,
+			99  => 8,
+			142 => 223,
+			190 => 225,
+			295 => 226,
+			194 => 227,
+			193 => 24,
+			80  => 4,
+			204 => 60,
+			199 => 229,
+			205 => 230,
+			198 => 62,
+			164 => 21,
+			296 => 231,
+			197 => 232,
+			297 => 233,
+			298 => 234,
+			201 => 235,
+			202 => 236,
+			203 => 63,
+			200 => 237,
+			299 => 238,
+			300 => 239,
+			206 => 240,
+			207 => 241,
+			58  => 254,
+			105 => 12,
+			209 => 28,
+			302 => 242,
+			208 => 243,
+			248 => 248,
+			210 => 49,
+			221 => 244,
+			211 => 245,
+			212 => 246,
+			224 => 249,
+			213 => 250,
+			214 => 58,
+			216 => 107,
+			217 => 252,
+			218 => 253,
 		];
 
 		return $map[ $id ];
 	}
 
-    /**
-     * Get state ID by country ID and state ISO code.
-     *
-     * @param int $countryId
-     * @param string $stateIsoCode
-     * @return int|null
-     */
+	/**
+	 * Get state ID by country ID and state ISO code.
+	 *
+	 * @param int    $countryId
+	 * @param string $stateIsoCode
+	 *
+	 * @return int|null
+	 */
 	public function getStateIdByCountryIdAndIsoCode(int $countryId, string $stateIsoCode)
-    {
-        /** @var CountryRepositoryContract $countryRepo */
-        $countryRepo = pluginApp(CountryRepositoryContract::class);
+	{
+		/** @var CountryRepositoryContract $countryRepo */
+		$countryRepo = pluginApp(CountryRepositoryContract::class);
 
-        if($countryRepo instanceof CountryRepositoryContract)
-        {
-            /** @var Country $country */
-            $country = $countryRepo->getCountryById($countryId);
+		if($countryRepo instanceof CountryRepositoryContract)
+		{
+			/** @var Country $country */
+			$country = $countryRepo->getCountryById($countryId);
 
-            /** @var CountryState $state */
-            foreach($country->states as $state)
-            {
-                if($state->isoCode === $stateIsoCode)
-                {
-                    return $state->id;
-                }
-            }
-        }
+			/** @var CountryState $state */
+			foreach($country->states as $state)
+			{
+				if($state->isoCode === $stateIsoCode)
+				{
+					return $state->id;
+				}
+			}
+		}
 
-        return null;
-    }
+		return null;
+	}
 
 	/**
 	 * @param string $paymentMethod
@@ -156,7 +383,7 @@ class OrderHelper
 	 *
 	 * @return bool
 	 */
-	public function isDirectCheckout($paymentMethod):bool
+	public function isDirectCheckout($paymentMethod): bool
 	{
 		return $this->getPaymentMethodId($paymentMethod) == $this->paymentHelper->getPaymentMethodId();
 	}
@@ -202,19 +429,19 @@ class OrderHelper
 		}
 		*/
 
-		if (preg_match($reExForeign, $address, $matches) > 0)
+		if(preg_match($reExForeign, $address, $matches) > 0)
 		{
-			$street = trim($matches['ad']);
+			$street      = trim($matches['ad']);
 			$houseNumber = trim($matches['no']);
 		}
-		else if (preg_match($reEx, $address, $matches) > 0)
+		else if(preg_match($reEx, $address, $matches) > 0)
 		{
-			$street = trim($matches['ad']);
+			$street      = trim($matches['ad']);
 			$houseNumber = trim($matches['no']);
 		}
 		else
 		{
-			$street = $address;
+			$street      = $address;
 			$houseNumber = '';
 		}
 
@@ -267,8 +494,8 @@ class OrderHelper
 		/** @var OrderRepositoryContract $orderRepo */
 		$orderRepo = pluginApp(OrderRepositoryContract::class);
 
-		 if($orderRepo instanceof OrderRepositoryContract)
-		 {
+		if($orderRepo instanceof OrderRepositoryContract)
+		{
 			$orderRepo->setFilters([
 				                       'externalOrderId' => $externalOrderId,
 				                       'referrerId'      => $this->getReferrerId(),
@@ -285,7 +512,7 @@ class OrderHelper
 					return true;
 				}
 			}
-		 }
+		}
 
 		return false;
 	}
