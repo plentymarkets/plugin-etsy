@@ -119,7 +119,7 @@ class UpdateListingService
 
 		if(strlen($record->itemDescription[ $language ]['keywords']))
 		{
-			$data['tags'] = $record->itemDescription[ $language ]['keywords'];
+			$data['tags'] = $this->itemHelper->getTags($record, $language);
 		}
 
 		if($whoMade = $this->itemHelper->getProperty($record, 'who_made', 'en'))

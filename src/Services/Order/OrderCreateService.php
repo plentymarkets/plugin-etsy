@@ -78,6 +78,14 @@ class OrderCreateService
 			{
 				$this->createPayment($data, $order);
 			}
+			else
+			{
+				$this
+					->getLogger(__METHOD__)
+					->setReferenceType('orderId')
+					->setReferenceValue($order->id)
+					->info('Etsy::order.paymentNotCreated');
+			}
 		}
 	}
 
@@ -88,7 +96,7 @@ class OrderCreateService
 	 *
 	 * @return int
 	 */
-	private function createContact(array $data):int
+	private function createContact(array $data): int
 	{
 		$name = $this->orderHelper->extractName($data['name']);
 
@@ -123,6 +131,12 @@ class OrderCreateService
 
 		$contact = $contactRepo->createContact($contactData);
 
+		$this
+			->getLogger(__METHOD__)
+			->setReferenceType('contactId')
+			->setReferenceValue($contact->id)
+			->info('Etsy::order.contactCreated');
+
 		return $contact->id;
 	}
 
@@ -132,7 +146,7 @@ class OrderCreateService
 	 *
 	 * @return int
 	 */
-	private function createAddress(int $contactId, array $data):int
+	private function createAddress(int $contactId, array $data): int
 	{
 		$addressData = [
 			'name2'      => $data['name'],
@@ -143,16 +157,15 @@ class OrderCreateService
 			'countryId'  => $this->orderHelper->getCountryIdByEtsyCountryId((int) $data['country_id']),
 		];
 
-        if( isset($addressData['countryId']) && $addressData['countryId'] > 0 &&
-            isset($data['state']) && strlen($data['state']))
-        {
-            $addressData['stateId'] = $this->orderHelper->getStateIdByCountryIdAndIsoCode($addressData['countryId'], $data['state']);
-        }
+		if(isset($addressData['countryId']) && $addressData['countryId'] > 0 && isset($data['state']) && strlen($data['state']))
+		{
+			$addressData['stateId'] = $this->orderHelper->getStateIdByCountryIdAndIsoCode($addressData['countryId'], $data['state']);
+		}
 
-        if(isset($data['second_line']) && strlen($data['second_line']))
-        {
-            $addressData['address3'] = $data['second_line'];
-        }
+		if(isset($data['second_line']) && strlen($data['second_line']))
+		{
+			$addressData['address3'] = $data['second_line'];
+		}
 
 		$addressData['options'] = [
 			[
@@ -166,6 +179,12 @@ class OrderCreateService
 
 		$address = $contactAddressRepo->createAddress($addressData, $contactId, 2);
 
+		$this
+			->getLogger(__METHOD__)
+			->setReferenceType('addressId')
+			->setReferenceValue($address->id)
+			->info('Etsy::order.addressCreated');
+
 		return $address->id;
 	}
 
@@ -176,7 +195,7 @@ class OrderCreateService
 	 *
 	 * @return Order
 	 */
-	private function createOrder(array $data, $addressId, $contactId):Order
+	private function createOrder(array $data, $addressId, $contactId): Order
 	{
 		// TODO add also the message_from_buyer(string) to the order
 
@@ -190,13 +209,13 @@ class OrderCreateService
 
 		$orderData['properties'] = [
 			[
-				'typeId'    => OrderPropertyType::PAYMENT_METHOD,
-				'value'     => (string) $this->orderHelper->getPaymentMethodId((string) $data['payment_method']),
+				'typeId' => OrderPropertyType::PAYMENT_METHOD,
+				'value'  => (string) $this->orderHelper->getPaymentMethodId((string) $data['payment_method']),
 			],
 
 			[
-				'typeId'    => OrderPropertyType::EXTERNAL_ORDER_ID,
-				'value'     => (string) $data['receipt_id'],
+				'typeId' => OrderPropertyType::EXTERNAL_ORDER_ID,
+				'value'  => (string) $data['receipt_id'],
 			],
 		];
 
@@ -226,6 +245,12 @@ class OrderCreateService
 		$orderRepo = pluginApp(OrderRepositoryContract::class);
 
 		$order = $orderRepo->createOrder($orderData);
+
+		$this
+			->getLogger(__METHOD__)
+			->setReferenceType('orderId')
+			->setReferenceValue($order->id)
+			->info('Etsy::order.orderCreated');
 
 		return $order;
 	}
@@ -363,7 +388,27 @@ class OrderCreateService
 					$paymentOrderRelation = $this->app->make(PaymentOrderRelationRepositoryContract::class);
 
 					$paymentOrderRelation->createOrderRelation($payment, $order);
+
+					$this
+						->getLogger(__METHOD__)
+						->setReferenceType('orderId')
+						->setReferenceValue($order->id)
+						->info('Etsy::order.paymentAssigned', [
+							'paymentId'         => $payment->id,
+							'amount'            => $payment->amount,
+							'methodOfPaymentId' => $payment->mopId,
+						]);
 				}
+			}
+			else
+			{
+				$this
+					->getLogger(__METHOD__)
+					->setReferenceType('orderId')
+					->setReferenceValue($order->id)
+					->info('Etsy::order.paymentNotFound', [
+						'receiptId'         => $data['receipt_id'],
+					]);
 			}
 		}
 		catch(\Exception $ex)
@@ -379,7 +424,7 @@ class OrderCreateService
 	 *
 	 * @return int
 	 */
-	private function getVatId(array $data):int
+	private function getVatId(array $data): int
 	{
 		/** @var VatInitContract $vatInit */
 		$vatInit = pluginApp(VatInitContract::class);
@@ -402,17 +447,17 @@ class OrderCreateService
 	/**
 	 * Create a payment property based on a given type ID and value.
 	 *
-	 * @param int $typeId
+	 * @param int   $typeId
 	 * @param mixed $value
 	 *
 	 * @return PaymentProperty
 	 */
-	private function createPaymentProperty(int $typeId, $value):PaymentProperty
+	private function createPaymentProperty(int $typeId, $value): PaymentProperty
 	{
 		/** @var PaymentProperty $paymentProperty */
-		$paymentProperty = pluginApp(PaymentProperty::class );
+		$paymentProperty         = pluginApp(PaymentProperty::class);
 		$paymentProperty->typeId = $typeId;
-		$paymentProperty->value = $value;
+		$paymentProperty->value  = $value;
 
 		return $paymentProperty;
 	}

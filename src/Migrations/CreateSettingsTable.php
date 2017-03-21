@@ -26,6 +26,6 @@ class CreateSettingsTable
 				                                 'AttributeName' => 'name',
 				                                 'KeyType'       => 'HASH',
 			                                 ],
-		                                 ], (int) $config->get(SettingsHelper::PLUGIN_NAME . '.readCapacityUnits', 3), (int) $config->get(SettingsHelper::PLUGIN_NAME . '.readCapacityUnits', 2));
+		                                 ], (int) $config->get(SettingsHelper::PLUGIN_NAME . '.readCapacityUnits', 3), (int) $config->get(SettingsHelper::PLUGIN_NAME . '.writeCapacityUnits', 2));
 	}
 }

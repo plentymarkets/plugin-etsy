@@ -205,8 +205,7 @@ class ItemHelper
 			{
 				$parcelServicePreset = $parcelServicePresetRepo->getPresetById($itemShippingProfile['id']);
 
-				if($parcelServicePreset->priority < $currentPriority &&
-				   (in_array($this->orderHelper->getReferrerId(), $parcelServicePreset->supportedReferrer) || in_array(-1, $parcelServicePreset->supportedReferrer)))
+				if($parcelServicePreset->priority < $currentPriority && (in_array($this->orderHelper->getReferrerId(), $parcelServicePreset->supportedReferrer) || in_array(- 1, $parcelServicePreset->supportedReferrer)))
 				{
 					$currentPriority       = $parcelServicePreset->priority;
 					$parcelServicePresetId = $parcelServicePreset->id;
@@ -267,5 +266,34 @@ class ItemHelper
 		$marketAttributeHelperRepository = pluginApp(MarketAttributeHelperRepositoryContract::class);
 
 		return $marketAttributeHelperRepository->getVariationNameAndAttributeNameAndValueCombination($record, $language);
+	}
+
+	/**
+	 * Get tags. Maximum 13 allowed.
+	 *
+	 * @param Record $record
+	 * @param string $language
+	 *
+	 * @return string
+	 */
+	public function getTags(Record $record, $language)
+	{
+		$tagsText = $record->itemDescription[ $language ]['keywords'];
+
+		$tagsArray = explode(',', $tagsText);
+
+		$list = [];
+
+		foreach($tagsArray as $tag)
+		{
+			$tag = trim(str_replace(' ', '', $tag));
+
+			if(strlen($tag) && count($list) < 13)
+			{
+				$list[] = $tag;
+			}
+		}
+
+		return implode(',', $list);
 	}
 }
