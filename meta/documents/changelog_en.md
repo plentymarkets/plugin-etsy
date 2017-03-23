@@ -1,5 +1,9 @@
 # Release Notes for Etsy
 
+## v1.0.8 (2017-03-23)
+### Changed
+- Tags that are duplicate will not be exported anymore
+
 ## v1.0.7 (2017-03-21)
 ### Fixed
 - Use the write capacity unit settings for DynamoDB throughput 

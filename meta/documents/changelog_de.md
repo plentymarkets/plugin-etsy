@@ -1,5 +1,9 @@
 # Release Notes für Etsy
 
+## v1.0.8 (2017-03-23)
+### Changed
+- Doppelte Artikel-Tags werden nicht mehr exportiert
+
 ## v1.0.7 (2017-03-21)
 ### Fixed
 - Eine Einstellung, die für das Schreiben der Datensätze in DynamoDB zuständig ist, wurde angepasst 
