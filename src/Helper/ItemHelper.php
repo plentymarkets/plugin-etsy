@@ -288,12 +288,14 @@ class ItemHelper
 		{
 			$tag = trim(str_replace(' ', '', $tag));
 
-			if(strlen($tag) && count($list) < 13)
+			if(strlen($tag))
 			{
 				$list[] = $tag;
 			}
 		}
 
-		return implode(',', $list);
+		$list = array_unique($list);
+
+		return implode(',', array_slice($list, 0, 13));
 	}
 }
