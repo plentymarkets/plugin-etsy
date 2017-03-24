@@ -1,5 +1,9 @@
 # Release Notes for Etsy
 
+## v1.0.9 (2017-03-24)
+### Changed
+- Tags with more than 20 letters will not be exported anymore
+
 ## v1.0.8 (2017-03-23)
 ### Changed
 - Tags that are duplicate will not be exported anymore

@@ -1,5 +1,9 @@
 # Release Notes für Etsy
 
+## v1.0.9 (2017-03-24)
+### Changed
+- Artikel-Tags mit mehr als 20 Buchstaben werden nicht mehr exportiert
+
 ## v1.0.8 (2017-03-23)
 ### Changed
 - Doppelte Artikel-Tags werden nicht mehr exportiert
