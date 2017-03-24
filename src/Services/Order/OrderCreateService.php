@@ -81,7 +81,7 @@ class OrderCreateService
 			else
 			{
 				$this
-					->getLogger(__METHOD__)
+					->getLogger(__FUNCTION__)
 					->setReferenceType('orderId')
 					->setReferenceValue($order->id)
 					->info('Etsy::order.paymentNotCreated');
@@ -132,7 +132,7 @@ class OrderCreateService
 		$contact = $contactRepo->createContact($contactData);
 
 		$this
-			->getLogger(__METHOD__)
+			->getLogger(__FUNCTION__)
 			->setReferenceType('contactId')
 			->setReferenceValue($contact->id)
 			->info('Etsy::order.contactCreated');
@@ -180,7 +180,7 @@ class OrderCreateService
 		$address = $contactAddressRepo->createAddress($addressData, $contactId, 2);
 
 		$this
-			->getLogger(__METHOD__)
+			->getLogger(__FUNCTION__)
 			->setReferenceType('addressId')
 			->setReferenceValue($address->id)
 			->info('Etsy::order.addressCreated');
@@ -247,7 +247,7 @@ class OrderCreateService
 		$order = $orderRepo->createOrder($orderData);
 
 		$this
-			->getLogger(__METHOD__)
+			->getLogger(__FUNCTION__)
 			->setReferenceType('orderId')
 			->setReferenceValue($order->id)
 			->info('Etsy::order.orderCreated');
@@ -390,7 +390,7 @@ class OrderCreateService
 					$paymentOrderRelation->createOrderRelation($payment, $order);
 
 					$this
-						->getLogger(__METHOD__)
+						->getLogger(__FUNCTION__)
 						->setReferenceType('orderId')
 						->setReferenceValue($order->id)
 						->info('Etsy::order.paymentAssigned', [
@@ -403,11 +403,11 @@ class OrderCreateService
 			else
 			{
 				$this
-					->getLogger(__METHOD__)
+					->getLogger(__FUNCTION__)
 					->setReferenceType('orderId')
 					->setReferenceValue($order->id)
 					->info('Etsy::order.paymentNotFound', [
-						'receiptId'         => $data['receipt_id'],
+						'receiptId' => $data['receipt_id'],
 					]);
 			}
 		}
