@@ -268,7 +268,7 @@ class StartListingService
 
 					if($record->itemDescription[ $language ]['keywords'])
 					{
-						$data['tags'] = $record->itemDescription[ $language ]['keywords'];
+						$data['tags'] = $this->itemHelper->getTags($record, $language);
 					}
 
 					$this->listingTranslationService->createListingTranslation($listingId, $language, $data);

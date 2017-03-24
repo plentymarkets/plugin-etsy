@@ -190,7 +190,7 @@ class UpdateListingService
 
 					if($record->itemDescription[ $language ]['keywords'])
 					{
-						$data['tags'] = $record->itemDescription[ $language ]['keywords'];
+						$data['tags'] = $this->itemHelper->getTags($record, $language);
 					}
 
 					$this->listingTranslationService->updateListingTranslation($listingId, $language, $data);

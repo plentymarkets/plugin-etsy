@@ -288,7 +288,7 @@ class ItemHelper
 		{
 			$tag = trim(str_replace(' ', '', $tag));
 
-			if(strlen($tag))
+			if(strlen($tag) <= 20)
 			{
 				$list[] = $tag;
 			}
