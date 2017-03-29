@@ -1,5 +1,9 @@
 # Release Notes for Etsy
 
+## v1.0.10 (2017-03-29)
+### Changed
+- The listing update process was changed. Listing translations will be updated firstly and other data afterwards.
+
 ## v1.0.9 (2017-03-24)
 ### Changed
 - Tags with more than 20 letters will not be exported anymore
