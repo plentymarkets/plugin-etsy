@@ -68,12 +68,12 @@ class UpdateListingService
 		{
 			try
 			{
+				$this->addTranslations($record, $listingId);
+				
 				$this->updateListing($record, $listingId);
 
 				// TODO: Pictures in later sprints
 //				$this->addPictures($record, $listingId);
-
-				$this->addTranslations($record, $listingId);
 			}
 			catch(\Exception $ex)
 			{
