@@ -1,5 +1,11 @@
 # Release Notes für Etsy
 
+## v1.0.11 (2017-04-03)
+### Changed
+- Das Plugin benutzt jetzt die neuste Terra-Komponente Version.
+### Fixed
+- Die Kategorie-Namen werden jetzt in der Login-Sprache angezeigt.
+
 ## v1.0.10 (2017-03-29)
 ### Changed
 - Der Update-Prozess der Listings wurde angepasst. Es wird als erstes versucht die Listing Übersetzungen zu aktualisieren
