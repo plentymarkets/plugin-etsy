@@ -5,7 +5,7 @@
 
 ## Registering with Etsy
 
-**Etsy** is an American online market focused on handmade or vintage items. In order to set up Etsy in your plentymarkets system, you have to register as a seller first an create and new App. You will then receive the access data that you need for the configuration in plentymarkets.
+**Etsy** is an American online market focused on handmade or vintage items. In order to set up Etsy in your plentymarkets system, you have to register as a seller first an create and new [App](https://www.etsy.com/developers/documentation/getting_started/register). You will then receive the access data that you need for the configuration in plentymarkets.
 
 ## Installing Etsy in plentymarkets
 
