@@ -100,7 +100,9 @@ class UpdateListingService
 	{
 		$language    = $this->settingsHelper->getShopSettings('mainLanguage', 'de');
 
-		$title       = $this->itemHelper->getVariationWithAttributesName($record, $language);
+		$title       = trim(preg_replace('/\s+/', ' ',$this->itemHelper->getVariationWithAttributesName($record, $language)));
+		$title = ltrim($title, ' +-!?');
+
 		$description = html_entity_decode(strip_tags($record->itemDescription[ $language ]['description']));
 
 		$data = [
@@ -183,8 +185,11 @@ class UpdateListingService
 			{
 				try
 				{
+					$title = trim(preg_replace('/\s+/', ' ', $record->itemDescription[ $language ]['name1']));
+					$title = ltrim($title, ' +-!?');
+
 					$data = [
-						'title'       => $record->itemDescription[ $language ]['name1'],
+						'title'       => $title,
 						'description' => html_entity_decode(strip_tags($record->itemDescription[ $language ]['description'])),
 					];
 

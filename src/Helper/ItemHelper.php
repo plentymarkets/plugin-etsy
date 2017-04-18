@@ -286,7 +286,7 @@ class ItemHelper
 
 		foreach($tagsArray as $tag)
 		{
-			$tag = trim(str_replace(' ', '', $tag));
+			$tag = trim(str_replace([' ', '&', '.', '€'], ['', ' and ', '', ''], $tag));
 
 			if(strlen($tag) <= 20)
 			{
@@ -294,8 +294,24 @@ class ItemHelper
 			}
 		}
 
-		$list = array_unique($list);
+		$list = $this->array_iunique($list);
 
 		return implode(',', array_slice($list, 0, 13));
+	}
+
+	/**
+	 * Case insensitive array unique.
+	 *
+	 * @see http://www.php.net/manual/de/function.array-unique.php#78801
+	 *
+	 * @param array $array
+	 *
+	 * @return array
+	 */
+	private function array_iunique($array)
+	{
+		$lowered = array_map('strtolower', $array);
+
+		return array_intersect_key($array, array_unique($lowered));
 	}
 }
