@@ -1,5 +1,9 @@
 # Release Notes for Etsy
 
+## v1.0.12 (2017-04-18)
+### Fixed
+- fixed some issues regarding tags and title export.
+
 ## v1.0.11 (2017-04-03)
 ### Changed
 - the plugin now uses the latest Terra components version.
