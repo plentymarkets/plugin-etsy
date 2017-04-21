@@ -61,7 +61,7 @@ Link your store categories to the Etsy categories in order to display your items
 
 ## Linking properties
 
-In order to use properties for the Etsy market, these properties have to be linked with Etsy.
+In order to use properties for the Etsy market, these properties have to be linked with Etsy. Please note that the properties **Who made** and **When made** are mandatory for the item export.
 
 ##### Linking properties:
 
@@ -73,7 +73,7 @@ In order to use properties for the Etsy market, these properties have to be link
 
 ## Linking shipping profiles
 
-Link etsy shipping profiles to the shipping profiles of your online store in the menu **Settings » Markets » Etsy » Shipping profile links**. 
+Link the shipping profiles that you created on Etsy to the shipping profiles of your online store in the menu **Settings » Markets » Etsy » Shipping profile links**. 
 
 ##### Linking shipping profiles:
 
