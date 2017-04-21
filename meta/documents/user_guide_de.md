@@ -68,7 +68,7 @@ Verknüpfen Sie Ihre Webshop-Kategorien mit den Kategorien von Etsy, damit Ihre 
 
 ## Merkmale verknüpfen
 
-Um Merkmale für den Marktplatz Etsy zu nutzen, verknüpfen Sie diese mit Etsy.
+Um Merkmale für den Marktplatz Etsy zu nutzen, verknüpfen Sie diese mit Etsy. Beachten Sie, dass es sich bei **Hersteller** und **Hergestellt** um Pflichtmerkamle handelt.
 
 ##### Merkmale verknüpfen:
 
@@ -82,7 +82,7 @@ Um Merkmale für den Marktplatz Etsy zu nutzen, verknüpfen Sie diese mit Etsy.
 
 ## Versandprofile verknüpfen
 
-Im Menü **Einstellungen » Märkte » Etsy » Versandprofilverknüpfungen** verknüpfen Sie Etsy-Versandprofile mit den Versandprofilen Ihres Webshops. 
+Im Menü **Einstellungen » Märkte » Etsy » Versandprofilverknüpfungen** verknüpfen Sie Etsy-Versandprofile, die Sie zuvor bei Etsy angelegt und in plentymarkets importiert haben, mit den Versandprofilen Ihres Webshops.
 
 ##### Versandprofile verknüpfen:
 
