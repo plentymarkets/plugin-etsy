@@ -1,5 +1,9 @@
 # Release Notes for Etsy
 
+## v1.0.13 (2017-05-02)
+### Fixed
+- Fixed some issues regarding the item measurements export.
+
 ## v1.0.12 (2017-04-18)
 ### Fixed
 - fixed some issues regarding tags and title export.
