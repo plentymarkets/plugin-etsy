@@ -211,7 +211,7 @@ class StartListingService
 			$data['item_dimensions_unit'] = 'mm';
 		}
 
-		$response = $this->listingService->createListing($this->settingsHelper->getShopSettings('shopLanguage', 'de'), $data); // TODO replace all languages with the shop language
+		$response = $this->listingService->createListing($this->settingsHelper->getShopSettings('mainLanguage', 'de'), $data);
 
 		if(!isset($response['results']) || !is_array($response['results']))
 		{

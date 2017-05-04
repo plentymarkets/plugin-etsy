@@ -58,7 +58,7 @@ class ShippingProfileImportService
 	 */
 	public function run()
 	{
-		$shippingProfiles = $this->shippingTemplateService->findAllUserShippingProfiles('__SELF__', $this->settingsHelper->getShopSettings('shopLanguage', 'de'));
+		$shippingProfiles = $this->shippingTemplateService->findAllUserShippingProfiles('__SELF__', $this->settingsHelper->getShopSettings('mainLanguage', 'de'));
 
 		$this->loadAllShippingProfiles();
 
