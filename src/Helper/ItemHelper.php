@@ -199,16 +199,18 @@ class ItemHelper
 		$parcelServicePresetId = null;
 		$currentPriority       = 999;
 
+		$shippingTemplateId = null;
+
 		foreach($record->itemShippingProfilesList as $itemShippingProfile)
 		{
 			try
 			{
 				$parcelServicePreset = $parcelServicePresetRepo->getPresetById($itemShippingProfile['id']);
 
-				if($parcelServicePreset->priority < $currentPriority && (in_array($this->orderHelper->getReferrerId(), $parcelServicePreset->supportedReferrer) || in_array(- 1, $parcelServicePreset->supportedReferrer)))
+				if($parcelServicePreset->priority < $currentPriority && (in_array($this->orderHelper->getReferrerId(), $parcelServicePreset->supportedReferrer) || in_array(- 1, $parcelServicePreset->supportedReferrer)) && $correlatedShipping = $this->getCorrelatedShippingTemplate($parcelServicePreset->id))
 				{
-					$currentPriority       = $parcelServicePreset->priority;
-					$parcelServicePresetId = $parcelServicePreset->id;
+					$shippingTemplateId = $correlatedShipping;
+					$currentPriority    = $parcelServicePreset->priority;
 				}
 			}
 			catch(\Exception $ex)
@@ -217,6 +219,18 @@ class ItemHelper
 			}
 		}
 
+		return $shippingTemplateId;
+	}
+
+	/**
+	 * Find a possible correlation for a given shipping template ID.
+	 *
+	 * @param int $parcelServicePresetId
+	 *
+	 * @return int|null
+	 */
+	private function getCorrelatedShippingTemplate($parcelServicePresetId)
+	{
 		$settingsCorrelationFactory = pluginApp(SettingsCorrelationFactory::class);
 
 		$settings = $settingsCorrelationFactory->type(SettingsCorrelationFactory::TYPE_SHIPPING)->getSettingsByCorrelation(SettingsHelper::PLUGIN_NAME, $parcelServicePresetId);
