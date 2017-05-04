@@ -124,6 +124,7 @@ class StartListingService
 	 *
 	 * @param Record $record
 	 *
+	 * @throws \Exception
 	 * @return int
 	 */
 	private function createListing(Record $record)
