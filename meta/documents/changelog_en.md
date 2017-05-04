@@ -1,5 +1,9 @@
 # Release Notes for Etsy
 
+## v1.0.15 (2017-05-04)
+### Fixed
+- Errors that occur during listing start are now also logged.
+
 ## v1.0.14 (2017-05-04)
 ### Fixed
 - Fixed some issues regarding the item shipping profile export.

@@ -1,5 +1,9 @@
 # Release Notes für Etsy
 
+## v1.0.15 (2017-05-04)
+### Fixed
+- Fehlermeldungen welche während der Listing-Erstellung vorkommen werden besser angezeigt.
+
 ## v1.0.14 (2017-05-04)
 ### Fixed
 - Es wurden einige Probleme bezüglich des Exports von Versandprofilen behoben.
