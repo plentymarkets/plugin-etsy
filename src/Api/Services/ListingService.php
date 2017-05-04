@@ -32,13 +32,11 @@ class ListingService
 	 * @param string $language
 	 * @param array  $data
 	 *
-	 * @return int
+	 * @return array
 	 */
 	public function createListing($language, array $data)
 	{
-		$response = $this->client->call('createListing', ['language' => $language], $data);
-
-		return (int) reset($response['results'])['listing_id'];
+		return $this->client->call('createListing', ['language' => $language], $data);
 	}
 
 	/**
