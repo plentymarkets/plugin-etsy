@@ -29,7 +29,8 @@ Items have to be available for Etsy. This is done in the **Availability** tab of
 2. Activate the main variation in the **Availability** section. 
 3. Click on the **Availability** tab. 
 4. Click in the **Markets** section in the selection field. → A list with all available markets will be displayed. 
-5. Activate the option **Etsy**. 6. Click on **Add**. → The Market will be added. 
+5. Activate the option **Etsy**. 
+6. Click on **Add**. → The Market will be added. 
 7. **Save** the settings. → The item is available on etsy.
 
 The availability for variations can be individually edit in the **Item » Edit item » Open item » Tab: Variation ID » Open variation » Tab: Availability** menu.
