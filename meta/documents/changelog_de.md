@@ -2,7 +2,7 @@
 
 ## v1.0.16 (2017-05-04)
 ### Fixed
-- Es wurde ein Fehler behoben bezüglich der ausgewählte Shop-Sprache.
+- Es wurde ein Fehler behoben bezüglich der ausgewählten Shop-Sprache.
 
 ## v1.0.15 (2017-05-04)
 ### Fixed
