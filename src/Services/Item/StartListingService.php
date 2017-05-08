@@ -132,6 +132,7 @@ class StartListingService
 		$language    = $this->settingsHelper->getShopSettings('mainLanguage', 'de');
 
 		$title       = trim(preg_replace('/\s+/', ' ', $this->itemHelper->getVariationWithAttributesName($record, $language)));
+		$title       = str_replace(':', ' -', $title);
 		$title = ltrim($title, ' +-!?');
 
 		$description = html_entity_decode(strip_tags($record->itemDescription[ $language ]['description']));
