@@ -1,5 +1,9 @@
 # Release Notes für Etsy
 
+## v1.0.17 (2017-05-08)
+### Fixed
+- Beim Erstellen eines Listings mit mehr als einem Attribut kam es zu einem Fehler. Dieser wurde behoben.
+
 ## v1.0.16 (2017-05-04)
 ### Fixed
 - Es wurde ein Fehler behoben bezüglich der ausgewählten Shop-Sprache.
