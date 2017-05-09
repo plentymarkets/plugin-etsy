@@ -216,10 +216,7 @@ class StartListingService
 
 		if(!isset($response['results']) || !is_array($response['results']))
 		{
-			if(is_string($response))
-			{
-				throw new \Exception($response);
-			}
+			throw new \Exception(is_string($response) ? $response : 'Failed to create listing.');
 		}
 
 		return (int) reset($response['results'])['listing_id'];
