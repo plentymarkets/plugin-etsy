@@ -216,7 +216,10 @@ class StartListingService
 
 		if(!isset($response['results']) || !is_array($response['results']))
 		{
-			throw new \Exception($response);
+			if(is_string($response))
+			{
+				throw new \Exception($response);
+			}
 		}
 
 		return (int) reset($response['results'])['listing_id'];
