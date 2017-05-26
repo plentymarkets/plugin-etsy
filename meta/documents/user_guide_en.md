@@ -19,6 +19,16 @@ First, the interface has to be activated in the menu **Settings » Markets » Et
 
 Go to **Settings » Markets » Etsy » Settings** to enter your Store ID and to activate the item export, stock update and order import. Etsy allows 500 calls per day. If you need more than 500 calls, contact Etsy directly.
 
+## Activating the order referrer
+
+In order to link items, properties etc. with Etsy you will have to activate the order referrer Etsy in the menu **Settings » Orders » Order referrer**.
+
+##### Activating the order referrer for Etsy:
+
+1. Open the **Settings » Orders » Order referrer** menu. 
+2. Place a check mark for **Etsy**.  
+3. **Save** the settings.
+
 ## Setting the item availability
 
 Items have to be available for Etsy. This is done in the **Availability** tab of an item within the **Item » Edit item » Tab: Variation ID** menu. It is not possible to transfer variations to Etsy. Therefore, item variations are transferred as main items to Etsy.
