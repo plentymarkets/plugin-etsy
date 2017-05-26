@@ -20,6 +20,16 @@ Im Menü **Einstellungen » Märkte » Etsy » Authentifizierung** muss zunächs
 Im Menü **Einstellungen » Märkte » Etsy » Einstellungen** geben Sie u.a. Ihre Shop-ID ein und aktivieren den Artikelexport, Bestandsabgleich und Auftragsimport.
 Etsy erlaubt 500 Calls am Tag. Sollten mehr Calls benötigt werden, setzen Sie sich direkt mit Etsy in Verbindung.
 
+## Auftragsherkunft aktivieren
+
+Damit Sie Artikel, Merkmale etc. mit Etsy verknüpfen können, muss im Menü Einstellungen » Aufträge » Auftragsherkunft die Auftragsherkunft Etsy aktiviert werden.
+
+##### Auftragsherkunft für Etsy aktivieren:
+
+1. Öffnen Sie das Menü **Einstellungen » Aufträge » Auftrgsherkunft**.
+2. Setzen Sie bei **Etsy** ein Häkchen.
+3. **Speichern** Sie die Einstellungen.
+
 ## Artikelverfügbarkeit einstellen
 
 Artikel, die Sie auf Etsy verkaufen möchten, müssen im Menü **Artikel » Artikel bearbeiten » Artikel öffnen » Tab: Varianten-ID** im Tab **Verfügbarkeit** aktiviert werden. Da keine Varianten zu Etsy übertragen werden können, werden Variantenartikel als Hauptartikel übertragen.
