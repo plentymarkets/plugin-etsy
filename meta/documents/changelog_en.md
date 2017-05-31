@@ -1,5 +1,9 @@
 # Release Notes for Etsy
 
+## v1.1.0 (2017-05-31)
+### Changed
+- Updated Etsy platform categories 
+
 ## v1.0.17 (2017-05-08)
 ### Fixed
 - An error occured while creating listings with more than one attribute. This has been fixed.
