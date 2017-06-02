@@ -1,5 +1,9 @@
 # Release Notes für Etsy
 
+## v1.1.1 (2017-06-02)
+### Changed
+- Es wurden mehrere Log-Ausgaben hinzugeüfgt für Starten/Aktualisieren der Listings
+
 ## v1.1.0 (2017-05-31)
 ### Changed
 - Etsy-Kategorien wurden aktualisiert.
