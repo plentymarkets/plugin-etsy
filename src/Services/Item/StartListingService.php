@@ -99,6 +99,11 @@ class StartListingService
 				$this->addTranslations($record, $listingId);
 
 				$this->publish($listingId, $record->variationBase->id);
+
+				$this->getLogger(__FUNCTION__)
+				     ->addReference('etsyListingId', $listingId)
+				     ->addReference('variationId', $record->variationBase->id)
+				     ->info('Etsy::item.itemExportSuccess');
 			}
 			catch(\Exception $ex)
 			{

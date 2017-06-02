@@ -74,6 +74,11 @@ class UpdateListingService
 
 				// TODO: Pictures in later sprints
 //				$this->addPictures($record, $listingId);
+
+				$this->getLogger(__FUNCTION__)
+				     ->addReference('etsyListingId', $listingId)
+				     ->addReference('variationId', $record->variationBase->id)
+				     ->info('Etsy::item.stockUpdateSuccess');
 			}
 			catch(\Exception $ex)
 			{
