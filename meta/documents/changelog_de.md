@@ -1,5 +1,9 @@
 # Release Notes für Etsy
 
+## v1.1.3 (2017-06-06)
+### Fixed
+- Aufträge welche keine PLZ haben werden jetzt auch importiert.
+
 ## v1.1.2 (2017-06-06)
 ### Fixed
 - Wird ein Listing direkt auf Etsy gelöscht, wird auch die zugehörige SKU aus plentymarkets entfernt

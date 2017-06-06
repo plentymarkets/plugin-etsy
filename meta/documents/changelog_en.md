@@ -1,5 +1,9 @@
 # Release Notes for Etsy
 
+## v1.1.3 (2017-06-06)
+### Fixed
+- Receipts without ZIP code will now be imported.
+
 ## v1.1.2 (2017-06-06)
 ### Fixed
 - Once a listing is deleted directly from Etsy, its SKU will be also deleted from plentymarkets
