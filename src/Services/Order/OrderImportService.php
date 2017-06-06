@@ -85,12 +85,16 @@ class OrderImportService
 				{
 					EtsyReceiptValidator::validateOrFail($receiptData);
 
-					if($this->orderHelper->orderWasImported($receiptData['receipt_id']))
+					if(!$this->orderHelper->orderWasImported($receiptData['receipt_id']))
 					{
-						throw new \Exception('Order was already imported.');
+						$this->orderCreateService->create($receiptData);
 					}
-
-					$this->orderCreateService->create($receiptData);
+					else
+					{
+						$this->getLogger(__FUNCTION__)
+						     ->addReference('etsyReceiptId', $receiptData['receipt_id'])
+						     ->info('Etsy::order.orderAlreadyImported');
+					}
 				}
 				catch(ValidationException $ex)
 				{
@@ -98,12 +102,16 @@ class OrderImportService
 
 					if(!is_null($messageBag))
 					{
-						$this->getLogger(__FUNCTION__)->info('Etsy::order.orderImportError', $messageBag);
+						$this->getLogger(__FUNCTION__)
+						     ->addReference('etsyReceiptId', $receiptData['receipt_id'])
+						     ->error('Etsy::order.orderImportError', $messageBag);
 					}
 				}
 				catch(\Exception $ex)
 				{
-					$this->getLogger(__FUNCTION__)->error('Etsy::order.orderImportError', $ex->getMessage());
+					$this->getLogger(__FUNCTION__)
+							->addReference('etsyReceiptId', $receiptData['receipt_id'])
+					        ->error('Etsy::order.orderImportError', $ex->getMessage());
 				}
 			}
 		}

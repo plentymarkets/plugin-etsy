@@ -133,8 +133,8 @@ class OrderCreateService
 
 		$this
 			->getLogger(__FUNCTION__)
-			->setReferenceType('contactId')
-			->setReferenceValue($contact->id)
+			->addReference('etsyReceiptId', $data['receipt_id'])
+			->addReference('contactId', $contact->id)
 			->info('Etsy::order.contactCreated');
 
 		return $contact->id;
@@ -181,8 +181,9 @@ class OrderCreateService
 
 		$this
 			->getLogger(__FUNCTION__)
-			->setReferenceType('addressId')
-			->setReferenceValue($address->id)
+			->addReference('etsyReceiptId', $data['receipt_id'])
+			->addReference('contactId', $contactId)
+			->addReference('addressId', $address->id)
 			->info('Etsy::order.addressCreated');
 
 		return $address->id;
@@ -248,8 +249,10 @@ class OrderCreateService
 
 		$this
 			->getLogger(__FUNCTION__)
-			->setReferenceType('orderId')
-			->setReferenceValue($order->id)
+			->addReference('etsyReceiptId', $data['receipt_id'])
+			->addReference('contactId', $contactId)
+			->addReference('addressId', $addressId)
+			->addReference('orderId', $order->id)
 			->info('Etsy::order.orderCreated');
 
 		return $order;
@@ -391,10 +394,9 @@ class OrderCreateService
 
 					$this
 						->getLogger(__FUNCTION__)
-						->setReferenceType('orderId')
-						->setReferenceValue($order->id)
+						->addReference('orderId', $order->id)
+						->addReference('paymentId', $payment->id)
 						->info('Etsy::order.paymentAssigned', [
-							'paymentId'         => $payment->id,
 							'amount'            => $payment->amount,
 							'methodOfPaymentId' => $payment->mopId,
 						]);
@@ -413,7 +415,9 @@ class OrderCreateService
 		}
 		catch(\Exception $ex)
 		{
-			$this->getLogger(__FUNCTION__)->error('Etsy::order.paymentError', $ex->getMessage());
+			$this->getLogger(__FUNCTION__)
+				 ->addReference('orderId', $order->id)
+			     ->error('Etsy::order.paymentError', $ex->getMessage());
 		}
 	}
 
