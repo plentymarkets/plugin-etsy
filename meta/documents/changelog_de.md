@@ -1,5 +1,9 @@
 # Release Notes für Etsy
 
+## v1.1.2 (2017-06-06)
+### Fixed
+- Wird ein Listing direkt auf Etsy gelöscht, wird auch die zugehörige SKU aus plentymarkets entfernt
+
 ## v1.1.1 (2017-06-02)
 ### Changed
 - Es wurden mehrere Log-Ausgaben hinzugeüfgt für Starten/Aktualisieren der Listings
