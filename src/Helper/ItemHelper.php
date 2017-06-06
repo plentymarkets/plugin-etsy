@@ -135,6 +135,26 @@ class ItemHelper
 	}
 
 	/**
+	 * Deletes an SKU.
+	 *
+	 * @param int $skuId
+	 */
+	public function deleteSku(int $skuId)
+	{
+		try
+		{
+			$this->variationSkuRepository->delete($skuId);
+		}
+		catch(\Exception $ex)
+		{
+			$this->getLogger(__FUNCTION__)->debug('Etsy::item.skuRemovalError', [
+				'skuId' => $skuId,
+				'error' => $ex->getMessage(),
+			]);
+		}
+	}
+
+	/**
 	 * Get the Etsy property.
 	 *
 	 * @param Record $record

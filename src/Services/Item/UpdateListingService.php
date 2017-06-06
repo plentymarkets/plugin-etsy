@@ -82,6 +82,18 @@ class UpdateListingService
 			}
 			catch(\Exception $ex)
 			{
+				if($ex->getMessage() === 'The listing is not editable, must be active or expired but is removed')
+				{
+					$this->itemHelper->deleteSku($record->variationMarketStatus->id);
+
+					$this->getLogger(__FUNCTION__)
+					     ->addReference('variationId', $record->variationBase->id)
+					     ->addReference('etsyListingId', $listingId)
+					     ->warning('Etsy::item.skuRemovalSuccess', [
+						     'sku' => $record->variationMarketStatus->sku
+					     ]);
+				}
+
 				$this->getLogger(__FUNCTION__)
 					->setReferenceType('variationId')
 					->setReferenceValue($record->variationBase->id)
