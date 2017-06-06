@@ -149,12 +149,13 @@ class OrderCreateService
 	private function createAddress(int $contactId, array $data): int
 	{
 		$addressData = [
-			'name2'      => $data['name'],
-			'address1'   => $this->orderHelper->getStreetName((string) $data['first_line']),
-			'address2'   => $this->orderHelper->getHouseNumber((string) $data['first_line']),
-			'postalCode' => $data['zip'],
-			'town'       => $data['city'],
-			'countryId'  => $this->orderHelper->getCountryIdByEtsyCountryId((int) $data['country_id']),
+			'name2'                    => $data['name'],
+			'address1'                 => $this->orderHelper->getStreetName((string) $data['first_line']),
+			'address2'                 => $this->orderHelper->getHouseNumber((string) $data['first_line']),
+			'postalCode'               => $data['zip'],
+			'town'                     => $data['city'],
+			'countryId'                => $this->orderHelper->getCountryIdByEtsyCountryId((int) $data['country_id']),
+			'useAddressLightValidator' => true,
 		];
 
 		if(isset($addressData['countryId']) && $addressData['countryId'] > 0 && isset($data['state']) && strlen($data['state']))
