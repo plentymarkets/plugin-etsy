@@ -1,5 +1,9 @@
 # Release Notes für Etsy
 
+## v1.1.4 (2017-06-14)
+### Fixed
+- Es wurde ein Bug behoben der verursachte das manchmal alte (unbenutzte SKUs) nicht gelöscht waren
+
 ## v1.1.3 (2017-06-06)
 ### Fixed
 - Aufträge welche keine PLZ haben werden jetzt auch importiert.

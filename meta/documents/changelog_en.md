@@ -1,5 +1,9 @@
 # Release Notes for Etsy
 
+## v1.1.4 (2017-06-14)
+### Fixed
+- Fixed an issue with unused SKUs that were not removed.
+
 ## v1.1.3 (2017-06-06)
 ### Fixed
 - Receipts without ZIP code will now be imported.
