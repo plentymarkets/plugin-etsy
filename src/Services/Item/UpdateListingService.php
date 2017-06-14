@@ -82,7 +82,7 @@ class UpdateListingService
 			}
 			catch(\Exception $ex)
 			{
-				if($ex->getMessage() === 'The listing is not editable, must be active or expired but is removed')
+				if(strpos($ex->getMessage(), 'must be active') !== false)
 				{
 					$this->itemHelper->deleteSku($record->variationMarketStatus->id);
 
