@@ -1,5 +1,9 @@
 # Release Notes for Etsy
 
+## v1.1.5 (2017-06-19)
+### Fixed
+- The item export now considers the generic item images and the images linked with the variation.
+
 ## v1.1.4 (2017-06-14)
 ### Fixed
 - Fixed an issue with unused SKUs that were not removed.

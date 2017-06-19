@@ -244,7 +244,7 @@ class StartListingService
 	 */
 	private function addPictures(Record $record, $listingId)
 	{
-		$list = $this->itemHelper->getImageList($record->variationImageList['all_images']->toArray(), 'normal');
+		$list = $this->itemHelper->getImageList($record->variationImageList['only_current_variation_images_and_generic_images']->toArray(), 'normal');
 
 		$imageList = [];
 

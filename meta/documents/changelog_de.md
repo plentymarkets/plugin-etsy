@@ -1,5 +1,9 @@
 # Release Notes für Etsy
 
+## v1.1.5 (2017-06-19)
+### Fixed
+- Beim Artikelexport werden nun pro Variante die allgemeinen Artikelbilder (unverknüpfte) sowie die mit der Variante verknüpften Bilder berücksichtigt.
+
 ## v1.1.4 (2017-06-14)
 ### Fixed
 - Es wurde ein Bug behoben der verursachte das manchmal alte (unbenutzte SKUs) nicht gelöscht waren
