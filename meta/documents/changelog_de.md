@@ -1,5 +1,9 @@
 # Release Notes für Etsy
 
+## v1.1.6 (2017-06-26)
+### Fixed
+- Bei den Auswahlboxen der Einstellungen und Versandprofilen wird nun ein korrekter Standardwert vorausgewählt.
+
 ## v1.1.5 (2017-06-19)
 ### Fixed
 - Beim Artikelexport werden nun pro Variante die allgemeinen Artikelbilder (unverknüpfte) sowie die mit der Variante verknüpften Bilder berücksichtigt.

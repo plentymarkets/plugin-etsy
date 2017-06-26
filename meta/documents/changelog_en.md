@@ -1,5 +1,9 @@
 # Release Notes for Etsy
 
+## v1.1.6 (2017-06-26)
+### Fixed
+- The dropdowns at the settings and the shipping profiles now preselect the correct default value.
+
 ## v1.1.5 (2017-06-19)
 ### Fixed
 - The item export now considers the generic item images and the images linked with the variation.
