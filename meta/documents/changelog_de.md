@@ -1,5 +1,9 @@
 # Release Notes für Etsy
 
+## v1.1.7 (2017-07-10)
+### Fixed
+- Es wurde ein Bug bezüglich der Preisformatierung behoben, welcher den Artikelexport verhinderte.
+
 ## v1.1.6 (2017-06-26)
 ### Fixed
 - Bei den Auswahlboxen der Einstellungen und Versandprofilen wird nun ein korrekter Standardwert vorausgewählt.
