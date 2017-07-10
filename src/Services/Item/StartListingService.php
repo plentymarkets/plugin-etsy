@@ -156,7 +156,7 @@ class StartListingService
 			'title'                => $title,
 			'description'          => $description,
 			'quantity'             => $this->itemHelper->getStock($record),
-			'price'                => number_format($record->variationRetailPrice->price, 2),
+			'price'                => number_format($record->variationRetailPrice->price, 2, '.', ''),
 			'currency_code'        => $record->variationRetailPrice->currency,
 			'shipping_template_id' => $this->itemHelper->getShippingTemplateId($record),
 			'taxonomy_id'          => $this->itemHelper->getTaxonomyId($record),
