@@ -1,5 +1,9 @@
 # Release Notes for Etsy
 
+## v1.1.7 (2017-07-24)
+### Fixed
+- Added more information to the log entries regarding translations upload
+
 ## v1.1.6 (2017-06-26)
 ### Fixed
 - The dropdowns at the settings and the shipping profiles now preselect the correct default value.

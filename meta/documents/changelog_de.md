@@ -1,5 +1,9 @@
 # Release Notes für Etsy
 
+## v1.1.7 (2017-07-24)
+### Fixed
+- Es wurden mehrere Informationen zu den Log-Einträge für das Hochladen der Übersetzungen hinzugefügt
+
 ## v1.1.6 (2017-06-26)
 ### Fixed
 - Bei den Auswahlboxen der Einstellungen und Versandprofilen wird nun ein korrekter Standardwert vorausgewählt.
