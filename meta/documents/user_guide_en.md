@@ -201,6 +201,41 @@ Set up an event procedure to automatically send shipping confirmations to Etsy w
 	</caption>
 </table>
 
+## Overview API-Calls
+
+<table>
+<thead>
+		<th>
+			Process
+		</th>
+		<th>
+			Call
+		</th>
+	</thead>
+	<tbody>
+      <tr>
+         <td><b>Listing start</b></td>
+         <td>One call per language. No further call is needed if only one language exists.<br /> One call for the method <b>CreateListing</b>.<br /> One call per item image.<br /> One call for the method <b>Publish</b>.<br /> => at least three API-Calls</td> 
+      </tr>
+      <tr>
+         <td><b>Listing update</b></td>
+         <td>One call per language.<br /> => at least one API-Call</td>
+      </tr>
+<tr>
+         <td><b>Stock update</b></td>
+         <td>One call per listing.</td>
+      </tr>
+      <tr>
+         <td><b>Delete listing</b></td>
+         <td>One call per listing.</td>
+      </tr>
+      <tr>
+         <td><b>Order import</b></td>
+         <td>One call every hour.</td>
+      </tr>
+</tbody>
+</table>
+
 ## License
 
 This project is licensed under the GNU AFFERO GENERAL PUBLIC LICENSE.- find further information in the [LICENSE.md](https://github.com/plentymarkets/plugin-etsy/blob/master/LICENSE.md).
