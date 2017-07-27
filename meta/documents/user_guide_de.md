@@ -220,7 +220,7 @@ Richten Sie eine Ereignisaktion ein, um Versandbestätigungen automatisch an Ets
 	<tbody>
       <tr>
          <td><b>Listing-Start</b></td>
-         <td>Ein Call pro Sprache. Bei nur einer Sprache wird kein zusätzlicher Call benötigt.<br /> Ein Call, für die Methode <b>CreateListing</b>.<br /> Ein Call pro Artikelbild.<br /> Ein Call für die Methode <b>Publish</b>.<br /> => mindestens drei API-Calls</td> 
+         <td>Ein Call pro Sprache. Bei nur einer Sprache wird kein zusätzlicher Call benötigt.<br /> Ein Call für die Methode <b>CreateListing</b>.<br /> Ein Call pro Artikelbild.<br /> Ein Call für die Methode <b>Publish</b>.<br /> => mindestens drei API-Calls</td> 
       </tr>
       <tr>
          <td><b>Listing-Update</b></td>
