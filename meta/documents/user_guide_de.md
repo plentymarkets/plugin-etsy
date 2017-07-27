@@ -118,7 +118,7 @@ Richten Sie eine Ereignisaktion ein, um Zahlungsbestätigungen automatisch an Et
 8. **Speichern** Sie die Einstellungen.
 
 <table>
-	<thead>
+<thead>
 		<th>
 			Einstellung
 		</th>
@@ -151,9 +151,6 @@ Richten Sie eine Ereignisaktion ein, um Zahlungsbestätigungen automatisch an Et
 <td>&nbsp;</td>
       </tr>
 </tbody>
-	<caption>
-		Table 2: Ereignisaktion zum automatischen Senden von Zahlungsbestätigungen an Etsy
-	</caption>
 </table>
 
 ## Versandbestätigung automatisch senden
@@ -207,9 +204,41 @@ Richten Sie eine Ereignisaktion ein, um Versandbestätigungen automatisch an Ets
 <td>&nbsp;</td>
       </tr>
 </tbody>
-	<caption>
-		Table 2: Ereignisaktion zum automatischen Senden von Versandbestätigungen an Etsy
-	</caption>
+</table>
+
+## Übersicht der benötigten API-Calls
+
+<table>
+<thead>
+		<th>
+			Prozess
+		</th>
+		<th>
+			Call
+		</th>
+	</thead>
+	<tbody>
+      <tr>
+         <td><b>Listing-Start</b></td>
+         <td>Ein Call pro Sprache. Bei nur einer Sprache wird kein zusätzlicher Call benötigt.<br /> Ein Call, für die Methode <b>CreateListing</b>.<br /> Ein Call pro Artikelbild.<br /> Ein Call für die Methode <b>Publish</b>.<br /> => mindestens drei API-Calls</td> 
+      </tr>
+      <tr>
+         <td><b>Listing-Update</b></td>
+         <td>Ein Call pro Sprache.<br /> => mindestens ein API-Call</td>
+      </tr>
+<tr>
+         <td><b>Bestandsabgleich</b></td>
+         <td>Ein Call pro Listing.</td>
+      </tr>
+      <tr>
+         <td><b>Delete Listing</b></td>
+         <td>Ein Call pro Listing.</td>
+      </tr>
+      <tr>
+         <td><b>Order-Import</b></td>
+         <td>Ein Call pro Stunde.</td>
+      </tr>
+</tbody>
 </table>
 
 ## Lizenz
