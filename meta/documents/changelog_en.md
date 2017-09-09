@@ -1,5 +1,9 @@
 # Release Notes for Etsy
 
+## v1.1.8 (2017-09-09)
+### Fixed
+- Fixed an issue regarding price formatting which prevented the item export.
+
 ## v1.1.7 (2017-07-24)
 ### Fixed
 - Added more information to the log entries regarding translations upload
