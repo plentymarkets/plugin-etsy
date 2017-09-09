@@ -304,8 +304,9 @@ class StartListingService
 				catch(\Exception $ex)
 				{
 					$this->getLogger(__FUNCTION__)
-						->setReferenceType('listingId')
-						->setReferenceValue($listingId)
+						->addReference('etsyListingId', $listingId)
+						->addReference('variationId', $record->variationBase->id)
+						->addReference('etsyLanguage', $language)
 						->error('Etsy::item.translationUpdateError', $ex->getMessage());
 				}
 			}

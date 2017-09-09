@@ -49,6 +49,7 @@ class EtsyServiceProvider extends ServiceProvider
 		$referenceContainer->add([
 			                         'etsyListingId' => 'etsyListingId',
 			                         'etsyReceiptId' => 'etsyReceiptId',
+			                         'etsyLanguage'  => 'etsyLanguage',
 		                         ]);
 
 		// register crons
