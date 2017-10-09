@@ -1,5 +1,9 @@
 # Release Notes für Etsy
 
+## v1.1.9 (2017-10-09)
+### Hinzugeügt
+- Es ist nun möglich das Merkmal “Was ist es” mit dem Artikel zu verknüpfen.
+
 ## v1.1.8 (2017-09-09)
 ### Fixed
 - Es wurde ein Bug bezüglich der Preisformatierung behoben, welcher den Artikelexport verhinderte.

@@ -1,5 +1,9 @@
 # Release Notes for Etsy
 
+## v1.1.9 (2017-10-09)
+### Added
+- It is now possible to add the "What is it" property to items.
+
 ## v1.1.8 (2017-09-09)
 ### Fixed
 - Fixed an issue regarding price formatting which prevented the item export.

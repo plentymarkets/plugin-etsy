@@ -21,192 +21,183 @@ use Plenty\Repositories\Models\PaginatedResult;
  */
 class PropertyController extends Controller
 {
-	/**
-	 * @var Request
-	 */
-	private $request;
+    /**
+     * @var Request
+     */
+    private $request;
 
-	/**
-	 * @var array
-	 */
-	private $groupIdList = [];
+    /**
+     * @var array
+     */
+    private $groupIdList = [];
 
-	/**
-	 * @param Request $request
-	 */
-	public function __construct(Request $request)
-	{
-		$this->request = $request;
-	}
+    /**
+     * @param Request $request
+     */
+    public function __construct(Request $request)
+    {
+        $this->request = $request;
+    }
 
-	/**
-	 * Import market properties.
-	 *
-	 * @param PropertyImportService $service
-	 */
-	public function import(PropertyImportService $service)
-	{
-		$service->run($this->request->get('properties', [
-			'occasion',
-			'when_made',
-			'recipient',
-			'who_made',
-			'style',
-		]), $this->request->get('force', false) === "true");
+    /**
+     * Import market properties.
+     *
+     * @param PropertyImportService $service
+     */
+    public function import(PropertyImportService $service)
+    {
+        $service->run($this->request->get('properties', [
+            'is_supply',
+            'occasion',
+            'when_made',
+            'recipient',
+            'who_made',
+            'style',
+        ]), $this->request->get('force', false) === "true");
 
-		return pluginApp(Response::class)->make('', 204);
-	}
+        return pluginApp(Response::class)->make('', 204);
+    }
 
-	/**
-	 * Get the imported properties.
-	 *
-	 * @return array
-	 */
-	public function imported()
-	{
-		$lang = $this->request->get('lang', 'de');
+    /**
+     * Get the imported properties.
+     *
+     * @return array
+     */
+    public function imported()
+    {
+        $lang = $this->request->get('lang', 'de');
 
-		$nameList = [];
+        $nameList = [];
 
-		/** @var SettingsRepositoryContract $settingsRepository */
-		$settingsRepository = pluginApp(SettingsRepositoryContract::class);
+        /** @var SettingsRepositoryContract $settingsRepository */
+        $settingsRepository = pluginApp(SettingsRepositoryContract::class);
 
-		$list = $settingsRepository->find(SettingsHelper::PLUGIN_NAME, SettingsCorrelationFactory::TYPE_PROPERTY);
+        $list = $settingsRepository->find(SettingsHelper::PLUGIN_NAME, SettingsCorrelationFactory::TYPE_PROPERTY);
 
-		if(count($list))
-		{
-			/** @var Settings $settings */
-			foreach($list as $settings)
-			{
-				if(isset($settings->settings['propertyKey']) && isset($settings->settings['propertyValueKey']))
-				{
-					$nameList[] = [
-						'id'        => $settings->id,
-						'name'      => $settings->settings['propertyValueName'][$lang],
-						'groupId'   => $this->calculateGroupId($settings->settings['propertyKey'][$lang]),
-						'groupName' => $settings->settings['propertyName'][$lang],
-					];
-				}
-			}
-		}
+        if (count($list)) {
+            /** @var Settings $settings */
+            foreach ($list as $settings) {
+                if (isset($settings->settings['propertyKey']) && isset($settings->settings['propertyValueKey'])) {
+                    $nameList[] = [
+                        'id'        => $settings->id,
+                        'name'      => $settings->settings['propertyValueName'][$lang],
+                        'groupId'   => $this->calculateGroupId($settings->settings['propertyKey'][$lang]),
+                        'groupName' => $settings->settings['propertyName'][$lang],
+                    ];
+                }
+            }
+        }
 
-		return $nameList;
-	}
+        return $nameList;
+    }
 
-	/**
-	 * Get the system properties.
-	 *
-	 * @return array
-	 */
-	public function properties()
-	{
-		/** @var PropertyRepositoryContract $propertyRepo */
-		$propertyRepo = pluginApp(PropertyRepositoryContract::class);
+    /**
+     * Get the system properties.
+     *
+     * @return array
+     */
+    public function properties()
+    {
+        /** @var PropertyRepositoryContract $propertyRepo */
+        $propertyRepo = pluginApp(PropertyRepositoryContract::class);
 
-		$list    = [];
-		$page    = 0;
-		$perPage = 100;
+        $list    = [];
+        $page    = 0;
+        $perPage = 100;
 
-		do
-		{
-			$page ++;
+        do {
+            $page++;
 
-			/** @var PaginatedResult $result */
-			$result = $propertyRepo->all(['*'], $perPage, $page);
+            /** @var PaginatedResult $result */
+            $result = $propertyRepo->all(['*'], $perPage, $page);
 
-			if($result instanceof PaginatedResult)
-			{
-				/** @var Property $property */
-				foreach($result->getResult() as $propertyItem)
-				{
-					$list[] = [
-						'id'        => $propertyItem->id,
-						'name'      => $propertyItem->backendName,
-						'groupId'   => $propertyItem->propertyGroupId,
-						'groupName' => $this->getPropertyGroupName($propertyItem->propertyGroupId),
-					];
-				}
-			}
-		} while(($result->getTotalCount()) > 0 && $page < ($result->getTotalCount() / $perPage));
+            if ($result instanceof PaginatedResult) {
+                /** @var Property $property */
+                foreach ($result->getResult() as $propertyItem) {
+                    $list[] = [
+                        'id'        => $propertyItem->id,
+                        'name'      => $propertyItem->backendName,
+                        'groupId'   => $propertyItem->propertyGroupId,
+                        'groupName' => $this->getPropertyGroupName($propertyItem->propertyGroupId),
+                    ];
+                }
+            }
+        } while (($result->getTotalCount()) > 0 && $page < ($result->getTotalCount() / $perPage));
 
-		return $list;
-	}
+        return $list;
+    }
 
-	/**
-	 * Correlate settings IDs with an property IDs.
-	 *
-	 * @param SettingsCorrelationFactory $settingsCorrelationFactory
-	 */
-	public function correlate(SettingsCorrelationFactory $settingsCorrelationFactory)
-	{
-		$settingsCorrelationFactory->type(SettingsCorrelationFactory::TYPE_PROPERTY)->clear(SettingsHelper::PLUGIN_NAME);
+    /**
+     * Correlate settings IDs with an property IDs.
+     *
+     * @param SettingsCorrelationFactory $settingsCorrelationFactory
+     */
+    public function correlate(SettingsCorrelationFactory $settingsCorrelationFactory)
+    {
+        $settingsCorrelationFactory->type(SettingsCorrelationFactory::TYPE_PROPERTY)->clear(SettingsHelper::PLUGIN_NAME);
 
-		foreach($this->request->get('correlations', []) as $correlationData)
-		{
-			if(isset($correlationData['settingsId']) && $correlationData['settingsId'] && isset($correlationData['propertyId']) && $correlationData['propertyId'])
-			{
-				$settingsCorrelationFactory->type(SettingsCorrelationFactory::TYPE_PROPERTY)->createRelation($correlationData['settingsId'], $correlationData['propertyId']);
-			}
-		}
+        foreach ($this->request->get('correlations', []) as $correlationData) {
+            if (isset($correlationData['settingsId']) && $correlationData['settingsId'] && isset($correlationData['propertyId']) && $correlationData['propertyId']) {
+                $settingsCorrelationFactory->type(SettingsCorrelationFactory::TYPE_PROPERTY)->createRelation($correlationData['settingsId'],
+                    $correlationData['propertyId']);
+            }
+        }
 
-		return pluginApp(Response::class)->make('', 204);
-	}
+        return pluginApp(Response::class)->make('', 204);
+    }
 
-	/**
-	 * Get the property correlations.
-	 *
-	 * @param SettingsCorrelationFactory $settingsCorrelationFactory
-	 *
-	 * @return array
-	 */
-	public function correlations(SettingsCorrelationFactory $settingsCorrelationFactory)
-	{
-		$correlations = $settingsCorrelationFactory->type(SettingsCorrelationFactory::TYPE_PROPERTY)->all(SettingsHelper::PLUGIN_NAME);
+    /**
+     * Get the property correlations.
+     *
+     * @param SettingsCorrelationFactory $settingsCorrelationFactory
+     *
+     * @return array
+     */
+    public function correlations(SettingsCorrelationFactory $settingsCorrelationFactory)
+    {
+        $correlations = $settingsCorrelationFactory->type(SettingsCorrelationFactory::TYPE_PROPERTY)->all(SettingsHelper::PLUGIN_NAME);
 
-		return $correlations;
-	}
+        return $correlations;
+    }
 
-	/**
-	 * Calculate a group Id.
-	 *
-	 * @param string $propertyKey
-	 *
-	 * @return int
-	 */
-	private function calculateGroupId($propertyKey):int
-	{
-		$found = array_search($propertyKey, $this->groupIdList);
+    /**
+     * Calculate a group Id.
+     *
+     * @param string $propertyKey
+     *
+     * @return int
+     */
+    private function calculateGroupId($propertyKey): int
+    {
+        $found = array_search($propertyKey, $this->groupIdList);
 
-		if($found === false)
-		{
-			$this->groupIdList[] = $propertyKey;
+        if ($found === false) {
+            $this->groupIdList[] = $propertyKey;
 
-			return $this->calculateGroupId($propertyKey);
-		}
+            return $this->calculateGroupId($propertyKey);
+        }
 
-		return $found;
-	}
+        return $found;
+    }
 
-	/**
-	 * Get the property group backend name.
-	 *
-	 * @param int $propertyGroupId
-	 * @return string
-	 */
-	private function getPropertyGroupName($propertyGroupId)
-	{
-		try
-		{
-			/** @var PropertyGroupRepositoryContract $propertyGroupRepo */
-			$propertyGroupRepo = pluginApp(PropertyGroupRepositoryContract::class);
+    /**
+     * Get the property group backend name.
+     *
+     * @param int $propertyGroupId
+     *
+     * @return string
+     */
+    private function getPropertyGroupName($propertyGroupId)
+    {
+        try {
+            /** @var PropertyGroupRepositoryContract $propertyGroupRepo */
+            $propertyGroupRepo = pluginApp(PropertyGroupRepositoryContract::class);
 
-			$propertyGroup = $propertyGroupRepo->findById($propertyGroupId);
+            $propertyGroup = $propertyGroupRepo->findById($propertyGroupId);
 
-			return $propertyGroup->backendName;
-		}
-		catch(\Exception $ex)
-		{
-			return $propertyGroupId;
-		}
-	}
+            return $propertyGroup->backendName;
+        } catch (\Exception $ex) {
+            return $propertyGroupId;
+        }
+    }
 }
