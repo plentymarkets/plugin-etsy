@@ -14,6 +14,7 @@ use Plenty\Modules\Accounting\Vat\Models\Vat;
 use Plenty\Modules\Item\VariationSku\Contracts\VariationSkuRepositoryContract;
 use Plenty\Modules\Order\Contracts\OrderRepositoryContract;
 use Plenty\Modules\Order\Models\Order;
+use Plenty\Modules\Order\Models\OrderItemType;
 use Plenty\Modules\Order\Property\Models\OrderPropertyType;
 use Plenty\Modules\Payment\Contracts\PaymentOrderRelationRepositoryContract;
 use Plenty\Modules\Payment\Contracts\PaymentRepositoryContract;
@@ -320,9 +321,8 @@ class OrderCreateService
 			if(isset($data['discount_amt']) && $data['discount_amt'] > 0)
 			{
 				$orderItems[] = [
-					'typeId'          => 5,
+					'typeId'          => OrderItemType::TYPE_UNASSIGEND_VARIATION,
 					'referrerId'      => $this->orderHelper->getReferrerId(),
-					'itemVariationId' => -2,
 					'quantity'        => 1,
 					'orderItemName'   => 'Coupon',
 					'countryVatId'    => $this->getVatId($data),
