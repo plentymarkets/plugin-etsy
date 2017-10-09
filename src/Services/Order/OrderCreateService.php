@@ -314,37 +314,25 @@ class OrderCreateService
 						],
 					],
 				];
+			}
 
-				// add coupon item position
-				if(isset($data['discount_amt']))
-				{
-					$orderItems[] = [
-						'typeId'          => 4,
-						'referrerId'      => $this->orderHelper->getReferrerId(),
-						'itemVariationId' => -2,
-						'quantity'        => 1,
-						'orderItemName'   => 'Coupon',
-						'countryVatId'    => $this->getVatId($data),
-						'amounts'         => [
-							[
-								'priceOriginalGross' => $data['discount_amt'],
-								'currency'           => $data['currency_code'],
-							],
+			// add coupon item position
+			if(isset($data['discount_amt']) && $data['discount_amt'] > 0)
+			{
+				$orderItems[] = [
+					'typeId'          => 5,
+					'referrerId'      => $this->orderHelper->getReferrerId(),
+					'itemVariationId' => -2,
+					'quantity'        => 1,
+					'orderItemName'   => 'Coupon',
+					'countryVatId'    => $this->getVatId($data),
+					'amounts'         => [
+						[
+							'priceOriginalGross' => -$data['discount_amt'],
+							'currency'           => $data['currency_code'],
 						],
-						'properties'      => [
-							[
-								'typeId'    => 10,
-								'subTypeId' => 6,
-								'value'     => (string) $transaction['listing_id'],
-							],
-							[
-								'typeId'    => 12,
-								'subTypeId' => 6,
-								'value'     => (string) $transaction['transaction_id'],
-							],
-						],
-					];
-				}
+					],
+				];
 			}
 		}
 
