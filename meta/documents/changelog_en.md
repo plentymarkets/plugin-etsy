@@ -1,5 +1,9 @@
 # Release Notes for Etsy
 
+## v1.1.10 (2017-10-10)
+### Added
+- From now on, Etsy coupons will be added as item positions to the order.
+
 ## v1.1.9 (2017-10-09)
 ### Added
 - It is now possible to add the "What is it" property to items.
