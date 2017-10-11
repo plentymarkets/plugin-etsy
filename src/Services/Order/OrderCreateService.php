@@ -321,7 +321,7 @@ class OrderCreateService
 			if(isset($data['discount_amt']) && $data['discount_amt'] > 0)
 			{
 				$orderItems[] = [
-					'typeId'          => OrderItemType::TYPE_UNASSIGEND_VARIATION,
+					'typeId'          => OrderItemType::TYPE_PROMOTIONAL_COUPON,
 					'referrerId'      => $this->orderHelper->getReferrerId(),
 					'quantity'        => 1,
 					'orderItemName'   => 'Coupon',
