@@ -2,26 +2,25 @@
 
 namespace Etsy\Services\Order;
 
+use Etsy\Api\Services\PaymentService;
+use Etsy\Helper\OrderHelper;
+use Etsy\Helper\PaymentHelper;
+use Etsy\Helper\SettingsHelper;
 use Plenty\Modules\Account\Contact\Contracts\ContactAddressRepositoryContract;
 use Plenty\Modules\Account\Contact\Contracts\ContactRepositoryContract;
 use Plenty\Modules\Accounting\Contracts\AccountingServiceContract;
 use Plenty\Modules\Accounting\Vat\Contracts\VatInitContract;
 use Plenty\Modules\Accounting\Vat\Models\Vat;
+use Plenty\Modules\Item\VariationSku\Contracts\VariationSkuRepositoryContract;
+use Plenty\Modules\Order\Contracts\OrderRepositoryContract;
 use Plenty\Modules\Order\Models\Order;
-use Plenty\Modules\Order\Models\OrderType;
+use Plenty\Modules\Order\Models\OrderItemType;
 use Plenty\Modules\Order\Property\Models\OrderPropertyType;
 use Plenty\Modules\Payment\Contracts\PaymentOrderRelationRepositoryContract;
 use Plenty\Modules\Payment\Contracts\PaymentRepositoryContract;
 use Plenty\Modules\Payment\Models\Payment;
 use Plenty\Modules\Payment\Models\PaymentProperty;
 use Plenty\Plugin\Application;
-use Plenty\Modules\Order\Contracts\OrderRepositoryContract;
-use Plenty\Modules\Item\VariationSku\Contracts\VariationSkuRepositoryContract;
-
-use Etsy\Api\Services\PaymentService;
-use Etsy\Helper\PaymentHelper;
-use Etsy\Helper\SettingsHelper;
-use Etsy\Helper\OrderHelper;
 use Plenty\Plugin\Log\Loggable;
 
 /**
@@ -313,6 +312,24 @@ class OrderCreateService
 							'typeId'    => 12,
 							'subTypeId' => 6,
 							'value'     => (string) $transaction['transaction_id'],
+						],
+					],
+				];
+			}
+
+			// add coupon item position
+			if(isset($data['discount_amt']) && $data['discount_amt'] > 0)
+			{
+				$orderItems[] = [
+					'typeId'          => OrderItemType::TYPE_PROMOTIONAL_COUPON,
+					'referrerId'      => $this->orderHelper->getReferrerId(),
+					'quantity'        => 1,
+					'orderItemName'   => 'Coupon',
+					'countryVatId'    => $this->getVatId($data),
+					'amounts'         => [
+						[
+							'priceOriginalGross' => -$data['discount_amt'],
+							'currency'           => $data['currency_code'],
 						],
 					],
 				];

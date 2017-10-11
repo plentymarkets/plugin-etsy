@@ -1,5 +1,9 @@
 # Release Notes für Etsy
 
+## v1.1.10 (2017-10-10)
+### Hinzugeügt
+- Etsy-Gutscheine werden nun beim Auftragsimport als eigene Artikelposition hinzugefügt.
+
 ## v1.1.9 (2017-10-09)
 ### Hinzugeügt
 - Es ist nun möglich das Merkmal “Was ist es” mit dem Artikel zu verknüpfen.
