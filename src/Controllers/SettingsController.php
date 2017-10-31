@@ -73,10 +73,15 @@ class SettingsController extends Controller
 	{
 		$data = $this->settingsHelper->get(SettingsHelper::SETTINGS_ETSY_SHOPS);
 
-		if($data)
-		{
-			return json_decode($data, true);
-		}
+        if($data)
+        {
+            $data = json_decode($data, true);
+
+            if(is_array($data))
+            {
+                return array_values($data);
+            }
+        }
 
 		return [];
 	}

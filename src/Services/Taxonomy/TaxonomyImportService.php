@@ -38,7 +38,7 @@ class TaxonomyImportService
 	 */
 	private function generateFile(array $taxonomies, $language)
 	{
-		$contents = '<?hh //strict
+		$contents = '<?php
 namespace Etsy\DataProviders;
 
 use Etsy\Contracts\TaxonomyDataProviderContract;

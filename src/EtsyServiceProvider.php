@@ -2,6 +2,9 @@
 
 namespace Etsy;
 
+use Etsy\Contracts\CategoryRepositoryContract;
+use Etsy\Repositories\CategoryRepository;
+use Etsy\Repositories\TaxonomyRepository;
 use Plenty\Log\Services\ReferenceContainer;
 use Plenty\Modules\Cron\Services\CronContainer;
 use Plenty\Modules\EventProcedures\Services\Entries\ProcedureEntry;
@@ -15,8 +18,7 @@ use Etsy\Factories\ItemDataProviderFactory;
 use Etsy\DataProviders\ItemExportDataProvider;
 use Etsy\DataProviders\ItemUpdateDataProvider;
 use Etsy\DataProviders\TaxonomyDeDataProvider;
-use Etsy\Contracts\EtsyTaxonomyRepositoryContract;
-use Etsy\Repositories\EtsyTaxonomyRepository;
+use Etsy\Contracts\TaxonomyRepositoryContract;
 
 /**
  * Class EtsyServiceProvider
@@ -28,7 +30,8 @@ class EtsyServiceProvider extends ServiceProvider
 	 */
 	public function register()
 	{
-		$this->getApplication()->bind(EtsyTaxonomyRepositoryContract::class, EtsyTaxonomyRepository::class);
+		$this->getApplication()->bind(TaxonomyRepositoryContract::class, TaxonomyRepository::class);
+        $this->getApplication()->bind(CategoryRepositoryContract::class, CategoryRepository::class);
 
 		$this->getApplication()->bind('Etsy\item.dataprovider.export', ItemExportDataProvider::class);
 		$this->getApplication()->bind('Etsy\item.dataprovider.update', ItemUpdateDataProvider::class);
