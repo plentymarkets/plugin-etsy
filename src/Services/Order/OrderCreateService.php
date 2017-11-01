@@ -6,11 +6,11 @@ use Etsy\Api\Services\PaymentService;
 use Etsy\Helper\OrderHelper;
 use Etsy\Helper\PaymentHelper;
 use Etsy\Helper\SettingsHelper;
+use Plenty\Legacy\Services\Order\Tax\BasicTaxInformation;
 use Plenty\Modules\Account\Contact\Contracts\ContactAddressRepositoryContract;
 use Plenty\Modules\Account\Contact\Contracts\ContactRepositoryContract;
-use Plenty\Modules\Accounting\Contracts\AccountingServiceContract;
 use Plenty\Modules\Accounting\Vat\Contracts\VatInitContract;
-use Plenty\Modules\Accounting\Vat\Models\Vat;
+use Plenty\Modules\Item\Variation\Models\Variation;
 use Plenty\Modules\Item\VariationSku\Contracts\VariationSkuRepositoryContract;
 use Plenty\Modules\Order\Contracts\OrderRepositoryContract;
 use Plenty\Modules\Order\Models\Order;
@@ -198,6 +198,15 @@ class OrderCreateService
 	 */
 	private function createOrder(array $data, $addressId, $contactId): Order
 	{
+		/** @var VatInitContract $vatInit */
+		$vatInit = pluginApp(VatInitContract::class);
+
+		$vatInit->initWithTaxInformation(new BasicTaxInformation([
+			'billingAddressId'  => $addressId,
+			'deliveryAddressId' => $addressId
+			// TODO entryDate?
+		]));
+
 		// TODO add also the message_from_buyer(string) to the order
 
 		$orderData = [
@@ -240,7 +249,7 @@ class OrderCreateService
 			]
 		];
 
-		$orderData['orderItems'] = $this->getOrderItems($data);
+		$orderData['orderItems'] = $this->getOrderItems($data, $vatInit);
 
 		/** @var OrderRepositoryContract $orderRepo */
 		$orderRepo = pluginApp(OrderRepositoryContract::class);
@@ -263,23 +272,11 @@ class OrderCreateService
 	 *
 	 * @return array
 	 */
-	private function getOrderItems(array $data)
+	private function getOrderItems(array $data, VatInitContract $vatInit)
 	{
-		$orderItems = [
-			[
-				'typeId'          => 6,
-				'itemVariationId' => 0,
-				'quantity'        => 1,
-				'orderItemName'   => 'Shipping Costs',
-				'countryVatId'    => $this->getVatId($data),
-				'amounts'         => [
-					[
-						'priceOriginalGross' => $data['total_shipping_cost'],
-						'currency'           => $data['currency_code'],
-					],
-				],
-			],
-		];
+		$orderItems = [];
+
+		$countryVat = $vatInit->getUsingVat();
 
 		$transactions = $data['Transactions'];
 
@@ -288,6 +285,7 @@ class OrderCreateService
 			foreach($transactions as $transaction)
 			{
 				$itemVariationId = $this->matchVariationId((string) $transaction['listing_id']);
+				$variation = $this->getVariationById($itemVariationId);
 
 				$orderItems[] = [
 					'typeId'          => $itemVariationId > 0 ? 1 : 9,
@@ -295,7 +293,9 @@ class OrderCreateService
 					'itemVariationId' => $this->matchVariationId((string) $transaction['listing_id']),
 					'quantity'        => $transaction['quantity'],
 					'orderItemName'   => $transaction['title'],
-					'countryVatId'    => $this->getVatId($data),
+					'countryVatId'    => $countryVat->id,
+					'vatField'        => $variation->vatId,
+					'vatRate'         => $vatInit->getVatRate($variation->vatId),
 					'amounts'         => [
 						[
 							'priceOriginalGross' => $transaction['price'],
@@ -304,7 +304,7 @@ class OrderCreateService
 					],
 					'properties'      => [
 						[
-							'typeId'    => 10,
+							'typeId'    => OrderPropertyType::SELLER_ACCOUNT,
 							'subTypeId' => 6,
 							'value'     => (string) $transaction['listing_id'],
 						],
@@ -317,16 +317,32 @@ class OrderCreateService
 				];
 			}
 
+			$orderItems[] = [
+				'typeId'          => 6,
+				'itemVariationId' => 0,
+				'quantity'        => 1,
+				'orderItemName'   => 'Shipping Costs',
+				'countryVatId'    => $countryVat->id,
+				'vatRate'         => 0, // TODO
+				'amounts'         => [
+					[
+						'priceOriginalGross' => $data['total_shipping_cost'],
+						'currency'           => $data['currency_code'],
+					],
+				],
+			];
+
 			// add coupon item position
-			if(isset($data['discount_amt']) && $data['discount_amt'] > 0)
+			if (isset($data['discount_amt']) && $data['discount_amt'] > 0)
 			{
 				$orderItems[] = [
-					'typeId'          => OrderItemType::TYPE_PROMOTIONAL_COUPON,
-					'referrerId'      => $this->orderHelper->getReferrerId(),
-					'quantity'        => 1,
-					'orderItemName'   => 'Coupon',
-					'countryVatId'    => $this->getVatId($data),
-					'amounts'         => [
+					'typeId'        => OrderItemType::TYPE_PROMOTIONAL_COUPON,
+					'referrerId'    => $this->orderHelper->getReferrerId(),
+					'quantity'      => 1,
+					'orderItemName' => 'Coupon',
+					'countryVatId'  => $countryVat->id,
+					'vatRate'       => 0, // TODO
+					'amounts'       => [
 						[
 							'priceOriginalGross' => -$data['discount_amt'],
 							'currency'           => $data['currency_code'],
@@ -360,6 +376,29 @@ class OrderCreateService
 		}
 
 		return 0;
+	}
+
+	/**
+	 * Get the variation.
+	 *
+	 * @param int $variationId
+	 *
+	 * @return null|Variation
+	 */
+	private function getVariationById(int $variationId)
+	{
+		/** @var \Plenty\Modules\Item\Variation\Contracts\VariationRepositoryContract $variationContract */
+		$variationContract = app(\Plenty\Modules\Item\Variation\Contracts\VariationRepositoryContract::class);
+
+		/** @var \Plenty\Modules\Item\Variation\Models\Variation $variation */
+		$variation = $variationContract->findById($variationId);
+
+		if ($variation instanceof Variation)
+		{
+			return $variation;
+		}
+
+		return null;
 	}
 
 	/**
@@ -437,33 +476,6 @@ class OrderCreateService
 				 ->addReference('orderId', $order->id)
 			     ->error('Etsy::order.paymentError', $ex->getMessage());
 		}
-	}
-
-	/**
-	 * Get the VAT ID.
-	 *
-	 * @param array $data
-	 *
-	 * @return int
-	 */
-	private function getVatId(array $data): int
-	{
-		/** @var VatInitContract $vatInit */
-		$vatInit = pluginApp(VatInitContract::class);
-
-		/** @var AccountingServiceContract $accountingService */
-		$accountingService = pluginApp(AccountingServiceContract::class);
-
-		$vatInit->init($this->orderHelper->getCountryIdByEtsyCountryId((int) $data['country_id']), '', $accountingService->detectLocationId($this->app->getPlentyId()), $this->orderHelper->getCountryIdByEtsyCountryId((int) $data['country_id']));
-
-		$vat = $vatInit->getStandardVatByLocationId($accountingService->detectLocationId($this->app->getPlentyId()));
-
-		if($vat instanceof Vat)
-		{
-			return $vat->id;
-		}
-
-		return 0;
 	}
 
 	/**
