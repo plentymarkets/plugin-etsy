@@ -6,9 +6,9 @@ use Etsy\Api\Services\PaymentService;
 use Etsy\Helper\OrderHelper;
 use Etsy\Helper\PaymentHelper;
 use Etsy\Helper\SettingsHelper;
-use Plenty\Legacy\Services\Order\Tax\BasicTaxInformation;
 use Plenty\Modules\Account\Contact\Contracts\ContactAddressRepositoryContract;
 use Plenty\Modules\Account\Contact\Contracts\ContactRepositoryContract;
+use Plenty\Modules\Accounting\Contracts\AccountingServiceContract;
 use Plenty\Modules\Accounting\Vat\Contracts\VatInitContract;
 use Plenty\Modules\Item\Variation\Models\Variation;
 use Plenty\Modules\Item\VariationSku\Contracts\VariationSkuRepositoryContract;
@@ -193,20 +193,10 @@ class OrderCreateService
 	 * @param array $data
 	 * @param int   $addressId
 	 * @param int   $contactId
-	 *
 	 * @return Order
 	 */
 	private function createOrder(array $data, $addressId, $contactId): Order
 	{
-		/** @var VatInitContract $vatInit */
-		$vatInit = pluginApp(VatInitContract::class);
-
-		$vatInit->initWithTaxInformation(new BasicTaxInformation([
-			'billingAddressId'  => $addressId,
-			'deliveryAddressId' => $addressId
-			// TODO entryDate?
-		]));
-
 		// TODO add also the message_from_buyer(string) to the order
 
 		$orderData = [
@@ -249,7 +239,7 @@ class OrderCreateService
 			]
 		];
 
-		$orderData['orderItems'] = $this->getOrderItems($data, $vatInit);
+		$orderData['orderItems'] = $this->getOrderItems($data);
 
 		/** @var OrderRepositoryContract $orderRepo */
 		$orderRepo = pluginApp(OrderRepositoryContract::class);
@@ -272,10 +262,11 @@ class OrderCreateService
 	 *
 	 * @return array
 	 */
-	private function getOrderItems(array $data, VatInitContract $vatInit)
+	private function getOrderItems(array $data)
 	{
 		$orderItems = [];
-
+		$minVatField = null;
+		$vatInit = $this->getVatInit($data);
 		$countryVat = $vatInit->getUsingVat();
 
 		$transactions = $data['Transactions'];
@@ -315,22 +306,32 @@ class OrderCreateService
 						],
 					],
 				];
+
+				if (!isset($minVatField))
+				{
+					$minVatField = $variation->vatId;
+				}
+
+				$minVatField = min($minVatField, $variation->vatId);
 			}
 
-			$orderItems[] = [
-				'typeId'          => 6,
-				'itemVariationId' => 0,
-				'quantity'        => 1,
-				'orderItemName'   => 'Shipping Costs',
-				'countryVatId'    => $countryVat->id,
-				'vatRate'         => 0, // TODO
-				'amounts'         => [
-					[
-						'priceOriginalGross' => $data['total_shipping_cost'],
-						'currency'           => $data['currency_code'],
+			if (count($orderItems))
+			{
+				$orderItems[] = [
+					'typeId'          => 6,
+					'itemVariationId' => 0,
+					'quantity'        => 1,
+					'orderItemName'   => 'Shipping Costs',
+					'countryVatId'    => $countryVat->id,
+					'vatRate'         => isset($minVatField) ? $vatInit->getVatRate($minVatField) : 0,
+					'amounts'         => [
+						[
+							'priceOriginalGross' => $data['total_shipping_cost'],
+							'currency'           => $data['currency_code'],
+						],
 					],
-				],
-			];
+				];
+			}
 
 			// add coupon item position
 			if (isset($data['discount_amt']) && $data['discount_amt'] > 0)
@@ -341,7 +342,7 @@ class OrderCreateService
 					'quantity'      => 1,
 					'orderItemName' => 'Coupon',
 					'countryVatId'  => $countryVat->id,
-					'vatRate'       => 0, // TODO
+					'vatRate'       => isset($minVatField) ? $vatInit->getVatRate($minVatField) : 0,
 					'amounts'       => [
 						[
 							'priceOriginalGross' => -$data['discount_amt'],
@@ -388,7 +389,7 @@ class OrderCreateService
 	private function getVariationById(int $variationId)
 	{
 		/** @var \Plenty\Modules\Item\Variation\Contracts\VariationRepositoryContract $variationContract */
-		$variationContract = app(\Plenty\Modules\Item\Variation\Contracts\VariationRepositoryContract::class);
+		$variationContract = pluginApp(\Plenty\Modules\Item\Variation\Contracts\VariationRepositoryContract::class);
 
 		/** @var \Plenty\Modules\Item\Variation\Models\Variation $variation */
 		$variation = $variationContract->findById($variationId);
@@ -476,6 +477,25 @@ class OrderCreateService
 				 ->addReference('orderId', $order->id)
 			     ->error('Etsy::order.paymentError', $ex->getMessage());
 		}
+	}
+
+	/**
+	 * Get the VAT configuration.
+	 *
+	 * @param array $data
+	 * @return VatInitContract
+	 */
+	private function getVatInit(array $data): VatInitContract
+	{
+		/** @var VatInitContract $vatInit */
+		$vatInit = pluginApp(VatInitContract::class);
+		
+		/** @var AccountingServiceContract $accountingService */
+		$accountingService = pluginApp(AccountingServiceContract::class);
+		
+		$vatInit->init($this->orderHelper->getCountryIdByEtsyCountryId((int) $data['country_id']), '', $accountingService->detectLocationId($this->app->getPlentyId()), $this->orderHelper->getCountryIdByEtsyCountryId((int) $data['country_id']));
+		
+		return $vatInit;
 	}
 
 	/**
