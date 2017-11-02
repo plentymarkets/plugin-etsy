@@ -1,5 +1,9 @@
 # Release Notes für Etsy
 
+## v1.1.11 (2017-11-02)
+### Fixed
+- Es wurde ein Fehler bezüglich der VAT behoben, welcher den Auftragsimport verhinderte.
+
 ## v1.1.10 (2017-10-10)
 ### Hinzugeügt
 - Etsy-Gutscheine werden nun beim Auftragsimport als eigene Artikelposition hinzugefügt.

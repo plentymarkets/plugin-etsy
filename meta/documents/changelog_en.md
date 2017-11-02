@@ -1,5 +1,9 @@
 # Release Notes for Etsy
 
+## v1.1.11 (2017-11-02)
+### Fixed
+- Fixed an issue regarding the vat which prevented the order import.
+
 ## v1.1.10 (2017-10-10)
 ### Added
 - From now on, Etsy coupons will be added as item positions to the order.
