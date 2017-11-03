@@ -327,24 +327,6 @@ class OrderCreateService
 				$minVatField = min($minVatField, $vatId);
 			}
 
-			if (count($orderItems))
-			{
-				$orderItems[] = [
-					'typeId'          => 6,
-					'itemVariationId' => 0,
-					'quantity'        => 1,
-					'orderItemName'   => 'Shipping Costs',
-					'countryVatId'    => $countryVat->id,
-					'vatField'        => $minVatField,
-					'amounts'         => [
-						[
-							'priceOriginalGross' => $data['total_shipping_cost'],
-							'currency'           => $data['currency_code'],
-						],
-					],
-				];
-			}
-
 			// add coupon item position
 			if (isset($data['discount_amt']) && $data['discount_amt'] > 0)
 			{
@@ -354,7 +336,7 @@ class OrderCreateService
 					'quantity'      => 1,
 					'orderItemName' => 'Coupon',
 					'countryVatId'  => $countryVat->id,
-					'vatField'      => $minVatField,
+					'vatField'      => $minVatField ? $minVatField : 0,
 					'amounts'       => [
 						[
 							'priceOriginalGross' => -$data['discount_amt'],
@@ -363,6 +345,21 @@ class OrderCreateService
 					],
 				];
 			}
+
+			$orderItems[] = [
+				'typeId'          => 6,
+				'itemVariationId' => 0,
+				'quantity'        => 1,
+				'orderItemName'   => 'Shipping Costs',
+				'countryVatId'    => $countryVat->id,
+				'vatField'        => $minVatField ? $minVatField : 0,
+				'amounts'         => [
+					[
+						'priceOriginalGross' => $data['total_shipping_cost'],
+						'currency'           => $data['currency_code'],
+					],
+				],
+			];
 		}
 
 		return $orderItems;
