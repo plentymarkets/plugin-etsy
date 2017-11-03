@@ -327,39 +327,42 @@ class OrderCreateService
 				$minVatField = min($minVatField, $vatId);
 			}
 
-			// add coupon item position
-			if (isset($data['discount_amt']) && $data['discount_amt'] > 0)
+			if(count($orderItems) > 0)
 			{
+				// add coupon item position
+				if (isset($data['discount_amt']) && $data['discount_amt'] > 0)
+				{
+					$orderItems[] = [
+						'typeId'        => OrderItemType::TYPE_PROMOTIONAL_COUPON,
+						'referrerId'    => $this->orderHelper->getReferrerId(),
+						'quantity'      => 1,
+						'orderItemName' => 'Coupon',
+						'countryVatId'  => $countryVat->id,
+						'vatField'      => $minVatField ? $minVatField : 0,
+						'amounts'       => [
+							[
+								'priceOriginalGross' => -$data['discount_amt'],
+								'currency'           => $data['currency_code'],
+							],
+						],
+					];
+				}
+
 				$orderItems[] = [
-					'typeId'        => OrderItemType::TYPE_PROMOTIONAL_COUPON,
-					'referrerId'    => $this->orderHelper->getReferrerId(),
-					'quantity'      => 1,
-					'orderItemName' => 'Coupon',
-					'countryVatId'  => $countryVat->id,
-					'vatField'      => $minVatField ? $minVatField : 0,
-					'amounts'       => [
+					'typeId'          => 6,
+					'itemVariationId' => 0,
+					'quantity'        => 1,
+					'orderItemName'   => 'Shipping Costs',
+					'countryVatId'    => $countryVat->id,
+					'vatField'        => $minVatField ? $minVatField : 0,
+					'amounts'         => [
 						[
-							'priceOriginalGross' => -$data['discount_amt'],
+							'priceOriginalGross' => $data['total_shipping_cost'],
 							'currency'           => $data['currency_code'],
 						],
 					],
 				];
 			}
-
-			$orderItems[] = [
-				'typeId'          => 6,
-				'itemVariationId' => 0,
-				'quantity'        => 1,
-				'orderItemName'   => 'Shipping Costs',
-				'countryVatId'    => $countryVat->id,
-				'vatField'        => $minVatField ? $minVatField : 0,
-				'amounts'         => [
-					[
-						'priceOriginalGross' => $data['total_shipping_cost'],
-						'currency'           => $data['currency_code'],
-					],
-				],
-			];
 		}
 
 		return $orderItems;
