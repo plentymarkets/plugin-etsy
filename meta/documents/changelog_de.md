@@ -1,5 +1,9 @@
 # Release Notes für Etsy
 
+## v1.1.12 (2017-11-03)
+### Fixed
+- Es wurden einige zusätzliche Prüfungen eingebaut bezüglich eines VAT Bugs, welcher den Auftragsimport verhinderte.
+
 ## v1.1.11 (2017-11-02)
 ### Fixed
 - Es wurde ein Fehler bezüglich der VAT behoben, welcher den Auftragsimport verhinderte.
