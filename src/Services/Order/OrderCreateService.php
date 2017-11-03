@@ -278,15 +278,27 @@ class OrderCreateService
 				$itemVariationId = $this->matchVariationId((string) $transaction['listing_id']);
 				$variation = $this->getVariationById($itemVariationId);
 
+				if(!$variation)
+				{
+					$vatId = 0;
+				}
+				elseif($variation->vatId)
+				{
+					$vatId = $variation->vatId;
+				}
+				else
+				{
+					$vatId = $variation->parent->vatId;
+				}
+
 				$orderItems[] = [
 					'typeId'          => $itemVariationId > 0 ? 1 : 9,
 					'referrerId'      => $this->orderHelper->getReferrerId(),
-					'itemVariationId' => $this->matchVariationId((string) $transaction['listing_id']),
+					'itemVariationId' => $itemVariationId,
 					'quantity'        => $transaction['quantity'],
 					'orderItemName'   => $transaction['title'],
 					'countryVatId'    => $countryVat->id,
-					'vatField'        => $variation->vatId,
-					'vatRate'         => $vatInit->getVatRate($variation->vatId),
+					'vatField'        => $vatId,
 					'amounts'         => [
 						[
 							'priceOriginalGross' => $transaction['price'],
@@ -307,30 +319,12 @@ class OrderCreateService
 					],
 				];
 
-				if (!isset($minVatField))
+				if (!$minVatField)
 				{
-					$minVatField = $variation->vatId;
+					$minVatField = $vatId;
 				}
 
-				$minVatField = min($minVatField, $variation->vatId);
-			}
-
-			if (count($orderItems))
-			{
-				$orderItems[] = [
-					'typeId'          => 6,
-					'itemVariationId' => 0,
-					'quantity'        => 1,
-					'orderItemName'   => 'Shipping Costs',
-					'countryVatId'    => $countryVat->id,
-					'vatRate'         => isset($minVatField) ? $vatInit->getVatRate($minVatField) : 0,
-					'amounts'         => [
-						[
-							'priceOriginalGross' => $data['total_shipping_cost'],
-							'currency'           => $data['currency_code'],
-						],
-					],
-				];
+				$minVatField = min($minVatField, $vatId);
 			}
 
 			// add coupon item position
@@ -342,7 +336,7 @@ class OrderCreateService
 					'quantity'      => 1,
 					'orderItemName' => 'Coupon',
 					'countryVatId'  => $countryVat->id,
-					'vatRate'       => isset($minVatField) ? $vatInit->getVatRate($minVatField) : 0,
+					'vatField'      => $minVatField ? $minVatField : 0,
 					'amounts'       => [
 						[
 							'priceOriginalGross' => -$data['discount_amt'],
@@ -351,6 +345,21 @@ class OrderCreateService
 					],
 				];
 			}
+
+			$orderItems[] = [
+				'typeId'          => 6,
+				'itemVariationId' => 0,
+				'quantity'        => 1,
+				'orderItemName'   => 'Shipping Costs',
+				'countryVatId'    => $countryVat->id,
+				'vatField'        => $minVatField ? $minVatField : 0,
+				'amounts'         => [
+					[
+						'priceOriginalGross' => $data['total_shipping_cost'],
+						'currency'           => $data['currency_code'],
+					],
+				],
+			];
 		}
 
 		return $orderItems;
@@ -388,15 +397,21 @@ class OrderCreateService
 	 */
 	private function getVariationById(int $variationId)
 	{
-		/** @var \Plenty\Modules\Item\Variation\Contracts\VariationRepositoryContract $variationContract */
-		$variationContract = pluginApp(\Plenty\Modules\Item\Variation\Contracts\VariationRepositoryContract::class);
-
-		/** @var \Plenty\Modules\Item\Variation\Models\Variation $variation */
-		$variation = $variationContract->findById($variationId);
-
-		if ($variation instanceof Variation)
+		try
 		{
-			return $variation;
+			/** @var \Plenty\Modules\Item\Variation\Contracts\VariationRepositoryContract $variationContract */
+			$variationContract = pluginApp(\Plenty\Modules\Item\Variation\Contracts\VariationRepositoryContract::class);
+
+			/** @var \Plenty\Modules\Item\Variation\Models\Variation $variation */
+			$variation = $variationContract->findById($variationId);
+
+			if ($variation instanceof Variation)
+			{
+				return $variation;
+			}
+		}
+		catch(\Throwable $e)
+		{
 		}
 
 		return null;
