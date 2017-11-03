@@ -57,20 +57,20 @@ class EtsyRouteServiceProvider extends RouteServiceProvider
 				'uses'       => 'Etsy\Controllers\PropertyController@import'
 			]);
 
-			$router->get('markets/etsy/properties/imported', [
-				'uses'       => 'Etsy\Controllers\PropertyController@imported'
+			$router->get('markets/etsy/properties', [
+				'uses'       => 'Etsy\Controllers\PropertyController@all'
 			]);
 
-			$router->get('markets/etsy/properties/properties', [
-				'uses'       => 'Etsy\Controllers\PropertyController@properties'
+			$router->get('markets/etsy/properties/system-properties', [
+				'uses'       => 'Etsy\Controllers\PropertyController@systemProperties'
 			]);
 
-			$router->post('markets/etsy/properties/correlate', [
-				'uses'       => 'Etsy\Controllers\PropertyController@correlate'
+			$router->post('markets/etsy/properties/correlations', [
+				'uses'       => 'Etsy\Controllers\PropertyController@saveCorrelations'
 			]);
 
 			$router->get('markets/etsy/properties/correlations', [
-				'uses'       => 'Etsy\Controllers\PropertyController@correlations'
+				'uses'       => 'Etsy\Controllers\PropertyController@getCorrelations'
 			]);
 
 			/** Taxonomies */
