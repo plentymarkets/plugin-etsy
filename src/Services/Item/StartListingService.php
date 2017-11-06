@@ -109,8 +109,6 @@ class StartListingService
 			{
 				$this->deleteListingService->delete($listingId);
 
-				$this->itemHelper->deleteSku($record->variationMarketStatus->id);
-
 				$this->getLogger(__FUNCTION__)
 				     ->addReference('variationId', $record->variationBase->id)
 				     ->addReference('etsyListingId', $listingId)
