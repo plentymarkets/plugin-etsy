@@ -37,8 +37,6 @@ class PropertyRepository implements PropertyRepositoryContract
         $list = $settingsRepository->find(SettingsHelper::PLUGIN_NAME, SettingsCorrelationFactory::TYPE_PROPERTY);
 
         if (count($list)) {
-            $groupIdList = [];
-
             /** @var Settings $settings */
             foreach ($list as $settings) {
                 if (isset($settings->settings['propertyKey']) && isset($settings->settings['propertyValueKey'])) {
@@ -49,7 +47,7 @@ class PropertyRepository implements PropertyRepositoryContract
                     $property->fillByAttributes([
                         'id'        => $settings->id,
                         'name'      => $settings->settings['propertyValueName'][$lang],
-                        'groupId'   => $this->calculateGroupId($groupIdList, $settings->settings['propertyKey'][$lang]),
+                        'groupId'   => $this->calculateGroupId($settings->settings['propertyKey'][$lang]),
                         'groupName' => $settings->settings['propertyName'][$lang],
                     ]);
 
@@ -102,24 +100,103 @@ class PropertyRepository implements PropertyRepositoryContract
     }
 
     /**
+     * @inheritdoc
+     */
+    public function getCorrelations(string $lang): array
+    {
+        $list = [];
+
+        /** @var SettingsCorrelationFactory $settingsCorrelationFactory */
+        $settingsCorrelationFactory = pluginApp(SettingsCorrelationFactory::class);
+
+        /** @var PlentyPropertyRepositoryContract $propertyRepo */
+        $propertyRepo = pluginApp(PlentyPropertyRepositoryContract::class);
+
+        /** @var SettingsRepositoryContract $settingsRepo */
+        $settingsRepo = pluginApp(SettingsRepositoryContract::class);
+
+        $correlations = $settingsCorrelationFactory->type(SettingsCorrelationFactory::TYPE_PROPERTY)
+                                                   ->all(SettingsHelper::PLUGIN_NAME);
+
+        foreach ($correlations as $correlationData) {
+            $settings = $settingsRepo->get($correlationData['settingsId']);
+
+            $propertyItem = $propertyRepo->findById($correlationData['propertyId']);
+
+            /** @var SystemProperty $systemProperty */
+            $systemProperty = pluginApp(SystemProperty::class);
+
+            $systemProperty->fillByAttributes([
+                'id'        => $propertyItem->id,
+                'name'      => $propertyItem->backendName,
+                'groupId'   => $propertyItem->propertyGroupId,
+                'groupName' => $this->getPropertyGroupName($propertyItem->propertyGroupId),
+            ]);
+
+
+            /** @var Property $property */
+            $property = pluginApp(Property::class);
+
+            $property->fillByAttributes([
+                'id'        => $settings->id,
+                'name'      => $settings->settings['propertyValueName'][$lang],
+                'groupId'   => $this->calculateGroupId($settings->settings['propertyKey'][$lang]),
+                'groupName' => $settings->settings['propertyName'][$lang],
+            ]);
+
+            $list[] = [
+                'property'       => $property,
+                'systemProperty' => $systemProperty,
+            ];
+        }
+
+        return $list;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function saveCorrelations(array $correlations)
+    {
+        /** @var SettingsCorrelationFactory $settingsCorrelationFactory */
+        $settingsCorrelationFactory = pluginApp(SettingsCorrelationFactory::class);
+
+        $settingsCorrelationFactory->type(SettingsCorrelationFactory::TYPE_PROPERTY)
+                                   ->clear(SettingsHelper::PLUGIN_NAME);
+
+        foreach ($correlations as $correlationData) {
+            if (isset($correlationData['property']) && isset($correlationData['property']['id']) && isset($correlationData['systemProperty']) && isset($correlationData['systemProperty']['id'])) {
+                $settingsCorrelationFactory->type(SettingsCorrelationFactory::TYPE_PROPERTY)
+                                           ->createRelation($correlationData['property']['id'], $correlationData['systemProperty']['id']);
+            }
+        }
+    }
+
+    /**
      * Calculate a group Id.
      *
-     * @param array  $groupIdList
      * @param string $propertyKey
      *
      * @return int
      */
-    private function calculateGroupId(array &$groupIdList, string $propertyKey): int
+    private function calculateGroupId(string $propertyKey): int
     {
-        $found = array_search($propertyKey, $groupIdList);
-
-        if ($found === false) {
-            $groupIdList[] = $propertyKey;
-
-            return $this->calculateGroupId($groupIdList, $propertyKey);
+        switch ($propertyKey) {
+            case 'is_supply':
+                return Property::GROUP_IS_SUPPLY;
+            case 'occasion':
+                return Property::GROUP_OCCASION;
+            case 'when_made':
+                return Property::GROUP_WHEN_MADE;
+            case 'recipient':
+                return Property::GROUP_RECIPIENT;
+            case 'who_made':
+                return Property::GROUP_WHO_MADE;
+            case 'style':
+                return Property::GROUP_STYLE;
+            default:
+                return Property::GROUP_UNKNOWN;
         }
-
-        return $found + 1;
     }
 
     /**

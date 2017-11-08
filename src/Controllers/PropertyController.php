@@ -80,45 +80,38 @@ class PropertyController extends Controller
     }
 
     /**
-     * Correlate settings IDs with an property IDs.
-     *
-     * @param Request                    $request
-     * @param Response                   $response
-     * @param SettingsCorrelationFactory $settingsCorrelationFactory
-     *
-     * @return Response
-     */
-    public function saveCorrelations(
-        Request $request,
-        Response $response,
-        SettingsCorrelationFactory $settingsCorrelationFactory
-    ) {
-        $settingsCorrelationFactory->type(SettingsCorrelationFactory::TYPE_PROPERTY)->clear(SettingsHelper::PLUGIN_NAME);
-
-        foreach ($request->get('correlations', []) as $correlationData) {
-            if (isset($correlationData['settingsId']) && $correlationData['settingsId'] && isset($correlationData['propertyId']) && $correlationData['propertyId']) {
-                $settingsCorrelationFactory->type(SettingsCorrelationFactory::TYPE_PROPERTY)->createRelation($correlationData['settingsId'],
-                    $correlationData['propertyId']);
-            }
-        }
-
-        return $response->make('', 204);
-    }
-
-    /**
      * Get the property correlations.
      *
-     * @param Response                   $response
-     * @param SettingsCorrelationFactory $settingsCorrelationFactory
+     * @param Request  $request
+     * @param Response $response
      *
      * @return array
      */
-    public function getCorrelations(Response $response, SettingsCorrelationFactory $settingsCorrelationFactory)
+    public function getCorrelations(Request $request, Response $response)
     {
-        $correlations = $settingsCorrelationFactory->type(SettingsCorrelationFactory::TYPE_PROPERTY)->all(SettingsHelper::PLUGIN_NAME);
+        /** @var PropertyRepositoryContract $propertyRepo */
+        $propertyRepo = pluginApp(PropertyRepositoryContract::class);
+
+        $correlations = $propertyRepo->getCorrelations($request->get('lang', 'de'));
 
         return $response->json($correlations);
     }
 
+    /**
+     * Correlate settings IDs with an property IDs.
+     *
+     * @param Request  $request
+     * @param Response $response
+     *
+     * @return Response
+     */
+    public function saveCorrelations(Request $request, Response $response)
+    {
+        /** @var PropertyRepositoryContract $propertyRepo */
+        $propertyRepo = pluginApp(PropertyRepositoryContract::class);
 
+        $propertyRepo->saveCorrelations($request->get('correlations', []));
+
+        return $response->make('', 204);
+    }
 }

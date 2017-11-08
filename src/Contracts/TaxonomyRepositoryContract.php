@@ -29,4 +29,21 @@ interface TaxonomyRepositoryContract
 	 * @return array
 	 */
 	public function all(array $filters = [], array $with = []);
+
+    /**
+     * Get all taxonomy correlations.
+     *
+     * @param string $lang
+     *
+     * @return array
+     */
+    public function getCorrelations(string $lang): array;
+
+    /**
+     * Save given property correlations.
+     *
+     * @param array $correlations
+     * @param string $lang
+     */
+    public function saveCorrelations(array $correlations, string $lang);
 }

@@ -7,6 +7,14 @@ namespace Etsy\Models;
  */
 class Property
 {
+    const GROUP_IS_SUPPLY = 1;
+    const GROUP_OCCASION = 2;
+    const GROUP_WHEN_MADE = 3;
+    const GROUP_RECIPIENT = 4;
+    const GROUP_WHO_MADE = 5;
+    const GROUP_STYLE = 6;
+    const GROUP_UNKNOWN = 7;
+
     /**
      * @var int
      */

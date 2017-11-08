@@ -49,10 +49,11 @@ class TaxonomyController extends Controller
      * Get all taxonomies.
      *
      * @param Request $request
+     * @param Response $response
      *
      * @return array
      */
-    public function all(Request $request)
+    public function all(Request $request, Response $response)
     {
         $with = $request->get('with', []);
 
@@ -67,100 +68,41 @@ class TaxonomyController extends Controller
             'lang' => $request->get('language', 'de')
         ], $with);
 
-        return $taxonomies;
+        return $response->json($taxonomies);
     }
 
     /**
      * Get the taxonomy correlations.
      *
-     * @param Request                    $request
-     * @param Response                   $response
-     * @param SettingsCorrelationFactory $settingsCorrelationFactory
+     * @param Request  $request
+     * @param Response $response
      *
      * @return array
      */
-    public function getCorrelations(
-        Request $request,
-        Response $response,
-        SettingsCorrelationFactory $settingsCorrelationFactory
-    ) {
-        $list = [];
-
-        $lang = $request->get('lang', 'de');
-
-        $correlations = $settingsCorrelationFactory->type(SettingsCorrelationFactory::TYPE_CATEGORY)->all(SettingsHelper::PLUGIN_NAME);
-
+    public function getCorrelations(Request $request, Response $response)
+    {
         /** @var TaxonomyRepositoryContract $taxonomyRepo */
         $taxonomyRepo = pluginApp(TaxonomyRepositoryContract::class);
 
-        /** @var CategoryRepositoryContract $categoryRepo */
-        $categoryRepo = pluginApp(CategoryRepositoryContract::class);
+        $correlations = $taxonomyRepo->getCorrelations($request->get('lang', 'de'));
 
-        foreach ($correlations as $correlationData) {
-            /** @var SettingsRepositoryContract $settingsRepo */
-            $settingsRepo = pluginApp(SettingsRepositoryContract::class);
-
-            $settings = $settingsRepo->get($correlationData['settingsId']);
-
-            if (isset($settings->settings['id'])) {
-                $list[] = [
-                    'taxonomy' => $taxonomyRepo->get((int)$settings->settings['id'], $lang, ['path']),
-                    'category' => $categoryRepo->get((int)$correlationData['categoryId'], $lang, ['path']),
-                ];
-            }
-        }
-
-        return $response->json($list);
+        return $response->json($correlations);
     }
 
     /**
      * Correlate taxonomy IDs with category IDs.
      *
-     * @param Request                    $request
-     * @param Response                   $response
-     * @param SettingsCorrelationFactory $settingsCorrelationFactory
+     * @param Request  $request
+     * @param Response $response
      *
      * @return Response
      */
-    public function saveCorrelations(
-        Request $request,
-        Response $response,
-        SettingsCorrelationFactory $settingsCorrelationFactory
-    ) {
-        /** @var SettingsRepositoryContract $settingsRepo */
-        $settingsRepo = pluginApp(SettingsRepositoryContract::class);
+    public function saveCorrelations(Request $request, Response $response)
+    {
+        /** @var TaxonomyRepositoryContract $taxonomyRepo */
+        $taxonomyRepo = pluginApp(TaxonomyRepositoryContract::class);
 
-        $lang = $request->get('lang', 'de');
-
-        $settingsRepo->deleteAll(SettingsHelper::PLUGIN_NAME, SettingsCorrelationFactory::TYPE_CATEGORY);
-
-        $settingsCorrelationFactory->type(SettingsCorrelationFactory::TYPE_CATEGORY)->clear(SettingsHelper::PLUGIN_NAME);
-
-        foreach ($request->get('correlations', []) as $correlationData) {
-            if (isset($correlationData['taxonomy']) && isset($correlationData['taxonomy']['id']) && isset($correlationData['category']) && isset($correlationData['category']['id'])) {
-                /** @var SettingsRepositoryContract $settingsRepo */
-                $settingsRepo = pluginApp(SettingsRepositoryContract::class);
-
-                /** @var TaxonomyRepositoryContract $taxonomyRepo */
-                $taxonomyRepo = pluginApp(TaxonomyRepositoryContract::class);
-
-                $taxonomy = $taxonomyRepo->get($correlationData['taxonomy']['id'], $lang);
-
-                $settings = $settingsRepo->create(SettingsHelper::PLUGIN_NAME,
-                    SettingsCorrelationFactory::TYPE_CATEGORY, [
-                        'id'       => $taxonomy->id,
-                        'parentId' => $taxonomy->parentId,
-                        'name'     => $taxonomy->name,
-                        'children' => $taxonomy->children,
-                        'isLeaf'   => $taxonomy->isLeaf,
-                        'level'    => $taxonomy->level,
-                        'path'     => $taxonomy->path
-                    ]);
-
-                $settingsCorrelationFactory->type(SettingsCorrelationFactory::TYPE_CATEGORY)->createRelation($settings->id,
-                    $correlationData['category']['id']);
-            }
-        }
+        $taxonomyRepo->saveCorrelations($request->get('correlations', []), $request->get('lang', 'de'));
 
         return $response->make('', 204);
     }

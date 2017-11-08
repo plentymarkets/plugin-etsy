@@ -26,4 +26,20 @@ interface PropertyRepositoryContract
      * @return array
      */
     public function systemProperties(array $filters = [], array $with = []);
+
+    /**
+     * Get all property correlations.
+     *
+     * @param string $lang
+     *
+     * @return array
+     */
+    public function getCorrelations(string $lang): array;
+
+    /**
+     * Save given property correlations.
+     *
+     * @param array $correlations
+     */
+    public function saveCorrelations(array $correlations);
 }
