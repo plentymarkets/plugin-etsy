@@ -10,7 +10,7 @@ use Plenty\Modules\Account\Contact\Contracts\ContactAddressRepositoryContract;
 use Plenty\Modules\Account\Contact\Contracts\ContactRepositoryContract;
 use Plenty\Modules\Accounting\Contracts\AccountingServiceContract;
 use Plenty\Modules\Accounting\Vat\Contracts\VatInitContract;
-use Plenty\Modules\Accounting\Vat\Models\Vat;
+use Plenty\Modules\Item\Variation\Models\Variation;
 use Plenty\Modules\Item\VariationSku\Contracts\VariationSkuRepositoryContract;
 use Plenty\Modules\Order\Contracts\OrderRepositoryContract;
 use Plenty\Modules\Order\Models\Order;
@@ -193,7 +193,6 @@ class OrderCreateService
 	 * @param array $data
 	 * @param int   $addressId
 	 * @param int   $contactId
-	 *
 	 * @return Order
 	 */
 	private function createOrder(array $data, $addressId, $contactId): Order
@@ -265,21 +264,10 @@ class OrderCreateService
 	 */
 	private function getOrderItems(array $data)
 	{
-		$orderItems = [
-			[
-				'typeId'          => 6,
-				'itemVariationId' => 0,
-				'quantity'        => 1,
-				'orderItemName'   => 'Shipping Costs',
-				'countryVatId'    => $this->getVatId($data),
-				'amounts'         => [
-					[
-						'priceOriginalGross' => $data['total_shipping_cost'],
-						'currency'           => $data['currency_code'],
-					],
-				],
-			],
-		];
+		$orderItems = [];
+		$minVatField = null;
+		$vatInit = $this->getVatInit($data);
+		$countryVat = $vatInit->getUsingVat();
 
 		$transactions = $data['Transactions'];
 
@@ -288,14 +276,29 @@ class OrderCreateService
 			foreach($transactions as $transaction)
 			{
 				$itemVariationId = $this->matchVariationId((string) $transaction['listing_id']);
+				$variation = $this->getVariationById($itemVariationId);
+
+				if(!$variation)
+				{
+					$vatId = 0;
+				}
+				elseif($variation->vatId)
+				{
+					$vatId = $variation->vatId;
+				}
+				else
+				{
+					$vatId = $variation->parent->vatId;
+				}
 
 				$orderItems[] = [
 					'typeId'          => $itemVariationId > 0 ? 1 : 9,
 					'referrerId'      => $this->orderHelper->getReferrerId(),
-					'itemVariationId' => $this->matchVariationId((string) $transaction['listing_id']),
+					'itemVariationId' => $itemVariationId,
 					'quantity'        => $transaction['quantity'],
 					'orderItemName'   => $transaction['title'],
-					'countryVatId'    => $this->getVatId($data),
+					'countryVatId'    => $countryVat->id,
+					'vatField'        => $vatId,
 					'amounts'         => [
 						[
 							'priceOriginalGross' => $transaction['price'],
@@ -304,7 +307,7 @@ class OrderCreateService
 					],
 					'properties'      => [
 						[
-							'typeId'    => 10,
+							'typeId'    => OrderPropertyType::SELLER_ACCOUNT,
 							'subTypeId' => 6,
 							'value'     => (string) $transaction['listing_id'],
 						],
@@ -315,20 +318,46 @@ class OrderCreateService
 						],
 					],
 				];
+
+				if (!$minVatField)
+				{
+					$minVatField = $vatId;
+				}
+
+				$minVatField = min($minVatField, $vatId);
 			}
 
-			// add coupon item position
-			if(isset($data['discount_amt']) && $data['discount_amt'] > 0)
+			if(count($orderItems) > 0)
 			{
+				// add coupon item position
+				if (isset($data['discount_amt']) && $data['discount_amt'] > 0)
+				{
+					$orderItems[] = [
+						'typeId'        => OrderItemType::TYPE_PROMOTIONAL_COUPON,
+						'referrerId'    => $this->orderHelper->getReferrerId(),
+						'quantity'      => 1,
+						'orderItemName' => 'Coupon',
+						'countryVatId'  => $countryVat->id,
+						'vatField'      => $minVatField ? $minVatField : 0,
+						'amounts'       => [
+							[
+								'priceOriginalGross' => -$data['discount_amt'],
+								'currency'           => $data['currency_code'],
+							],
+						],
+					];
+				}
+
 				$orderItems[] = [
-					'typeId'          => OrderItemType::TYPE_PROMOTIONAL_COUPON,
-					'referrerId'      => $this->orderHelper->getReferrerId(),
+					'typeId'          => 6,
+					'itemVariationId' => 0,
 					'quantity'        => 1,
-					'orderItemName'   => 'Coupon',
-					'countryVatId'    => $this->getVatId($data),
+					'orderItemName'   => 'Shipping Costs',
+					'countryVatId'    => $countryVat->id,
+					'vatField'        => $minVatField ? $minVatField : 0,
 					'amounts'         => [
 						[
-							'priceOriginalGross' => -$data['discount_amt'],
+							'priceOriginalGross' => $data['total_shipping_cost'],
 							'currency'           => $data['currency_code'],
 						],
 					],
@@ -360,6 +389,35 @@ class OrderCreateService
 		}
 
 		return 0;
+	}
+
+	/**
+	 * Get the variation.
+	 *
+	 * @param int $variationId
+	 *
+	 * @return null|Variation
+	 */
+	private function getVariationById(int $variationId)
+	{
+		try
+		{
+			/** @var \Plenty\Modules\Item\Variation\Contracts\VariationRepositoryContract $variationContract */
+			$variationContract = pluginApp(\Plenty\Modules\Item\Variation\Contracts\VariationRepositoryContract::class);
+
+			/** @var \Plenty\Modules\Item\Variation\Models\Variation $variation */
+			$variation = $variationContract->findById($variationId);
+
+			if ($variation instanceof Variation)
+			{
+				return $variation;
+			}
+		}
+		catch(\Throwable $e)
+		{
+		}
+
+		return null;
 	}
 
 	/**
@@ -440,30 +498,22 @@ class OrderCreateService
 	}
 
 	/**
-	 * Get the VAT ID.
+	 * Get the VAT configuration.
 	 *
 	 * @param array $data
-	 *
-	 * @return int
+	 * @return VatInitContract
 	 */
-	private function getVatId(array $data): int
+	private function getVatInit(array $data): VatInitContract
 	{
 		/** @var VatInitContract $vatInit */
 		$vatInit = pluginApp(VatInitContract::class);
-
+		
 		/** @var AccountingServiceContract $accountingService */
 		$accountingService = pluginApp(AccountingServiceContract::class);
-
+		
 		$vatInit->init($this->orderHelper->getCountryIdByEtsyCountryId((int) $data['country_id']), '', $accountingService->detectLocationId($this->app->getPlentyId()), $this->orderHelper->getCountryIdByEtsyCountryId((int) $data['country_id']));
-
-		$vat = $vatInit->getStandardVatByLocationId($accountingService->detectLocationId($this->app->getPlentyId()));
-
-		if($vat instanceof Vat)
-		{
-			return $vat->id;
-		}
-
-		return 0;
+		
+		return $vatInit;
 	}
 
 	/**
