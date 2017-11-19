@@ -3,7 +3,6 @@
 namespace Etsy\Controllers;
 
 use Etsy\Api\Services\AuthService;
-use Etsy\Api\Services\ShopService;
 use Etsy\Helper\AccountHelper;
 use Etsy\Helper\SettingsHelper;
 use Etsy\Services\Shop\ShopImportService;

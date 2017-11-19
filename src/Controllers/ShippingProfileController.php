@@ -7,7 +7,6 @@ use Plenty\Modules\Market\Settings\Contracts\SettingsRepositoryContract;
 use Plenty\Modules\Market\Settings\Factories\SettingsCorrelationFactory;
 use Plenty\Modules\Market\Settings\Models\Settings;
 use Plenty\Modules\Order\Shipping\Contracts\ParcelServicePresetRepositoryContract;
-use Plenty\Plugin\Application;
 use Plenty\Plugin\Controller;
 use Etsy\Services\Shipping\ShippingProfileImportService;
 use Plenty\Plugin\Http\Request;

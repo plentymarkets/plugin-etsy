@@ -3,8 +3,6 @@
 namespace Etsy\Controllers;
 
 use Etsy\Contracts\PropertyRepositoryContract;
-use Etsy\Helper\SettingsHelper;
-use Plenty\Modules\Market\Settings\Factories\SettingsCorrelationFactory;
 use Plenty\Plugin\Controller;
 use Plenty\Plugin\Http\Request;
 use Plenty\Plugin\Http\Response;
