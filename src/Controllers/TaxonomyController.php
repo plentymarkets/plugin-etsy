@@ -2,10 +2,6 @@
 
 namespace Etsy\Controllers;
 
-use Etsy\Contracts\CategoryRepositoryContract;
-use Etsy\Helper\SettingsHelper;
-use Plenty\Modules\Market\Settings\Contracts\SettingsRepositoryContract;
-use Plenty\Modules\Market\Settings\Factories\SettingsCorrelationFactory;
 use Plenty\Plugin\Controller;
 use Plenty\Plugin\Http\Request;
 use Etsy\Contracts\TaxonomyRepositoryContract;
@@ -38,7 +34,7 @@ class TaxonomyController extends Controller
         /** @var TaxonomyRepositoryContract $taxonomyRepo */
         $taxonomyRepo = pluginApp(TaxonomyRepositoryContract::class);
 
-        $lang = $request->get('lang', 'de');
+        $lang = 'de'; // TODO EN file must be downloaded and, due to its huge size, stored on S3 // $request->get('lang', 'de');
 
         $taxonomy = $taxonomyRepo->get($taxonomyId, $lang, $with);
 
@@ -65,7 +61,7 @@ class TaxonomyController extends Controller
         $taxonomyRepo = pluginApp(TaxonomyRepositoryContract::class);
 
         $taxonomies = $taxonomyRepo->all([
-            'lang' => $request->get('language', 'de')
+            'lang' => 'de', // // TODO EN file must be downloaded and, due to its huge size, stored on S3 // $request->get('lang', 'de'); $request->get('lang', 'de')
         ], $with);
 
         return $response->json($taxonomies);

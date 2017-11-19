@@ -108,6 +108,10 @@ class EtsyRouteServiceProvider extends RouteServiceProvider
 				'uses'       => 'Etsy\Controllers\AuthController@status'
 			]);
 
+            $router->delete('markets/etsy/auth', [
+                'uses'       => 'Etsy\Controllers\AuthController@deleteAccount'
+            ]);
+
 			/** Settings */
 			$router->post('markets/etsy/settings/save', [
 				'uses'       => 'Etsy\Controllers\SettingsController@save'

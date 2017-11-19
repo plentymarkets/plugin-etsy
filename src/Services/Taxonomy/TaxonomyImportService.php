@@ -45,7 +45,7 @@ use Etsy\Contracts\TaxonomyDataProviderContract;
 
 class Taxonomy' . ucwords($language) . 'DataProvider implements TaxonomyDataProviderContract
 {
-    public function data():array<int,mixed>
+    public function data():array
     {
         return null;
     }

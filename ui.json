@@ -5,31 +5,31 @@
     {
       "label": "menu.authentication",
       "menu": "settings/markets/etsy",
-      "urlKey": "authentication",
-      "entryPoint": "index.html?action=login"
+      "urlKey": "etsy-authentication",
+      "entryPoint": "index.html?action=auth"
     },
     {
       "label": "menu.settings",
       "menu": "settings/markets/etsy",
-      "urlKey": "settings",
+      "urlKey": "etsy-settings",
       "entryPoint": "index.html?action=settings"
     },
     {
       "label": "menu.shippingProfiles",
       "menu": "settings/markets/etsy",
-      "urlKey": "shipping",
-      "entryPoint": "index.html?action=shipping"
+      "urlKey": "etsy-shipping-profiles",
+      "entryPoint": "index.html?action=shippingProfiles"
     },
     {
       "label": "menu.categories",
       "menu": "settings/markets/etsy",
-      "urlKey": "categories",
+      "urlKey": "etsy-categories",
       "entryPoint": "index.html?action=taxonomies"
     },
     {
       "label": "menu.properties",
       "menu": "settings/markets/etsy",
-      "urlKey": "properties",
+      "urlKey": "etsy-properties",
       "entryPoint": "index.html?action=properties"
     }
   ]
