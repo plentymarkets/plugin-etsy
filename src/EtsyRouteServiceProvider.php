@@ -37,6 +37,7 @@ class EtsyRouteServiceProvider extends RouteServiceProvider
         }]);
 		*/
 
+		
 		$api->version(['v1'], ['middleware' => ['oauth']], function ($router) {
 
 			/** Actions */
