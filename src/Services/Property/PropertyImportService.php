@@ -112,7 +112,7 @@ class PropertyImportService
                     }
 
                     if (is_array($enum) && count($enum)) {
-                        $this->createSettings($propertyKey, $enum);
+                        $this->createSettings($propertyKey, $enum, $language);
                     }
                 } catch (\Exception $ex) {
                     $this->getLogger(__FUNCTION__)->error('Etsy::order.propertyImportError', $ex->getMessage());
@@ -193,8 +193,9 @@ class PropertyImportService
      *
      * @param string $propertyKey
      * @param array  $propertyEnum
+     * @param string $language
      */
-    private function createSettings($propertyKey, $propertyEnum)
+    private function createSettings(string $propertyKey, array $propertyEnum, string $language)
     {
         $defaultPropertyEnum = reset($propertyEnum);
 
@@ -214,7 +215,8 @@ class PropertyImportService
                     if (isset($propertyEnum[$lang]['formatted']) && is_array($propertyEnum[$lang]['formatted']) && isset($propertyEnum[$lang]['formatted'][$propertyEnum[$lang]['values'][$key]]) && strlen($propertyEnum[$lang]['formatted'][$propertyEnum[$lang]['values'][$key]])) {
                         $data['propertyValueName'][$lang] = $propertyEnum[$lang]['formatted'][$propertyEnum[$lang]['values'][$key]];
                     } else {
-                        $data['propertyValueName'][$lang] = $this->formatName($propertyEnum[$lang]['values'][$key]);
+                        $data['propertyValueName'][$lang] = $this->formatName($propertyEnum[$lang]['values'][$key],
+                            $propertyKey, $lang);
                     }
                 }
 
@@ -239,18 +241,17 @@ class PropertyImportService
      */
     private function getIsSupplyTypes($lang)
     {
-        switch($lang)
-        {
+        switch ($lang) {
             case 'de':
                 return [
                     [
                         'value' => 'true',
-                        'name' => 'Zubehör oder ein Werkzeug, um etwas herzustellen'
+                        'name'  => 'Zubehör oder ein Werkzeug, um etwas herzustellen'
                     ],
 
                     [
                         'value' => 'false',
-                        'name' => 'Ein fertiges Produkt'
+                        'name'  => 'Ein fertiges Produkt'
                     ],
                 ];
 
@@ -259,12 +260,12 @@ class PropertyImportService
                 return [
                     [
                         'value' => 'true',
-                        'name' => 'A supply or tool to make things'
+                        'name'  => 'A supply or tool to make things'
                     ],
 
                     [
                         'value' => 'false',
-                        'name' => 'A finished product'
+                        'name'  => 'A finished product'
                     ],
                 ];
         }
@@ -315,19 +316,68 @@ class PropertyImportService
             return $map[$propertyKey][$lang];
         }
 
-        return $this->formatName($propertyKey);
+        return $this->formatName($propertyKey, $propertyKey, $lang);
     }
 
     /**
      * Format a name.
      *
      * @param string $name
+     * @param string $propertyKey
+     * @param string $lang
      *
      * @return string
      */
-    private function formatName($name)
+    private function formatName($name, string $propertyKey, string $lang)
     {
-        return ucfirst(str_replace('_', ' ', $name));
+        $name = ucwords(str_replace('_', ' ', $name));
+
+        if ($propertyKey === 'occasion') {
+            switch ($lang) {
+                case 'de':
+                    $name = str_replace([
+                        'Jubilum',
+                    ], [
+                        'Jubiläum',
+                    ], $name);
+                    break;
+            }
+        } elseif ($propertyKey === 'recipient') {
+            switch ($lang) {
+                case 'de':
+                    $name = str_replace([
+                        'Mnner',
+                        'Teenager  Mdchen',
+                        'Mdchen',
+                        'Babys  Mdchen',
+                        'Vgel',
+                    ], [
+                        'Männer',
+                        'Teenager Mädchen',
+                        'Mädchen',
+                        'Babys  Mädchen',
+                        'Vögel'
+                    ], $name);
+                    break;
+            }
+        } elseif ($propertyKey === 'who_made') {
+            switch ($lang) {
+                case 'de':
+                    $name = str_replace([
+                        'I Did',
+                        'Collective',
+                        'Someone Else',
+                    ], [
+                        'Ich war\'s',
+                        'Ein Mitglied meines Shops',
+                        'Eine andere Firma oder Person',
+                    ], $name);
+                    break;
+            }
+        }
+
+
+        return $name;
     }
 
     /**

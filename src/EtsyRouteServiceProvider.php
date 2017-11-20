@@ -57,38 +57,47 @@ class EtsyRouteServiceProvider extends RouteServiceProvider
 				'uses'       => 'Etsy\Controllers\PropertyController@import'
 			]);
 
-			$router->get('markets/etsy/properties/imported', [
-				'uses'       => 'Etsy\Controllers\PropertyController@imported'
+			$router->get('markets/etsy/properties', [
+				'uses'       => 'Etsy\Controllers\PropertyController@all'
 			]);
 
-			$router->get('markets/etsy/properties/properties', [
-				'uses'       => 'Etsy\Controllers\PropertyController@properties'
+			$router->get('markets/etsy/properties/system-properties', [
+				'uses'       => 'Etsy\Controllers\PropertyController@systemProperties'
 			]);
 
-			$router->post('markets/etsy/properties/correlate', [
-				'uses'       => 'Etsy\Controllers\PropertyController@correlate'
+			$router->post('markets/etsy/properties/correlations', [
+				'uses'       => 'Etsy\Controllers\PropertyController@saveCorrelations'
 			]);
 
 			$router->get('markets/etsy/properties/correlations', [
-				'uses'       => 'Etsy\Controllers\PropertyController@correlations'
+				'uses'       => 'Etsy\Controllers\PropertyController@getCorrelations'
 			]);
 
 			/** Taxonomies */
-			$router->get('markets/etsy/taxonomies/imported', [
-				'uses'       => 'Etsy\Controllers\TaxonomyController@imported'
+			$router->get('markets/etsy/taxonomies', [
+				'uses'       => 'Etsy\Controllers\TaxonomyController@all'
 			]);
 
-			$router->get('markets/etsy/taxonomies/categories', [
-				'uses'       => 'Etsy\Controllers\TaxonomyController@categories'
-			]);
+            $router->post('markets/etsy/taxonomies/correlations', [
+                'uses'       => 'Etsy\Controllers\TaxonomyController@saveCorrelations'
+            ]);
 
-			$router->post('markets/etsy/taxonomies/correlate', [
-				'uses'       => 'Etsy\Controllers\TaxonomyController@correlate'
-			]);
+            $router->get('markets/etsy/taxonomies/correlations', [
+                'uses'       => 'Etsy\Controllers\TaxonomyController@getCorrelations'
+            ]);
 
-			$router->get('markets/etsy/taxonomies/correlations', [
-				'uses'       => 'Etsy\Controllers\TaxonomyController@correlations'
-			]);
+            $router->get('markets/etsy/taxonomies/{id}', [
+                'uses'       => 'Etsy\Controllers\TaxonomyController@get'
+            ]);
+
+            /** Categories */
+            $router->get('markets/etsy/categories', [
+                'uses'       => 'Etsy\Controllers\CategoryController@all'
+            ]);
+
+            $router->get('markets/etsy/categories/{id}', [
+                'uses'       => 'Etsy\Controllers\CategoryController@get'
+            ]);
 
 			/** Auth */
 			$router->get('markets/etsy/auth/login-url', [
@@ -98,6 +107,10 @@ class EtsyRouteServiceProvider extends RouteServiceProvider
 			$router->get('markets/etsy/auth/status', [
 				'uses'       => 'Etsy\Controllers\AuthController@status'
 			]);
+
+            $router->delete('markets/etsy/auth', [
+                'uses'       => 'Etsy\Controllers\AuthController@deleteAccount'
+            ]);
 
 			/** Settings */
 			$router->post('markets/etsy/settings/save', [

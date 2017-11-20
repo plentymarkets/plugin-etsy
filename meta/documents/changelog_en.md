@@ -1,4 +1,10 @@
 # Release Notes for Etsy
+## v1.2.0 (2017-11-20)
+#### Changed
+- This updated brings UI changes on all plugin sections. The views fulfill the newest Terra style guide and makes the plugin more friendlier.
+
+#### Added
+- It is now possible to delete an account and all its settings at once.
 
 ## v1.1.13 (2017-11-06)
 ### Fixed

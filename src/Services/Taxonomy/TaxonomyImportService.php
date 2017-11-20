@@ -38,16 +38,16 @@ class TaxonomyImportService
 	 */
 	private function generateFile(array $taxonomies, $language)
 	{
-		$contents = '<?hh //strict
+		$contents = '<?php
 namespace Etsy\DataProviders;
 
 use Etsy\Contracts\TaxonomyDataProviderContract;
 
 class Taxonomy' . ucwords($language) . 'DataProvider implements TaxonomyDataProviderContract
 {
-    public function data():array<int,mixed>
+    public function data():array
     {
-        return null;
+        return [];
     }
 }';
 		// save somewhere the generated content
