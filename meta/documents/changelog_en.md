@@ -1,4 +1,12 @@
 # Release Notes for Etsy
+## v1.2.1 (2017-11-22)
+#### Hinzugefügt
+- Possibility to import gift informations and gift message.
+- Buyer and payment messages are now also imported.
+
+#### Fixed
+- Fixed item title display bug that occurred after importing orderd.
+
 ## v1.2.0 (2017-11-20)
 #### Changed
 - This updated brings UI changes on all plugin sections. The views fulfill the newest Terra style guide and makes the plugin more friendlier.

@@ -1,4 +1,12 @@
 # Release Notes für Etsy
+## v1.2.1 (2017-11-22)
+#### Hinzugefügt
+- Geschenkinformationen werden jetzt auch zu den Aufträge importiert, als Auftragsposition und als Auftragsnotiz.
+- Käufernotizen und Zahlungsnotizen werden importiert.
+
+#### Fixed
+- Titel der Artikel im Auftragspositionen wird richtig angezeigt.
+
 ## v1.2.0 (2017-11-20)
 #### Geändert
 - Diese Aktualisierung bringt UI-Anpassungen an alle Bereiche. Die Benutzeroberflächen wurden auf die neue Terra Styleguide aktualisiert und optimieren damit die UX.
