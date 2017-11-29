@@ -65,7 +65,8 @@
   },
   "taxonomies": {
     "splitViewNames": {
-      "correlations": "Category Correlations"
+      "correlations": "Category Correlations",
+      "newCorrelation": "New category correlation"
     },
     "list": {
       "plentymarketsCategory": "Plentymarkets category",
@@ -89,7 +90,8 @@
   },
   "properties": {
     "splitViewNames": {
-      "correlations": "Property Correlations"
+      "correlations": "Property Correlations",
+      "newCorrelation": "New property correlation"
     },
     "list": {
       "systemProperty": "Plentymarkets property",

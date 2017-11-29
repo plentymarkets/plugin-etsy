@@ -64,7 +64,8 @@
   },
   "taxonomies": {
     "splitViewNames": {
-      "correlations": "Kategorie-Verknüpfungen"
+      "correlations": "Kategorie-Verknüpfungen",
+      "newCorrelation": "Neue Kategorieverknüpfung"
     },
     "list": {
       "plentymarketsCategory": "Plentymarkets-Kategorie",
@@ -88,7 +89,8 @@
   },
   "properties": {
     "splitViewNames": {
-      "correlations": "Merkmalverknüpfungen"
+      "correlations": "Merkmalverknüpfungen",
+      "newCorrelation": "Neue Merkmalverknüpfung"
     },
     "list": {
       "systemProperty": "Plentymarkets-Merkmal",
