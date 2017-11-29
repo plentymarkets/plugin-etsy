@@ -1,4 +1,11 @@
 # Release Notes für Etsy
+## v1.2.2 (2017-11-29)
+#### Fixed
+- Es wurde ein Bug behoben, welcher verhinderte, dass mehrere neu hinzugefügte Kategorie- oder Merkmalverknüpfungen gleichzeitig bearbeitet werden konnten.
+
+#### Fixed
+- Titel der Artikel im Auftragspositionen wird richtig angezeigt.
+
 ## v1.2.1 (2017-11-22)
 #### Hinzugefügt
 - Geschenkinformationen werden jetzt auch zu den Aufträge importiert, als Auftragsposition und als Auftragsnotiz.
