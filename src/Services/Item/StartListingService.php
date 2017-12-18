@@ -117,8 +117,8 @@ class StartListingService
 				     ]);
 
 				$this->getLogger(__FUNCTION__)
-					->setReferenceType('variationId')
-					->setReferenceValue($record->variationBase->id)
+                    ->addReference('variationId', $record->variationBase->id)
+                    ->addReference('etsyListingId', $listingId)
 					->error('Etsy::item.startListingError', $ex->getMessage());
 			}
 		}
