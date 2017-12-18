@@ -1,4 +1,8 @@
 # Release Notes for Etsy
+## v1.2.3 (2017-12-18)
+#### Fixed
+- A bug was fixed that prevented properties being displayed in the right language.
+
 ## v1.2.2 (2017-11-29)
 #### Fixed
 - A bug was fixed that prevented simultaneous editing of newly added category or property correlations.
