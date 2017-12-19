@@ -1,4 +1,8 @@
 # Release Notes für Etsy
+## v1.2.4 (2017-12-19)
+#### Fixed
+- Es wurde ein Bug behoben welcher verhinderte das Merkmale manchmal nicht richtig angezeigt waren.
+
 ## v1.2.3 (2017-12-18)
 #### Fixed
 - Es wurde ein Bug behoben, welcher verhinderte, dass Merkmale in der richtige Sprache angezeigt waren.

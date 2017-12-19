@@ -1,4 +1,8 @@
-# Release Notes for Etsy
+# Release Notes für Etsy
+## v1.2.4 (2017-12-19)
+#### Fixed
+- A bug was fixed that prevented that properties were sometimes not shown correctly.
+
 ## v1.2.3 (2017-12-18)
 #### Fixed
 - A bug was fixed that prevented properties being displayed in the right language.
