@@ -7,11 +7,14 @@ use Etsy\Helper\SettingsHelper;
 use Etsy\Models\Property;
 use Etsy\Models\SystemProperty;
 use Plenty\Modules\Item\Property\Contracts\PropertyGroupRepositoryContract;
+use Plenty\Modules\Item\Property\Models\PropertyGroupName;
+use Plenty\Modules\Item\Property\Models\PropertyName;
 use Plenty\Modules\Market\Settings\Contracts\SettingsRepositoryContract;
 use Plenty\Modules\Market\Settings\Factories\SettingsCorrelationFactory;
 use Plenty\Modules\Market\Settings\Models\Settings;
 use Plenty\Modules\Item\Property\Contracts\PropertyRepositoryContract as PlentyPropertyRepositoryContract;
 use Plenty\Repositories\Models\PaginatedResult;
+use Plenty\Modules\Item\Property\Models\Property as ItemProperty;
 
 /**
  * Class PropertyRepository
@@ -67,6 +70,12 @@ class PropertyRepository implements PropertyRepositoryContract
         /** @var PlentyPropertyRepositoryContract $propertyRepo */
         $propertyRepo = pluginApp(PlentyPropertyRepositoryContract::class);
 
+        $lang = 'de';
+
+        if (isset($filters['lang'])) {
+            $lang = $filters['lang'];
+        }
+
         $list    = [];
         $page    = 0;
         $perPage = 100;
@@ -86,9 +95,9 @@ class PropertyRepository implements PropertyRepositoryContract
 
                     $systemProperty->fillByAttributes([
                         'id'        => $propertyItem->id,
-                        'name'      => $propertyItem->backendName,
+                        'name'      => $this->getPropertyName($propertyItem, $lang),
                         'groupId'   => $propertyItem->propertyGroupId,
-                        'groupName' => $this->getPropertyGroupName($propertyItem->propertyGroupId),
+                        'groupName' => $this->getPropertyGroupName($propertyItem->propertyGroupId, $lang),
                     ]);
 
                     $list[] = $systemProperty;
@@ -128,9 +137,9 @@ class PropertyRepository implements PropertyRepositoryContract
 
             $systemProperty->fillByAttributes([
                 'id'        => $propertyItem->id,
-                'name'      => $propertyItem->backendName,
+                'name'      => $this->getPropertyName($propertyItem, $lang),
                 'groupId'   => $propertyItem->propertyGroupId,
-                'groupName' => $this->getPropertyGroupName($propertyItem->propertyGroupId),
+                'groupName' => $this->getPropertyGroupName($propertyItem->propertyGroupId, $lang),
             ]);
 
 
@@ -200,13 +209,14 @@ class PropertyRepository implements PropertyRepositoryContract
     }
 
     /**
-     * Get the property group backend name.
+     * Get the property group name with fallback to backend name.
      *
      * @param int $propertyGroupId
+     * @param string $lang
      *
      * @return string
      */
-    private function getPropertyGroupName($propertyGroupId)
+    private function getPropertyGroupName($propertyGroupId, string $lang)
     {
         try {
             /** @var PropertyGroupRepositoryContract $propertyGroupRepo */
@@ -214,9 +224,37 @@ class PropertyRepository implements PropertyRepositoryContract
 
             $propertyGroup = $propertyGroupRepo->findById($propertyGroupId);
 
+            /** @var PropertyGroupName $propertyGroupName */
+            foreach($propertyGroup->names as $propertyGroupName) {
+                if($propertyGroupName->lang === $lang) {
+                    return $propertyGroupName->name;
+                }
+            }
+
             return $propertyGroup->backendName;
         } catch (\Exception $ex) {
             return $propertyGroupId;
         }
+    }
+
+    /**
+     * Get the property name with fallback to backend name.
+     *
+     * @param ItemProperty $property
+     * @param string $lang
+     *
+     * @return string
+     */
+    private function getPropertyName(ItemProperty $property, string $lang)
+    {
+        /** @var PropertyName $propertyName */
+        foreach($property->names as $propertyName) {
+            if($propertyName->lang === $lang) {
+                return $propertyName->name;
+            }
+        }
+
+
+        return $property->backendName;
     }
 }
