@@ -226,10 +226,17 @@ class StartListingService
 
 		$response = $this->listingService->createListing($this->settingsHelper->getShopSettings('mainLanguage', 'de'), $data);
 
-		if(!isset($response['results']) || !is_array($response['results']))
-		{
-			throw new \Exception(is_string($response) ? $response : 'Failed to create listing.');
-		}
+        if (!isset($response['results']) || !is_array($response['results'])) {
+            if (is_array($response) && isset($response['error_msg'])) {
+                $message = $response['error_msg'];
+            } else if (is_string($response)) {
+                $message = $response;
+            } else {
+                $message = 'Failed to create listing.';
+            }
+
+            throw new \Exception($message);
+        }
 
 		return (int) reset($response['results'])['listing_id'];
 	}
