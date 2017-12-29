@@ -1,4 +1,8 @@
 # Release Notes für Etsy
+## v1.2.5 (2017-12-29)
+#### Geändert
+- Es werden nun mehrere Informationen angezeigt, wenn ein Listing nicht gestartet werden kann. 
+
 ## v1.2.4 (2017-12-19)
 #### Fixed
 - Es wurde ein Bug behoben welcher verhinderte das Merkmale manchmal nicht richtig angezeigt waren.

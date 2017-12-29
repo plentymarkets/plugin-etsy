@@ -1,4 +1,8 @@
 # Release Notes für Etsy
+## v1.2.5 (2017-12-29)
+#### Changed
+- More info is now shown if listing could not be started.
+
 ## v1.2.4 (2017-12-19)
 #### Fixed
 - A bug was fixed that prevented that properties were sometimes not shown correctly.
@@ -12,7 +16,7 @@
 - A bug was fixed that prevented simultaneous editing of newly added category or property correlations.
 
 ## v1.2.1 (2017-11-22)
-#### Hinzugefügt
+#### Added
 - Possibility to import gift informations and gift message.
 - Buyer and payment messages are now also imported.
 
