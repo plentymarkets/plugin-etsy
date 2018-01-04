@@ -74,20 +74,14 @@ class ReceiptService
 
             $this->getLogger('EtsyEventManager')
                 ->addReference('etsyReceiptId',$receiptId)
-                ->report('Etsy::item.updateReceiptCallSuccessful',
-                    [
-                        'receiptId' => $receiptId
-                    ]);
+                ->report('Etsy::item.updateReceiptCallSuccessful', $data);
 
             return $response;
         }
         catch (\Exception $ex){
             $this->getLogger('EtsyEventManager')
                 ->addReference('etsyReceiptId',$receiptId)
-                ->error('Etsy::item.updateReceiptCallFailed', $ex->getMessage(),
-                    [
-                        'receiptId' => $receiptId
-                    ]);
+                ->error('Etsy::item.updateReceiptCallFailed', $ex->getMessage(), $data);
         }
 	}
 
@@ -107,29 +101,27 @@ class ReceiptService
 	public function submitTracking($shopId, $receiptId, $trackingCode, $carrierName, $sendBcc = false)
 	{
 	    try {
-            $response = $this->client->call('submitTracking', [
-                'shop_id' => $shopId,
-                'receipt_id' => $receiptId,
-            ], [
+	        $data = [
                 'tracking_code' => $trackingCode,
                 'carrier_name' => $carrierName,
                 'send_bcc' => $sendBcc
-            ]);
+            ];
+
+            $response = $this->client->call('submitTracking', [
+                'shop_id' => $shopId,
+                'receipt_id' => $receiptId,
+            ], $data);
+
             $this->getLogger('EtsyEventManager')
                 ->addReference('etsyReceiptId',$receiptId)
-                ->report('Etsy::item.submitTrackingCallSuccessful',
-                    [
-                        'shopId' => $shopId,
-                        'receiptId' => $receiptId,
-                        'trackingCode' => $trackingCode
-                    ]);
+                ->report('Etsy::item.submitTrackingCallSuccessful', $data);
 
                 return $response;
         }
         catch(\Exception $ex){
             $this->getLogger('EtsyEventManager')
                 ->addReference('etsyReceiptId',$receiptId)
-                ->error('Etsy::item.submitTrackingCallFailed', $ex->getMessage());
+                ->error('Etsy::item.submitTrackingCallFailed', $data, $ex->getMessage());
         }
 	}
 }
