@@ -3,12 +3,16 @@
 namespace Etsy\Api\Services;
 
 use Etsy\Api\Client;
+use Plenty\Plugin\Log\Loggable;
+
 
 /**
  * Class ReceiptService
  */
 class ReceiptService
 {
+    use Loggable;
+
 	/**
 	 * @var Client
 	 */
@@ -53,23 +57,32 @@ class ReceiptService
 	 */
 	public function updateReceipt($receiptId, $wasPaid = null, $wasShipped = null)
 	{
-		$data = [];
+	    try {
+            $data = [];
 
-		if($wasPaid)
-		{
-			$data['was_paid'] = $wasPaid;
-		}
+            if ($wasPaid) {
+                $data['was_paid'] = $wasPaid;
+            }
 
-		if($wasShipped)
-		{
-			$data['was_shipped'] = $wasShipped;
-		}
+            if ($wasShipped) {
+                $data['was_shipped'] = $wasShipped;
+            }
 
-		$response = $this->client->call('updateReceipt', [
-			'receipt_id' => $receiptId,
-		], $data);
+            $response = $this->client->call('updateReceipt', [
+                'receipt_id' => $receiptId,
+            ], $data);
 
-		return $response;
+            $this->getLogger('EtsyEventManager')
+                ->addReference('receiptId', $receiptId)
+                ->report('Etsy::item.updateReceiptCallSuccessful');
+
+            return $response;
+        }
+        catch (\Exception $ex){
+            $this->getLogger('EtsyEventManager')
+                ->addReference('receiptId', $receiptId)
+                ->error('Etsy::item.updateReceiptCallFailed', $ex->getMessage());
+        }
 	}
 
 	/**
@@ -87,15 +100,28 @@ class ReceiptService
 	 */
 	public function submitTracking($shopId, $receiptId, $trackingCode, $carrierName, $sendBcc = false)
 	{
-		$response = $this->client->call('submitTracking', [
-			'shop_id'    => $shopId,
-			'receipt_id' => $receiptId,
-		], [
-			                                'tracking_code' => $trackingCode,
-			                                'carrier_name'  => $carrierName,
-			                                'send_bcc'      => $sendBcc
-		                                ]);
-
-		return $response;
+	    try {
+            $response = $this->client->call('submitTracking', [
+                'shop_id' => $shopId,
+                'receipt_id' => $receiptId,
+            ], [
+                'tracking_code' => $trackingCode,
+                'carrier_name' => $carrierName,
+                'send_bcc' => $sendBcc
+            ]);
+            $this->getLogger('EtsyEventManager')
+                ->addReference('shopId', $shopId)
+                ->addReference('receiptId', $receiptId)
+                ->addReference('trackingCode', $trackingCode)
+                ->report('Etsy::item.submitTrackingCallSuccessful');
+            return $response;
+        }
+        catch(\Exception $ex){
+            $this->getLogger('EtsyEventManager')
+                ->addReference('shopId', $shopId)
+                ->addReference('receiptId', $receiptId)
+                ->addReference('trackingCode', $trackingCode)
+                ->error('Etsy::item.submitTrackingCallFailed', $ex->getMessage());
+        }
 	}
 }
