@@ -114,7 +114,8 @@ class ReceiptService
                 ->addReference('receiptId', $receiptId)
                 ->addReference('trackingCode', $trackingCode)
                 ->report('Etsy::item.submitTrackingCallSuccessful');
-            return $response;
+
+                return $response;
         }
         catch(\Exception $ex){
             $this->getLogger('EtsyEventManager')
