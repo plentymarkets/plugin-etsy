@@ -1,4 +1,8 @@
 # Release Notes für Etsy
+## v1.2.6 (2018-01-05)
+#### Added
+- New logs for the etsy event actions.
+
 ## v1.2.5 (2017-12-29)
 #### Changed
 - More info is now shown if listing could not be started.
