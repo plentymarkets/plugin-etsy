@@ -74,14 +74,17 @@ class ReceiptService
 
             $this->getLogger('etsyPaymentEventManager')
                 ->addReference('etsyReceiptId',$receiptId)
-                ->info('Etsy::item.updateReceiptCallSuccessful', $data);
+                ->info('Etsy::service.updateReceiptCallSuccessful', $data);
 
             return $response;
         }
         catch (\Exception $ex){
             $this->getLogger('etsyPaymentEventManager')
                 ->addReference('etsyReceiptId',$receiptId)
-                ->error('Etsy::item.updateReceiptCallFailed', $ex->getMessage(), $data);
+                ->error('Etsy::service.updateReceiptCallFailed', [
+					'message' => $ex->getMessage(),
+					'data' => $data
+				]);
         }
 	}
 
@@ -114,14 +117,17 @@ class ReceiptService
 
             $this->getLogger('etsyShippingEventManager')
                 ->addReference('etsyReceiptId',$receiptId)
-                ->info('Etsy::item.submitTrackingCallSuccessful', $data);
+                ->info('Etsy::service.submitTrackingCallSuccessful', $data);
 
                 return $response;
         }
         catch(\Exception $ex){
             $this->getLogger('etsyShippingEventManager')
                 ->addReference('etsyReceiptId',$receiptId)
-                ->error('Etsy::item.submitTrackingCallFailed', $data, $ex->getMessage());
+                ->error('Etsy::service.submitTrackingCallFailed', [
+                	'message' => $ex->getMessage(),
+					'data' => $data
+				]);
         }
 	}
 }
