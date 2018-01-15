@@ -1,7 +1,7 @@
 # Release Notes für Etsy
 ## v1.2.7 (2018-01-15)
 #### Fixed
-- Es wurde ein Bug behoben das manchmal verhinderte dass das Plugin richtig gebaut wurde.
+- Es wurde ein Bug behoben, welcher dazu führte, dass das Plugin nicht richtig gebaut wurde.
 
 ## v1.2.6 (2018-01-05)
 #### Hinzugefügt
