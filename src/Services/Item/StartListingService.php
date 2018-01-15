@@ -238,7 +238,9 @@ class StartListingService
             throw new \Exception($message);
         }
 
-		return (int) reset($response['results'])['listing_id'];
+        $results = (array) $response['results'];
+
+        return (int) reset($results)['listing_id'];
 	}
 
 	/**
