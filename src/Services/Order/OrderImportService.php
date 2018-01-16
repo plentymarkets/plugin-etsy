@@ -85,7 +85,8 @@ class OrderImportService
 				{
 					EtsyReceiptValidator::validateOrFail($receiptData);
 
-					if(!$this->orderHelper->orderWasImported($receiptData['receipt_id']))
+					if(!$this->orderHelper->orderWasImported($receiptData['receipt_id']) && // TODO remove this in a next version.
+                       !$this->orderHelper->orderWasImported($this->settingsHelper->getShopSettings('shopId') . '_' . $receiptData['receipt_id']))
 					{
 						$this->orderCreateService->create($receiptData);
 					}

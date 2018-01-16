@@ -219,7 +219,7 @@ class OrderCreateService
 
             [
                 'typeId' => OrderPropertyType::EXTERNAL_ORDER_ID,
-                'value'  => (string)$data['receipt_id'],
+                'value'  => $this->settingsHelper->getShopSettings('shopId') . '_'. $data['receipt_id'],
             ],
         ];
 
