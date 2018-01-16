@@ -1,4 +1,8 @@
 # Release Notes für Etsy
+## v1.2.8 (2018-01-16)
+#### Changed
+- Die Struktur der externen Auftragsnummer wurde angepasst, damit die PayPal-Zahlungen eine höhere Übereinstimmungsrate haben.
+
 ## v1.2.7 (2018-01-15)
 #### Fixed
 - Es wurde ein Bug behoben, welcher dazu führte, dass das Plugin nicht richtig gebaut wurde.

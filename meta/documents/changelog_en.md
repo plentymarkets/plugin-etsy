@@ -1,4 +1,8 @@
 # Release Notes für Etsy
+## v1.2.8 (2018-01-16)
+#### Changed
+- The structure of the external order id was changed so that PayPal payments have a higher matching rate.
+
 ## v1.2.7 (2018-01-15)
 #### Fixed
 - A bug was fixed that prevented the plugin from being successfully built.
