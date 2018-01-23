@@ -69,7 +69,7 @@ class ReceiptService
             }
 
             $response = $this->client->call('updateReceipt', [
-                'receipt_id' => $receiptId,
+                'receipt_id' => end(explode('_', $receiptId)),
             ], $data);
 
             $this->getLogger('etsyPaymentEventManager')
@@ -112,7 +112,7 @@ class ReceiptService
 
             $response = $this->client->call('submitTracking', [
                 'shop_id' => $shopId,
-                'receipt_id' => $receiptId,
+                'receipt_id' => end(explode('_', $receiptId)),
             ], $data);
 
             $this->getLogger('etsyShippingEventManager')
