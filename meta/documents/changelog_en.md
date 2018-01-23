@@ -1,4 +1,8 @@
 # Release Notes für Etsy
+## v1.2.9 (2018-01-23)
+#### Fixed
+- An issue was fixed which caused event procedures (shipping and payment confirmation) not to be carried out correctly. 
+
 ## v1.2.8 (2018-01-16)
 #### Changed
 - The structure of the external order id was changed so that PayPal payments have a higher matching rate.

@@ -1,4 +1,8 @@
 # Release Notes für Etsy
+## v1.2.9 (2018-01-23)
+#### Fixed
+- Ein Fehler wurde behoben, welcher dazu führte, dass Ereignisaktionen (Versandbestätigung und Zahlungsbestätigung) nicht korrekt durchgeführt wurden.
+
 ## v1.2.8 (2018-01-16)
 #### Changed
 - Die Struktur der externen Auftragsnummer wurde angepasst, damit die PayPal-Zahlungen eine höhere Übereinstimmungsrate haben.
