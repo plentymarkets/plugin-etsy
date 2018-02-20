@@ -1,4 +1,10 @@
 # Release Notes für Etsy
+
+## v1.2.10 (2018-02-20)
+
+### Changed
+- Updated plugin short description.
+
 ## v1.2.9 (2018-01-23)
 #### Fixed
 - An issue was fixed which caused event procedures (shipping and payment confirmation) not to be carried out correctly. 

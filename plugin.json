@@ -1,5 +1,5 @@
 {
-  "version": "1.2.9",
+  "version": "1.2.10",
   "name": "Etsy",
   "description": "Plugin für Etsy-Marktplatzintegration. Um Etsy in plentymarkets nutzen zu können, ist eine Händlerregistrierung bei Etsy nötig.",
   "namespace": "Etsy",
@@ -8,8 +8,8 @@
   "email": "support@plentymarkets.eu",
   "authorIcon": "icon_author_xs.png",
   "shortDescription": {
-    "de": "Plugin für Etsy-Marktplatzintegartion. Um Etsy in plentymarkets nutzen zu können, ist eine Händlerregistrierung bei Etsy nötig.",
-    "en": "Plugin for integrating the market Etsy. An Etsy seller account is mandatory for setting up Etsy in plentymarkets."
+    "de": "Über die Anbindung des Online-Marktplatzes Etsy wird der automatische Austausch von Artikel- und Auftragsdaten mit plentymarkets ermöglicht, um Artikel auf Etsy zu listen. Die Schnittstelle zu Etsy ist in plentymarkets 7 bereits integriert.",
+    "en": "The integration of the online marketplace Etsy enables an automatic exchange of item- and order data with plentymarkets, allowing to list items on Etsy. The interface to Etsy is already integrated into plentymarkets 7."
   },
   "license": "AGPL-3.0",
   "categories": [
