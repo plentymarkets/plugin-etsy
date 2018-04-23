@@ -1,5 +1,10 @@
 # Release Notes für Etsy
 
+## v1.2.11 (2018-04-23)
+
+### Fixed
+- Merkmale ohne Gruppe werden korrekt angezeigt.
+
 ## v1.2.10 (2018-02-20)
 
 ### Geändert

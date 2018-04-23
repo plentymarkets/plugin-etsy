@@ -69,6 +69,8 @@ class CategoryRepository implements CategoryRepositoryContract
         $categories = $plentyCategoryRepo->getLinklistTree('item', $lang);
 
         $list = $this->buildCategoriesTree([], $categories, $lang, $with);
+        
+        $list = array_unique($list, SORT_REGULAR);
 
         return $list;
     }
