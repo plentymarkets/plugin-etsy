@@ -6,6 +6,9 @@ use Etsy\Models\Category;
 use Plenty\Modules\Category\Contracts\CategoryBranchRepositoryContract;
 use Plenty\Modules\Category\Contracts\CategoryRepositoryContract as PlentyCategoryRepositoryContract;
 use Etsy\Contracts\CategoryRepositoryContract;
+use Plenty\Modules\System\Contracts\SystemInformationRepositoryContract;
+use Plenty\Modules\System\Contracts\WebstoreRepositoryContract;
+use Plenty\Modules\System\Models\Webstore;
 
 /**
  * Class CategoryRepository
@@ -65,8 +68,15 @@ class CategoryRepository implements CategoryRepositoryContract
 
         /** @var PlentyCategoryRepositoryContract $plentyCategoryRepo */
         $plentyCategoryRepo = pluginApp(PlentyCategoryRepositoryContract::class);
+        /** @var WebstoreRepositoryContract $webstoreRepo */
+        $webstoreRepo = pluginApp(WebstoreRepositoryContract::class);
+        /** @var SystemInformationRepositoryContract $sysInfoRepo */
+        $sysInfoRepo = pluginApp(SystemInformationRepositoryContract::class);
 
-        $categories = $plentyCategoryRepo->getLinklistTree('item', $lang);
+        /** @var Webstore $webstore */
+        $webstore = $webstoreRepo->findByPlentyId($sysInfoRepo->loadValue('plentyId'));
+
+        $categories = $plentyCategoryRepo->getLinklistTree('item', $lang, $webstore->id);
 
         $list = $this->buildCategoriesTree([], $categories, $lang, $with);
 

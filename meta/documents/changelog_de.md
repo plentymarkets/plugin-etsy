@@ -1,12 +1,14 @@
 # Release Notes für Etsy
 
-## v1.2.11 (2018-04-23)
-
+## v1.2.12 (2018-04-23)
 ### Fixed
 - Merkmale ohne Gruppe werden korrekt angezeigt.
 
-## v1.2.10 (2018-02-20)
+## v1.2.11 (2018-02-20)
+### Fixed
+- Ein Fehler wurde behoben, welcher dazu führte, dass die plentymarkets Kategorien mehrfach angezeigt wurde.
 
+## v1.2.10 (2018-02-20)
 ### Geändert
 - Plugin-Kurzbeschreibung wurde angepasst.
 
