@@ -6,6 +6,8 @@ use Etsy\Api\Services\PaymentService;
 use Etsy\Helper\OrderHelper;
 use Etsy\Helper\PaymentHelper;
 use Etsy\Helper\SettingsHelper;
+use Plenty\Modules\Account\Address\Contracts\AddressContactRelationRepositoryContract;
+use Plenty\Modules\Account\Address\Models\AddressRelationType;
 use Plenty\Modules\Account\Contact\Contracts\ContactAddressRepositoryContract;
 use Plenty\Modules\Account\Contact\Contracts\ContactRepositoryContract;
 use Plenty\Modules\Accounting\Contracts\AccountingServiceContract;
@@ -59,7 +61,10 @@ class OrderCreateService
      * @param SettingsHelper $settingsHelper
      * @param Translator     $translator
      */
-    public function __construct(Application $app, OrderHelper $orderHelper, SettingsHelper $settingsHelper, Translator $translator)
+    public function __construct(Application $app,
+								OrderHelper $orderHelper,
+								SettingsHelper $settingsHelper,
+								Translator $translator)
     {
         $this->app            = $app;
         $this->orderHelper    = $orderHelper;
@@ -181,15 +186,25 @@ class OrderCreateService
         /** @var ContactAddressRepositoryContract $contactAddressRepo */
         $contactAddressRepo = pluginApp(ContactAddressRepositoryContract::class);
 
-        $address = $contactAddressRepo->createAddress($addressData, $contactId, 2);
+        $address = $contactAddressRepo->createAddress($addressData, $contactId, AddressRelationType::DELIVERY_ADDRESS);
 
         $this->getLogger(__FUNCTION__)
              ->addReference('etsyReceiptId', $data['receipt_id'])
              ->addReference('contactId', $contactId)
              ->addReference('addressId', $address->id)
              ->info('Etsy::order.addressCreated');
+        
+        // add address relation for typeId AddressRelationType::BILLING_ADDRESS
+		/** @var AddressContactRelationRepositoryContract $addressContactRelationRepo */
+		$addressContactRelationRepo = pluginApp(AddressContactRelationRepositoryContract::class);
+		
+		$addressContactRelationRepo->createAddressContactRelation([
+			'contactId' => $contactId,
+			'addressId' => $address->id,
+			'typeId' => AddressRelationType::BILLING_ADDRESS,
+		]);
 
-        return $address->id;
+		return $address->id;
     }
 
     /**
