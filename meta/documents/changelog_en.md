@@ -1,7 +1,10 @@
 # Release Notes für Etsy
 
-## v1.2.10 (2018-02-20)
+## v1.2.11 (2018-04-23)
+### Fixed
+- An issue was fixed which caused that the plentymarkets categories were shown multiple times.
 
+## v1.2.10 (2018-02-20)
 ### Changed
 - Updated plugin short description.
 
