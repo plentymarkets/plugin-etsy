@@ -1,5 +1,9 @@
 # Release Notes für Etsy
 
+## v1.2.13 (2018-04-26)
+### Added
+- Information about required rights for variable user classes was added to the user guide.
+
 ## v1.2.12 (2018-04-23)
 ### Fixed
 - Properties without groups are shown correctly.

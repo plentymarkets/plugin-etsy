@@ -236,6 +236,30 @@ Set up an event procedure to automatically send shipping confirmations to Etsy w
 </tbody>
 </table>
 
+## Required rights for the Etsy plugin
+    
+Users of the user class **Variable** need REST-API rights to use the **Etsy plugin**.
+
+Use the **System » Settings » User » Accounts » User account » Tab: Right** menu to assign rights.
+
+→ **Tip**: Use the filter function to search for users of the user class **Variable**. To do so, go to **Tab: Filter** and select the filter **Variable** within the drop-down list **Class**. Click on **Search**.
+    
+#### Required REST-API rights
+    
+The required REST-API rights for variable user classes are listed below.
+    
+ - **Categories** and all subordinate rights
+ - Items » **Properties** and all subordinate rights
+ - Markets » **Credentials** and all subordinate rights
+    
+#### Assigning REST-API rights
+    
+1. Go to **System » Settings » User » Accounts**.
+2. Click on the **user** that you want to assign rights to.
+3. Go to **Tab: Right » Tab: REST-API**.
+4. Place a check mark next to the required rights.
+5. **Save** the settings.
+
 ## License
 
 This project is licensed under the GNU AFFERO GENERAL PUBLIC LICENSE.- find further information in the [LICENSE.md](https://github.com/plentymarkets/plugin-etsy/blob/master/LICENSE.md).
