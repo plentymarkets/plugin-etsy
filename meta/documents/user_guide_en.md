@@ -249,7 +249,7 @@ Use the **System » Settings » User » Accounts » User account » Tab: Right**
 The required REST-API rights for variable user classes are listed below.
     
  - **Categories** and all subordinate rights
- - **Properties** and all subordinate rights
+ - Items » **Properties** and all subordinate rights
  - Markets » **Credentials** and all subordinate rights
     
 #### Assigning REST-API rights

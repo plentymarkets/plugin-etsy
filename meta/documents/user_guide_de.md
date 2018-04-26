@@ -254,7 +254,7 @@ Richten Sie eine Ereignisaktion ein, um Versandbestätigungen automatisch an Ets
  Die folgenden REST-API Berechtigungen sind für variable Benutzerklassen erforderlich.
  
  - **Kategorien** und alle untergeordneten Berechtigungen
- - **Merkmale** und alle untergeordneten Berechtigungen
+ - Artikel » **Merkmale** und alle untergeordneten Berechtigungen
  - Märkte » **Zugangsdaten** und alle untergeordneten Berechtigungen
  
  #### REST-API Berechtigungen zuweisen:
