@@ -1,5 +1,9 @@
 # Release Notes für Etsy
 
+## v1.2.14 (2018-05-02)
+### Fixed
+- The indicated shipping address is also used as invoice address.
+
 ## v1.2.13 (2018-04-26)
 ### Added
 - Information about required rights for variable user classes was added to the user guide.

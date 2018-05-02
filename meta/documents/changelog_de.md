@@ -1,5 +1,9 @@
 # Release Notes für Etsy
 
+## v1.2.14 (2018-05-02)
+### Fixed
+- Die angegebene Lieferadresse wird auch als Rechnungsadresse hinterlegt.
+
 ## v1.2.13 (2018-04-26)
 ### Hinzugefügt
 - Dem User Guide wurden Informationen über benötigte Berechtigungen für variable Benutzerklassen hinzugefügt.
