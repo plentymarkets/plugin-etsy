@@ -1,5 +1,9 @@
 # Release Notes für Etsy
 
+## v1.2.13 (2018-04-26)
+### Hinzugefügt
+- Dem User Guide wurden Informationen über benötigte Berechtigungen für variable Benutzerklassen hinzugefügt.
+
 ## v1.2.12 (2018-04-23)
 ### Fixed
 - Merkmale ohne Gruppe werden korrekt angezeigt.
