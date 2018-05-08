@@ -1,5 +1,9 @@
 # Release Notes für Etsy
 
+## v1.2.15 (2018-05-08)
+### Fixed
+- Ein Fehler wurde behoben, welcher dazu führte, dass die Rechnungsanschrift nicht angelegt werden konnte.
+
 ## v1.2.14 (2018-05-02)
 ### Fixed
 - Die angegebene Lieferadresse wird auch als Rechnungsadresse hinterlegt.
