@@ -199,9 +199,11 @@ class OrderCreateService
 		$addressContactRelationRepo = pluginApp(AddressContactRelationRepositoryContract::class);
 		
 		$addressContactRelationRepo->createAddressContactRelation([
-			'contactId' => $contactId,
-			'addressId' => $address->id,
-			'typeId' => AddressRelationType::BILLING_ADDRESS,
+			[
+				'contactId' => $contactId,
+				'addressId' => $address->id,
+				'typeId' => AddressRelationType::BILLING_ADDRESS,
+			]
 		]);
 
 		return $address->id;
