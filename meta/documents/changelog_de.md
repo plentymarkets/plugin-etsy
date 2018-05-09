@@ -1,5 +1,9 @@
 # Release Notes für Etsy
 
+## v1.2.16 (2018-05-09)
+### Fixed
+- Die Plugin-Config ist multilingual.
+
 ## v1.2.15 (2018-05-08)
 ### Fixed
 - Ein Fehler wurde behoben, welcher dazu führte, dass die Rechnungsanschrift nicht angelegt werden konnte.
