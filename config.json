@@ -1,31 +1,31 @@
 [
   {
-    "tab": "config.appSettings",
+    "tab": "Config.appSettings",
     "key": "consumerKey",
-    "label": "config.keyString",
+    "label": "Config.keyString",
     "type": "text",
     "default": ""
   },
 
   {
-    "tab": "config.appSettings",
+    "tab": "Config.appSettings",
     "key": "consumerSecret",
-    "label": "config.sharedSecret",
+    "label": "Config.sharedSecret",
     "type": "text",
     "default": ""
   },
   {
-    "tab": "config.general",
+    "tab": "Config.general",
     "key": "readCapacityUnits",
-    "label": "config.readCapacityUnits",
+    "label": "Config.readCapacityUnits",
     "type": "text",
     "default": "3"
   },
 
   {
-    "tab": "config.general",
+    "tab": "Config.general",
     "key": "writeCapacityUnits",
-    "label": "config.writeCapacityUnits",
+    "label": "Config.writeCapacityUnits",
     "type": "text",
     "default": "2"
   }
