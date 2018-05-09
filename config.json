@@ -1,31 +1,31 @@
 [
   {
-    "tab": "Etsy App Settings",
+    "tab": "config.appSettings",
     "key": "consumerKey",
-    "label": "Keystring",
+    "label": "config.keyString",
     "type": "text",
     "default": ""
   },
 
   {
-    "tab": "Etsy App Settings",
+    "tab": "config.appSettings",
     "key": "consumerSecret",
-    "label": "Shared secret",
+    "label": "config.sharedSecret",
     "type": "text",
     "default": ""
   },
   {
-    "tab": "General",
+    "tab": "config.general",
     "key": "readCapacityUnits",
-    "label": "Read Capacity Units",
+    "label": "config.readCapacityUnits",
     "type": "text",
     "default": "3"
   },
 
   {
-    "tab": "General",
+    "tab": "config.general",
     "key": "writeCapacityUnits",
-    "label": "Write Capacity Units",
+    "label": "config.writeCapacityUnits",
     "type": "text",
     "default": "2"
   }
