@@ -1,5 +1,9 @@
 # Release Notes für Etsy
 
+## v1.2.16 (2018-05-09)
+### Fixed
+- The plugin config is multilingual.
+
 ## v1.2.15 (2018-05-08)
 ### Fixed
 - An issue was fixed which caused that the billing address could not be created.
