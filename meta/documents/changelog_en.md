@@ -1,5 +1,9 @@
 # Release Notes für Etsy
 
+## v1.2.17 (2018-06-05)
+### Changed
+- Changed the log level for some logs.
+
 ## v1.2.16 (2018-05-09)
 ### Fixed
 - The plugin config is multilingual.
