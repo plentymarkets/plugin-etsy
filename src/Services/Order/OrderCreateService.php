@@ -272,7 +272,7 @@ class OrderCreateService
              ->addReference('contactId', $contactId)
              ->addReference('addressId', $addressId)
              ->addReference('orderId', $order->id)
-             ->info('Etsy::order.orderCreated');
+             ->report('Etsy::order.orderCreated');
 
         return $order;
     }
