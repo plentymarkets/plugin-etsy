@@ -2,7 +2,7 @@
 
 ## v1.2.17 (2018-06-05)
 ### Geändert
-- Das Log-Level für manche Logs wurde geändert.
+- Das Log-Level wurde für einige Logs geändert.
 
 ## v1.2.16 (2018-05-09)
 ### Fixed
