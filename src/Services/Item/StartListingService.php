@@ -103,7 +103,7 @@ class StartListingService
 				$this->getLogger(__FUNCTION__)
 				     ->addReference('etsyListingId', $listingId)
 				     ->addReference('variationId', $record->variationBase->id)
-				     ->info('Etsy::item.itemExportSuccess');
+				     ->report('Etsy::item.itemExportSuccess');
 			}
 			catch(\Exception $ex)
 			{
