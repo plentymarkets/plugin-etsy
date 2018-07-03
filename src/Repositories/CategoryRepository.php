@@ -6,6 +6,7 @@ use Etsy\Models\Category;
 use Plenty\Modules\Category\Contracts\CategoryBranchRepositoryContract;
 use Plenty\Modules\Category\Contracts\CategoryRepositoryContract as PlentyCategoryRepositoryContract;
 use Etsy\Contracts\CategoryRepositoryContract;
+use Plenty\Modules\Category\Models\CategoryDetails;
 use Plenty\Modules\System\Contracts\SystemInformationRepositoryContract;
 use Plenty\Modules\System\Contracts\WebstoreRepositoryContract;
 use Plenty\Modules\System\Models\Webstore;
@@ -24,13 +25,18 @@ class CategoryRepository implements CategoryRepositoryContract
         $plentyCategoryRepo = pluginApp(PlentyCategoryRepositoryContract::class);
 
         $plentyCategory = $plentyCategoryRepo->get($categoryId, $lang);
+        $categoryDetailsList = $plentyCategory->details;
+        /** @var CategoryDetails $categoryDetails */
+        if($categoryDetailsList instanceof \ArrayAccess) {
+            $categoryDetails = $categoryDetailsList->offsetGet(0);
+        }
 
         /** @var Category $category */
         $category = pluginApp(Category::class);
 
         $category->fillByAttributes([
             'id'       => (int)$plentyCategory->id,
-            'name'     => $plentyCategory->details[0]->name,
+            'name'     => $categoryDetails->name,
             'level'    => (int)$plentyCategory->level - 1,
             'parentId' => (int)$plentyCategory->parentCategoryId,
             'children' => [],
