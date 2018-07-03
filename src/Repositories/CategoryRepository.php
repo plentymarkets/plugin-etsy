@@ -25,11 +25,10 @@ class CategoryRepository implements CategoryRepositoryContract
         $plentyCategoryRepo = pluginApp(PlentyCategoryRepositoryContract::class);
 
         $plentyCategory = $plentyCategoryRepo->get($categoryId, $lang);
+        /** @var \ArrayAccess $categoryDetailsList */
         $categoryDetailsList = $plentyCategory->details;
         /** @var CategoryDetails $categoryDetails */
-        if($categoryDetailsList instanceof \ArrayAccess) {
-            $categoryDetails = $categoryDetailsList->offsetGet(0);
-        }
+        $categoryDetails = $categoryDetailsList->offsetGet(0);
 
         /** @var Category $category */
         $category = pluginApp(Category::class);
