@@ -36,15 +36,12 @@ class CategoryRepository implements CategoryRepositoryContract
 
         $category->fillByAttributes([
             'id'       => (int)$plentyCategory->id,
-            'name'     => $categoryDetails->name,
+            'name'     => $categoryDetails instanceof CategoryDetails ? $categoryDetails->name : '',
             'level'    => (int)$plentyCategory->level - 1,
             'parentId' => (int)$plentyCategory->parentCategoryId,
             'children' => [],
             'path'     => [],
         ]);
-
-        /** @var PlentyCategoryRepositoryContract $plentyCategoryRepo */
-        $plentyCategoryRepo = pluginApp(PlentyCategoryRepositoryContract::class);
 
         $children = $plentyCategoryRepo->getChildren($categoryId, $lang);
 
