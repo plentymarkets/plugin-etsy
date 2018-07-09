@@ -9,7 +9,7 @@
 
 ## Installing Etsy in plentymarkets
 
-After buying the Etsy plugin in the plentyMarketplace, install the market in the menu **Start » Plugins » Tab: Purchases**. Then switch to the tab **Plugins** and open **Etsy**. Now enter the Keystring and Shared secret in the **Configuration** section. You should have received both after creating the app on Etsy. Save the setting.
+After buying the Etsy plugin in the plentyMarketplace, install the market in the menu **Plugins » Plugin Overview**. Select the filter **Not installed** or **All** to display plugins that are not installed. Then open **Etsy** in the **Plugin Overview** menu. Now enter the Keystring and Shared secret in the **Configuration** section. You should have received both after creating the app on Etsy. Save the setting.
 
 ### Granting rights
 
