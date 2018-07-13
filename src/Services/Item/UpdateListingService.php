@@ -133,7 +133,7 @@ class UpdateListingService
 
 		if($isSupply = $this->itemHelper->getProperty($record, 'is_supply', $language))
 		{
-			$data['is_supply'] = $isSupply;
+			$data['is_supply'] = $isSupply == 'true' ? true : false;
 		}
 
 		if(strlen($record->itemDescription[ $language ]['keywords']))
