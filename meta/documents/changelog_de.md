@@ -1,5 +1,9 @@
 # Release Notes für Etsy
 
+## v1.2.20 (2018-07-13)
+### Fixed
+- Ein Fehler wurde behoben, der das Aktualisieren eines Artikels verhindert hat.
+
 ## v1.2.19 (2018-07-09)
 ### Geändert
 - Die Informationen zum Installieren des Plugins wurden im User Guide angepasst.
