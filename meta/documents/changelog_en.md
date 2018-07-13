@@ -1,8 +1,8 @@
 # Release Notes für Etsy
 
 ## v1.2.20 (2018-07-13)
-### Changed
-- 
+### Fixed
+- An error was fixed which prevented items from being updated.
 
 ## v1.2.19 (2018-07-09)
 ### Changed
