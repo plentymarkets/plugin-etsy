@@ -63,20 +63,25 @@ class UpdateListingStockService
 				];
 
 				$this->listingService->updateListing($listingId, $data);
+
+				$this->getLogger(__FUNCTION__)
+					->addReference('etsyListingId', $listingId)
+					->addReference('variationId', $record->variationBase->id)
+					->report('Etsy::item.stockUpdateSuccess', $data);
 			}
 			catch(\Exception $ex)
 			{
 				$this->getLogger(__FUNCTION__)
-					->setReferenceType('variationId')
-					->setReferenceValue($record->variationBase->id)
+					->addReference('etsyListingId', $listingId)
+					->addReference('variationId', $record->variationBase->id)
 					->error('Etsy::item.stockUpdateError', $ex->getMessage());
 			}
 		}
 		else
 		{
 			$this->getLogger(__FUNCTION__)
-				->setReferenceType('variationId')
-				->setReferenceValue($record->variationBase->id)
+				->addReference('etsyListingId', $listingId)
+				->addReference('variationId', $record->variationBase->id)
 				->info('Etsy::item.stockUpdateError');
 		}
 	}
