@@ -1,9 +1,12 @@
 # Release Notes für Etsy
 
+## v1.2.22 (2018-08-13)
+### Hinzugefügt
+- Den Logs wurden Anweisungen hinzugefügt.
+
 ## v1.2.21 (2018-07-17)
 ### Geändert
 - Die Logs für einige Prozesse wurden angepasst.
-
 
 ## v1.2.20 (2018-07-13)
 ### Fixed
