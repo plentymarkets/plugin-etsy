@@ -94,10 +94,23 @@ class UpdateListingService
 					     ]);
 				}
 
-				$this->getLogger(__FUNCTION__)
-					->addReference('etsyListingId', $listingId)
-					->addReference('variationId', $record->variationBase->id)
-					->error('Etsy::item.updateListingError', $ex->getMessage());
+				if (strpos($ex->getMessage(), 'The listing is not editable, must be active or expired but is removed') !== false)
+				{
+					$this->getLogger(__FUNCTION__)
+						->addReference('variationId', $record->variationBase->id)
+						->addReference('etsyListingId', $listingId)
+						->error('Etsy::item.startListingErrorInvalidSku', [
+							'exception' => $ex->getMessage(),
+							'instruction' => trans('Etsy::instructions.instructionInvalidSku')
+						]);
+				}
+				else
+				{
+					$this->getLogger(__FUNCTION__)
+						->addReference('etsyListingId', $listingId)
+						->addReference('variationId', $record->variationBase->id)
+						->error('Etsy::item.updateListingError', $ex->getMessage());
+				}
 			}
 		}
 		else
