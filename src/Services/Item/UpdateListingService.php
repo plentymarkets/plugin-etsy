@@ -8,6 +8,7 @@ use Etsy\Api\Services\ListingService;
 use Etsy\Helper\ItemHelper;
 use Etsy\Helper\SettingsHelper;
 use Plenty\Plugin\Log\Loggable;
+use Plenty\Plugin\Translation\Translator;
 
 /**
  * Class UpdateListingService
@@ -40,21 +41,27 @@ class UpdateListingService
 	 * @var ListingTranslationService
 	 */
 	private $listingTranslationService;
+	/**
+	 * @var Translator
+	 */
+	private $translator;
 
 	/**
-	 * @param ItemHelper                 $itemHelper
-	 * @param ConfigRepository           $config
-	 * @param ListingService             $listingService
-	 * @param SettingsHelper             $settingsHelper
-	 * @param ListingTranslationService  $listingTranslationService
+	 * @param ItemHelper                $itemHelper
+	 * @param ConfigRepository          $config
+	 * @param ListingService            $listingService
+	 * @param SettingsHelper            $settingsHelper
+	 * @param ListingTranslationService $listingTranslationService
+	 * @param Translator                $translator
 	 */
-	public function __construct(ItemHelper $itemHelper, ConfigRepository $config, ListingService $listingService, SettingsHelper $settingsHelper, ListingTranslationService $listingTranslationService)
+	public function __construct(ItemHelper $itemHelper, ConfigRepository $config, ListingService $listingService, SettingsHelper $settingsHelper, ListingTranslationService $listingTranslationService, Translator $translator)
 	{
 		$this->config                    = $config;
 		$this->settingsHelper            = $settingsHelper;
 		$this->itemHelper                = $itemHelper;
 		$this->listingService            = $listingService;
 		$this->listingTranslationService = $listingTranslationService;
+		$this->translator = $translator;
 	}
 
 	/**
@@ -101,7 +108,7 @@ class UpdateListingService
 						->addReference('etsyListingId', $listingId)
 						->error('Etsy::item.startListingErrorInvalidSku', [
 							'exception' => $ex->getMessage(),
-							'instruction' => trans('Etsy::instructions.instructionInvalidSku')
+							'instruction' => $this->translator->trans('Etsy::instructions.instructionInvalidSku')
 						]);
 				}
 				else
