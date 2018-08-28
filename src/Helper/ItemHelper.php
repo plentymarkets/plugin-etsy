@@ -320,7 +320,7 @@ class ItemHelper
 
 		foreach($tagsArray as $tag)
 		{
-			$tag = trim(str_replace([' ', '&', '.', '€'], ['', ' and ', '', ''], $tag));
+			$tag = trim(str_replace(['&', '.', '€'], [' and ', '', ''], $tag));
 
 			if(strlen($tag) <= 20)
 			{
