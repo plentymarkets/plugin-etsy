@@ -62,6 +62,10 @@ class ItemExportService extends AbstractBatchService
 	 */
 	protected function export(RecordList $records)
 	{
+		$this->getLogger(__FUNCTION__)
+			->addReference('etsyExportListCount', count($records))
+			->debug('Etsy::item.exportRecord');
+		
 		foreach($records as $record)
 		{
 			try

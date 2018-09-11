@@ -53,9 +53,10 @@ class EtsyServiceProvider extends ServiceProvider
 	public function boot(CronContainer $container, EventProceduresService $eventProceduresService, ReferenceContainer $referenceContainer)
 	{
 		$referenceContainer->add([
-			                         'etsyListingId' => 'etsyListingId',
-			                         'etsyReceiptId' => 'etsyReceiptId',
-			                         'etsyLanguage'  => 'etsyLanguage',
+			                         	'etsyListingId'  		=> 'etsyListingId',
+			                         	'etsyReceiptId'  		=> 'etsyReceiptId',
+			                         	'etsyLanguage'   		=> 'etsyLanguage',
+										'etsyExportListCount' 	=> 'etsyExportListCount'
 		                         ]);
 
 		// register crons
