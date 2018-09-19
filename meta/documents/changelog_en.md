@@ -1,5 +1,9 @@
 # Release Notes für Etsy
 
+## v1.2.25 (2018-09-19)
+### Fixed
+- An error was fixed which prevented the account authentication.
+
 ## v1.2.23 (2018-08-28)
 ### Changed
 - Tags can now contain spaces.

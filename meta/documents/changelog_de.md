@@ -1,5 +1,9 @@
 # Release Notes für Etsy
 
+## v1.2.25 (2018-09-19)
+### Fixed
+- Ein Fehler wurde behoben, der den Authentifizierungsprozess verhindert hat.
+
 ## v1.2.23 (2018-08-28)
 ### Geändert
 - Tags können nun mit Leerzeichen übertragen werden.
