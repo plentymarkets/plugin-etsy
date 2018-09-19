@@ -4,6 +4,10 @@
 ### Fixed
 - An error was fixed which prevented the account authentication.
 
+## v1.2.24 (2018-09-11)
+### Added
+- Added a log.
+
 ## v1.2.23 (2018-08-28)
 ### Changed
 - Tags can now contain spaces.
