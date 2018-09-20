@@ -27,6 +27,8 @@ use Etsy\Contracts\TaxonomyRepositoryContract;
  */
 class EtsyServiceProvider extends ServiceProvider
 {
+    const PLUGIN_NAME = 'Etsy';
+    
 	/**
 	 * @return void
 	 */

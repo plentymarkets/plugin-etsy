@@ -26,6 +26,7 @@
     "Etsy\\Migrations\\CreateSettingsTable",
     "Etsy\\Migrations\\CreateVariationImageTable",
     "Etsy\\Migrations\\CreateOrderReferrer",
-    "Etsy\\Migrations\\CreateMarketPropertySettings"
+    "Etsy\\Migrations\\CreateMarketPropertySettings",
+    "Etsy\\Migrations\\CreateLegalInformationTable"
   ]
 }
