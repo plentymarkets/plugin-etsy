@@ -89,10 +89,32 @@ class LegalInformation extends Model
      */
     public function fill(array $data)
     {
-        $this->id = $data['id'];
-        $this->lang = $data['lang'];
-        $this->value = $data['value'];
-        $this->createdAt = $data['createdAt'];
-        $this->updatedAt = $data['updatedAt'];
+        if($data['id']) {
+            $this->id = $data['id'];    
+        }
+
+        if($data['lang']) {
+            $this->lang = $data['lang'];
+        }
+
+        if($data['value']) {
+            $this->value = $data['value'];
+        }
+
+        if($data['createdAt']) {
+            $this->createdAt = $data['createdAt'];
+        }
+
+        if($data['updatedAt']) {
+            $this->updatedAt = $data['updatedAt'];
+        }
+    }
+
+    /**
+     * @return string
+     */
+    function jsonSerialize()
+    {
+        return json_encode($this->toArray());
     }
 }

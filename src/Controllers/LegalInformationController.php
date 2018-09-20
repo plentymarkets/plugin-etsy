@@ -37,7 +37,14 @@ class LegalInformationController extends Controller
      */
     public function search(Request $request)
     {
-        return $this->legalInformationRepository->search($request->get('filter'));
+        $lang = $request->get('lang');
+        if(strlen($lang)) {
+            $filter['lang'] = $lang;
+        } else {
+            $filter = [];
+        }
+        
+        return json_encode($this->legalInformationRepository->search($filter));
     }
 
     /**
@@ -46,7 +53,7 @@ class LegalInformationController extends Controller
      */
     public function get(int $id)
     {
-        return $this->legalInformationRepository->get($id);
+        return json_encode($this->legalInformationRepository->get($id));
     }
 
     /**
@@ -55,7 +62,8 @@ class LegalInformationController extends Controller
      */
     public function save(Request $request)
     {
-        return $this->legalInformationRepository->save($request->get('data'));
+        $result = $this->legalInformationRepository->save((array)json_decode($request->getContent()));
+        return json_encode($result);
     }
 
     /**
@@ -65,7 +73,8 @@ class LegalInformationController extends Controller
      */
     public function update($id, Request $request)
     {
-        return $this->legalInformationRepository->update($id, $request->get('data'));
+        $result = $this->legalInformationRepository->update($id, (array)json_decode($request->getContent()));
+        return json_encode($result);
     }
 
     /**
@@ -77,6 +86,4 @@ class LegalInformationController extends Controller
     {
         return $response->make($this->legalInformationRepository->delete($id));
     }
-    
-    
 }

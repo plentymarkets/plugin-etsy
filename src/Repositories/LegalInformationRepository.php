@@ -70,16 +70,31 @@ class LegalInformationRepository implements LegalInformationRepositoryContract
      */
 	public function save($data)
 	{
-        /** @var LegalInformation $legalInformation */
-        $legalInformation = pluginApp(LegalInformation::class);
-	    if(is_array($data)) {
+        if(isset($data['lang'])) {
+            $legalInformations = $this->search(['lang' => $data['lang']]);
+            if(count($legalInformations) >= 1) {
+                $legalInformation = array_shift($legalInformations);
+            }
+        }
+        
+        if(!isset($legalInformation)) {
+            /** @var LegalInformation $legalInformation */
+            $legalInformation = pluginApp(LegalInformation::class);
+        }
+
+        if(is_array($data)) {
             $legalInformation->fill($data);
         } else {
             $legalInformation = $data;
         }
 
-        $legalInformation->createdAt = date('Y-m-d H:is:');
-        $legalInformation->updatedAt = date('Y-m-d H:is:');
+        if(!isset($legalInformation->createdAt)) {
+            $legalInformation->createdAt = date('Y-m-d H:i:s');
+        }
+
+        if(!isset($data['updatedAt'])) {
+            $legalInformation->updatedAt = date('Y-m-d H:i:s');
+        }
 
         /** @var LegalInformation $result */
         $result = $this->database->save($legalInformation);
@@ -103,6 +118,10 @@ class LegalInformationRepository implements LegalInformationRepositoryContract
             }
 
             $legalInformation->fill($data);
+            if(!isset($data['updatedAt'])) {
+                $legalInformation->updatedAt = date('Y-m-d H:i:s');
+            }
+            
             $legalInformation = $this->database->save($legalInformation);
             return $legalInformation;
         } else {
