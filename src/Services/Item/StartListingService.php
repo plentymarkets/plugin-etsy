@@ -59,16 +59,16 @@ class StartListingService
 	 */
 	private $translator;
 
-	/**
-	 * @param ItemHelper                $itemHelper
-	 * @param ListingService            $listingService
-	 * @param DeleteListingService      $deleteListingService
-	 * @param ListingImageService       $listingImageService
-	 * @param ListingTranslationService $listingTranslationService
-	 * @param SettingsHelper            $settingsHelper
-	 * @param ImageHelper               $imageHelper
-	 * @param Translator                $translator
-	 */
+    /**
+     * @param ItemHelper $itemHelper
+     * @param ListingService $listingService
+     * @param DeleteListingService $deleteListingService
+     * @param ListingImageService $listingImageService
+     * @param ListingTranslationService $listingTranslationService
+     * @param SettingsHelper $settingsHelper
+     * @param ImageHelper $imageHelper
+     * @param Translator $translator
+     */
 	public function __construct(
 		ItemHelper $itemHelper,
 		ListingService $listingService,
@@ -79,14 +79,14 @@ class StartListingService
 		ImageHelper $imageHelper,
 		Translator $translator)
 	{
-		$this->itemHelper                = $itemHelper;
-		$this->listingTranslationService = $listingTranslationService;
-		$this->listingService            = $listingService;
-		$this->deleteListingService      = $deleteListingService;
-		$this->listingImageService       = $listingImageService;
-		$this->settingsHelper            = $settingsHelper;
-		$this->imageHelper               = $imageHelper;
-		$this->translator = $translator;
+        $this->itemHelper                 = $itemHelper;
+        $this->listingTranslationService  = $listingTranslationService;
+        $this->listingService             = $listingService;
+        $this->deleteListingService       = $deleteListingService;
+        $this->listingImageService        = $listingImageService;
+        $this->settingsHelper             = $settingsHelper;
+        $this->imageHelper                = $imageHelper;
+        $this->translator                 = $translator;
 	}
 
 	/**
@@ -189,11 +189,12 @@ class StartListingService
 		$title = ltrim($title, ' +-!?');
 
 		$description = html_entity_decode(strip_tags($record->itemDescription[ $language ]['description']));
+		$legalInformationText = $this->itemHelper->getLegalInformation($language);
 
 		$data = [
 			'state'                => 'draft',
 			'title'                => $title,
-			'description'          => $description,
+			'description'          => $description.$legalInformationText,
 			'quantity'             => $this->itemHelper->getStock($record),
 			'price'                => number_format($record->variationRetailPrice->price, 2, '.', ''),
 			'currency_code'        => $record->variationRetailPrice->currency,

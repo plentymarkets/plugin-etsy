@@ -1,5 +1,9 @@
 # Release Notes für Etsy
 
+## v1.3.0 (2018-09-24)
+### Hinzugefügt
+- Die Artikelbeschreibung wird durch den Gesetzestext ergänzt.
+
 ## v1.2.24 (2018-09-11)
 ### Hinzugefügt
 - Ein Log wurde hinzugefügt.
