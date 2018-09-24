@@ -182,19 +182,20 @@ class StartListingService
 	 */
 	private function createListing(Record $record)
 	{
-		$language    = $this->settingsHelper->getShopSettings('mainLanguage', 'de');
+        $language = $this->settingsHelper->getShopSettings('mainLanguage', 'de');
 
-		$title       = trim(preg_replace('/\s+/', ' ', $this->itemHelper->getVariationWithAttributesName($record, $language)));
-		$title       = str_replace(':', ' -', $title);
-		$title = ltrim($title, ' +-!?');
+        $title = trim(preg_replace('/\s+/', ' ', $this->itemHelper->getVariationWithAttributesName($record, $language)));
+        $title = str_replace(':', ' -', $title);
+        $title = ltrim($title, ' +-!?');
 
-		$description = html_entity_decode(strip_tags($record->itemDescription[ $language ]['description']));
-		$legalInformationText = $this->itemHelper->getLegalInformation($language);
+        $legalInformation = $this->itemHelper->getLegalInformation($language);
+        
+		$description = html_entity_decode(strip_tags($record->itemDescription[ $language ]['description'] . $legalInformation));
 
 		$data = [
 			'state'                => 'draft',
 			'title'                => $title,
-			'description'          => $description.$legalInformationText,
+			'description'          => $description,
 			'quantity'             => $this->itemHelper->getStock($record),
 			'price'                => number_format($record->variationRetailPrice->price, 2, '.', ''),
 			'currency_code'        => $record->variationRetailPrice->currency,
