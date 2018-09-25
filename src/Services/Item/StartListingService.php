@@ -339,9 +339,11 @@ class StartListingService
 					$title = trim(preg_replace('/\s+/', ' ', $record->itemDescription[ $language ]['name1']));
 					$title = ltrim($title, ' +-!?');
 
+                    $legalInformation = $this->itemHelper->getLegalInformation($language);
+
 					$data = [
 						'title'       => $title,
-						'description' => html_entity_decode(strip_tags($record->itemDescription[ $language ]['description'])),
+						'description' => html_entity_decode(strip_tags($record->itemDescription[ $language ]['description'].$legalInformation)),
 					];
 
 					if($record->itemDescription[ $language ]['keywords'])
