@@ -62,44 +62,42 @@ class LegalInformationRepository implements LegalInformationRepositoryContract
 
     /**
      * Saves a new legal information.
-     * 
+     *
      * The language and text has to be specified.
-     * 
-     * @param LegalInformation|array $data
+     *
+     * @param array $data
      * @return LegalInformation
      */
-	public function save($data)
-	{
+    public function save($data)
+    {
         if(isset($data['lang'])) {
             $legalInformations = $this->search(['lang' => $data['lang']]);
             if(count($legalInformations) >= 1) {
                 $legalInformation = array_shift($legalInformations);
+                return $this->update($legalInformation->id, $data);
             }
         }
-        
-        if(!isset($legalInformation)) {
+
+        $result = null;
+        if(is_array($data)) {
             /** @var LegalInformation $legalInformation */
             $legalInformation = pluginApp(LegalInformation::class);
-        }
-
-        if(is_array($data)) {
             $legalInformation->fill($data);
-        } else {
-            $legalInformation = $data;
-        }
 
-        if(!isset($legalInformation->createdAt)) {
-            $legalInformation->createdAt = date('Y-m-d H:i:s');
-        }
+            if(!isset($legalInformation->createdAt)) {
+                $legalInformation->createdAt = date('Y-m-d H:i:s');
+            }
 
-        if(!isset($data['updatedAt'])) {
-            $legalInformation->updatedAt = date('Y-m-d H:i:s');
-        }
+            if(!isset($data['updatedAt'])) {
+                $legalInformation->updatedAt = date('Y-m-d H:i:s');
+            }
 
-        /** @var LegalInformation $result */
-        $result = $this->database->save($legalInformation);
-	    return $result;
-	}
+            /** @var LegalInformation $result */
+            $result = $this->database->save($legalInformation);
+        }
+        
+        return $result;
+    }
 
     /**
      * Updates a legal information.
