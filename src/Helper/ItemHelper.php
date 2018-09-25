@@ -158,7 +158,8 @@ class ItemHelper
         } else {
             $this->legalInformationCache[$lang] = '';
         }
-        return '';
+        
+        return $this->legalInformationCache[$lang];
     }
 
 	/**
