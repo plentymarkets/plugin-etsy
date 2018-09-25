@@ -90,16 +90,16 @@ Um Merkmale für den Marktplatz Etsy zu nutzen, verknüpfen Sie diese mit Etsy. 
     → Die Bezeichnung des Etsy-Merkmals und der Merkmalpfad werden angezeigt.
 5. **Speichern** Sie die Einstellungen.
 
-## Rechtliche Hinweise übertragen
+## Rechtliche Hinweise übertragen 
 
-Um rechtliche Hinweise an den Marktplatz Etsy zu übertragen, hinterlegen Sie diese für die Platform für die Sie Ihr Sortiment anbieten. Hierbei werden die Hinweise an die Artikelbeschreibung angehangen.
+Um rechtliche Hinweise an den Marktplatz Etsy zu übertragen, hinterlegen Sie diese Hinweise für jede Sprache, für die Sie Ihr Sortiment anbieten. Die Hinweise werden der Artikelbeschreibung hinzugefügt. 
 
-##### Rechtliche Hinweise hinterlegen:
+##### Rechtliche Hinweise hinterlegen: 
 
-1. Öffnen Sie das Menü **Einstellungen » Märkte » Etsy » Rechtliche Hinweise**.
-    → Das Fenster **Rechtliche Hinweise** wird geöffnet.
-2. Wählen Sie die Sprache aus, für die Hinweise hinterlegt werden sollen.
-3. Geben Sie Ihren Text ein.
+1. Öffnen Sie das Menü **Einstellungen » Märkte » Etsy » Rechtliche Hinweise**. 
+→ Das Fenster **Rechtliche Hinweise** wird geöffnet. 
+2. Wählen Sie die Sprache aus, für die Hinweise hinterlegt werden sollen. 
+3. Geben Sie Ihren Text ein. 
 4. **Speichern** Sie die Einstellungen.
 
 ## Versandprofile verknüpfen

@@ -1,6 +1,6 @@
 # Release Notes für Etsy
 
-## v1.3.0 (2018-09-24)
+## v1.3.0 (2018-09-26)
 ### Added
 - The legal information will be added to the item description.
 
