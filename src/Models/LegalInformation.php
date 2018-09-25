@@ -97,8 +97,10 @@ class LegalInformation extends Model
             $this->lang = $data['lang'];
         }
 
-        if($data['value']) {
-            $this->value = $data['value'];
+        if(strlen($data['value'])) {
+            $this->value = (string)$data['value'];
+        } else {
+            $this->value = '';
         }
 
         if($data['createdAt']) {
