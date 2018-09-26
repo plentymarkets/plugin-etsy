@@ -47,6 +47,11 @@
       "settingsNotSaved": "Settings not saved."
     }
   },
+  "legalInformation": {
+    "title": "Legal information",
+    "language": "Language",
+    "text": "Text"
+  },
   "shippingProfiles": {
     "tooltips": {
       "addCorrelation": "Add correlation",

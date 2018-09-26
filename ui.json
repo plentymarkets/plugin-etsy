@@ -15,6 +15,12 @@
       "entryPoint": "index.html?action=settings"
     },
     {
+      "label": "menu.legalInformation",
+      "menu": "settings/markets/etsy",
+      "urlKey": "etsy-legal-information",
+      "entryPoint": "index.html?action=legal-information"
+    },
+    {
       "label": "menu.shippingProfiles",
       "menu": "settings/markets/etsy",
       "urlKey": "etsy-shipping-profiles",

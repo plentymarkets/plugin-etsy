@@ -2,6 +2,8 @@
 
 namespace Etsy\Helper;
 
+use Etsy\Contracts\LegalInformationRepositoryContract;
+use Etsy\Models\LegalInformation;
 use Plenty\Modules\Item\Variation\Models\Variation;
 use Plenty\Modules\Item\VariationSku\Models\VariationSku;
 use Plenty\Modules\Market\Helper\Contracts\MarketAttributeHelperRepositoryContract;
@@ -49,21 +51,41 @@ class ItemHelper
 	 */
 	private $orderHelper;
 
-	/**
-	 * @param Application                    $app
-	 * @param UrlBuilderRepositoryContract   $urlBuilderRepository
-	 * @param VariationSkuRepositoryContract $variationSkuRepository
-	 * @param ConfigRepository               $config
-	 * @param OrderHelper                    $orderHelper
-	 */
-	public function __construct(Application $app, UrlBuilderRepositoryContract $urlBuilderRepository, VariationSkuRepositoryContract $variationSkuRepository, ConfigRepository $config, OrderHelper $orderHelper)
-	{
-		$this->app                    = $app;
-		$this->urlBuilderRepository   = $urlBuilderRepository;
-		$this->variationSkuRepository = $variationSkuRepository;
-		$this->config                 = $config;
-		$this->orderHelper            = $orderHelper;
-	}
+    /**
+     * @var array
+     */
+	private $legalInformationCache = [];
+	
+    /**
+     * @var LegalInformationRepositoryContract
+     */
+    private $legalInformationRepository;
+
+    /**
+     * ItemHelper constructor.
+     *
+     * @param Application $app
+     * @param UrlBuilderRepositoryContract $urlBuilderRepository
+     * @param VariationSkuRepositoryContract $variationSkuRepository
+     * @param ConfigRepository $config
+     * @param OrderHelper $orderHelper
+     * @param LegalInformationRepositoryContract $legalInformationRepository
+     */
+    public function __construct(
+        Application $app,
+        UrlBuilderRepositoryContract $urlBuilderRepository,
+        VariationSkuRepositoryContract $variationSkuRepository,
+        ConfigRepository $config,
+        OrderHelper $orderHelper,
+        LegalInformationRepositoryContract $legalInformationRepository
+    ) {
+        $this->app = $app;
+        $this->urlBuilderRepository = $urlBuilderRepository;
+        $this->variationSkuRepository = $variationSkuRepository;
+        $this->config = $config;
+        $this->orderHelper = $orderHelper;
+        $this->legalInformationRepository = $legalInformationRepository;
+    }
 
 	/**
 	 * Get the stock based on the settings.
@@ -114,6 +136,31 @@ class ItemHelper
 
 		return $stock;
 	}
+
+    /**
+     * Gets the legal information by language.
+     * 
+     * @param string $lang
+     * @return string
+     */
+	public function getLegalInformation($lang):string 
+    {
+        if(array_key_exists($lang, $this->legalInformationCache)) {
+            return $this->legalInformationCache[$lang];    
+        }
+        
+        $list = $this->legalInformationRepository->search(['lang' => $lang]);
+        if(count($list)) {
+            $legalInformation = array_shift($list);
+            if($legalInformation instanceof LegalInformation) {
+                $this->legalInformationCache[$lang] = (string)$legalInformation->value;
+            }
+        } else {
+            $this->legalInformationCache[$lang] = '';
+        }
+        
+        return $this->legalInformationCache[$lang];
+    }
 
 	/**
 	 * @param int $sku

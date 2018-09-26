@@ -218,31 +218,29 @@ class UpdateListingService
 	{
 		foreach($this->settingsHelper->getShopSettings('exportLanguages', [$this->settingsHelper->getShopSettings('mainLanguage', 'de')]) as $language)
 		{
-			if($language != $this->settingsHelper->getShopSettings('mainLanguage', 'de') && $record->itemDescription[ $language ]['name1'] && strip_tags($record->itemDescription[ $language ]['description']))
-			{
+			if($language != $this->settingsHelper->getShopSettings('mainLanguage', 'de') && $record->itemDescription[ $language ]['name1'] && strip_tags($record->itemDescription[ $language ]['description'])) {
 				try
 				{
 					$title = trim(preg_replace('/\s+/', ' ', $record->itemDescription[ $language ]['name1']));
 					$title = ltrim($title, ' +-!?');
+					
+					$legalInformation = $this->itemHelper->getLegalInformation($language);
 
 					$data = [
-						'title'       => $title,
-						'description' => html_entity_decode(strip_tags($record->itemDescription[ $language ]['description'])),
+                        'title' => $title,
+                        'description' => html_entity_decode(strip_tags($record->itemDescription[ $language ]['description'].$legalInformation)),
 					];
 
-					if($record->itemDescription[ $language ]['keywords'])
-					{
-						$data['tags'] = $this->itemHelper->getTags($record, $language);
-					}
+                    if ($record->itemDescription[$language]['keywords']) {
+                        $data['tags'] = $this->itemHelper->getTags($record, $language);
+                    }
 
-					$this->listingTranslationService->updateListingTranslation($listingId, $language, $data);
-				}
-				catch(\Exception $ex)
-				{
-					$this->getLogger(__FUNCTION__)
-						->addReference('etsyListingId', $listingId)
-						->addReference('variationId', $record->variationBase->id)
-						->addReference('etsyLanguage', $language)
+                    $this->listingTranslationService->updateListingTranslation($listingId, $language, $data);
+                } catch (\Exception $ex) {
+                    $this->getLogger(__FUNCTION__)
+                        ->addReference('etsyListingId', $listingId)
+                        ->addReference('variationId', $record->variationBase->id)
+                        ->addReference('etsyLanguage', $language)
 						->error('Etsy::item.translationUpdateError', $ex->getMessage());
 				}
 			}

@@ -46,6 +46,11 @@
       "settingsNotSaved": "Einstellungen nicht gespeichert."
     }
   },
+  "legalInformation": {
+    "title": "Rechtliche Hinweise",
+    "language": "Sprache",
+    "text": "Text"
+  },
   "shippingProfiles": {
     "tooltips": {
       "addCorrelation": "Verknüpfung hinzufügen",

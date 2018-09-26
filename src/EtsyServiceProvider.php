@@ -3,8 +3,10 @@
 namespace Etsy;
 
 use Etsy\Contracts\CategoryRepositoryContract;
+use Etsy\Contracts\LegalInformationRepositoryContract;
 use Etsy\Contracts\PropertyRepositoryContract;
 use Etsy\Repositories\CategoryRepository;
+use Etsy\Repositories\LegalInformationRepository;
 use Etsy\Repositories\PropertyRepository;
 use Etsy\Repositories\TaxonomyRepository;
 use Plenty\Log\Services\ReferenceContainer;
@@ -27,6 +29,8 @@ use Etsy\Contracts\TaxonomyRepositoryContract;
  */
 class EtsyServiceProvider extends ServiceProvider
 {
+    const PLUGIN_NAME = 'Etsy';
+    
 	/**
 	 * @return void
 	 */
@@ -35,6 +39,7 @@ class EtsyServiceProvider extends ServiceProvider
 		$this->getApplication()->bind(TaxonomyRepositoryContract::class, TaxonomyRepository::class);
         $this->getApplication()->bind(CategoryRepositoryContract::class, CategoryRepository::class);
         $this->getApplication()->bind(PropertyRepositoryContract::class, PropertyRepository::class);
+        $this->getApplication()->bind(LegalInformationRepositoryContract::class, LegalInformationRepository::class);
 
 		$this->getApplication()->bind('Etsy\item.dataprovider.export', ItemExportDataProvider::class);
 		$this->getApplication()->bind('Etsy\item.dataprovider.update', ItemUpdateDataProvider::class);

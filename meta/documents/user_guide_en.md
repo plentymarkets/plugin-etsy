@@ -82,6 +82,18 @@ In order to use properties for the Etsy market, these properties have to be link
 4. Click on **Apply**. → The name and property path of the Etsy property will be displayed. 
 5. **Save** the settings.
 
+##Transferring legal information
+
+In order to transfer legal information to Etsy, you have to save the information for each language you use for Etsy. The legal information is then added to the item description. 
+
+#####Transferring legal inforation:
+
+1. Go to **Settings » Markets » Etsy » Legal information**
+-> The window **Legal information** will open.
+2. Select the language for which you want to save legal information.
+3. Enter the text.
+4. **Save** the Settings.
+
 ## Linking shipping profiles
 
 Link the shipping profiles that you created on Etsy to the shipping profiles of your online store in the menu **Settings » Markets » Etsy » Shipping profile links**. 
