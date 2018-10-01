@@ -98,7 +98,7 @@ Um rechtliche Hinweise an den Marktplatz Etsy zu übertragen, hinterlegen Sie di
 
 1. Öffnen Sie das Menü **Einstellungen » Märkte » Etsy » Rechtliche Hinweise**. 
 → Das Fenster **Rechtliche Hinweise** wird geöffnet. 
-2. Wählen Sie die Sprache aus, für die Hinweise hinterlegt werden sollen. 
+2. Wählen Sie die Sprache aus, für die rechtliche Hinweise hinterlegt werden sollen. 
 3. Geben Sie Ihren Text ein. 
 4. **Speichern** Sie die Einstellungen.
 
