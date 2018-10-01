@@ -1,4 +1,4 @@
-# Release Notes für Etsy
+# Release notes for Etsy
 
 ## v1.3.0 (2018-09-26)
 ### Added
