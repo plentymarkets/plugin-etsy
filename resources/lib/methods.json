@@ -2002,7 +2002,7 @@
     "uri": "/shops/:shop_id/receipts",
     "params": {
       "shop_id": "shop_id_or_name",
-      "language": "sting",
+      "language": "string",
       "min_created": "int",
       "max_created": "int",
       "min_last_modified": "int",
