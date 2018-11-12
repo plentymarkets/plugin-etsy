@@ -1,5 +1,9 @@
 # Release Notes für Etsy
 
+## v1.3.1 (2018-11-12)
+### Fixed
+- Auftragspositionen werden nun in der Sprache des Shops importiert.
+
 ## v1.3.0 (2018-09-26)
 ### Hinzugefügt
 - Die Artikelbeschreibung wird durch rechtliche Hinweise ergänzt.

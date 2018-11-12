@@ -1,5 +1,9 @@
 # Release notes for Etsy
 
+## v1.3.1 (2018-11-12)
+### Fixed
+- Order positions will be imported in the language of the Etsy shop.
+
 ## v1.3.0 (2018-09-26)
 ### Added
 - The legal information will be added to the item description.
