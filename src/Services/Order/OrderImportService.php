@@ -71,7 +71,9 @@ class OrderImportService
 	 */
 	public function run($from, $to)
 	{
-		$receipts = $this->receiptService->findAllShopReceipts($this->settingsHelper->getShopSettings('shopId'), $from, $to);
+		$lang = $this->settingsHelper->getShopSettings('mainLanguage', 'de');
+
+		$receipts = $this->receiptService->findAllShopReceipts($this->settingsHelper->getShopSettings('shopId'),$lang, $from, $to);
 
 		if(isset($receipts['error']) && $receipts['error'] === true)
 		{

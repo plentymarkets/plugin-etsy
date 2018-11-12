@@ -2002,6 +2002,7 @@
     "uri": "/shops/:shop_id/receipts",
     "params": {
       "shop_id": "shop_id_or_name",
+      "language": "string",
       "min_created": "int",
       "max_created": "int",
       "min_last_modified": "int",
@@ -2013,6 +2014,7 @@
       "was_shipped": "boolean"
     },
     "defaults": {
+      "language": null,
       "min_created": null,
       "max_created": null,
       "min_last_modified": null,

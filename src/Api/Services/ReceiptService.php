@@ -27,18 +27,20 @@ class ReceiptService
 	 * Retrieves a set of Receipt objects associated to a Shop.
 	 *
 	 * @param int    $shopId
+	 * @param string $lang
 	 * @param string $from
 	 * @param string $to
 	 *
 	 * @return array
 	 */
-	public function findAllShopReceipts($shopId, $from, $to)
+	public function findAllShopReceipts($shopId,$lang, $from, $to)
 	{
 		return $this->client->call('findAllShopReceipts', [
 			'shop_id' => $shopId,
 		], [
-			                                'min_created' => strtotime($from),
-			                                'max_created' => strtotime($to),
+											'language'    => $lang,
+											'min_created' => strtotime($from),
+											'max_created' => strtotime($to),
 		                                ], [], [
 			                                'Transactions' => 'Transactions',
 			                                'Buyer'        => 'Buyer',
