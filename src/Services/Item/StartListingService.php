@@ -124,43 +124,10 @@ class StartListingService
 					     'sku' => $record->variationMarketStatus->sku
 				     ]);
 
-				if (strpos($ex->getMessage(), 'Invalid data param type "shipping_template_id"') !== false)
-				{
-					$this->getLogger(__FUNCTION__)
-						->addReference('variationId', $record->variationBase->id)
-						->addReference('etsyListingId', $listingId)
-						->error('Etsy::item.startListingErrorShippingProfile', [
-							'exception' => $ex->getMessage(),
-							'instruction' => $this->translator->trans('Etsy::instructions.instructionShippingProfile')
-						]);
-				}
-				elseif (strpos($ex->getMessage(), 'Invalid data param type "taxonomy_id"') !== false)
-				{
-					$this->getLogger(__FUNCTION__)
-						->addReference('variationId', $record->variationBase->id)
-						->addReference('etsyListingId', $listingId)
-						->error('Etsy::item.startListingErrorTaxonomyId', [
-							'exception' => $ex->getMessage(),
-							'instruction' => $this->translator->trans('Etsy::instructions.instructionShippingProfile')
-						]);
-				}
-				elseif (strpos($ex->getMessage(), 'Oh dear, you cannot sell this item on Etsy') !== false)
-				{
-					$this->getLogger(__FUNCTION__)
-						->addReference('variationId', $record->variationBase->id)
-						->addReference('etsyListingId', $listingId)
-						->error('Etsy::item.startListingErrorInvalidItem', [
-							'exception' => $ex->getMessage(),
-							'instruction' => $this->translator->trans('Etsy::instructions.instructionInvalidItem')
-						]);
-				}
-				else
-				{
-					$this->getLogger(__FUNCTION__)
-						->addReference('variationId', $record->variationBase->id)
-						->addReference('etsyListingId', $listingId)
-						->error('Etsy::item.startListingError', $ex->getMessage());
-				}
+				$this->getLogger(__FUNCTION__)
+					->addReference('variationId', $record->variationBase->id)
+					->addReference('etsyListingId', $listingId)
+					->error('Etsy::item.startListingError', $ex->getMessage());
 			}
 		}
 		else
