@@ -11,7 +11,6 @@ use Etsy\Api\Services\ListingImageService;
 use Etsy\Helper\ItemHelper;
 use Etsy\Api\Services\ListingTranslationService;
 use Plenty\Plugin\Log\Loggable;
-use Plenty\Plugin\Translation\Translator;
 
 /**
  * Class StartListingService
@@ -54,10 +53,6 @@ class StartListingService
 	 * @var ImageHelper
 	 */
 	private $imageHelper;
-	/**
-	 * @var Translator
-	 */
-	private $translator;
 
     /**
      * @param ItemHelper $itemHelper
@@ -67,7 +62,6 @@ class StartListingService
      * @param ListingTranslationService $listingTranslationService
      * @param SettingsHelper $settingsHelper
      * @param ImageHelper $imageHelper
-     * @param Translator $translator
      */
 	public function __construct(
 		ItemHelper $itemHelper,
@@ -76,8 +70,7 @@ class StartListingService
 		ListingImageService $listingImageService,
 		ListingTranslationService $listingTranslationService,
 		SettingsHelper $settingsHelper,
-		ImageHelper $imageHelper,
-		Translator $translator)
+		ImageHelper $imageHelper)
 	{
         $this->itemHelper                 = $itemHelper;
         $this->listingTranslationService  = $listingTranslationService;
@@ -86,7 +79,6 @@ class StartListingService
         $this->listingImageService        = $listingImageService;
         $this->settingsHelper             = $settingsHelper;
         $this->imageHelper                = $imageHelper;
-        $this->translator                 = $translator;
 	}
 
 	/**
