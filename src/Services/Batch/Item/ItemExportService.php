@@ -12,6 +12,7 @@ use Etsy\Services\Batch\AbstractBatchService;
 use Etsy\Factories\ItemDataProviderFactory;
 use Etsy\Services\Item\StartListingService;
 use Plenty\Plugin\Log\Loggable;
+use Plenty\Plugin\Translation\Translator;
 
 /**
  * Class ItemExportService
@@ -36,21 +37,29 @@ class ItemExportService extends AbstractBatchService
 	private $updateService;
 
 	/**
+	 * @var Translator
+	 */
+	private $translator;
+
+	/**
 	 * @param Application             $app
 	 * @param ItemDataProviderFactory $itemDataProviderFactory
 	 * @param StartListingService     $startService
 	 * @param UpdateListingService    $updateService
+	 * @param Translator $translator
 	 */
 	public function __construct(
 		Application $app,
 		ItemDataProviderFactory $itemDataProviderFactory,
 		StartListingService $startService,
-		UpdateListingService $updateService
+		UpdateListingService $updateService,
+		Translator $translator
 	)
 	{
-		$this->app     = $app;
+		$this->app = $app;
 		$this->startService = $startService;
 		$this->updateService = $updateService;
+		$this->translator = $translator;
 
 		parent::__construct($itemDataProviderFactory->make('export'));
 	}
@@ -81,10 +90,39 @@ class ItemExportService extends AbstractBatchService
 			}
 			catch(\Exception $ex)
 			{
-				$this->getLogger(__FUNCTION__)
-					->setReferenceType('variationId')
-					->setReferenceValue($record->variationBase->id)
-					->error('Etsy::item.startListingError', $ex->getMessage());
+				if (strpos($ex->getMessage(), 'Invalid data param type "shipping_template_id"') !== false)
+				{
+					$this->getLogger(__FUNCTION__)
+						->addReference('variationId', $record->variationBase->id)
+						->error('Etsy::item.startListingErrorShippingProfile', [
+							'exception' => $ex->getMessage(),
+							'instruction' => $this->translator->trans('Etsy::instructions.instructionShippingProfile')
+						]);
+				}
+				elseif (strpos($ex->getMessage(), 'Invalid data param type "taxonomy_id"') !== false)
+				{
+					$this->getLogger(__FUNCTION__)
+						->addReference('variationId', $record->variationBase->id)
+						->error('Etsy::item.startListingErrorTaxonomyId', [
+							'exception' => $ex->getMessage(),
+							'instruction' => $this->translator->trans('Etsy::instructions.instructionShippingProfile')
+						]);
+				}
+				elseif (strpos($ex->getMessage(), 'Oh dear, you cannot sell this item on Etsy') !== false)
+				{
+					$this->getLogger(__FUNCTION__)
+						->addReference('variationId', $record->variationBase->id)
+						->error('Etsy::item.startListingErrorInvalidItem', [
+							'exception' => $ex->getMessage(),
+							'instruction' => $this->translator->trans('Etsy::instructions.instructionInvalidItem')
+						]);
+				}
+				else
+				{
+					$this->getLogger(__FUNCTION__)
+						->addReference('variationId', $record->variationBase->id)
+						->error('Etsy::item.startListingError', $ex->getMessage());
+				}
 			}
 		}
 	}
