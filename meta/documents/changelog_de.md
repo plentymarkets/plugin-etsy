@@ -1,5 +1,9 @@
 # Release Notes für Etsy
 
+## v1.3.3 (2018-11-14)
+### Fixed
+- Die plentymarkets-Kategorien werden nun für die Kategorie-Verknüpfung immer angezeigt.
+
 ## v1.3.2 (2018-11-14)
 ### Fixed
 - Die Anweisungen in den Logs werden nun korrekt angezeigt.

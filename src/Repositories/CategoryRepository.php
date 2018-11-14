@@ -79,9 +79,13 @@ class CategoryRepository implements CategoryRepositoryContract
         /** @var Webstore $webstore */
         $webstore = $webstoreRepo->findByPlentyId($sysInfoRepo->loadValue('plentyId'));
 
-        $categories = $plentyCategoryRepo->getLinklistTree('item', $lang, $webstore->id);
+        $categories = $plentyCategoryRepo->search(null, 0, 50, [], [
+			'lang'  => $lang,
+			'type'  => 'item',
+			'level' => 1,
+		]);
 
-        $list = $this->buildCategoriesTree([], $categories, $lang, $with);
+        $list = $this->buildCategoriesTree([], $categories->getResult(), $lang, $with);
 
         return $list;
     }

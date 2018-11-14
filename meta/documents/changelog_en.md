@@ -1,5 +1,9 @@
 # Release notes for Etsy
 
+## v1.3.3 (2018-11-14)
+### Fixed
+- Plentymarkets categories will always be displayed when linking categories.
+
 ## v1.3.2 (2018-11-14)
 ### Fixed
 - Log instructions will now displayed correctly.
