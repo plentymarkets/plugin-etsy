@@ -1,5 +1,9 @@
 # Release notes for Etsy
 
+## v1.3.2 (2018-11-14)
+### Fixed
+- Log instructions will now displayed correctly.
+
 ## v1.3.1 (2018-11-12)
 ### Fixed
 - Order positions will be imported in the language of the Etsy shop.
