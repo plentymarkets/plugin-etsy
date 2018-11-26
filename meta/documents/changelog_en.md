@@ -1,5 +1,9 @@
 # Release notes for Etsy
 
+## v1.3.4 (2018-11-26)
+### Fixed
+- Raised the limit for order import from 25 orders to 200 orders per process.
+
 ## v1.3.3 (2018-11-14)
 ### Fixed
 - Plentymarkets categories will always be displayed when linking categories.
