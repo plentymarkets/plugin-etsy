@@ -38,6 +38,7 @@ class ReceiptService
 		return $this->client->call('findAllShopReceipts', [
 			'shop_id' => $shopId,
 		], [
+											'limit'       => 200,
 											'language'    => $lang,
 											'min_created' => strtotime($from),
 											'max_created' => strtotime($to),

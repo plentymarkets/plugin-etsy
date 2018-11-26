@@ -1,5 +1,9 @@
 # Release Notes für Etsy
 
+## v1.3.4 (2018-11-26)
+### Fixed
+- Das Limit beim Auftragsimport wurde von 25 Aufträge auf 200 Aufträge pro Prozess erhöht.
+
 ## v1.3.3 (2018-11-14)
 ### Fixed
 - Die plentymarkets-Kategorien werden nun für die Kategorie-Verknüpfung immer angezeigt.
