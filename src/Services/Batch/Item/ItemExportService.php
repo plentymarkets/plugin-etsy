@@ -3,6 +3,7 @@
 namespace Etsy\Services\Batch\Item;
 
 use Plenty\Modules\Item\DataLayer\Models\Record;
+use Plenty\Modules\Item\Search\Contracts\VariationElasticSearchScrollRepositoryContract;
 use Plenty\Plugin\Application;
 use Plenty\Exceptions\ValidationException;
 use Plenty\Modules\Item\DataLayer\Models\RecordList;
@@ -19,130 +20,136 @@ use Plenty\Plugin\Translation\Translator;
  */
 class ItemExportService extends AbstractBatchService
 {
-	use Loggable;
+    use Loggable;
 
-	/**
-	 * @var Application
-	 */
-	private $app;
+    /**
+     * @var Application
+     */
+    private $app;
 
-	/**
-	 * @var StartListingService
-	 */
-	private $startService;
+    /**
+     * @var StartListingService
+     */
+    private $startService;
 
-	/**
-	 * @var UpdateListingService
-	 */
-	private $updateService;
+    /**
+     * @var UpdateListingService
+     */
+    private $updateService;
 
-	/**
-	 * @var Translator
-	 */
-	private $translator;
+    /**
+     * @var Translator
+     */
+    private $translator;
 
-	/**
-	 * @param Application             $app
-	 * @param ItemDataProviderFactory $itemDataProviderFactory
-	 * @param StartListingService     $startService
-	 * @param UpdateListingService    $updateService
-	 * @param Translator $translator
-	 */
-	public function __construct(
-		Application $app,
-		ItemDataProviderFactory $itemDataProviderFactory,
-		StartListingService $startService,
-		UpdateListingService $updateService,
-		Translator $translator
-	)
-	{
-		$this->app = $app;
-		$this->startService = $startService;
-		$this->updateService = $updateService;
-		$this->translator = $translator;
+    /**
+     * ItemExportService constructor.
+     * @param Application $app
+     * @param StartListingService $startService
+     * @param UpdateListingService $updateService
+     * @param Translator $translator
+     */
+    public function __construct(
+        Application $app,
+        StartListingService $startService,
+        UpdateListingService $updateService,
+        Translator $translator
+    )
+    {
+        $this->app = $app;
+        $this->startService = $startService;
+        $this->updateService = $updateService;
+        $this->translator = $translator;
 
-		parent::__construct($itemDataProviderFactory->make('export'));
-	}
+        parent::__construct(pluginApp(VariationElasticSearchScrollRepositoryContract::class));
+    }
 
-	/**
-	 * Export all items.
-	 * @param RecordList $records
-	 * @return void
-	 */
-	protected function export(RecordList $records)
-	{
-		$this->getLogger(__FUNCTION__)
-			->addReference('etsyExportListCount', count($records))
-			->debug('Etsy::item.exportRecord');
-		
-		foreach($records as $record)
-		{
-			try
-			{
-				if($this->isListingCreated($record))
-				{
-					$this->updateService->update($record);
-				}
-				else
-				{
-					$this->startService->start($record);
-				}
-			}
-			catch(\Exception $ex)
-			{
-				if (strpos($ex->getMessage(), 'Invalid data param type "shipping_template_id"') !== false)
-				{
-					$this->getLogger(__FUNCTION__)
-						->addReference('variationId', $record->variationBase->id)
-						->error('Etsy::item.startListingErrorShippingProfile', [
-							'exception' => $ex->getMessage(),
-							'instruction' => $this->translator->trans('Etsy::instructions.instructionShippingProfile')
-						]);
-				}
-				elseif (strpos($ex->getMessage(), 'Invalid data param type "taxonomy_id"') !== false)
-				{
-					$this->getLogger(__FUNCTION__)
-						->addReference('variationId', $record->variationBase->id)
-						->error('Etsy::item.startListingErrorTaxonomyId', [
-							'exception' => $ex->getMessage(),
-							'instruction' => $this->translator->trans('Etsy::instructions.instructionShippingProfile')
-						]);
-				}
-				elseif (strpos($ex->getMessage(), 'Oh dear, you cannot sell this item on Etsy') !== false)
-				{
-					$this->getLogger(__FUNCTION__)
-						->addReference('variationId', $record->variationBase->id)
-						->error('Etsy::item.startListingErrorInvalidItem', [
-							'exception' => $ex->getMessage(),
-							'instruction' => $this->translator->trans('Etsy::instructions.instructionInvalidItem')
-						]);
-				}
-				else
-				{
-					$this->getLogger(__FUNCTION__)
-						->addReference('variationId', $record->variationBase->id)
-						->error('Etsy::item.startListingError', $ex->getMessage());
-				}
-			}
-		}
-	}
+    /**
+     * Export all items.
+     * @param
+     * @return void
+     */
+    protected function export(array $variationElasticSearchScrollRepositoryResult)
+    {
+        //todo do stuff
 
-	/**
-	 * Check if listing is created.
-	 *
-	 * @param Record $record
-	 *
-	 * @return bool
-	 */
-	private function isListingCreated(Record $record):bool
-	{
-		$listingId = (string) $record->variationMarketStatus->sku;
+        $esFunktioniert = true;
+        /*
 
-		if(strlen($listingId))
-		{
-			return true;
-		}
+        $this->getLogger(__FUNCTION__)
+            ->addReference('etsyExportListCount', count($records))
+            ->debug('Etsy::item.exportRecord');
 
-		return false;
-	}
+        foreach($records as $record)
+        {
+            try
+            {
+                if($this->isListingCreated($record))
+                {
+                    $this->updateService->update($record);
+                }
+                else
+                {
+                    $this->startService->start($record);
+                }
+            }
+            catch(\Exception $ex)
+            {
+                if (strpos($ex->getMessage(), 'Invalid data param type "shipping_template_id"') !== false)
+                {
+                    $this->getLogger(__FUNCTION__)
+                        ->addReference('variationId', $record->variationBase->id)
+                        ->error('Etsy::item.startListingErrorShippingProfile', [
+                            'exception' => $ex->getMessage(),
+                            'instruction' => $this->translator->trans('Etsy::instructions.instructionShippingProfile')
+                        ]);
+                }
+                elseif (strpos($ex->getMessage(), 'Invalid data param type "taxonomy_id"') !== false)
+                {
+                    $this->getLogger(__FUNCTION__)
+                        ->addReference('variationId', $record->variationBase->id)
+                        ->error('Etsy::item.startListingErrorTaxonomyId', [
+                            'exception' => $ex->getMessage(),
+                            'instruction' => $this->translator->trans('Etsy::instructions.instructionShippingProfile')
+                        ]);
+                }
+                elseif (strpos($ex->getMessage(), 'Oh dear, you cannot sell this item on Etsy') !== false)
+                {
+                    $this->getLogger(__FUNCTION__)
+                        ->addReference('variationId', $record->variationBase->id)
+                        ->error('Etsy::item.startListingErrorInvalidItem', [
+                            'exception' => $ex->getMessage(),
+                            'instruction' => $this->translator->trans('Etsy::instructions.instructionInvalidItem')
+                        ]);
+                }
+                else
+                {
+                    $this->getLogger(__FUNCTION__)
+                        ->addReference('variationId', $record->variationBase->id)
+                        ->error('Etsy::item.startListingError', $ex->getMessage());
+                }
+            }
+        }
+
+         */
+    }
+
+    /**
+     * Check if listing is created.
+     *
+     * @param Record $record
+     *
+     * @return bool
+     */
+    private function isListingCreated(Record $record):bool
+    {
+        $listingId = (string) $record->variationMarketStatus->sku;
+
+        if(strlen($listingId))
+        {
+            return true;
+        }
+
+        return false;
+    }
 }

@@ -2,6 +2,7 @@
 
 namespace Etsy\Services\Batch\Item;
 
+use Plenty\Modules\Item\Search\Contracts\VariationElasticSearchScrollRepositoryContract;
 use Plenty\Modules\Item\Variation\Models\Variation;
 use Plenty\Modules\Item\VariationSku\Contracts\VariationSkuRepositoryContract;
 use Plenty\Modules\Item\VariationSku\Models\VariationSku;
@@ -13,7 +14,6 @@ use Etsy\Helper\OrderHelper;
 use Etsy\Services\Item\DeleteListingService;
 use Etsy\Services\Item\UpdateListingStockService;
 use Etsy\Services\Batch\AbstractBatchService;
-use Etsy\Factories\ItemDataProviderFactory;
 use Plenty\Plugin\Log\Loggable;
 
 /**
@@ -21,114 +21,118 @@ use Plenty\Plugin\Log\Loggable;
  */
 class ItemUpdateStockService extends AbstractBatchService
 {
-	use Loggable;
+    use Loggable;
 
-	/**
-	 * @var UpdateListingStockService
-	 */
-	private $updateListingStockService;
+    /**
+     * @var UpdateListingStockService
+     */
+    private $updateListingStockService;
 
-	/**
-	 * @var DeleteListingService
-	 */
-	private $deleteListingService;
+    /**
+     * @var DeleteListingService
+     */
+    private $deleteListingService;
 
-	/**
-	 * @var AccountHelper
-	 */
-	private $accountHelper;
+    /**
+     * @var AccountHelper
+     */
+    private $accountHelper;
 
-	/**
-	 * @var OrderHelper
-	 */
-	private $orderHelper;
+    /**
+     * @var OrderHelper
+     */
+    private $orderHelper;
 
-	/**
-	 * @param ItemDataProviderFactory        $itemDataProviderFactory
-	 * @param UpdateListingStockService      $updateListingStockService
-	 * @param DeleteListingService           $deleteListingService
-	 * @param AccountHelper                  $accountHelper
-	 * @param OrderHelper                    $orderHelper
-	 */
-	public function __construct(
-		ItemDataProviderFactory $itemDataProviderFactory,
-		UpdateListingStockService $updateListingStockService,
-		DeleteListingService $deleteListingService,
-		AccountHelper $accountHelper,
-		OrderHelper $orderHelper)
-	{
-		$this->updateListingStockService = $updateListingStockService;
-		$this->deleteListingService      = $deleteListingService;
-		$this->accountHelper             = $accountHelper;
-		$this->orderHelper               = $orderHelper;
+    /**
+     * @param UpdateListingStockService      $updateListingStockService
+     * @param DeleteListingService           $deleteListingService
+     * @param AccountHelper                  $accountHelper
+     * @param OrderHelper                    $orderHelper
+     */
+    public function __construct(
+        UpdateListingStockService $updateListingStockService,
+        DeleteListingService $deleteListingService,
+        AccountHelper $accountHelper,
+        OrderHelper $orderHelper)
+    {
+        $this->updateListingStockService = $updateListingStockService;
+        $this->deleteListingService      = $deleteListingService;
+        $this->accountHelper             = $accountHelper;
+        $this->orderHelper               = $orderHelper;
 
-		parent::__construct($itemDataProviderFactory->make('update'));
-	}
+        parent::__construct(pluginApp(VariationElasticSearchScrollRepositoryContract::class));
+    }
 
-	/**
-	 * Update all article which are not updated yet.
-	 *
-	 * @param RecordList $records
-	 *
-	 * @return void
-	 */
-	protected function export(RecordList $records)
-	{
-		if($this->accountHelper->isValidConfig())
-		{
-			$this->deleteDeprecatedListing();
+    /**
+     * Update all article which are not updated yet.
+     *
+     * @param array $variationElasticSearchScrollRepositoryResult
+     *
+     * @return void
+     */
+    protected function export(array $variationElasticSearchScrollRepositoryResult)
+    {
+        //todo do stuff
 
-			$this->updateListingsStock($records);
-		}
-	}
+        /*
 
-	/**
-	 * Update listings on Etsy.
-	 *
-	 * @param RecordList $records
-	 */
-	private function updateListingsStock(RecordList $records)
-	{
-		foreach($records as $record)
-		{
-			try
-			{
-				$this->updateListingStockService->updateStock($record);
-			}
-			catch(\Exception $ex)
-			{
-				$this->getLogger(__FUNCTION__)
-					->setReferenceType('variationId')
-					->setReferenceValue($record->variationBase->id)
-					->error('Etsy::item.stockUpdateError', $ex->getMessage());
-			}
-		}
-	}
+        if($this->accountHelper->isValidConfig())
+        {
+        $this->deleteDeprecatedListing();
 
-	/**
-	 * Delete listings on Etsy and the entry in the market status table if the variation was deleted.
-	 */
-	private function deleteDeprecatedListing()
-	{
-		$filter = [
-			'marketId' => $this->orderHelper->getReferrerId(),
-		];
+        $this->updateListingsStock($records);
+        }
 
-		/** @var VariationSkuRepositoryContract $variationSkuRepo */
-		$variationSkuRepo = pluginApp(VariationSkuRepositoryContract::class);
+         */
+    }
 
-		$variationSkuList = $variationSkuRepo->search($filter);
+    /**
+     * Update listings on Etsy.
+     *
+     * @param RecordList $records
+     */
+    private function updateListingsStock(RecordList $records)
+    {
+        foreach($records as $record)
+        {
+            try
+            {
+                $this->updateListingStockService->updateStock($record);
+            }
+            catch(\Exception $ex)
+            {
+                $this->getLogger(__FUNCTION__)
+                    ->setReferenceType('variationId')
+                    ->setReferenceValue($record->variationBase->id)
+                    ->error('Etsy::item.stockUpdateError', $ex->getMessage());
+            }
+        }
+    }
 
-		/** @var VariationSku $variationSku */
-		foreach($variationSkuList as $variationSku)
-		{
-			if($variationSku->deletedAt)
-			{
-				if($this->deleteListingService->delete($variationSku->sku))
-				{
-					$variationSkuRepo->delete((int) $variationSku->id);
-				}
-			}
-		}
-	}
+    /**
+     * Delete listings on Etsy and the entry in the market status table if the variation was deleted.
+     */
+    private function deleteDeprecatedListing()
+    {
+        $filter = [
+            'marketId' => $this->orderHelper->getReferrerId(),
+        ];
+
+        /** @var VariationSkuRepositoryContract $variationSkuRepo */
+        $variationSkuRepo = pluginApp(VariationSkuRepositoryContract::class);
+
+        $variationSkuList = $variationSkuRepo->search($filter);
+
+        /** @var VariationSku $variationSku */
+        foreach($variationSkuList as $variationSku)
+        {
+            if($variationSku->deletedAt)
+            {
+                if($this->deleteListingService->delete($variationSku->sku))
+                {
+                    $variationSkuRepo->delete((int) $variationSku->id);
+                }
+            }
+        }
+    }
 }

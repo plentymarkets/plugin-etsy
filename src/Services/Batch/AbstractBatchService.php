@@ -5,43 +5,48 @@ namespace Etsy\Services\Batch;
 use Plenty\Modules\Item\DataLayer\Models\RecordList;
 
 use Etsy\Contracts\ItemDataProviderContract;
+use Plenty\Modules\Item\Search\Contracts\VariationElasticSearchScrollRepositoryContract;
 
 /**
  * Class AbstractBatchService
  */
 abstract class AbstractBatchService
 {
-	/**
-	 * @var ItemDataProviderContract
-	 */
-	private $itemDataProvider;
+    /**
+     * @var VariationElasticSearchScrollRepositoryContract
+     */
+    protected $variationElasticSearchScrollRepository;
 
-	/**
-	 * @param ItemDataProviderContract $itemDataProvider
-	 */
-	public function __construct(ItemDataProviderContract $itemDataProvider)
-	{
-		$this->itemDataProvider = $itemDataProvider;
-	}
+    /**
+     * @param VariationElasticSearchScrollRepositoryContract $variationElasticSearchScrollRepository
+     */
+    public function __construct(VariationElasticSearchScrollRepositoryContract $variationElasticSearchScrollRepository)
+    {
+        $this->variationElasticSearchScrollRepository = $variationElasticSearchScrollRepository;
+    }
 
-	/**
-	 * Run the batch service.
-	 *
-	 * @param array $params The params needed by the data provider. Eg. the last run.
-	 */
-	final public function run(array $params = [])
-	{
-		$result = $this->itemDataProvider->fetch($params);
+    /**
+     * Run the batch service.
+     *
+     * @param array $params The params needed by the data provider. Eg. the last run.
+     */
+    final public function run(array $params = [])
+    {
+        $test = 0;
 
-		$this->export($result);
-	}
+        /*
+        $result = $this->itemDataProvider->fetch($params);
 
-	/**
-	 * Execute the export process.
-	 *
-	 * @param RecordList $recordList
-	 *
-	 * @return void
-	 */
-	protected abstract function export(RecordList $recordList);
+        $this->export($result);
+         */
+    }
+
+    /**
+     * Execute the export process.
+     *
+     * @param RecordList $recordList
+     *
+     * @return void
+     */
+    protected abstract function export(RecordList $recordList);
 }
