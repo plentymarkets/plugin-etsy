@@ -44,9 +44,8 @@ abstract class AbstractBatchService
     /**
      * Execute the export process.
      *
-     * @param RecordList $recordList
-     *
-     * @return void
+     * @param array $elasticSearchResult
+     * @return mixed
      */
-    protected abstract function export(RecordList $recordList);
+    protected abstract function export(array $elasticSearchResult);
 }
