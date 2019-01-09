@@ -73,7 +73,6 @@ class ItemExportService extends AbstractBatchService
     {
         //todo do stuff
 
-        $esFunktioniert = true;
         /*
 
         $this->getLogger(__FUNCTION__)

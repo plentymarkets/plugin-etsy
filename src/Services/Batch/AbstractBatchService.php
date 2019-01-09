@@ -2,10 +2,12 @@
 
 namespace Etsy\Services\Batch;
 
-use Plenty\Modules\Item\DataLayer\Models\RecordList;
-
-use Etsy\Contracts\ItemDataProviderContract;
+use Etsy\Helper\SettingsHelper;
+use Plenty\Modules\Cloud\ElasticSearch\Lib\Processor\DocumentProcessor;
+use Plenty\Modules\Cloud\ElasticSearch\Lib\Search\Document\DocumentSearch;
 use Plenty\Modules\Item\Search\Contracts\VariationElasticSearchScrollRepositoryContract;
+use Plenty\Modules\Item\Search\Filter\MarketFilter;
+use Plenty\Modules\Item\Search\Filter\VariationBaseFilter;
 
 /**
  * Class AbstractBatchService
@@ -23,22 +25,28 @@ abstract class AbstractBatchService
     public function __construct(VariationElasticSearchScrollRepositoryContract $variationElasticSearchScrollRepository)
     {
         $this->variationElasticSearchScrollRepository = $variationElasticSearchScrollRepository;
+        $documentProcessor = pluginApp(DocumentProcessor::class);
+        $elasticSearchDocument = pluginApp(DocumentSearch::class, [$documentProcessor]);
+
+        $variationFilter = pluginApp(VariationBaseFilter::class);
+        $variationFilter->isActive();
+
+        $marketFilter = pluginApp(MarketFilter::class);
+        $marketFilter->isVisibleForMarket(SettingsHelper::SETTINGS_ORDER_REFERRER);
+
+        $elasticSearchDocument->addFilter($variationFilter);
+        $elasticSearchDocument->addFilter($marketFilter);
+        $this->variationElasticSearchScrollRepository->addSearch($elasticSearchDocument);
     }
 
     /**
      * Run the batch service.
-     *
-     * @param array $params The params needed by the data provider. Eg. the last run.
      */
-    final public function run(array $params = [])
+    final public function run()
     {
-        $test = 0;
-
-        /*
-        $result = $this->itemDataProvider->fetch($params);
+        $result = $this->variationElasticSearchScrollRepository->execute();
 
         $this->export($result);
-         */
     }
 
     /**

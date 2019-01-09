@@ -42,13 +42,14 @@ class UpdateListingStockService
 		$this->listingService = $listingService;
 	}
 
-	/**
-	 * Updates
-	 *
-	 * @param Record $record
-	 */
-	public function updateStock(Record $record)
+    /**
+     * Updates
+     * @param array $elasticSearchResult
+     */
+	public function updateStock(array $elasticSearchResult)
 	{
+	    //todo
+		/*
 		$listingId = $record->variationMarketStatus->sku;
 
 		if(!is_null($listingId))
@@ -84,6 +85,7 @@ class UpdateListingStockService
 				->addReference('variationId', $record->variationBase->id)
 				->info('Etsy::item.stockUpdateError');
 		}
+		 */
 	}
 
 	/**

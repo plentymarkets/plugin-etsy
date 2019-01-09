@@ -41,9 +41,7 @@ class ItemExportCron extends Cron
 		{
 			if($accountHelper->isProcessActive(SettingsHelper::SETTINGS_PROCESS_ITEM_EXPORT))
 			{
-				$service->run([
-					              'lastRun' => $this->lastRun(),
-				              ]);
+				$service->run();
 
 				$this->saveLastRun();
 			}

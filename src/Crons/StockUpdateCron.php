@@ -41,9 +41,7 @@ class StockUpdateCron extends Cron
 		{
 			if($accountHelper->isProcessActive(SettingsHelper::SETTINGS_PROCESS_STOCK_UPDATE))
 			{
-				$service->run([
-					              'lastRun' => $this->lastRun(),
-				              ]);
+				$service->run();
 
 				$this->saveLastRun();
 			}
