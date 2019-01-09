@@ -81,13 +81,15 @@ class StartListingService
         $this->imageHelper                = $imageHelper;
 	}
 
-	/**
-	 * Start the listing
-	 *
-	 * @param Record $record
-	 */
-	public function start(Record $record)
+    /**
+     * Start the listing
+     *
+     * @param array $listing
+     */
+	public function start(array $listing)
 	{
+	    $test = 0;
+		/*
 		$listingId = $this->createListing($record);
 
 		if(!is_null($listingId))
@@ -129,6 +131,7 @@ class StartListingService
 				->setReferenceValue($record->variationBase->id)
 				->info('Etsy::item.startListingError');
 		}
+		*/
 	}
 
 	/**

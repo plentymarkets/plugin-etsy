@@ -71,7 +71,27 @@ class ItemExportService extends AbstractBatchService
      */
     protected function export(array $variationElasticSearchScrollRepositoryResult)
     {
-        //todo do stuff
+        $listings = [];
+
+        foreach ($variationElasticSearchScrollRepositoryResult['documents'] as $variation) {
+            $listings[$variation['data']['item']['id']][] = $variation;
+        }
+
+        foreach ($listings as $listing) {
+            try
+            {
+                if($this->isListingCreated($listing))
+                {
+                    $this->updateService->update($listing);
+                }
+                else
+                {
+                    $this->startService->start($listing);
+                }
+            } catch (\Exception $exception) {
+
+            }
+        }
 
         /*
 
@@ -135,13 +155,14 @@ class ItemExportService extends AbstractBatchService
 
     /**
      * Check if listing is created.
-     *
-     * @param Record $record
-     *
+     * @param array $listing
      * @return bool
      */
-    private function isListingCreated(Record $record):bool
+    private function isListingCreated(array $listing):bool
     {
+        // todo
+        return true;
+        /*
         $listingId = (string) $record->variationMarketStatus->sku;
 
         if(strlen($listingId))
@@ -150,5 +171,6 @@ class ItemExportService extends AbstractBatchService
         }
 
         return false;
+         */
     }
 }

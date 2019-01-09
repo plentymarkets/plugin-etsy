@@ -20,10 +20,16 @@ abstract class AbstractBatchService
     protected $variationElasticSearchScrollRepository;
 
     /**
+     * @var SettingsHelper $settingshelper
+     */
+    protected $settingshelper;
+
+    /**
      * @param VariationElasticSearchScrollRepositoryContract $variationElasticSearchScrollRepository
      */
     public function __construct(VariationElasticSearchScrollRepositoryContract $variationElasticSearchScrollRepository)
     {
+        $this->settingshelper = pluginApp(SettingsHelper::class);
         $this->variationElasticSearchScrollRepository = $variationElasticSearchScrollRepository;
         $documentProcessor = pluginApp(DocumentProcessor::class);
         $elasticSearchDocument = pluginApp(DocumentSearch::class, [$documentProcessor]);
@@ -32,7 +38,7 @@ abstract class AbstractBatchService
         $variationFilter->isActive();
 
         $marketFilter = pluginApp(MarketFilter::class);
-        $marketFilter->isVisibleForMarket(SettingsHelper::SETTINGS_ORDER_REFERRER);
+        $marketFilter->isVisibleForMarket($this->settingshelper->get(SettingsHelper::SETTINGS_ORDER_REFERRER));
 
         $elasticSearchDocument->addFilter($variationFilter);
         $elasticSearchDocument->addFilter($marketFilter);

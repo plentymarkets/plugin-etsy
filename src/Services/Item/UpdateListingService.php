@@ -64,11 +64,16 @@ class UpdateListingService
 		$this->translator = $translator;
 	}
 
-	/**
-	 * @param Record $record
-	 */
-	public function update(Record $record)
+    /**
+     * Update the listing
+     *
+     * @param array $listing
+     */
+	public function update(array $listing)
 	{
+        $test = 0;
+
+		/*
 		$listingId = $record->variationMarketStatus->sku;
 
 		if(!is_null($listingId))
@@ -127,6 +132,7 @@ class UpdateListingService
 				->addReference('variationId', $record->variationBase->id)
 				->info('Etsy::item.updateListingError');
 		}
+		 */
 	}
 
 	/**
