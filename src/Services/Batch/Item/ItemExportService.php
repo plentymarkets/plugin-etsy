@@ -161,7 +161,7 @@ class ItemExportService extends AbstractBatchService
     private function isListingCreated(array $listing):bool
     {
         // todo
-        return true;
+        return false;
         /*
         $listingId = (string) $record->variationMarketStatus->sku;
 
