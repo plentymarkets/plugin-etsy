@@ -92,7 +92,6 @@ class ItemExportService extends AbstractBatchService
 
             }
         }
-
         /*
 
         $this->getLogger(__FUNCTION__)

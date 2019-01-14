@@ -145,7 +145,6 @@ class StartListingService
      */
     private function createListing(array $listing)
     {
-
         $data = [];
 
         $data['state'] = 'draft';
@@ -154,6 +153,7 @@ class StartListingService
 
         foreach ($listing as $variation)
         {
+            //title and description
             foreach ($variation['data']['texts'] as $text)
             {
                 $data['title'] = $text['name1'];
@@ -169,12 +169,13 @@ class StartListingService
                 }
             }
 
+            //quantity
             $data['quantity'] = $variation['data']['stock']['net'];
 
+            //sales price and currency code
             foreach ($variation['data']['salesPrices'] as $salesPrice)
             {
                 $orderReferrer= $this->settingsHelper->get(SettingsHelper::SETTINGS_ORDER_REFERRER);
-
 
                 if (in_array($orderReferrer, $salesPrice['settings']['referrers']))
                 {
@@ -185,20 +186,21 @@ class StartListingService
                     $data['currency_code'] = $salesPrice['settings']['currencies'][0];
                     break;
                 }
-
-
-
-
+                /*
+                 * todo:
+                 * shipping_template_id
+                 * taxonomy_id
+                 * should_auto_renew
+                 * is_digital
+                 * is_supply
+                 * materials
+                 * shop_section_id
+                 * processing_min
+                 * processing_max
+                 */
             }
-
-
-
-
         }
-
-
-        $language = $this->settingsHelper->getShopSettings('mainLanguage', 'de');
-
+/*
         $title = trim(preg_replace('/\s+/', ' ', $this->itemHelper->getVariationWithAttributesName($record, $language)));
         $title = str_replace(':', ' -', $title);
         $title = ltrim($title, ' +-!?');
@@ -301,6 +303,8 @@ class StartListingService
         $results = (array) $response['results'];
 
         return (int) reset($results)['listing_id'];
+*/
+return 0;
     }
 
     /**
