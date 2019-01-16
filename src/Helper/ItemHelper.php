@@ -121,7 +121,7 @@ class ItemHelper
 			{
 				if($item->variationStock->stockNet > 0)
 				{
-					$stock = $item->variationStock->stockNet;
+					$stock = (int) $item->variationStock->stockNet;
 				}
 				else
 				{

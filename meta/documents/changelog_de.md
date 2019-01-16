@@ -1,4 +1,7 @@
 # Release Notes für Etsy
+## v1.3.5 (2019-01-16)
+### Fixed
+- Der Datentyp für den Bestand einer Variante wurde auf ganze Zahlen beschränkt.
 
 ## v1.3.4 (2018-11-26)
 ### Fixed
