@@ -1,4 +1,11 @@
 # Release notes for Etsy
+## v1.3.6 (2019-01-17)
+### Fixed
+- The data type for variation stock was adjusted.
+
+## v1.3.5 (2019-01-16)
+### Fixed
+- The data type of the variation stock is changed to whole number.
 
 ## v1.3.4 (2018-11-26)
 ### Fixed
