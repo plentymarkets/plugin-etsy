@@ -110,7 +110,7 @@ class ItemHelper
 			}
 			else
 			{
-				$stock = $item->variationStock->stockNet;
+				$stock = intval($item->variationStock->stockNet);
 			}
 		}
 		elseif($item->variationBase->limitOrderByStockSelect == 0)
@@ -123,7 +123,7 @@ class ItemHelper
 			{
 				if($item->variationStock->stockNet > 0)
 				{
-					$stock = $item->variationStock->stockNet;
+					$stock = intval($item->variationStock->stockNet);
 				}
 				else
 				{
