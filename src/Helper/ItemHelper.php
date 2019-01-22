@@ -4,6 +4,8 @@ namespace Etsy\Helper;
 
 use Etsy\Contracts\LegalInformationRepositoryContract;
 use Etsy\Models\LegalInformation;
+use Illuminate\Database\Eloquent\Collection;
+use Plenty\Modules\Item\ItemShippingProfiles\Models\ItemShippingProfiles;
 use Plenty\Modules\Item\Variation\Models\Variation;
 use Plenty\Modules\Item\VariationSku\Models\VariationSku;
 use Plenty\Modules\Market\Helper\Contracts\MarketAttributeHelperRepositoryContract;
@@ -254,11 +256,11 @@ class ItemHelper
 	/**
 	 * Get the Etsy shipping profile id.
 	 *
-	 * @param Record $record
+	 * @param Collection $itemShippingProfiles
 	 *
 	 * @return int|null
 	 */
-	public function getShippingTemplateId(Record $record)
+	public function getShippingTemplateId($itemShippingProfiles)
 	{
 		/** @var ParcelServicePresetRepositoryContract $parcelServicePresetRepo */
 		$parcelServicePresetRepo = pluginApp(ParcelServicePresetRepositoryContract::class);
@@ -268,8 +270,9 @@ class ItemHelper
 
 		$shippingTemplateId = null;
 
-		foreach($record->itemShippingProfilesList as $itemShippingProfile)
+		foreach($itemShippingProfiles as $itemShippingProfile)
 		{
+		    $itemShippingProfile = $itemShippingProfile->toArray();
 			try
 			{
 				$parcelServicePreset = $parcelServicePresetRepo->getPresetById($itemShippingProfile['id']);
@@ -313,14 +316,12 @@ class ItemHelper
 	/**
 	 * Get the Etsy taxonomy id.
 	 *
-	 * @param Record $record
+	 * @param int $categoryId
 	 *
 	 * @return int|null
 	 */
-	public function getTaxonomyId(Record $record)
+	public function getTaxonomyId(int $categoryId)
 	{
-		$categoryId = $record->variationStandardCategory['categoryId'];
-
 		$settingsCorrelationFactory = pluginApp(SettingsCorrelationFactory::class);
 
 		$settings = $settingsCorrelationFactory->type(SettingsCorrelationFactory::TYPE_CATEGORY)->getSettingsByCorrelation(SettingsHelper::PLUGIN_NAME, $categoryId);

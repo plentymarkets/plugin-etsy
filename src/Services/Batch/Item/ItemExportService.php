@@ -74,6 +74,7 @@ class ItemExportService extends AbstractBatchService
         $listings = [];
 
         foreach ($variationElasticSearchScrollRepositoryResult['documents'] as $variation) {
+            //if ($variation['data'])
             $listings[$variation['data']['item']['id']][] = $variation;
         }
 

@@ -2,6 +2,7 @@
 
 namespace Etsy\Services\Item;
 
+use Illuminate\Database\Eloquent\Collection;
 use Plenty\Modules\Item\DataLayer\Models\Record;
 
 use Etsy\Helper\ImageHelper;
@@ -10,6 +11,7 @@ use Etsy\Api\Services\ListingService;
 use Etsy\Api\Services\ListingImageService;
 use Etsy\Helper\ItemHelper;
 use Etsy\Api\Services\ListingTranslationService;
+use Plenty\Modules\Item\ItemShippingProfiles\Contracts\ItemShippingProfilesRepositoryContract;
 use Plenty\Plugin\Log\Loggable;
 
 /**
@@ -145,12 +147,81 @@ class StartListingService
      */
     private function createListing(array $listing)
     {
+        /*
+         * Es wird IMMER die Hauptvariante mitgeladen
+         * Felder die nicht durch Plentyfelder abgedeckt sind und sich auf Artikelebene beziehen werden als Eigenschaften an der Hauptvariante hinterlegt
+         * Felder die nicht durch Plentyfelder abgedeckt sind und sich auf Varianten beziehen werden als Eigenschaften an den einzelnen Varianten hinterlegt
+         *
+         * Benötigte Daten:
+         * Hauptvarianten & zugeordnete Eigenschaften
+         */
+
+        /*
+         * Ablauf:
+         * Listing anlegen
+         * Inventory befüllen
+         * Listing aktivieren
+         */
+
         $data = [];
+        $itemShippingProfilesRepository = pluginApp(ItemShippingProfilesRepositoryContract::class);
 
         $data['state'] = 'draft';
 
         $language = $this->settingsHelper->getShopSettings('mainLanguage', 'de');
+        $exportLanguages = $this->settingsHelper->getShopSettings('exportLanguages', $language);
 
+        //todo: data befüllen
+        //languages?
+        //quantity
+        //title
+        //description
+        //price
+
+        /** @var Collection $shippingProfiles */
+        $shippingProfiles = $itemShippingProfilesRepository->findByItemId($listing[0]['data']['item']['id']);
+        $data['shipping_template_id'] = $this->itemHelper->getShippingTemplateId($shippingProfiles);
+
+        //who_made
+        //is_supply
+        //when_made
+
+
+
+
+        /* todo: Listing anlegen (Artikeldaten)
+         * required:
+         * languague?               Abklären wie man die Sprache definiert, bzw. ob das in createListing möglich ist
+         * quantity                 Bedeutung?
+         * title
+         * description
+         * price
+         * shipping_template_id
+         * who_made
+         * is_supply
+         * when_made
+         *
+         * optional:
+         * shop_section_id
+         * image_ids
+         * is_customizable
+         * non_taxable
+         * image
+         * state
+         * processing_min
+         * processing_max
+         * category_id
+         * taxonomy_id
+         * tags
+         * recipient
+         * occasion
+         * style
+         */
+
+
+
+
+        //todo: Listing befüllen (Variantendaten)
         foreach ($listing as $variation)
         {
             //title and description
@@ -163,6 +234,7 @@ class StartListingService
 
                 $data['description']= $text['description'];
 
+                //todo: an exportsprachen anpassen
                 if ($text['lang'] == $language)
                 {
                     break;
@@ -186,19 +258,27 @@ class StartListingService
                     $data['currency_code'] = $salesPrice['settings']['currencies'][0];
                     break;
                 }
-                /*
-                 * todo:
-                 * shipping_template_id
-                 * taxonomy_id
-                 * should_auto_renew
-                 * is_digital
-                 * is_supply
-                 * materials
-                 * shop_section_id
-                 * processing_min
-                 * processing_max
-                 */
             }
+
+            /** @var Collection $shippingProfiles */
+            $shippingProfiles = $itemShippingProfilesRepository->findByItemId($variation['data']['item']['id']);
+            $data['shipping_template_id'] = $this->itemHelper->getShippingTemplateId($shippingProfiles);
+
+            //welche standardkategorie?
+            $data['taxonomy_id'] = $this->itemHelper->getTaxonomyId($variation['data']['defaultCategories'][0]['id']);
+
+            /*
+             * todo:
+             * shipping_template_id
+             * taxonomy_id
+             * should_auto_renew
+             * is_digital
+             * is_supply
+             * materials
+             * shop_section_id
+             * processing_min
+             * processing_max
+             */
         }
 /*
         $title = trim(preg_replace('/\s+/', ' ', $this->itemHelper->getVariationWithAttributesName($record, $language)));

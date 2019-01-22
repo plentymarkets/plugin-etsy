@@ -34,13 +34,9 @@ abstract class AbstractBatchService
         $documentProcessor = pluginApp(DocumentProcessor::class);
         $elasticSearchDocument = pluginApp(DocumentSearch::class, [$documentProcessor]);
 
-        $variationFilter = pluginApp(VariationBaseFilter::class);
-        $variationFilter->isActive();
-
         $marketFilter = pluginApp(MarketFilter::class);
         $marketFilter->isVisibleForMarket($this->settingshelper->get(SettingsHelper::SETTINGS_ORDER_REFERRER));
 
-        $elasticSearchDocument->addFilter($variationFilter);
         $elasticSearchDocument->addFilter($marketFilter);
         $this->variationElasticSearchScrollRepository->addSearch($elasticSearchDocument);
     }
