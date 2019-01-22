@@ -90,51 +90,53 @@ class StartListingService
      */
     public function start(array $listing)
     {
-        $etsyListing = $this->createListing($listing);
-        $test = 0;
-        /*
-        $listingId = $this->createListing($record);
+        if (isset($listing['main'])) {
+            $etsyListing = $this->createListing($listing);
+            $test = 0;
+            /*
+            $listingId = $this->createListing($record);
 
-        if(!is_null($listingId))
-        {
-            try
+            if(!is_null($listingId))
             {
-                $this->addPictures($record, $listingId);
+                try
+                {
+                    $this->addPictures($record, $listingId);
 
-                $this->addTranslations($record, $listingId);
+                    $this->addTranslations($record, $listingId);
 
-                $this->publish($listingId, $record->variationBase->id);
+                    $this->publish($listingId, $record->variationBase->id);
 
-                $this->getLogger(__FUNCTION__)
-                     ->addReference('etsyListingId', $listingId)
-                     ->addReference('variationId', $record->variationBase->id)
-                     ->report('Etsy::item.itemExportSuccess');
+                    $this->getLogger(__FUNCTION__)
+                         ->addReference('etsyListingId', $listingId)
+                         ->addReference('variationId', $record->variationBase->id)
+                         ->report('Etsy::item.itemExportSuccess');
+                }
+                catch(\Exception $ex)
+                {
+                    $this->deleteListingService->delete($listingId);
+
+                    $this->getLogger(__FUNCTION__)
+                         ->addReference('variationId', $record->variationBase->id)
+                         ->addReference('etsyListingId', $listingId)
+                         ->warning('Etsy::item.skuRemovalSuccess', [
+                             'sku' => $record->variationMarketStatus->sku
+                         ]);
+
+                    $this->getLogger(__FUNCTION__)
+                        ->addReference('variationId', $record->variationBase->id)
+                        ->addReference('etsyListingId', $listingId)
+                        ->error('Etsy::item.startListingError', $ex->getMessage());
+                }
             }
-            catch(\Exception $ex)
+            else
             {
-                $this->deleteListingService->delete($listingId);
-
                 $this->getLogger(__FUNCTION__)
-                     ->addReference('variationId', $record->variationBase->id)
-                     ->addReference('etsyListingId', $listingId)
-                     ->warning('Etsy::item.skuRemovalSuccess', [
-                         'sku' => $record->variationMarketStatus->sku
-                     ]);
-
-                $this->getLogger(__FUNCTION__)
-                    ->addReference('variationId', $record->variationBase->id)
-                    ->addReference('etsyListingId', $listingId)
-                    ->error('Etsy::item.startListingError', $ex->getMessage());
+                    ->setReferenceType('variationId')
+                    ->setReferenceValue($record->variationBase->id)
+                    ->info('Etsy::item.startListingError');
             }
+            */
         }
-        else
-        {
-            $this->getLogger(__FUNCTION__)
-                ->setReferenceType('variationId')
-                ->setReferenceValue($record->variationBase->id)
-                ->info('Etsy::item.startListingError');
-        }
-        */
     }
 
     /**
@@ -171,20 +173,56 @@ class StartListingService
         $language = $this->settingsHelper->getShopSettings('mainLanguage', 'de');
         $exportLanguages = $this->settingsHelper->getShopSettings('exportLanguages', $language);
 
-        //todo: data befüllen
-        //languages?
-        //quantity
-        //title
-        //description
-        //price
+        $data['language'] = $language;
 
+        //title and description
+        foreach ($listing['main']['data']['texts'] as $text)
+        {
+            if ($text['lang'] == $language)
+            {
+                $data['title'] = str_replace(':', ' -', $text['name1']);
+                $data['title'] = ltrim($data['title'], ' +-!?');
+
+                $data['description']= $text['description'];
+            }
+        }
+
+        //quantity & price
+        $data['quantity'] = 0;
+
+        foreach ($listing as $variation) {
+            $data['quantity'] += $variation['data']['stock']['net'];
+
+            //sales price and currency code
+            foreach ($variation['data']['salesPrices'] as $salesPrice)
+            {
+                $orderReferrer= $this->settingsHelper->get(SettingsHelper::SETTINGS_ORDER_REFERRER);
+
+                //todo Währung über Einstellungen vom Kunden definieren lassen
+                if (in_array($orderReferrer, $salesPrice['settings']['referrers']))
+                {
+                    if (!isset($data['price']) || (float) $salesPrice['price'] < $data['price']) {
+                        $data['price'] = (float) $salesPrice['price'];
+                    }
+                    break;
+                }
+            }
+        }
+
+        //todo: data befüllen
+        //languages? (Übersetzungen)
+        //quantity -> varianten bestand zusammenzählen
+        //description
+        //price -> Währung über Einstellungen definieren und in die Abfrage implementieren
+
+        //shipping template id
         /** @var Collection $shippingProfiles */
         $shippingProfiles = $itemShippingProfilesRepository->findByItemId($listing[0]['data']['item']['id']);
         $data['shipping_template_id'] = $this->itemHelper->getShippingTemplateId($shippingProfiles);
 
-        //who_made
-        //is_supply
-        //when_made
+        //who_made -> gemappte eigenschaft des kunden
+        //is_supply ->
+        //when_made -> ^
 
 
 
@@ -192,7 +230,7 @@ class StartListingService
         /* todo: Listing anlegen (Artikeldaten)
          * required:
          * languague?               Abklären wie man die Sprache definiert, bzw. ob das in createListing möglich ist
-         * quantity                 Bedeutung?
+         * quantity
          * title
          * description
          * price
@@ -244,21 +282,7 @@ class StartListingService
             //quantity
             $data['quantity'] = $variation['data']['stock']['net'];
 
-            //sales price and currency code
-            foreach ($variation['data']['salesPrices'] as $salesPrice)
-            {
-                $orderReferrer= $this->settingsHelper->get(SettingsHelper::SETTINGS_ORDER_REFERRER);
 
-                if (in_array($orderReferrer, $salesPrice['settings']['referrers']))
-                {
-                    $data['price'] = $salesPrice['price'];
-
-                    //todo validieren und if einbauen, die -1 abfängt, maximal eine währung für etsy preis
-
-                    $data['currency_code'] = $salesPrice['settings']['currencies'][0];
-                    break;
-                }
-            }
 
             /** @var Collection $shippingProfiles */
             $shippingProfiles = $itemShippingProfilesRepository->findByItemId($variation['data']['item']['id']);
