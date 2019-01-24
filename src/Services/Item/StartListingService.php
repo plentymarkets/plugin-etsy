@@ -173,7 +173,7 @@ class StartListingService
         $language = $this->settingsHelper->getShopSettings('mainLanguage', 'de');
         $exportLanguages = $this->settingsHelper->getShopSettings('exportLanguages', $language);
 
-        $data['language'] = $language;
+        //$data['language'] = $language;
 
         //title and description
         foreach ($listing['main']['data']['texts'] as $text)
@@ -201,8 +201,8 @@ class StartListingService
                 //todo Währung über Einstellungen vom Kunden definieren lassen
                 if (in_array($orderReferrer, $salesPrice['settings']['referrers']))
                 {
-                    if (!isset($data['price']) || (float) $salesPrice['price'] < $data['price']) {
-                        $data['price'] = (float) $salesPrice['price'];
+                    if (!isset($data['price']) || (float) $salesPrice['price'] < (float) $data['price']) {
+                        $data['price'] = $salesPrice['price'];
                     }
                     break;
                 }
@@ -221,10 +221,29 @@ class StartListingService
         $data['shipping_template_id'] = $this->itemHelper->getShippingTemplateId($shippingProfiles);
 
         //who_made -> gemappte eigenschaft des kunden
+        $data['who_made'] = 'i_did';
         //is_supply ->
+        $data['is_supply'] = 'false';
         //when_made -> ^
+        $data['when_made'] = 'made_to_order';
 
+        $response = $this->listingService->createListing($this->settingsHelper->getShopSettings('mainLanguage', 'de'), $data);
 
+        if (!isset($response['results']) || !is_array($response['results'])) {
+            if (is_array($response) && isset($response['error_msg'])) {
+                $message = $response['error_msg'];
+            } else if (is_string($response)) {
+                $message = $response;
+            } else {
+                $message = 'Failed to create listing.';
+            }
+
+            throw new \Exception($message);
+        }
+
+        $results = (array) $response['results'];
+
+        return (int) reset($results)['listing_id'];
 
 
         /* todo: Listing anlegen (Artikeldaten)
@@ -255,55 +274,6 @@ class StartListingService
          * occasion
          * style
          */
-
-
-
-
-        //todo: Listing befüllen (Variantendaten)
-        foreach ($listing as $variation)
-        {
-            //title and description
-            foreach ($variation['data']['texts'] as $text)
-            {
-                $data['title'] = $text['name1'];
-
-                $data['title'] = str_replace(':', ' -', $data['title']);
-                $data['title'] = ltrim($data['title'], ' +-!?');
-
-                $data['description']= $text['description'];
-
-                //todo: an exportsprachen anpassen
-                if ($text['lang'] == $language)
-                {
-                    break;
-                }
-            }
-
-            //quantity
-            $data['quantity'] = $variation['data']['stock']['net'];
-
-
-
-            /** @var Collection $shippingProfiles */
-            $shippingProfiles = $itemShippingProfilesRepository->findByItemId($variation['data']['item']['id']);
-            $data['shipping_template_id'] = $this->itemHelper->getShippingTemplateId($shippingProfiles);
-
-            //welche standardkategorie?
-            $data['taxonomy_id'] = $this->itemHelper->getTaxonomyId($variation['data']['defaultCategories'][0]['id']);
-
-            /*
-             * todo:
-             * shipping_template_id
-             * taxonomy_id
-             * should_auto_renew
-             * is_digital
-             * is_supply
-             * materials
-             * shop_section_id
-             * processing_min
-             * processing_max
-             */
-        }
 /*
         $title = trim(preg_replace('/\s+/', ' ', $this->itemHelper->getVariationWithAttributesName($record, $language)));
         $title = str_replace(':', ' -', $title);
