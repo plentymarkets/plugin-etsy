@@ -46,9 +46,14 @@ abstract class AbstractBatchService
      */
     final public function run()
     {
-        $result = $this->variationElasticSearchScrollRepository->execute();
+        do {
 
-        $this->export($result);
+            $result = $this->variationElasticSearchScrollRepository->execute();
+
+            $this->export($result);
+
+        } while ($this->variationElasticSearchScrollRepository->hasNext());
+
     }
 
     /**

@@ -227,6 +227,54 @@ class StartListingService
         //when_made -> ^
         $data['when_made'] = 'made_to_order';
 
+        // Kategorie
+        if (isset($listing['main']['data']['defaultCategories'][0]['id'])
+            && $listing['main']['data']['defaultCategories'][0]['id'] == 420){
+            $data['taxonomy_id'] = 1069;
+        } else {
+            $data['taxonomy_id'] = 1102;
+        }
+
+        if(false)
+        {
+            $data['tags'] = '';
+        }
+
+        if(false)
+        {
+            $data['occasion'] = '';
+        }
+
+        if(false)
+        {
+            $data['recipient'] = '';
+        }
+
+        if(false)
+        {
+            $data['item_weight']       = '';
+            $data['item_weight_units'] = 'g';
+        }
+
+        if(false)
+        {
+            $data['item_height']          = '';
+            $data['item_dimensions_unit'] = 'mm';
+        }
+
+        if(false)
+        {
+            $data['item_length']          = '';
+            $data['item_dimensions_unit'] = 'mm';
+        }
+
+        if(false)
+        {
+            $data['item_width']           = '';
+            $data['item_dimensions_unit'] = 'mm';
+        }
+
+
         $response = $this->listingService->createListing($this->settingsHelper->getShopSettings('mainLanguage', 'de'), $data);
 
         if (!isset($response['results']) || !is_array($response['results'])) {
@@ -274,27 +322,7 @@ class StartListingService
          * occasion
          * style
          */
-/*
-        $title = trim(preg_replace('/\s+/', ' ', $this->itemHelper->getVariationWithAttributesName($record, $language)));
-        $title = str_replace(':', ' -', $title);
-        $title = ltrim($title, ' +-!?');
 
-        $legalInformation = $this->itemHelper->getLegalInformation($language);
-
-        $description = html_entity_decode(strip_tags($record->itemDescription[ $language ]['description'] . $legalInformation));
-
-        $data = [
-            'state'                => 'draft',
-            'title'                => $title,
-            'description'          => $description,
-            'quantity'             => $this->itemHelper->getStock($record),
-            'price'                => number_format($record->variationRetailPrice->price, 2, '.', ''),
-            'currency_code'        => $record->variationRetailPrice->currency,
-            'shipping_template_id' => $this->itemHelper->getShippingTemplateId($record),
-            'taxonomy_id'          => $this->itemHelper->getTaxonomyId($record),
-            'should_auto_renew'    => 'true',
-            'is_digital'           => 'false',
-            'is_supply'            => 'false',
 
             // TODO
             // materials
@@ -302,83 +330,8 @@ class StartListingService
             // processing_min
             // processing_max
 
-        ];
-
         // TODO 'en' und 'de' dynamisch aus dem dynamodb repo ziehen
 
-        if($isSupply = $this->itemHelper->getProperty($record, 'is_supply', $language))
-        {
-            $data['is_supply'] = $isSupply;
-        }
-
-        if(strlen($record->itemDescription[ $language ]['keywords']))
-        {
-            $data['tags'] = $this->itemHelper->getTags($record, $language);
-        }
-
-        if($whoMade = $this->itemHelper->getProperty($record, 'who_made', 'en'))
-        {
-            $data['who_made'] = $whoMade;
-        }
-
-        if($whenMade = $this->itemHelper->getProperty($record, 'when_made', 'en'))
-        {
-            $data['when_made'] = $whenMade;
-        }
-
-        if($occasion = $this->itemHelper->getProperty($record, 'occasion', 'en'))
-        {
-            $data['occasion'] = $occasion;
-        }
-
-        if($recipient = $this->itemHelper->getProperty($record, 'recipient', 'en'))
-        {
-            $data['recipient'] = $recipient;
-        }
-
-        if($itemWeight = $record->variationBase->weightG)
-        {
-            $data['item_weight']       = $itemWeight;
-            $data['item_weight_units'] = 'g';
-        }
-
-        if($itemHeight = $record->variationBase->heightMm)
-        {
-            $data['item_height']          = $itemHeight;
-            $data['item_dimensions_unit'] = 'mm';
-        }
-
-        if($itemLength = $record->variationBase->lengthMm)
-        {
-            $data['item_length']          = $itemLength;
-            $data['item_dimensions_unit'] = 'mm';
-        }
-
-        if($itemWidth = $record->variationBase->widthMm)
-        {
-            $data['item_width']           = $itemWidth;
-            $data['item_dimensions_unit'] = 'mm';
-        }
-
-        $response = $this->listingService->createListing($this->settingsHelper->getShopSettings('mainLanguage', 'de'), $data);
-
-        if (!isset($response['results']) || !is_array($response['results'])) {
-            if (is_array($response) && isset($response['error_msg'])) {
-                $message = $response['error_msg'];
-            } else if (is_string($response)) {
-                $message = $response;
-            } else {
-                $message = 'Failed to create listing.';
-            }
-
-            throw new \Exception($message);
-        }
-
-        $results = (array) $response['results'];
-
-        return (int) reset($results)['listing_id'];
-*/
-return 0;
     }
 
     /**

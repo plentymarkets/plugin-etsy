@@ -49,6 +49,8 @@ class EtsyServiceProvider extends ServiceProvider
 		$this->getApplication()->singleton(ItemDataProviderFactory::class);
 
 		$this->getApplication()->register(EtsyRouteServiceProvider::class);
+
+		$this->getApplication()->register(CatalogBootServiceProvider::class);
 	}
 
 	/**
