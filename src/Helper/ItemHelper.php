@@ -275,7 +275,7 @@ class ItemHelper
 		    $itemShippingProfile = $itemShippingProfile->toArray();
 			try
 			{
-				$parcelServicePreset = $parcelServicePresetRepo->getPresetById($itemShippingProfile['id']);
+				$parcelServicePreset = $parcelServicePresetRepo->getPresetById($itemShippingProfile['profileId']);
 
 				if($parcelServicePreset->priority < $currentPriority && (in_array($this->orderHelper->getReferrerId(), $parcelServicePreset->supportedReferrer) || in_array(- 1, $parcelServicePreset->supportedReferrer)) && $correlatedShipping = $this->getCorrelatedShippingTemplate($parcelServicePreset->id))
 				{
