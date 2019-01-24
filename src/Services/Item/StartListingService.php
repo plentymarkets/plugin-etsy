@@ -91,8 +91,13 @@ class StartListingService
     public function start(array $listing)
     {
         if (isset($listing['main'])) {
-            $etsyListing = $this->createListing($listing);
-            $test = 0;
+            $listingId = $this->createListing($listing);
+
+            try {
+                $this->fillInventory($listingId, $listing);
+            } catch (\Exception $e) {
+
+            }
             /*
             $listingId = $this->createListing($record);
 
@@ -149,7 +154,7 @@ class StartListingService
      */
     private function createListing(array $listing)
     {
-        /*
+        /*todo: WICHTIG Katalog als Datenquelle verwenden
          * Es wird IMMER die Hauptvariante mitgeladen
          * Felder die nicht durch Plentyfelder abgedeckt sind und sich auf Artikelebene beziehen werden als Eigenschaften an der Hauptvariante hinterlegt
          * Felder die nicht durch Plentyfelder abgedeckt sind und sich auf Varianten beziehen werden als Eigenschaften an den einzelnen Varianten hinterlegt
@@ -229,7 +234,7 @@ class StartListingService
 
         // Kategorie
         if (isset($listing['main']['data']['defaultCategories'][0]['id'])
-            && $listing['main']['data']['defaultCategories'][0]['id'] == 420){
+            && $listing['main']['data']['defaultCategories'][0]['id'] == 75){
             $data['taxonomy_id'] = 1069;
         } else {
             $data['taxonomy_id'] = 1102;
@@ -331,6 +336,16 @@ class StartListingService
             // processing_max
 
         // TODO 'en' und 'de' dynamisch aus dem dynamodb repo ziehen
+
+    }
+
+    private function fillInventory($listingId, $listing) {
+        /*
+         * Inventory laden
+         * Varianten bauen
+         * Inventory updaten
+         */
+
 
     }
 
