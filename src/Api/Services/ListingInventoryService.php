@@ -9,9 +9,8 @@ use Etsy\Api\Client;
  */
 class ListingInventoryService
 {
-    const STATE_DRAFT = 'draft';
-    const STATE_ACTIVE = 'active';
-    const STATE_INACTIVE = 'inactive';
+    const CUSTOM_ATTRIBUTE_1 = 513;
+    const CUSTOM_ATTRIBUTE_2 = 514;
 
     /**
      * @var Client
@@ -26,5 +25,36 @@ class ListingInventoryService
         $this->client = $client;
     }
 
-    //todo: Inventory calls implementieren
+    /**
+     * @param int $listingId
+     * @param string $language
+     * @return array
+     */
+    public function getInventory(int $listingId, string $language = '')
+    {
+        if (strlen($language) > 0) {
+            $params['language'] = $language;
+        }
+
+        $params['listing_id'] = $listingId;
+
+        return $this->client->call('getInventory', $params);
+    }
+
+    /**
+     * @param int $listingId
+     * @param array $data
+     * @param string $language
+     * @return array
+     */
+    public function updateInventory(int $listingId, array $data, string $language = '')
+    {
+        if (strlen($language) > 0) {
+            $params['language'] = $language;
+        }
+
+        $params['listing_id'] = $listingId;
+
+        return $this->client->call('updateInventory', $params, $data);
+    }
 }

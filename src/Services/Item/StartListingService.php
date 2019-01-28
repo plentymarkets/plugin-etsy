@@ -2,6 +2,7 @@
 
 namespace Etsy\Services\Item;
 
+use Etsy\Api\Services\ListingInventoryService;
 use Illuminate\Database\Eloquent\Collection;
 use Plenty\Modules\Item\DataLayer\Models\Record;
 
@@ -57,6 +58,11 @@ class StartListingService
     private $imageHelper;
 
     /**
+     * @var ListingInventoryService $inventoryService
+     */
+    private $inventoryService;
+
+    /**
      * @param ItemHelper $itemHelper
      * @param ListingService $listingService
      * @param DeleteListingService $deleteListingService
@@ -72,7 +78,8 @@ class StartListingService
         ListingImageService $listingImageService,
         ListingTranslationService $listingTranslationService,
         SettingsHelper $settingsHelper,
-        ImageHelper $imageHelper)
+        ImageHelper $imageHelper,
+        ListingInventoryService $inventoryService)
     {
         $this->itemHelper                 = $itemHelper;
         $this->listingTranslationService  = $listingTranslationService;
@@ -81,6 +88,7 @@ class StartListingService
         $this->listingImageService        = $listingImageService;
         $this->settingsHelper             = $settingsHelper;
         $this->imageHelper                = $imageHelper;
+        $this->inventoryService           = $inventoryService;
     }
 
     /**
@@ -228,7 +236,7 @@ class StartListingService
         //who_made -> gemappte eigenschaft des kunden
         $data['who_made'] = 'i_did';
         //is_supply ->
-        $data['is_supply'] = 'false';
+        $data['is_supply'] = false;
         //when_made -> ^
         $data['when_made'] = 'made_to_order';
 
@@ -341,10 +349,44 @@ class StartListingService
 
     private function fillInventory($listingId, $listing) {
         /*
-         * Inventory laden
          * Varianten bauen
          * Inventory updaten
          */
+
+        //was bestimmt die attribute?
+        $firstAttributes = [
+            [
+                'property_id' => $this->inventoryService::CUSTOM_ATTRIBUTE_1,
+                'property_name' => 'Fastener Type',
+                'values'        => ['Hook and loop'],
+            ],
+        ];
+
+        $secondAttributes = [
+            [
+                'property_id'   => $this->inventoryService::CUSTOM_ATTRIBUTE_2,
+                'property_name' => 'Fastener Type',
+                'values'        => ['Hook and loop'],
+            ]
+        ];
+
+        $products = [];
+
+        foreach ($firstAttributes as $firstAttribute) {
+            foreach ($secondAttributes as $secondAttribute) {
+                $products[] = [
+                    'property_values' => [$firstAttribute, $secondAttribute],
+                    'sku'             => '',
+                    'offerings'       => [
+                        [
+                            'price'      => 40.00,
+                            'quantity'   => 10,
+                            'is_enabled' => 1
+                        ]
+                    ]
+                ];
+            }
+        }
 
 
     }
