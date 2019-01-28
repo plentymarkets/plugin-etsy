@@ -81,14 +81,14 @@ class StartListingService
         ImageHelper $imageHelper,
         ListingInventoryService $inventoryService)
     {
-        $this->itemHelper                 = $itemHelper;
-        $this->listingTranslationService  = $listingTranslationService;
-        $this->listingService             = $listingService;
-        $this->deleteListingService       = $deleteListingService;
-        $this->listingImageService        = $listingImageService;
-        $this->settingsHelper             = $settingsHelper;
-        $this->imageHelper                = $imageHelper;
-        $this->inventoryService           = $inventoryService;
+        $this->itemHelper = $itemHelper;
+        $this->listingTranslationService = $listingTranslationService;
+        $this->listingService = $listingService;
+        $this->deleteListingService = $deleteListingService;
+        $this->listingImageService = $listingImageService;
+        $this->settingsHelper = $settingsHelper;
+        $this->imageHelper = $imageHelper;
+        $this->inventoryService = $inventoryService;
     }
 
     /**
@@ -104,7 +104,7 @@ class StartListingService
             try {
                 $this->fillInventory($listingId, $listing);
             } catch (\Exception $e) {
-
+                $this->listingService->deleteListing($listingId);
             }
             /*
             $listingId = $this->createListing($record);
@@ -189,14 +189,12 @@ class StartListingService
         //$data['language'] = $language;
 
         //title and description
-        foreach ($listing['main']['data']['texts'] as $text)
-        {
-            if ($text['lang'] == $language)
-            {
+        foreach ($listing['main']['data']['texts'] as $text) {
+            if ($text['lang'] == $language) {
                 $data['title'] = str_replace(':', ' -', $text['name1']);
                 $data['title'] = ltrim($data['title'], ' +-!?');
 
-                $data['description']= $text['description'];
+                $data['description'] = $text['description'];
             }
         }
 
@@ -207,14 +205,12 @@ class StartListingService
             $data['quantity'] += $variation['data']['stock']['net'];
 
             //sales price and currency code
-            foreach ($variation['data']['salesPrices'] as $salesPrice)
-            {
-                $orderReferrer= $this->settingsHelper->get(SettingsHelper::SETTINGS_ORDER_REFERRER);
+            foreach ($variation['data']['salesPrices'] as $salesPrice) {
+                $orderReferrer = $this->settingsHelper->get(SettingsHelper::SETTINGS_ORDER_REFERRER);
 
                 //todo Währung über Einstellungen vom Kunden definieren lassen
-                if (in_array($orderReferrer, $salesPrice['settings']['referrers']))
-                {
-                    if (!isset($data['price']) || (float) $salesPrice['price'] < (float) $data['price']) {
+                if (in_array($orderReferrer, $salesPrice['settings']['referrers'])) {
+                    if (!isset($data['price']) || (float)$salesPrice['price'] < (float)$data['price']) {
                         $data['price'] = $salesPrice['price'];
                     }
                     break;
@@ -242,48 +238,41 @@ class StartListingService
 
         // Kategorie
         if (isset($listing['main']['data']['defaultCategories'][0]['id'])
-            && $listing['main']['data']['defaultCategories'][0]['id'] == 75){
+            && $listing['main']['data']['defaultCategories'][0]['id'] == 75) {
             $data['taxonomy_id'] = 1069;
         } else {
             $data['taxonomy_id'] = 1102;
         }
 
-        if(false)
-        {
+        if (false) {
             $data['tags'] = '';
         }
 
-        if(false)
-        {
+        if (false) {
             $data['occasion'] = '';
         }
 
-        if(false)
-        {
+        if (false) {
             $data['recipient'] = '';
         }
 
-        if(false)
-        {
-            $data['item_weight']       = '';
+        if (false) {
+            $data['item_weight'] = '';
             $data['item_weight_units'] = 'g';
         }
 
-        if(false)
-        {
-            $data['item_height']          = '';
+        if (false) {
+            $data['item_height'] = '';
             $data['item_dimensions_unit'] = 'mm';
         }
 
-        if(false)
-        {
-            $data['item_length']          = '';
+        if (false) {
+            $data['item_length'] = '';
             $data['item_dimensions_unit'] = 'mm';
         }
 
-        if(false)
-        {
-            $data['item_width']           = '';
+        if (false) {
+            $data['item_width'] = '';
             $data['item_dimensions_unit'] = 'mm';
         }
 
@@ -302,9 +291,9 @@ class StartListingService
             throw new \Exception($message);
         }
 
-        $results = (array) $response['results'];
+        $results = (array)$response['results'];
 
-        return (int) reset($results)['listing_id'];
+        return (int)reset($results)['listing_id'];
 
 
         /* todo: Listing anlegen (Artikeldaten)
@@ -337,56 +326,132 @@ class StartListingService
          */
 
 
-            // TODO
-            // materials
-            // shop_section_id
-            // processing_min
-            // processing_max
+        // TODO
+        // materials
+        // shop_section_id
+        // processing_min
+        // processing_max
 
         // TODO 'en' und 'de' dynamisch aus dem dynamodb repo ziehen
 
     }
 
-    private function fillInventory($listingId, $listing) {
+    private function fillInventory($listingId, $listing)
+    {
         /*
          * Varianten bauen
          * Inventory updaten
          */
 
-        //was bestimmt die attribute?
-        $firstAttributes = [
-            [
-                'property_id' => $this->inventoryService::CUSTOM_ATTRIBUTE_1,
-                'property_name' => 'Fastener Type',
-                'values'        => ['Hook and loop'],
-            ],
-        ];
+        //ATTRIBUTE LADEN
+        //Prüfen ob Attribute < 2
+        //Attributwerte products zuweisen
+        //inventory befüllen
 
-        $secondAttributes = [
-            [
-                'property_id'   => $this->inventoryService::CUSTOM_ATTRIBUTE_2,
-                'property_name' => 'Fastener Type',
-                'values'        => ['Hook and loop'],
-            ]
-        ];
-
+        $language = $this->settingsHelper->getShopSettings('mainLanguage', 'de');
         $products = [];
+        $dependencies = [];
 
-        foreach ($firstAttributes as $firstAttribute) {
-            foreach ($secondAttributes as $secondAttribute) {
-                $products[] = [
-                    'property_values' => [$firstAttribute, $secondAttribute],
-                    'sku'             => '',
-                    'offerings'       => [
-                        [
-                            'price'      => 40.00,
-                            'quantity'   => 10,
-                            'is_enabled' => 1
-                        ]
-                    ]
-                ];
-            }
+        if (count($listing['main']['data']['attributes']) > 2) {
+            throw new \Exception("Can't list article " . $listing['main']['data']['item']['id'] . ". Too many attributes.");
         }
+
+        if (isset($listing['main']['data']['attributes'][0])) {
+            $attributeOneId = $listing['main']['data']['attributes'][0]['attributeId'];
+            $dependencies[] = $this->inventoryService::CUSTOM_ATTRIBUTE_1;
+        }
+
+        if (isset($listing['main']['data']['attributes'][1])) {
+            $attributeTwoId = $listing['main']['data']['attributes'][1]['attributeId'];
+            $dependencies[] = $this->inventoryService::CUSTOM_ATTRIBUTE_2;
+        }
+
+        $counter = 0;
+
+        foreach ($listing as $variation) {
+
+            foreach ($variation['data']['attributes'] as $attribute) {
+
+                foreach ($attribute['attribute']['names'] as $name) {
+                    if ($name['lang'] == $language) {
+                        $attributeName = $name['name'];
+                    }
+                }
+
+                foreach ($attribute['value']['names'] as $name) {
+                    if ($name['lang'] == $language) {
+                        $attributeValueName = $name['name'];
+                    }
+                }
+
+                if (!isset($attributeName)) {
+                    throw new \Exception("Can't list variation " . $variation['variation']['id'] . ". Undefined attribute name for language " . $language . ".");
+                }
+
+                if (!isset($attributeValueName)) {
+                    throw new \Exception("Can't list variation " . $variation['variation']['id'] . ". Undefined attribute value name for language " . $language . ".");
+                }
+
+                if (isset($attributeOneId) && $attribute['attributeId'] == $attributeOneId) {
+                    $products[$counter]['property_values'][] = [
+                        'property_id' => $this->inventoryService::CUSTOM_ATTRIBUTE_1,
+                        'property_name' => $attributeName,
+                        'values' => [$attributeValueName],
+                    ];
+                } elseif (isset($attributeTwoId) && $attribute['attributeId'] == $attributeTwoId) {
+                    $products[$counter]['property_values'][] = [
+                        'property_id' => $this->inventoryService::CUSTOM_ATTRIBUTE_2,
+                        'property_name' => $attributeName,
+                        'values' => [$attributeValueName],
+                    ];
+                }
+            }
+
+            foreach ($variation['data']['salesPrices'] as $salesPrice) {
+                $orderReferrer = $this->settingsHelper->get(SettingsHelper::SETTINGS_ORDER_REFERRER);
+
+                if (in_array($orderReferrer, $salesPrice['settings']['referrers'])) {
+                    $price = $salesPrice['price'];
+                    break;
+                }
+            }
+
+            //todo: skus pflegen
+            $products[$counter]['sku'] = '';
+            $products[$counter]['offerings'] = [
+                [
+                    //todo Bestand pflegen
+                    'quantity' => 1,
+                    'is_enabled' => $variation['data']['variation']['isActive']
+                ]
+            ];
+
+            if (isset($price)) {
+                $products[$counter]['offerings'][0]['price'] = $price;
+            }
+
+            $counter++;
+        }
+
+        if ($counter == 0) {
+            throw new \Exception("Can't list article " . $listing['main']['data']['item']['id'] . ". No active variations");
+        }
+
+        $test = json_encode($products);
+
+        $data = [
+            'products' => json_encode($products),
+            //'price_on_property' => [$dependencies],
+            //'quantity_on_property' => [$dependencies]
+        ];
+
+        $test = $data;
+
+        $test = $this->inventoryService->updateInventory($listingId, $data, $language);
+
+        $test = 0;
+
+        throw new \Exception();
 
 
     }
@@ -395,7 +460,7 @@ class StartListingService
      * Add pictures to listing.
      *
      * @param Record $record
-     * @param int    $listingId
+     * @param int $listingId
      */
     private function addPictures(Record $record, $listingId)
     {
@@ -405,24 +470,21 @@ class StartListingService
 
         $list = array_reverse(array_slice($list, 0, 5));
 
-        foreach($list as $id => $image)
-        {
+        foreach ($list as $id => $image) {
             $response = $this->listingImageService->uploadListingImage($listingId, $image);
 
-            if(isset($response['results']) && isset($response['results'][0]) && isset($response['results'][0]['listing_image_id']))
-            {
+            if (isset($response['results']) && isset($response['results'][0]) && isset($response['results'][0]['listing_image_id'])) {
                 $imageList[] = [
-                    'imageId'        => $id,
+                    'imageId' => $id,
                     'listingImageId' => $response['results'][0]['listing_image_id'],
-                    'listingId'      => $response['results'][0]['listing_id'],
-                    'imageUrl'       => $image,
+                    'listingId' => $response['results'][0]['listing_id'],
+                    'imageUrl' => $image,
                 ];
 
             }
         }
 
-        if(count($imageList))
-        {
+        if (count($imageList)) {
             $this->imageHelper->save($record->variationBase->id, json_encode($imageList));
         }
     }
@@ -431,35 +493,29 @@ class StartListingService
      * Add translations to listing.
      *
      * @param Record $record
-     * @param int    $listingId
+     * @param int $listingId
      */
     private function addTranslations(Record $record, $listingId)
     {
-        foreach($this->settingsHelper->getShopSettings('exportLanguages', [$this->settingsHelper->getShopSettings('mainLanguage', 'de')]) as $language)
-        {
-            if($language != $this->settingsHelper->getShopSettings('mainLanguage', 'de') && $record->itemDescription[ $language ]['name1'] && strip_tags($record->itemDescription[ $language ]['description']))
-            {
-                try
-                {
-                    $title = trim(preg_replace('/\s+/', ' ', $record->itemDescription[ $language ]['name1']));
+        foreach ($this->settingsHelper->getShopSettings('exportLanguages', [$this->settingsHelper->getShopSettings('mainLanguage', 'de')]) as $language) {
+            if ($language != $this->settingsHelper->getShopSettings('mainLanguage', 'de') && $record->itemDescription[$language]['name1'] && strip_tags($record->itemDescription[$language]['description'])) {
+                try {
+                    $title = trim(preg_replace('/\s+/', ' ', $record->itemDescription[$language]['name1']));
                     $title = ltrim($title, ' +-!?');
 
                     $legalInformation = $this->itemHelper->getLegalInformation($language);
 
                     $data = [
-                        'title'       => $title,
-                        'description' => html_entity_decode(strip_tags($record->itemDescription[ $language ]['description'].$legalInformation)),
+                        'title' => $title,
+                        'description' => html_entity_decode(strip_tags($record->itemDescription[$language]['description'] . $legalInformation)),
                     ];
 
-                    if($record->itemDescription[ $language ]['keywords'])
-                    {
+                    if ($record->itemDescription[$language]['keywords']) {
                         $data['tags'] = $this->itemHelper->getTags($record, $language);
                     }
 
                     $this->listingTranslationService->createListingTranslation($listingId, $language, $data);
-                }
-                catch(\Exception $ex)
-                {
+                } catch (\Exception $ex) {
                     $this->getLogger(__FUNCTION__)
                         ->addReference('etsyListingId', $listingId)
                         ->addReference('variationId', $record->variationBase->id)
