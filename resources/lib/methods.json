@@ -848,7 +848,7 @@
       "listing_id": "int",
       "type": "int",
       "value": "string",
-      "price": "float",
+      "price": "string",
       "secondary_price": "float"
     },
     "defaults": null,
