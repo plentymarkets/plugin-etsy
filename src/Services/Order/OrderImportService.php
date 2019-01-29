@@ -90,6 +90,10 @@ class OrderImportService
 					if(!$this->orderHelper->orderWasImported($receiptData['receipt_id']) && // TODO remove this in a next version.
                        !$this->orderHelper->orderWasImported($this->settingsHelper->getShopSettings('shopId') . '_' . $receiptData['receipt_id']))
 					{
+						$this->getLogger(__FUNCTION__)
+							->addReference('etsyReceiptId', $receiptData['receipt_id'])
+							->report('Etsy::order.startOrderImport', $receiptData);
+
 						$this->orderCreateService->create($receiptData);
 					}
 					else

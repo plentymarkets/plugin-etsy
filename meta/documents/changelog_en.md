@@ -1,4 +1,8 @@
 # Release notes for Etsy
+## v1.3.7 (2019-01-29)
+### Added
+- Added a log before the order import.
+
 ## v1.3.6 (2019-01-17)
 ### Fixed
 - The data type for variation stock was adjusted.
