@@ -1,4 +1,8 @@
 # Release Notes für Etsy
+## v1.3.7 (2019-01-29)
+### Hinzugefügt
+- Ein Log vor dem Auftragsimport wurde hinzugefügt.
+
 ## v1.3.6 (2019-01-17)
 ### Fixed
 - Der Datentyp für den Bestand von Varianten wurde angepasst.
