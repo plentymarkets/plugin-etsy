@@ -211,7 +211,7 @@ class StartListingService
                 //todo Währung über Einstellungen vom Kunden definieren lassen
                 if (in_array($orderReferrer, $salesPrice['settings']['referrers'])) {
                     if (!isset($data['price']) || (float)$salesPrice['price'] < (float)$data['price']) {
-                        $data['price'] = $salesPrice['price'];
+                        $data['price'] = (float) $salesPrice['price'];
                     }
                     break;
                 }
@@ -407,8 +407,8 @@ class StartListingService
                 }
             }
 
+            $orderReferrer = $this->settingsHelper->get(SettingsHelper::SETTINGS_ORDER_REFERRER);
             foreach ($variation['data']['salesPrices'] as $salesPrice) {
-                $orderReferrer = $this->settingsHelper->get(SettingsHelper::SETTINGS_ORDER_REFERRER);
 
                 if (in_array($orderReferrer, $salesPrice['settings']['referrers'])) {
                     $price = $salesPrice['price'];
@@ -437,15 +437,11 @@ class StartListingService
             throw new \Exception("Can't list article " . $listing['main']['data']['item']['id'] . ". No active variations");
         }
 
-        $test = json_encode($products);
-
         $data = [
             'products' => json_encode($products),
-            //'price_on_property' => [$dependencies],
-            //'quantity_on_property' => [$dependencies]
+            'price_on_property' => $dependencies,
+            'quantity_on_property' => $dependencies
         ];
-
-        $test = $data;
 
         $test = $this->inventoryService->updateInventory($listingId, $data, $language);
 
