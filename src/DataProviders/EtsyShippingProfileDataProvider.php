@@ -10,11 +10,11 @@ class EtsyShippingProfileDataProvider extends KeyDataProvider
 
     public function getKey(): string
     {
-        // TODO: Implement getKey() method.
+       return '';
     }
 
     public function getRows(): array
     {
-        // TODO: Implement getRows() method.
+        return [];
     }
 }
