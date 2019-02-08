@@ -3,6 +3,9 @@
 namespace Etsy;
 
 use Etsy\DataProviders\EtsyCategoryDataProvider;
+use Etsy\DataProviders\EtsyOccasionDataProvider;
+use Etsy\DataProviders\EtsyShippingProfileDataProvider;
+use Etsy\DataProviders\EtsyVariationPropertyDataProvider;
 use Etsy\DataProviders\GeneralDataProvider;
 use Plenty\Modules\Catalog\Contracts\TemplateContainerContract;
 use Plenty\Modules\Catalog\Templates\Template;
@@ -25,6 +28,16 @@ class CatalogBootServiceProvider extends ServiceProvider
             /** @var Template $template */
             $template = $container->register('catalog::etsy.name', 'catalog::etsy.type');
 
+        $template->addMapping([
+            'identifier' => 'occasion',
+            'label' => 'Anlass',
+            'isArray' => true,
+            'isMapping' => true,
+            'provider' => EtsyOccasionDataProvider::class,
+            'mutators' => [
+            ]
+        ]);
+
             $template->addMapping([
                 'identifier' => 'categories',
                 'label' => 'Kategorien',
@@ -36,31 +49,11 @@ class CatalogBootServiceProvider extends ServiceProvider
             ]);
 
         $template->addMapping([
-            'identifier' => 'categories2',
-            'label' => 'Kategorien2',
-            'isArray' => true,
-            'isMapping' => false,
-            'provider' => GeneralDataProvider::class,
-            'mutators' => [
-            ]
-        ]);
-
-        $template->addMapping([
-            'identifier' => 'categories3',
-            'label' => 'Kategorien3',
+            'identifier' => 'shippingProfile',
+            'label' => 'Versandprofil',
             'isArray' => false,
             'isMapping' => true,
-            'provider' => EtsyCategoryDataProvider::class,
-            'mutators' => [
-            ]
-        ]);
-
-        $template->addMapping([
-            'identifier' => 'categories4',
-            'label' => 'Kategorien4',
-            'isArray' => false,
-            'isMapping' => false,
-            'provider' => GeneralDataProvider::class,
+            'provider' => EtsyShippingProfileDataProvider::class,
             'mutators' => [
             ]
         ]);
