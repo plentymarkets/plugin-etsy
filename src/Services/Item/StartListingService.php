@@ -13,6 +13,7 @@ use Etsy\Api\Services\ListingImageService;
 use Etsy\Helper\ItemHelper;
 use Etsy\Api\Services\ListingTranslationService;
 use Plenty\Modules\Item\ItemShippingProfiles\Contracts\ItemShippingProfilesRepositoryContract;
+use Plenty\Modules\StockManagement\Stock\Repositories\StockRepository;
 use Plenty\Plugin\Log\Loggable;
 
 /**
@@ -63,6 +64,11 @@ class StartListingService
     private $inventoryService;
 
     /**
+     * @var StockRepository
+     */
+    private $stockRepository;
+
+    /**
      * @param ItemHelper $itemHelper
      * @param ListingService $listingService
      * @param DeleteListingService $deleteListingService
@@ -79,7 +85,8 @@ class StartListingService
         ListingTranslationService $listingTranslationService,
         SettingsHelper $settingsHelper,
         ImageHelper $imageHelper,
-        ListingInventoryService $inventoryService)
+        ListingInventoryService $inventoryService,
+        StockRepository $stockRepository)
     {
         $this->itemHelper = $itemHelper;
         $this->listingTranslationService = $listingTranslationService;
@@ -89,6 +96,7 @@ class StartListingService
         $this->settingsHelper = $settingsHelper;
         $this->imageHelper = $imageHelper;
         $this->inventoryService = $inventoryService;
+        $this->stockRepository = $stockRepository;
     }
 
     /**
@@ -100,6 +108,8 @@ class StartListingService
     {
         if (isset($listing['main'])) {
             $listingId = $this->createListing($listing);
+
+            $this->addPictures($listingId, $listing);
 
             try {
                 $this->fillInventory($listingId, $listing);
@@ -198,10 +208,15 @@ class StartListingService
             }
         }
 
+
         //quantity & price
         $data['quantity'] = 0;
 
         foreach ($listing as $variation) {
+            $this->stockRepository->setFilters(['variationId' => $variation['id']]);
+            $stock = $this->stockRepository->listStockByWarehouseType('sales')->getResult()->first();
+
+
             $data['quantity'] += $variation['data']['stock']['net'];
 
             //sales price and currency code
@@ -210,8 +225,8 @@ class StartListingService
 
                 //todo Währung über Einstellungen vom Kunden definieren lassen
                 if (in_array($orderReferrer, $salesPrice['settings']['referrers'])) {
-                    if (!isset($data['price']) || (float)$salesPrice['price'] < (float)$data['price']) {
-                        $data['price'] = (float) $salesPrice['price'];
+                    if (!isset($data['price']) || $salesPrice['price'] < $data['price']) {
+                        $data['price'] =  $salesPrice['price'];
                     }
                     break;
                 }
@@ -256,9 +271,9 @@ class StartListingService
             $data['recipient'] = '';
         }
 
-        if (false) {
-            $data['item_weight'] = '';
-            $data['item_weight_units'] = 'g';
+        if (isset($listing['main']['data']['variation']['weightNetG'])) {
+//            $data['item_weight'] = $listing['main']['data']['variation']['heightMM'];
+//            $data['item_weight_units'] = 'g';
         }
 
         if (false) {
@@ -458,20 +473,20 @@ class StartListingService
      * @param Record $record
      * @param int $listingId
      */
-    private function addPictures(Record $record, $listingId)
+    private function addPictures($listingId, $listing)
     {
-        $list = $this->itemHelper->getImageList($record->variationImageList['only_current_variation_images_and_generic_images']->toArray(), 'normal');
+        $list = $listing['main']['data']['images']['all'];
 
         $imageList = [];
 
-        $list = array_reverse(array_slice($list, 0, 5));
+        $list = array_reverse(array_slice($list, 0, 10));
 
-        foreach ($list as $id => $image) {
-            $response = $this->listingImageService->uploadListingImage($listingId, $image);
+        foreach ($list as $image) {
+            $response = $this->listingImageService->uploadListingImage($listingId, $image['url']);
 
             if (isset($response['results']) && isset($response['results'][0]) && isset($response['results'][0]['listing_image_id'])) {
                 $imageList[] = [
-                    'imageId' => $id,
+//                    'imageId' => $id,
                     'listingImageId' => $response['results'][0]['listing_image_id'],
                     'listingId' => $response['results'][0]['listing_id'],
                     'imageUrl' => $image,
