@@ -64,35 +64,16 @@ class ListingInventoryService
 
         $params['listing_id'] = $listingId;
 
-        $oAuthAuthentication = json_decode($this->settingsHelper->get(SettingsHelper::SETTINGS_ACCESS_TOKEN), true);
+        if (isset($data['price_on_property'])) {
+            $params['price_on_property'] = implode(',', $data['price_on_property']);
+            unset($data['price_on_property']);
+        }
 
-        $oauth = new OAuth(
-            $oAuthAuthentication['consumerKey'],
-            $oAuthAuthentication['consumerSecret'],
-            OAUTH_SIG_METHOD_HMACSHA1,
-            OAUTH_AUTH_TYPE_URI
-        );
-        $oauth->setToken($oAuthAuthentication['accessToken'], $oAuthAuthentication['accessTokenSecret']);
+        if (isset($data['quantity_on_property'])) {
+            $params['quantity_on_property'] = implode(',', $data['quantity_on_property']);
+            unset($data['quantity_on_property']);
+        }
 
-        $etsy_base = 'https://openapi.etsy.com/v2';
-
-        $propertyIds = implode(',', $data['price_on_property']);
-
-        $inventory_uri = sprintf(
-            '%s/listings/%d/inventory?price_on_property='.$propertyIds.'&quantity_on_property='.$propertyIds,
-            $etsy_base,
-            $listingId
-        );
-
-        $data = $oauth->fetch(
-            $inventory_uri,
-            ['products' => $data['products']],
-            OAUTH_HTTP_METHOD_PUT
-        );
-
-        $test = true;
-
-
-
+        return $this->client->call('updateInventory', $params, $data);
     }
 }

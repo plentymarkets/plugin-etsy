@@ -109,7 +109,7 @@ class StartListingService
         if (isset($listing['main'])) {
             $listingId = $this->createListing($listing);
 
-            $this->addPictures($listingId, $listing);
+            //$this->addPictures($listingId, $listing);
 
             try {
                 $this->fillInventory($listingId, $listing);
@@ -226,7 +226,7 @@ class StartListingService
                 //todo Währung über Einstellungen vom Kunden definieren lassen
                 if (in_array($orderReferrer, $salesPrice['settings']['referrers'])) {
                     if (!isset($data['price']) || $salesPrice['price'] < $data['price']) {
-                        $data['price'] =  $salesPrice['price'];
+                        $data['price'] =  (float) $salesPrice['price'];
                     }
                     break;
                 }
@@ -426,7 +426,7 @@ class StartListingService
             foreach ($variation['data']['salesPrices'] as $salesPrice) {
 
                 if (in_array($orderReferrer, $salesPrice['settings']['referrers'])) {
-                    $price = $salesPrice['price'];
+                    $price = (float) $salesPrice['price'];
                     break;
                 }
             }
