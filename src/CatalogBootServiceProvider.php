@@ -3,10 +3,8 @@
 namespace Etsy;
 
 use Etsy\DataProviders\EtsyCategoryDataProvider;
-use Etsy\DataProviders\EtsyOccasionDataProvider;
+use Etsy\DataProviders\EtsyPropertyDataProvider;
 use Etsy\DataProviders\EtsyShippingProfileDataProvider;
-use Etsy\DataProviders\EtsyVariationPropertyDataProvider;
-use Etsy\DataProviders\GeneralDataProvider;
 use Plenty\Modules\Catalog\Contracts\TemplateContainerContract;
 use Plenty\Modules\Catalog\Templates\Template;
 use Plenty\Plugin\ServiceProvider;
@@ -25,28 +23,28 @@ class CatalogBootServiceProvider extends ServiceProvider
     public function boot(TemplateContainerContract $container)
     {
 
-            /** @var Template $template */
-            $template = $container->register('catalog::etsy.name', 'catalog::etsy.type');
+        /** @var Template $template */
+        $template = $container->register('catalog::etsy.name', 'catalog::etsy.type');
 
         $template->addMapping([
-            'identifier' => 'occasion',
-            'label' => 'Anlass',
-            'isArray' => true,
-            'isMapping' => true,
-            'provider' => EtsyOccasionDataProvider::class,
+            'identifier' => 'etsy_properties',
+            'label' => 'Etsy Eigenschaften',
+            'isArray' => false,
+            'isMapping' => false,
+            'provider' => EtsyPropertyDataProvider::class,
             'mutators' => [
             ]
         ]);
 
-            $template->addMapping([
-                'identifier' => 'categories',
-                'label' => 'Kategorien',
-                'isArray' => true,
-                'isMapping' => true,
-                'provider' => EtsyCategoryDataProvider::class,
-                'mutators' => [
-                ]
-            ]);
+        $template->addMapping([
+            'identifier' => 'categories',
+            'label' => 'Kategorien',
+            'isArray' => true,
+            'isMapping' => true,
+            'provider' => EtsyCategoryDataProvider::class,
+            'mutators' => [
+            ]
+        ]);
 
         $template->addMapping([
             'identifier' => 'shippingProfile',
@@ -58,44 +56,48 @@ class CatalogBootServiceProvider extends ServiceProvider
             ]
         ]);
 
-            $template->addFilter([
-                'name' => 'variationBase.isActive',
-            ]);
+        //todo: Währung
 
-            $template->addFilter([
-                'name' => 'variationMarket.isVisibleForMarket',
-                'params' => [
-                    ["name" => "marketId", "value" => "settings.marketId"]
-                ]
-            ]);
+        //todo: Preis
 
-            /*$template->addFilter([
-               'name'
-            ]);*/
+        $template->addFilter([
+            'name' => 'variationBase.isActive',
+        ]);
 
-            $template->addSetting([
-                'key' => 'settings.marketId',
-                'type' => 'market',
-                'label' => 'Marktplatz',
-                'defaultValue' => 0
-            ]);
+        $template->addFilter([
+            'name' => 'variationMarket.isVisibleForMarket',
+            'params' => [
+                ["name" => "marketId", "value" => "settings.marketId"]
+            ]
+        ]);
 
-            $template->addSetting([
-                'key' => 'settings.foo',
-                'type' => 'foo',
-                'label' => 'Foo',
-                'defaultValue' => 0
-            ]);
+        /*$template->addFilter([
+           'name'
+        ]);*/
 
-            $template->addSetting([
-                'key' => 'settings.bar',
-                'type' => 'bar',
-                'label' => 'Bar',
-                'defaultValue' => 0
-            ]);
+        $template->addSetting([
+            'key' => 'settings.marketId',
+            'type' => 'market',
+            'label' => 'Marktplatz',
+            'defaultValue' => 0
+        ]);
 
-            $template->setSkuCallback(function ($foo) {
-                return 'neue SKU';
-            });
-        }
+        $template->addSetting([
+            'key' => 'settings.foo',
+            'type' => 'foo',
+            'label' => 'Foo',
+            'defaultValue' => 0
+        ]);
+
+        $template->addSetting([
+            'key' => 'settings.bar',
+            'type' => 'bar',
+            'label' => 'Bar',
+            'defaultValue' => 0
+        ]);
+
+        $template->setSkuCallback(function ($foo) {
+            return 'neue SKU';
+        });
+    }
 }
