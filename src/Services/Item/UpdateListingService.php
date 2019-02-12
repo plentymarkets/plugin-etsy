@@ -71,6 +71,7 @@ class UpdateListingService
      */
 	public function update(array $listing)
 	{
+	    //todo: an Katalog array anpassen
 	    $listingId = $listing['main']['data']['skus'][0]['sku'];
 
 	    /*

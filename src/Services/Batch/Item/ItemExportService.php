@@ -75,19 +75,20 @@ class ItemExportService extends AbstractBatchService
 
     /**
      * Export all items.
-     * @param
+     * @param array $catalogResult
      * @return void
      */
-    protected function export(array $variationElasticSearchScrollRepositoryResult)
+    protected function export(array $catalogResult)
     {
         $listings = [];
 
-        foreach ($variationElasticSearchScrollRepositoryResult['documents'] as $variation) {
-            if ($variation['data']['variation']['isMain'] == true) {
-                $listings[$variation['data']['item']['id']]['main'] = $variation;
+        foreach ($catalogResult as $variation) {
+
+            if ($variation['isMain'] == true) {
+                $listings[$variation['itemId']]['main'] = $variation;
                 continue;
             }
-            $listings[$variation['data']['item']['id']][] = $variation;
+            $listings[$variation['itemId']][] = $variation;
         }
 
         foreach ($listings as $listing) {
@@ -172,7 +173,7 @@ class ItemExportService extends AbstractBatchService
      */
     private function isListingCreated(array $listing):bool
     {
-
+//todo: anpassen
         if (isset($listing['main']['data']['skus'][0]['sku'])
             && $listing['main']['data']['skus'][0]['marketId'] === $this->settingsHelper->get(SettingsHelper::SETTINGS_ORDER_REFERRER))
         {

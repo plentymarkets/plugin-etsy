@@ -167,7 +167,7 @@ class StartListingService
     /**
      * Create a listing base.
      *
-     * @param Record $record
+     * @param array $listing
      *
      * @throws \Exception
      * @return int
@@ -357,9 +357,16 @@ class StartListingService
 
     }
 
+    /**
+     * Creates variations for the listing
+     *
+     * @param $listingId
+     * @param $listing
+     * @throws \Exception
+     */
     private function fillInventory($listingId, $listing)
     {
-        /*
+        /* todo: auf Katalog arrays anpassen
          * Varianten bauen
          * Inventory updaten
          */

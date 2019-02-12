@@ -3,11 +3,10 @@
 namespace Etsy\Services\Batch;
 
 use Etsy\Helper\SettingsHelper;
-use Plenty\Modules\Cloud\ElasticSearch\Lib\Processor\DocumentProcessor;
-use Plenty\Modules\Cloud\ElasticSearch\Lib\Search\Document\DocumentSearch;
+use Plenty\Modules\Catalog\Contracts\CatalogExportRepositoryContract;
+use Plenty\Modules\Catalog\Contracts\CatalogExportServiceContract;
+use Plenty\Modules\Catalog\Contracts\CatalogRepositoryContract;
 use Plenty\Modules\Item\Search\Contracts\VariationElasticSearchScrollRepositoryContract;
-use Plenty\Modules\Item\Search\Filter\MarketFilter;
-use Plenty\Modules\Item\Search\Filter\VariationBaseFilter;
 
 /**
  * Class AbstractBatchService
@@ -15,9 +14,22 @@ use Plenty\Modules\Item\Search\Filter\VariationBaseFilter;
 abstract class AbstractBatchService
 {
     /**
-     * @var VariationElasticSearchScrollRepositoryContract
+     * template uuid
      */
-    protected $variationElasticSearchScrollRepository;
+    const TEMPLATE = 'c96973ee-0b1a-3ce0-b7a8-38e45bea658e';
+
+    /**
+     * Fields that should be returned by the catalog, even though they don't get mapped
+     */
+    const ADDITIONAL_FIELDS = [
+        'isActive' => 'variation.isActive',
+        'isMain' => 'variation.isMain'
+    ];
+
+    /**
+     * @var CatalogExportServiceContract
+     */
+    protected $catalogExportService;
 
     /**
      * @var SettingsHelper $settingshelper
@@ -30,15 +42,17 @@ abstract class AbstractBatchService
     public function __construct(VariationElasticSearchScrollRepositoryContract $variationElasticSearchScrollRepository)
     {
         $this->settingshelper = pluginApp(SettingsHelper::class);
-        $this->variationElasticSearchScrollRepository = $variationElasticSearchScrollRepository;
-        $documentProcessor = pluginApp(DocumentProcessor::class);
-        $elasticSearchDocument = pluginApp(DocumentSearch::class, [$documentProcessor]);
 
-        $marketFilter = pluginApp(MarketFilter::class);
-        $marketFilter->isVisibleForMarket($this->settingshelper->get(SettingsHelper::SETTINGS_ORDER_REFERRER));
+        /** @var CatalogExportRepositoryContract $catalogExportRepository */
+        $catalogExportRepository = pluginApp(CatalogExportRepositoryContract::class);
+        $catalogRepository = pluginApp(CatalogRepositoryContract::class);
+        $catalogRepository->setFilters(['template' => self::TEMPLATE]);
+        $mappings = $catalogRepository->all();
+        $id = $mappings->getResult()[0]['id'];
 
-        $elasticSearchDocument->addFilter($marketFilter);
-        $this->variationElasticSearchScrollRepository->addSearch($elasticSearchDocument);
+        $this->catalogExportService = $catalogExportRepository->exportById($id);
+        $this->catalogExportService->setSettings(['marketId' => $this->settingshelper->get($this->settingshelper::SETTINGS_ORDER_REFERRER)]);
+        $this->catalogExportService->setAdditionalFields(self::ADDITIONAL_FIELDS);
     }
 
     /**
@@ -46,21 +60,19 @@ abstract class AbstractBatchService
      */
     final public function run()
     {
-        do {
+        $result = $this->catalogExportService->getResult();
 
-            $result = $this->variationElasticSearchScrollRepository->execute();
-
-            $this->export($result);
-
-        } while ($this->variationElasticSearchScrollRepository->hasNext());
+       foreach ($result as $page) {
+           $this->export($page);
+       }
 
     }
 
     /**
      * Execute the export process.
      *
-     * @param array $elasticSearchResult
+     * @param array $catalogResult
      * @return mixed
      */
-    protected abstract function export(array $elasticSearchResult);
+    protected abstract function export(array $catalogResult);
 }

@@ -66,11 +66,11 @@ class ItemUpdateStockService extends AbstractBatchService
     /**
      * Update all article which are not updated yet.
      *
-     * @param array $variationElasticSearchScrollRepositoryResult
+     * @param array $catalogResult
      *
      * @return void
      */
-    protected function export(array $variationElasticSearchScrollRepositoryResult)
+    protected function export(array $catalogResult)
     {
         //todo do stuff
 
