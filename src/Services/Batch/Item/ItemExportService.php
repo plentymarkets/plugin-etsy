@@ -2,6 +2,7 @@
 
 namespace Etsy\Services\Batch\Item;
 
+use Etsy\Helper\SettingsHelper;
 use Plenty\Modules\Item\DataLayer\Models\Record;
 use Plenty\Modules\Item\Search\Contracts\VariationElasticSearchScrollRepositoryContract;
 use Plenty\Plugin\Application;
@@ -43,23 +44,31 @@ class ItemExportService extends AbstractBatchService
     private $translator;
 
     /**
+     * @var SettingsHelper
+     */
+    protected $settingsHelper;
+
+    /**
      * ItemExportService constructor.
      * @param Application $app
      * @param StartListingService $startService
      * @param UpdateListingService $updateService
      * @param Translator $translator
+     * @param SettingsHelper $settingsHelper
      */
     public function __construct(
         Application $app,
         StartListingService $startService,
         UpdateListingService $updateService,
-        Translator $translator
+        Translator $translator,
+        SettingsHelper $settingsHelper
     )
     {
         $this->app = $app;
         $this->startService = $startService;
         $this->updateService = $updateService;
         $this->translator = $translator;
+        $this->settingshelper = $settingsHelper;
 
         parent::__construct(pluginApp(VariationElasticSearchScrollRepositoryContract::class));
     }
@@ -163,8 +172,16 @@ class ItemExportService extends AbstractBatchService
      */
     private function isListingCreated(array $listing):bool
     {
-        // todo
-        return false;
+
+        if (isset($listing['main']['data']['skus'][0]['sku'])
+            && $listing['main']['data']['skus'][0]['marketId'] === $this->settingsHelper->get(SettingsHelper::SETTINGS_ORDER_REFERRER))
+        {
+            return true;
+        }
+        else {
+            return false;
+        }
+
         /*
         $listingId = (string) $record->variationMarketStatus->sku;
 
