@@ -10,11 +10,17 @@ class EtsyShippingProfileDataProvider extends KeyDataProvider
 
     public function getKey(): string
     {
-       return '';
+       return 'shipping_profiles';
     }
 
     public function getRows(): array
     {
-        return [];
+        return [
+            [
+                'value' => 67847086057,
+                'label' => 'DE 0,1 USA 0,2 Sonst 0,3 1-2 weeks',
+                'required' => false,
+            ]
+        ];
     }
 }

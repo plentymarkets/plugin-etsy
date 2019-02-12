@@ -2,22 +2,14 @@
 
 namespace Etsy\DataProviders;
 
-use Plenty\Modules\Catalog\DataProviders\KeyDataProvider;
+use Plenty\Modules\Catalog\DataProviders\BaseDataProvider;
 
 /**
  * Class EtsyPropertyDataProvider
  * @package Etsy\DataProviders
  */
-class EtsyPropertyDataProvider extends KeyDataProvider
+class EtsyPropertyDataProvider extends BaseDataProvider
 {
-    /**
-     * @return string
-     */
-    public function getKey(): string
-    {
-        return 'etsy_properties';
-    }
-
     /**
      * @inheritdoc
      */
@@ -25,13 +17,18 @@ class EtsyPropertyDataProvider extends KeyDataProvider
     {
         return [
             [
-                'id' => 1,
-                'label' => 'sdasdas',
+                'key' => 'material',
+                'label' => 'material',
                 'required' => false,
             ],
             [
-                'id' => 2,
-                'label' => 'dasda',
+                'key' => 'occasion',
+                'label' => 'occasion',
+                'required' => false,
+            ],
+            [
+                'key' => 'who_made',
+                'label' => 'who made',
                 'required' => false,
             ]
         ];

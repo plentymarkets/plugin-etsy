@@ -2,10 +2,13 @@
 
 namespace Etsy\DataProviders;
 
-
 use Plenty\Modules\Catalog\DataProviders\KeyDataProvider;
 
-class EtsyCategoryDataProvider extends KeyDataProvider
+/**
+ * Class EtsyCurrencyDataProvider
+ * @package Etsy\DataProviders
+ */
+class EtsyCurrencyDataProvider extends KeyDataProvider
 {
     /**
      * @return string
@@ -33,22 +36,4 @@ class EtsyCategoryDataProvider extends KeyDataProvider
             ],
         ];
     }
-
-    /**
-     'id' => '1069',
-    'name' => 'Teetassen & Teesets',
-    'id' => '1102',
-    'name' => 'Büro- & Schulbedarf',
-    englisch:
-    'id' => '1069',
-    'name' => 'Tea Cups & Sets',
-    'id' => '1102',
-    'name' => 'Office & School Supplies',
-    französisch:
-    'id' => '1069',
-    'name' => 'Tasses et services à thé',
-    'id' => '1102',
-    'name' => 'Fournitures école et bureau',
-     */
 }
-

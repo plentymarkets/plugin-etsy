@@ -3,6 +3,7 @@
 namespace Etsy;
 
 use Etsy\DataProviders\EtsyCategoryDataProvider;
+use Etsy\DataProviders\EtsyCurrencyDataProvider;
 use Etsy\DataProviders\EtsyPropertyDataProvider;
 use Etsy\DataProviders\EtsyShippingProfileDataProvider;
 use Plenty\Modules\Catalog\Contracts\TemplateContainerContract;
@@ -27,16 +28,6 @@ class CatalogBootServiceProvider extends ServiceProvider
         $template = $container->register('catalog::etsy.name', 'catalog::etsy.type');
 
         $template->addMapping([
-            'identifier' => 'etsy_properties',
-            'label' => 'Etsy Eigenschaften',
-            'isArray' => false,
-            'isMapping' => false,
-            'provider' => EtsyPropertyDataProvider::class,
-            'mutators' => [
-            ]
-        ]);
-
-        $template->addMapping([
             'identifier' => 'categories',
             'label' => 'Kategorien',
             'isArray' => true,
@@ -46,6 +37,7 @@ class CatalogBootServiceProvider extends ServiceProvider
             ]
         ]);
 
+/*
         $template->addMapping([
             'identifier' => 'shippingProfile',
             'label' => 'Versandprofil',
@@ -55,19 +47,23 @@ class CatalogBootServiceProvider extends ServiceProvider
             'mutators' => [
             ]
         ]);
+*/
 
-        //todo: Währung
 
-        //todo: Preis
-
-        $template->addFilter([
-            'name' => 'variationBase.isActive',
+        $template->addMapping([
+            'identifier' => 'etsy_properties',
+            'label' => 'Etsy Eigenschaft',
+            'isArray' => false,
+            'isMapping' => false,
+            'provider' => EtsyPropertyDataProvider::class,
+            'mutators' => [
+            ]
         ]);
 
         $template->addFilter([
             'name' => 'variationMarket.isVisibleForMarket',
             'params' => [
-                ["name" => "marketId", "value" => "settings.marketId"]
+                ["name" => "marketId", "ref" => "settings.marketId"]
             ]
         ]);
 
@@ -76,23 +72,9 @@ class CatalogBootServiceProvider extends ServiceProvider
         ]);*/
 
         $template->addSetting([
-            'key' => 'settings.marketId',
+            'key' => 'marketId',
             'type' => 'market',
             'label' => 'Marktplatz',
-            'defaultValue' => 0
-        ]);
-
-        $template->addSetting([
-            'key' => 'settings.foo',
-            'type' => 'foo',
-            'label' => 'Foo',
-            'defaultValue' => 0
-        ]);
-
-        $template->addSetting([
-            'key' => 'settings.bar',
-            'type' => 'bar',
-            'label' => 'Bar',
             'defaultValue' => 0
         ]);
 

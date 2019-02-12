@@ -7,6 +7,7 @@ use Plenty\Modules\Catalog\Contracts\CatalogExportRepositoryContract;
 use Plenty\Modules\Catalog\Contracts\CatalogExportServiceContract;
 use Plenty\Modules\Catalog\Contracts\CatalogRepositoryContract;
 use Plenty\Modules\Item\Search\Contracts\VariationElasticSearchScrollRepositoryContract;
+use Plenty\Modules\System\Contracts\WebstoreConfigurationRepositoryContract;
 
 /**
  * Class AbstractBatchService
@@ -23,7 +24,10 @@ abstract class AbstractBatchService
      */
     const ADDITIONAL_FIELDS = [
         'isActive' => 'variation.isActive',
-        'isMain' => 'variation.isMain'
+        'isMain' => 'variation.isMain',
+        'texts' => 'texts',
+        'salesPrices' => 'salesPrices', //todo: Entfernen sobald es settings für Katalog gibt
+        'defaultCategories' => 'defaultCategories'
     ];
 
     /**
@@ -65,7 +69,6 @@ abstract class AbstractBatchService
        foreach ($result as $page) {
            $this->export($page);
        }
-
     }
 
     /**

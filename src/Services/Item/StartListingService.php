@@ -14,6 +14,8 @@ use Etsy\Helper\ItemHelper;
 use Etsy\Api\Services\ListingTranslationService;
 use Plenty\Modules\Item\ItemShippingProfiles\Contracts\ItemShippingProfilesRepositoryContract;
 use Plenty\Modules\StockManagement\Stock\Repositories\StockRepository;
+use Plenty\Modules\System\Contracts\WebstoreConfigurationRepositoryContract;
+use Plenty\Plugin\Application;
 use Plenty\Plugin\Log\Loggable;
 
 /**
@@ -201,12 +203,12 @@ class StartListingService
         //$data['language'] = $language;
 
         //title and description
-        foreach ($listing['main']['data']['texts'] as $text) {
+        foreach ($listing['main']['texts'] as $text) {
             if ($text['lang'] == $language) {
                 $data['title'] = str_replace(':', ' -', $text['name1']);
                 $data['title'] = ltrim($data['title'], ' +-!?');
 
-                $data['description'] = $text['description'];
+                $data['description'] = html_entity_decode(strip_tags($text['description']));
             }
         }
 
@@ -215,7 +217,7 @@ class StartListingService
         $data['quantity'] = 0;
 
         foreach ($listing as $variation) {
-            $this->stockRepository->setFilters(['variationId' => $variation['id']]);
+            $this->stockRepository->setFilters(['variationId' => $variation['variationId']]);
             $stock = $this->stockRepository->listStockByWarehouseType('sales')->getResult()->first();
 
             if ($stock->stockNet === NULL)
@@ -225,11 +227,17 @@ class StartListingService
 
             $data['quantity'] += $stock->stockNet;
 
-            //sales price and currency code
-            foreach ($variation['data']['salesPrices'] as $salesPrice) {
+            //loading default currency
+            /** @var WebstoreConfigurationRepositoryContract $webstoreConfigurationRepository */
+            $webstoreConfigurationRepository = pluginApp(WebstoreConfigurationRepositoryContract::class);
+            $webStoreConfiguration = $webstoreConfigurationRepository->findByPlentyId(pluginApp(Application::class)->getPlentyId());
+            $defaultCurrency = $webStoreConfiguration->defaultCurrency;
+
+            //todo: Nur den in den Eimstellungen definierten Preis für Etsy nutzen und auf Shopwährung prüfen. Ggf. umrechnen
+            foreach ($variation['salesPrices'] as $salesPrice) {
                 $orderReferrer = $this->settingsHelper->get(SettingsHelper::SETTINGS_ORDER_REFERRER);
 
-                //todo Währung über Einstellungen vom Kunden definieren lassen
+                //todo Falls die bei Etsy hinterlegte Währung von der Standardwährung abweicht muss umgerechnet werden
                 if (in_array($orderReferrer, $salesPrice['settings']['referrers'])) {
                     if (!isset($data['price']) || $salesPrice['price'] < $data['price']) {
                         $data['price'] =  (float) $salesPrice['price'];
@@ -239,15 +247,10 @@ class StartListingService
             }
         }
 
-        //todo: data befüllen
-        //languages? (Übersetzungen)
-        //quantity -> varianten bestand zusammenzählen
-        //description
-        //price -> Währung über Einstellungen definieren und in die Abfrage implementieren
-
         //shipping template id
+        //todo: auf katalog umbauen
         /** @var Collection $shippingProfiles */
-        $shippingProfiles = $itemShippingProfilesRepository->findByItemId($listing[0]['data']['item']['id']);
+        $shippingProfiles = $itemShippingProfilesRepository->findByItemId($listing['main']['itemId']);
         $data['shipping_template_id'] = $this->itemHelper->getShippingTemplateId($shippingProfiles);
 
         //who_made -> gemappte eigenschaft des kunden
@@ -257,46 +260,66 @@ class StartListingService
         //when_made -> ^
         $data['when_made'] = 'made_to_order';
 
-        // Kategorie
-        if (isset($listing['main']['data']['defaultCategories'][0]['id'])
-            && $listing['main']['data']['defaultCategories'][0]['id'] == 75) {
-            $data['taxonomy_id'] = 1069;
-        } else {
-            $data['taxonomy_id'] = 1102;
-        }
+        //Kategorie todo: umbauen auf Standardkategorie
+        $data['taxonomy_id'] = $listing['main']['categories'][0];
+
 
         if (false) {
+            //todo
             $data['tags'] = '';
         }
 
-        if (false) {
-            $data['occasion'] = '';
+        if (isset($listing['main']['occasion'])) {
+            $data['occasion'] = $listing['main']['occasion'];
         }
 
-        if (false) {
-            $data['recipient'] = '';
+        if (isset($listing['main']['recipient'])) {
+            $data['recipient'] = $listing['main']['recipient'];
         }
 
-        if (false) {
-            $data['item_weight'] = '';
+        if (isset($listing['main']['item_weight'])) {
+            $data['item_weight'] = $listing['main']['item_weight'];
             $data['item_weight_units'] = 'g';
         }
 
-        if (false) {
-            $data['item_height'] = '';
+        if (isset($listing['main']['item_height'])) {
+            $data['item_height'] = $listing['main']['item_height'];
             $data['item_dimensions_unit'] = 'mm';
         }
 
-        if (false) {
-            $data['item_length'] = '';
+        if (isset($listing['main']['item_length'])) {
+            $data['item_length'] = $listing['main']['item_length'];
             $data['item_dimensions_unit'] = 'mm';
         }
 
-        if (false) {
-            $data['item_width'] = '';
+        if (isset($listing['main']['item_width'])) {
+            $data['item_width'] = $listing['main']['item_width'];
             $data['item_dimensions_unit'] = 'mm';
         }
 
+        //validating required fields
+        //todo auslagern in Validator
+        /*
+        if (!isset($data['title']) || $data['title'] == '') {
+            throw new \Exception('Required field title is not allowed to be empty. Item ID ' . $listing['main']['itemId']);
+        }
+
+        if (!isset($data['description']) || $data['description'] == '') {
+            throw new \Exception('Required field description is not allowed to be empty. Item ID ' . $listing['main']['itemId']);
+        }
+
+        if (!isset($data['price']) || $data['price'] == 0) {
+            throw new \Exception('Required field price is not allowed to be empty or 0. Item ID ' . $listing['main']['itemId']);
+        }
+
+        if (!isset($data['quantity']) || $data['quantity'] == 0) {
+            throw new \Exception('No . Item ID ' . $listing['main']['itemId']);
+        }
+
+        if (!isset($data['taxonomy_id']) || $data['taxonomy_id'] == null) {
+            throw new \Exception('');
+        }
+        */
 
         $response = $this->listingService->createListing($this->settingsHelper->getShopSettings('mainLanguage', 'de'), $data);
 
