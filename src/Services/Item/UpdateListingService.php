@@ -71,9 +71,9 @@ class UpdateListingService
      */
 	public function update(array $listing)
 	{
-        $test = 0;
+	    $listingId = $listing['main']['data']['skus'][0]['sku'];
 
-		/*
+	    /*
 		$listingId = $record->variationMarketStatus->sku;
 
 		if(!is_null($listingId))
@@ -141,7 +141,7 @@ class UpdateListingService
 	 */
 	private function updateListing(Record $record, $listingId)
 	{
-		/*
+
 		$language    = $this->settingsHelper->getShopSettings('mainLanguage', 'de');
 
 		$title       = trim(preg_replace('/\s+/', ' ',$this->itemHelper->getVariationWithAttributesName($record, $language)));
@@ -213,7 +213,7 @@ class UpdateListingService
 		}
 
 		$this->listingService->updateListing($listingId, $data, $language);
-		 */
+
 	}
 
 	/**

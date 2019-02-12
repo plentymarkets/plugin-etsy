@@ -109,18 +109,20 @@ class StartListingService
         if (isset($listing['main'])) {
             $listingId = $this->createListing($listing);
 
-            $this->addPictures($listingId, $listing);
+//            $this->addPictures($listingId, $listing);
 
             try {
                 $this->fillInventory($listingId, $listing);
             } catch (\Exception $e) {
                 $this->listingService->deleteListing($listingId);
             }
+
+            $this->publish($listingId, $listing);
             /*
             $listingId = $this->createListing($record);
 
             if(!is_null($listingId))
-            {
+            {u
                 try
                 {
                     $this->addPictures($record, $listingId);
@@ -216,8 +218,12 @@ class StartListingService
             $this->stockRepository->setFilters(['variationId' => $variation['id']]);
             $stock = $this->stockRepository->listStockByWarehouseType('sales')->getResult()->first();
 
+            if ($stock->stockNet === NULL)
+            {
+                continue;
+            }
 
-            $data['quantity'] += $variation['data']['stock']['net'];
+            $data['quantity'] += $stock->stockNet;
 
             //sales price and currency code
             foreach ($variation['data']['salesPrices'] as $salesPrice) {
@@ -271,9 +277,9 @@ class StartListingService
             $data['recipient'] = '';
         }
 
-        if (isset($listing['main']['data']['variation']['weightNetG'])) {
-//            $data['item_weight'] = $listing['main']['data']['variation']['heightMM'];
-//            $data['item_weight_units'] = 'g';
+        if (false) {
+            $data['item_weight'] = '';
+            $data['item_weight_units'] = 'g';
         }
 
         if (false) {
@@ -458,20 +464,15 @@ class StartListingService
             'quantity_on_property' => $dependencies
         ];
 
-        $test = $this->inventoryService->updateInventory($listingId, $data, $language);
-
-        $test = 0;
-
-        throw new \Exception();
-
+        $this->inventoryService->updateInventory($listingId, $data, $language);
 
     }
 
     /**
      * Add pictures to listing.
      *
-     * @param Record $record
      * @param int $listingId
+     * @param $listing
      */
     private function addPictures($listingId, $listing)
     {
@@ -541,14 +542,17 @@ class StartListingService
      * @param int $listingId
      * @param int $variationId
      */
-    private function publish($listingId, $variationId)
+    private function publish($listingId, $listing)
     {
-        $data = [
-            'state' => 'active',
-        ];
+//        $data = [
+//            'state' => 'active',
+//        ];
+//
+//        $this->listingService->updateListing($listingId, $data);
+        foreach ($listing as $variation)
+        {
+            $this->itemHelper->generateParentSku($listingId, $variation);
+        }
 
-        $this->listingService->updateListing($listingId, $data);
-
-        $this->itemHelper->generateSku($listingId, $variationId);
     }
 }
