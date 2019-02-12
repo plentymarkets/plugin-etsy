@@ -232,7 +232,7 @@ class StartListingService
                 //todo Währung über Einstellungen vom Kunden definieren lassen
                 if (in_array($orderReferrer, $salesPrice['settings']['referrers'])) {
                     if (!isset($data['price']) || $salesPrice['price'] < $data['price']) {
-                        $data['price'] =  $salesPrice['price'];
+                        $data['price'] =  (float) $salesPrice['price'];
                     }
                     break;
                 }
