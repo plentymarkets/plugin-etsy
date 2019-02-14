@@ -183,6 +183,22 @@ class ItemHelper
 
 	}
 
+    public function generateParentSku($sku, $listing)
+    {
+        $etsySku = $sku.'-'.$listing['id'];
+
+        $parentSku = $this->variationSkuRepository->generateSkuWithParent($listing, $this->orderHelper->getReferrerId(), 0, $etsySku, $sku, true, true);
+
+        if ($parentSku instanceof VariationSku)
+        {
+            $this->variationSkuRepository->update([
+                'status' => 'ACTIVE'
+
+                ], $parentSku->id
+            );
+        }
+	}
+
 	/**
 	 * Deletes an SKU.
 	 *
