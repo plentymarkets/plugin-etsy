@@ -273,6 +273,9 @@ class StartListingService
             $data['item_dimensions_unit'] = 'mm';
         }
 
+        if (isset($listing['main']['materials'])) {
+            $data['materials'] = explode(',', $listing['main']['materials']);
+        }
         //validating required fields
         //todo auslagern in Validator
         /*
@@ -314,43 +317,6 @@ class StartListingService
         $results = (array)$response['results'];
 
         return (int)reset($results)['listing_id'];
-
-
-        /* todo: Listing anlegen (Artikeldaten)
-         * required:
-         * languague?               Abklären wie man die Sprache definiert, bzw. ob das in createListing möglich ist
-         * quantity
-         * title
-         * description
-         * price
-         * shipping_template_id
-         * who_made
-         * is_supply
-         * when_made
-         *
-         * optional:
-         * shop_section_id
-         * image_ids
-         * is_customizable
-         * non_taxable
-         * image
-         * state
-         * processing_min
-         * processing_max
-         * category_id
-         * taxonomy_id
-         * tags
-         * recipient
-         * occasion
-         * style
-         */
-
-
-        // TODO
-        // materials
-        // shop_section_id
-        // processing_min
-        // processing_max
     }
 
     /**
@@ -382,7 +348,12 @@ class StartListingService
 
         $counter = 0;
 
+
+
         foreach ($listing as $variation) {
+
+            //initialising property values array for articles with no attributes (single variation)
+            $products[$counter]['property_values'] = [];
 
             foreach ($variation['attributes'] as $attribute) {
 
@@ -431,7 +402,16 @@ class StartListingService
             }
 
             //todo: skus pflegen
-            $products[$counter]['sku'] = '';
+
+            //Creating a formatted array so the method can use the data
+            $products[$counter]['sku'] = $this->itemHelper->generateParentSku($listingId, [
+                'id' => $variation['variationId'],
+                'data' => [
+                    'item' => [
+                        'id' => $variation['itemId']
+                    ]
+                ]
+            ]);
 
             $products[$counter]['offerings'] = [
                 [
@@ -455,11 +435,13 @@ class StartListingService
         $data = [
             'products' => json_encode($products),
             'price_on_property' => $dependencies,
-            'quantity_on_property' => $dependencies
+            'quantity_on_property' => $dependencies,
+            'sku_on_property' => $dependencies
         ];
 
         $this->inventoryService->updateInventory($listingId, $data, $language);
 
+        throw new \Exception();
     }
 
     /**
@@ -545,10 +527,8 @@ class StartListingService
 //        ];
 //
 //        $this->listingService->updateListing($listingId, $data);
-        foreach ($listing as $variation)
-        {
-            $this->itemHelper->generateParentSku($listingId, $variation);
-        }
+
+        //todo: skus aktiv schalten
 
     }
 }

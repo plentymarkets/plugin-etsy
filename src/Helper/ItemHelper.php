@@ -183,20 +183,13 @@ class ItemHelper
 
 	}
 
-    public function generateParentSku($sku, $listing)
+    public function generateParentSku($listingId, $variationData)
     {
-        $etsySku = $sku.'-'.$listing['id'];
+        $etsySku = $listingId.'-'.$variationData['id'];
 
-        $parentSku = $this->variationSkuRepository->generateSkuWithParent($listing, $this->orderHelper->getReferrerId(), 0, $etsySku, $sku, true, true);
+        $variationSku = $this->variationSkuRepository->generateSkuWithParent($variationData, $this->orderHelper->getReferrerId(), 0, $etsySku, $listingId, true, true);
 
-        if ($parentSku instanceof VariationSku)
-        {
-            $this->variationSkuRepository->update([
-                'status' => 'ACTIVE'
-
-                ], $parentSku->id
-            );
-        }
+        return $variationSku->sku;
 	}
 
 	/**

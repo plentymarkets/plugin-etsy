@@ -76,6 +76,12 @@ class ListingInventoryService
             unset($data['quantity_on_property']);
         }
 
+        if (isset($data['sku_on_property']))
+        {
+            $params['sku_on_property'] = implode(',',$data['sku_on_property']);
+            unset($data['sku_on_property']);
+        }
+
         return $this->client->call('updateInventory', $params, $data);
 
     }

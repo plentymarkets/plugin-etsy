@@ -32,8 +32,8 @@ class EtsyPropertyDataProvider extends BaseDataProvider
                 'required' => true,
             ],
             [
-                'key' => 'material',
-                'label' => 'material',
+                'key' => 'materials',
+                'label' => 'materials',
                 'required' => false,
             ],
             [
@@ -46,6 +46,46 @@ class EtsyPropertyDataProvider extends BaseDataProvider
                 'label' => 'recipient',
                 'required' => false,
             ],
+            [
+                'key' => 'shop_section_id',
+                'label' => 'shop section',
+                'required' => false,
+            ],
+            [
+                'key' => 'is_customizable',
+                'label' => 'is customizable',
+                'required' => false,
+            ],
+            [
+                'key' => 'recipient',
+                'label' => 'recipient',
+                'required' => false,
+            ],
+            [
+                'key' => 'non_taxable',
+                'label' => 'non taxable',
+                'required' => false,
+            ],
+            [
+                'key' => 'recipient',
+                'label' => 'recipient',
+                'required' => false,
+            ],
+            [
+                'key' => 'processing_min',
+                'label' => 'processing min',
+                'required' => false,
+            ],
+            [
+                'key' => 'processing_max',
+                'label' => 'processing max',
+                'required' => false,
+            ],
+            [
+                'key' => 'style',
+                'label' => 'style',
+                'required' => false,
+            ]
         ];
     }
 }
