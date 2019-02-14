@@ -3,6 +3,7 @@
 namespace Etsy\Services\Item;
 
 use Etsy\Api\Services\ListingInventoryService;
+use Etsy\Validators\EtsyListingValidator;
 use Illuminate\Database\Eloquent\Collection;
 use Plenty\Modules\Item\DataLayer\Models\Record;
 
@@ -112,7 +113,7 @@ class StartListingService
             $listingId = $this->createListing($listing);
 
             try {
-                //$this->addPictures($listingId, $listing); todo
+                $this->addPictures($listingId, $listing);
                 //todo: translations
                 $this->fillInventory($listingId, $listing);
             } catch (\Exception $e) {
@@ -177,6 +178,7 @@ class StartListingService
     private function createListing(array $listing)
     {
         $data = [];
+        EtsyListingValidator::validateOrFail($listing['main']);
 
         $data['state'] = 'draft';
 
@@ -194,8 +196,13 @@ class StartListingService
 
         //quantity & price
         $data['quantity'] = 0;
+        $hasActiveVariations = false;
 
         foreach ($listing as $variation) {
+            if (!$variation['isActive']) {
+                continue;
+            }
+
             $this->stockRepository->setFilters(['variationId' => $variation['variationId']]);
             $stock = $this->stockRepository->listStockByWarehouseType('sales')->getResult()->first();
 
@@ -203,6 +210,8 @@ class StartListingService
             {
                 continue;
             }
+
+            $hasActiveVariations = true;
 
             $data['quantity'] += $stock->stockNet;
 
@@ -212,7 +221,7 @@ class StartListingService
             $webStoreConfiguration = $webstoreConfigurationRepository->findByPlentyId(pluginApp(Application::class)->getPlentyId());
             $defaultCurrency = $webStoreConfiguration->defaultCurrency;
 
-            //todo: Nur den in den Eimstellungen definierten Preis für Etsy nutzen und auf Shopwährung prüfen. Ggf. umrechnen
+            //todo: Nur den in den Einstellungen definierten Preis für Etsy nutzen und auf Shopwährung prüfen. Ggf. umrechnen
             foreach ($variation['salesPrices'] as $salesPrice) {
                 $orderReferrer = $this->settingsHelper->get(SettingsHelper::SETTINGS_ORDER_REFERRER);
 
@@ -300,6 +309,10 @@ class StartListingService
         }
         */
 
+        if (!$hasActiveVariations) {
+            throw new \Exception('Item with id ' . $listing['main']['itemId'] . 'has no active variations with positive stock.');
+        }
+
         $response = $this->listingService->createListing($this->settingsHelper->getShopSettings('mainLanguage', 'de'), $data);
 
         if (!isset($response['results']) || !is_array($response['results'])) {
@@ -348,12 +361,18 @@ class StartListingService
 
         $counter = 0;
 
-
-
         foreach ($listing as $variation) {
 
             //initialising property values array for articles with no attributes (single variation)
             $products[$counter]['property_values'] = [];
+
+            $this->stockRepository->setFilters(['variationId' => $variation['variationId']]);
+            $stock = $this->stockRepository->listStockByWarehouseType('sales')->getResult()->first();
+
+            if ($stock->stockNet === NULL || !$variation['isActive'])
+            {
+                continue;
+            }
 
             foreach ($variation['attributes'] as $attribute) {
 
@@ -401,8 +420,6 @@ class StartListingService
                 }
             }
 
-            //todo: skus pflegen
-
             //Creating a formatted array so the method can use the data
             $products[$counter]['sku'] = $this->itemHelper->generateParentSku($listingId, [
                 'id' => $variation['variationId'],
@@ -415,7 +432,6 @@ class StartListingService
 
             $products[$counter]['offerings'] = [
                 [
-                    //todo Bestand pflegen
                     'quantity' => 1,
                     'is_enabled' => $variation['isActive']
                 ]
@@ -441,7 +457,7 @@ class StartListingService
 
         $this->inventoryService->updateInventory($listingId, $data, $language);
 
-        throw new \Exception();
+        throw new \Exception(); //todo entfernen
     }
 
     /**
