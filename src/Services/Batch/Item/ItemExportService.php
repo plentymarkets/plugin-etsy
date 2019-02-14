@@ -103,7 +103,7 @@ class ItemExportService extends AbstractBatchService
                     $this->startService->start($listing);
                 }
             } catch (\Exception $exception) {
-
+                $test = true;
             }
         }
         /*

@@ -212,6 +212,17 @@ class ItemHelper
 		}
 	}
 
+	public function deleteListingsSkus($listingId, $marketId) {
+	    $skus = $this->variationSkuRepository->search([
+	        'marketId' => $marketId,
+            'parentSku' => $listingId
+        ]);
+
+	    foreach ($skus as $sku) {
+	        $this->deleteSku($sku->id);
+        }
+    }
+
 	/**
 	 * Get the Etsy property.
 	 *

@@ -48,7 +48,11 @@ class EtsyListingValidator extends Validator
     {
         \Validator::extend('is_bool', function ($attribute, $value, $parameters, $validator) {
             return $this->isBool($attribute, $value, $parameters, $validator);
-        }, 'The tag name must be unique');
+        }, 'Has to be a bool convertible string');
+
+        \Validator::extend('values_in_array', function ($attribute, $value, $parameters, $validator) {
+            return $this->valuesInArray($attribute, $value, $parameters, $validator);
+        }, "Array has missing or wrong entries");
     }
 
     /**
@@ -62,7 +66,7 @@ class EtsyListingValidator extends Validator
         $this->addBool('isMain')->required();
         $this->addString('who_made')->in(static::WHO_MADE)->required();
         $this->addString('when_made')->in(static::WHEN_MADE)->required();
-        $this->add('is_supply')->required()->customRule('is_bool', []);
+        $this->add('is_supply')->required()->customRule('is_bool', ['required']);
         $this->add('categories')->required();//todo
         $this->add('shipping_profiles')->required();//todo
         $this->add('images')->required();//todo
@@ -81,14 +85,37 @@ class EtsyListingValidator extends Validator
         $this->add('style');//todo
     }
 
+    /**
+     * Validates fields that are provided as a string and need to be converted into a boolean
+     *
+     * @param $attribute
+     * @param $value
+     * @param $parameters
+     * @param $validator
+     * @return bool
+     */
     protected function isBool($attribute, $value, $parameters, $validator) {
         $allowed = [
             '0', '1', 'true', 'false', 'y', 'n'
         ];
 
+        //if the field is not required we can accept null
+        if (!in_array('required', $parameters) && $value === null) {
+            return true;
+        }
+
+        if (gettype($value) != 'string') {
+            return false;
+        }
+
         if (in_array(strtolower($value), $allowed)) {
             return true;
         }
+
         return false;
+    }
+
+    protected function valuesInArray($attribute, $value, $parameters, $validator) {
+
     }
 }

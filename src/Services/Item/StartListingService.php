@@ -113,10 +113,11 @@ class StartListingService
             $listingId = $this->createListing($listing);
 
             try {
-                $this->addPictures($listingId, $listing);
                 //todo: translations
                 $this->fillInventory($listingId, $listing);
+                $this->addPictures($listingId, $listing);
             } catch (\Exception $e) {
+                $this->itemHelper->deleteListingsSkus($listingId, $this->settingsHelper->get($this->settingsHelper::SETTINGS_ORDER_REFERRER));
                 $this->listingService->deleteListing($listingId);
             }
 
@@ -235,13 +236,15 @@ class StartListingService
             }
         }
 
+        $boolConvertableStrings = ['1', 'y', 'true'];
+
         //was ist mit mehreren Versandprofilen?? todo
         $data['shipping_template_id'] = $listing['main']['shipping_profiles'][0];
 
         //who_made -> gemappte eigenschaft des kunden
         $data['who_made'] = $listing['main']['who_made'];
         //is_supply ->
-        $data['is_supply'] = ($listing['main']['is_supply'] == 1) ? true : false;
+        $data['is_supply'] = (in_array(strtolower($listing['main']['is_supply']), $boolConvertableStrings)) ? true : false;
         //when_made -> ^
         $data['when_made'] = $listing['main']['when_made'];
 
@@ -249,6 +252,7 @@ class StartListingService
         $data['taxonomy_id'] = $listing['main']['categories'][0];
 
 
+        //Adding fields to data array if they are mapped and have a value
         if (false) {
             //todo
             $data['tags'] = '';
@@ -285,29 +289,30 @@ class StartListingService
         if (isset($listing['main']['materials'])) {
             $data['materials'] = explode(',', $listing['main']['materials']);
         }
-        //validating required fields
-        //todo auslagern in Validator
-        /*
-        if (!isset($data['title']) || $data['title'] == '') {
-            throw new \Exception('Required field title is not allowed to be empty. Item ID ' . $listing['main']['itemId']);
+
+        if (isset($listing['main']['is_customizable'])) {
+            $data['is_customizable'] = (in_array(strtolower($listing['main']['is_customizable']), $boolConvertableStrings)) ? true : false;
         }
 
-        if (!isset($data['description']) || $data['description'] == '') {
-            throw new \Exception('Required field description is not allowed to be empty. Item ID ' . $listing['main']['itemId']);
+        if (isset($listing['main']['non_taxable'])) {
+            $data['non_taxable'] = (in_array(strtolower($listing['main']['non_taxable']), $boolConvertableStrings)) ? true : false;
         }
 
-        if (!isset($data['price']) || $data['price'] == 0) {
-            throw new \Exception('Required field price is not allowed to be empty or 0. Item ID ' . $listing['main']['itemId']);
+        if (isset($listing['main']['processing_min'])) {
+            $data['processing_min'] = $listing['main']['processing_min'];
         }
 
-        if (!isset($data['quantity']) || $data['quantity'] == 0) {
-            throw new \Exception('No . Item ID ' . $listing['main']['itemId']);
+        if (isset($listing['main']['processing_max'])) {
+            $data['processing_max'] = $listing['main']['processing_max'];
         }
 
-        if (!isset($data['taxonomy_id']) || $data['taxonomy_id'] == null) {
-            throw new \Exception('');
+        if (isset($listing['main']['style'])){
+            //todo
         }
-        */
+
+        if (isset($listing['main']['shop_section_id'])) {
+            $data['shop_section_id'] = $listing['main']['shop_section_id'];
+        }
 
         if (!$hasActiveVariations) {
             throw new \Exception('Item with id ' . $listing['main']['itemId'] . 'has no active variations with positive stock.');
@@ -456,8 +461,6 @@ class StartListingService
         ];
 
         $this->inventoryService->updateInventory($listingId, $data, $language);
-
-        throw new \Exception(); //todo entfernen
     }
 
     /**
@@ -469,21 +472,21 @@ class StartListingService
     private function addPictures($listingId, $listing)
     {
         $list = $listing['main']['images']['all'];
+        throw new \Exception();
 
         $imageList = [];
 
         $list = array_reverse(array_slice($list, 0, 10));
 
         foreach ($list as $image) {
-            $image['url'] = 'https://cdn.pixabay.com/photo/2013/08/11/19/46/coffee-171653_1280.jpg'; //todo: Das ist nur zum Testen, später entfernen
             $response = $this->listingImageService->uploadListingImage($listingId, $image['url']);
 
             if (isset($response['results']) && isset($response['results'][0]) && isset($response['results'][0]['listing_image_id'])) {
                 $imageList[] = [
-//                    'imageId' => $id,
+                    'imageId' => $image['id'],
                     'listingImageId' => $response['results'][0]['listing_image_id'],
                     'listingId' => $response['results'][0]['listing_id'],
-                    'imageUrl' => $image,
+                    'imageUrl' => $image['url']
                 ];
 
             }
