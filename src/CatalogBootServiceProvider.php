@@ -37,18 +37,16 @@ class CatalogBootServiceProvider extends ServiceProvider
             ]
         ]);
 
-/*
+
         $template->addMapping([
-            'identifier' => 'shippingProfile',
+            'identifier' => 'shipping_profile',
             'label' => 'Versandprofil',
-            'isArray' => false,
+            'isArray' => true,
             'isMapping' => true,
             'provider' => EtsyShippingProfileDataProvider::class,
             'mutators' => [
             ]
         ]);
-*/
-
 
         $template->addMapping([
             'identifier' => 'etsy_properties',

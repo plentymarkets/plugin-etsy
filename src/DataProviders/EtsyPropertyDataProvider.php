@@ -17,6 +17,21 @@ class EtsyPropertyDataProvider extends BaseDataProvider
     {
         return [
             [
+                'key' => 'who_made',
+                'label' => 'who made',
+                'required' => true,
+            ],
+            [
+                'key' => 'when_made',
+                'label' => 'when made',
+                'required' => true,
+            ],
+            [
+                'key' => 'is_supply',
+                'label' => 'is supply',
+                'required' => true,
+            ],
+            [
                 'key' => 'material',
                 'label' => 'material',
                 'required' => false,
@@ -27,10 +42,10 @@ class EtsyPropertyDataProvider extends BaseDataProvider
                 'required' => false,
             ],
             [
-                'key' => 'who_made',
-                'label' => 'who made',
+                'key' => 'recipient',
+                'label' => 'recipient',
                 'required' => false,
-            ]
+            ],
         ];
     }
 }

@@ -27,7 +27,9 @@ abstract class AbstractBatchService
         'isMain' => 'variation.isMain',
         'texts' => 'texts',
         'salesPrices' => 'salesPrices', //todo: Entfernen sobald es settings für Katalog gibt
-        'defaultCategories' => 'defaultCategories'
+        'defaultCategories' => 'defaultCategories',
+        'attributes' => 'attributes',
+        'images' => 'images'
     ];
 
     /**

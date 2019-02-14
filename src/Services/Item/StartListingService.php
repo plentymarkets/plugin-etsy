@@ -111,9 +111,9 @@ class StartListingService
         if (isset($listing['main'])) {
             $listingId = $this->createListing($listing);
 
-//            $this->addPictures($listingId, $listing);
-
             try {
+                //$this->addPictures($listingId, $listing); todo
+                //todo: translations
                 $this->fillInventory($listingId, $listing);
             } catch (\Exception $e) {
                 $this->listingService->deleteListing($listingId);
@@ -176,31 +176,11 @@ class StartListingService
      */
     private function createListing(array $listing)
     {
-        /*todo: WICHTIG Katalog als Datenquelle verwenden
-         * Es wird IMMER die Hauptvariante mitgeladen
-         * Felder die nicht durch Plentyfelder abgedeckt sind und sich auf Artikelebene beziehen werden als Eigenschaften an der Hauptvariante hinterlegt
-         * Felder die nicht durch Plentyfelder abgedeckt sind und sich auf Varianten beziehen werden als Eigenschaften an den einzelnen Varianten hinterlegt
-         *
-         * Benötigte Daten:
-         * Hauptvarianten & zugeordnete Eigenschaften
-         */
-
-        /*
-         * Ablauf:
-         * Listing anlegen
-         * Inventory befüllen
-         * Listing aktivieren
-         */
-
         $data = [];
-        $itemShippingProfilesRepository = pluginApp(ItemShippingProfilesRepositoryContract::class);
 
         $data['state'] = 'draft';
 
         $language = $this->settingsHelper->getShopSettings('mainLanguage', 'de');
-        $exportLanguages = $this->settingsHelper->getShopSettings('exportLanguages', $language);
-
-        //$data['language'] = $language;
 
         //title and description
         foreach ($listing['main']['texts'] as $text) {
@@ -211,7 +191,6 @@ class StartListingService
                 $data['description'] = html_entity_decode(strip_tags($text['description']));
             }
         }
-
 
         //quantity & price
         $data['quantity'] = 0;
@@ -247,18 +226,15 @@ class StartListingService
             }
         }
 
-        //shipping template id
-        //todo: auf katalog umbauen
-        /** @var Collection $shippingProfiles */
-        $shippingProfiles = $itemShippingProfilesRepository->findByItemId($listing['main']['itemId']);
-        $data['shipping_template_id'] = $this->itemHelper->getShippingTemplateId($shippingProfiles);
+        //was ist mit mehreren Versandprofilen?? todo
+        $data['shipping_template_id'] = $listing['main']['shipping_profiles'][0];
 
         //who_made -> gemappte eigenschaft des kunden
-        $data['who_made'] = 'i_did';
+        $data['who_made'] = $listing['main']['who_made'];
         //is_supply ->
-        $data['is_supply'] = false;
+        $data['is_supply'] = ($listing['main']['is_supply'] == 1) ? true : false;
         //when_made -> ^
-        $data['when_made'] = 'made_to_order';
+        $data['when_made'] = $listing['main']['when_made'];
 
         //Kategorie todo: umbauen auf Standardkategorie
         $data['taxonomy_id'] = $listing['main']['categories'][0];
@@ -375,9 +351,6 @@ class StartListingService
         // shop_section_id
         // processing_min
         // processing_max
-
-        // TODO 'en' und 'de' dynamisch aus dem dynamodb repo ziehen
-
     }
 
     /**
@@ -389,31 +362,21 @@ class StartListingService
      */
     private function fillInventory($listingId, $listing)
     {
-        /* todo: auf Katalog arrays anpassen
-         * Varianten bauen
-         * Inventory updaten
-         */
-
-        //ATTRIBUTE LADEN
-        //Prüfen ob Attribute < 2
-        //Attributwerte products zuweisen
-        //inventory befüllen
-
         $language = $this->settingsHelper->getShopSettings('mainLanguage', 'de');
         $products = [];
         $dependencies = [];
 
-        if (count($listing['main']['data']['attributes']) > 2) {
-            throw new \Exception("Can't list article " . $listing['main']['data']['item']['id'] . ". Too many attributes.");
+        if (count($listing['main']['attributes']) > 2) {
+            throw new \Exception("Can't list article " . $listing['main']['itemId'] . ". Too many attributes.");
         }
 
-        if (isset($listing['main']['data']['attributes'][0])) {
-            $attributeOneId = $listing['main']['data']['attributes'][0]['attributeId'];
+        if (isset($listing['main']['attributes'][0])) {
+            $attributeOneId = $listing['main']['attributes'][0]['attributeId'];
             $dependencies[] = $this->inventoryService::CUSTOM_ATTRIBUTE_1;
         }
 
-        if (isset($listing['main']['data']['attributes'][1])) {
-            $attributeTwoId = $listing['main']['data']['attributes'][1]['attributeId'];
+        if (isset($listing['main']['attributes'][1])) {
+            $attributeTwoId = $listing['main']['attributes'][1]['attributeId'];
             $dependencies[] = $this->inventoryService::CUSTOM_ATTRIBUTE_2;
         }
 
@@ -421,7 +384,7 @@ class StartListingService
 
         foreach ($listing as $variation) {
 
-            foreach ($variation['data']['attributes'] as $attribute) {
+            foreach ($variation['attributes'] as $attribute) {
 
                 foreach ($attribute['attribute']['names'] as $name) {
                     if ($name['lang'] == $language) {
@@ -436,11 +399,11 @@ class StartListingService
                 }
 
                 if (!isset($attributeName)) {
-                    throw new \Exception("Can't list variation " . $variation['variation']['id'] . ". Undefined attribute name for language " . $language . ".");
+                    throw new \Exception("Can't list variation " . $variation['variationId'] . ". Undefined attribute name for language " . $language . ".");
                 }
 
                 if (!isset($attributeValueName)) {
-                    throw new \Exception("Can't list variation " . $variation['variation']['id'] . ". Undefined attribute value name for language " . $language . ".");
+                    throw new \Exception("Can't list variation " . $variation['variationId'] . ". Undefined attribute value name for language " . $language . ".");
                 }
 
                 if (isset($attributeOneId) && $attribute['attributeId'] == $attributeOneId) {
@@ -459,7 +422,7 @@ class StartListingService
             }
 
             $orderReferrer = $this->settingsHelper->get(SettingsHelper::SETTINGS_ORDER_REFERRER);
-            foreach ($variation['data']['salesPrices'] as $salesPrice) {
+            foreach ($variation['salesPrices'] as $salesPrice) {
 
                 if (in_array($orderReferrer, $salesPrice['settings']['referrers'])) {
                     $price = $salesPrice['price'];
@@ -469,11 +432,12 @@ class StartListingService
 
             //todo: skus pflegen
             $products[$counter]['sku'] = '';
+
             $products[$counter]['offerings'] = [
                 [
                     //todo Bestand pflegen
                     'quantity' => 1,
-                    'is_enabled' => $variation['data']['variation']['isActive']
+                    'is_enabled' => $variation['isActive']
                 ]
             ];
 
@@ -485,7 +449,7 @@ class StartListingService
         }
 
         if ($counter == 0) {
-            throw new \Exception("Can't list article " . $listing['main']['data']['item']['id'] . ". No active variations");
+            throw new \Exception("Can't list article " . $listing['main']['itemId'] . ". No active variations");
         }
 
         $data = [
@@ -506,13 +470,14 @@ class StartListingService
      */
     private function addPictures($listingId, $listing)
     {
-        $list = $listing['main']['data']['images']['all'];
+        $list = $listing['main']['images']['all'];
 
         $imageList = [];
 
         $list = array_reverse(array_slice($list, 0, 10));
 
         foreach ($list as $image) {
+            $image['url'] = 'https://cdn.pixabay.com/photo/2013/08/11/19/46/coffee-171653_1280.jpg'; //todo: Das ist nur zum Testen, später entfernen
             $response = $this->listingImageService->uploadListingImage($listingId, $image['url']);
 
             if (isset($response['results']) && isset($response['results'][0]) && isset($response['results'][0]['listing_image_id'])) {
@@ -524,10 +489,11 @@ class StartListingService
                 ];
 
             }
+            break;
         }
 
         if (count($imageList)) {
-            $this->imageHelper->save($record->variationBase->id, json_encode($imageList));
+            $this->imageHelper->save($listing['main']['variationId'], json_encode($imageList));
         }
     }
 

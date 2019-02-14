@@ -2,7 +2,6 @@
 
 namespace Etsy\DataProviders;
 
-
 use Plenty\Modules\Catalog\DataProviders\KeyDataProvider;
 
 class EtsyShippingProfileDataProvider extends KeyDataProvider
@@ -10,7 +9,7 @@ class EtsyShippingProfileDataProvider extends KeyDataProvider
 
     public function getKey(): string
     {
-       return 'shipping_profiles';
+       return 'shipping_profiles[]';
     }
 
     public function getRows(): array
