@@ -6,7 +6,6 @@ use Etsy\Api\Services\ListingInventoryService;
 use Etsy\Validators\EtsyListingValidator;
 use Illuminate\Database\Eloquent\Collection;
 use Plenty\Modules\Item\DataLayer\Models\Record;
-
 use Etsy\Helper\ImageHelper;
 use Etsy\Helper\SettingsHelper;
 use Etsy\Api\Services\ListingService;
@@ -72,17 +71,20 @@ class StartListingService
     private $stockRepository;
 
     /**
-     * @param ItemHelper $itemHelper
+     * StartListingService constructor.
      * @param ListingService $listingService
+     * @param ItemHelper $itemHelper
      * @param DeleteListingService $deleteListingService
      * @param ListingImageService $listingImageService
      * @param ListingTranslationService $listingTranslationService
      * @param SettingsHelper $settingsHelper
      * @param ImageHelper $imageHelper
+     * @param ListingInventoryService $inventoryService
+     * @param StockRepository $stockRepository
      */
     public function __construct(
-        ItemHelper $itemHelper,
         ListingService $listingService,
+        ItemHelper $itemHelper,
         DeleteListingService $deleteListingService,
         ListingImageService $listingImageService,
         ListingTranslationService $listingTranslationService,
@@ -111,9 +113,12 @@ class StartListingService
     public function start(array $listing)
     {
         if (isset($listing['main'])) {
-            $listingId = $this->createListing($listing);
+//            $listingId = $this->createListing($listing);
+
+            $listingId = 1;
 
             try {
+
                 //todo: translations
                 $this->fillInventory($listingId, $listing);
                 //$this->addPictures($listingId, $listing);
@@ -211,8 +216,7 @@ class StartListingService
             $this->stockRepository->setFilters(['variationId' => $variation['variationId']]);
             $stock = $this->stockRepository->listStockByWarehouseType('sales')->getResult()->first();
 
-            if ($stock->stockNet === NULL)
-            {
+            if ($stock->stockNet === null) {
                 continue;
             }
 */
@@ -233,7 +237,7 @@ class StartListingService
                 //todo Falls die bei Etsy hinterlegte Währung von der Standardwährung abweicht muss umgerechnet werden
                 if (in_array($orderReferrer, $salesPrice['settings']['referrers'])) {
                     if (!isset($data['price']) || $salesPrice['price'] < $data['price']) {
-                        $data['price'] =  (float) $salesPrice['price'];
+                        $data['price'] = (float)$salesPrice['price'];
                     }
                     break;
                 }
@@ -324,13 +328,17 @@ class StartListingService
 
         $response = $this->listingService->createListing($this->settingsHelper->getShopSettings('mainLanguage', 'de'), $data);
 
+
+
         if (!isset($response['results']) || !is_array($response['results'])) {
             if (is_array($response) && isset($response['error_msg'])) {
                 $message = $response['error_msg'];
-            } else if (is_string($response)) {
-                $message = $response;
             } else {
-                $message = 'Failed to create listing.';
+                if (is_string($response)) {
+                    $message = $response;
+                } else {
+                    $message = 'Failed to create listing.';
+                }
             }
 
             throw new \Exception($message);
@@ -465,6 +473,7 @@ class StartListingService
         ];
 
         $this->inventoryService->updateInventory($listingId, $data, $language);
+
     }
 
     /**
@@ -476,14 +485,22 @@ class StartListingService
     private function addPictures($listingId, $listing)
     {
         $list = $listing['main']['images']['all'];
-        throw new \Exception();
+
+        $list = $this->imageHelper->sortImagePosition($list);
 
         $imageList = [];
 
-        $list = array_reverse(array_slice($list, 0, 10));
+        $list = array_slice($list, 0, 10);
 
         foreach ($list as $image) {
-            $response = $this->listingImageService->uploadListingImage($listingId, $image['url']);
+
+            if ($image['availabilities']['market'] !== -1 && $image['availabilities']['market'] !== $this->settingsHelper->get($this->settingsHelper::SETTINGS_ORDER_REFERRER))
+            {
+                continue;
+            }
+
+            $response = $this->listingImageService->uploadListingImage($listingId, $image['url'], $image['position']);
+
 
             if (isset($response['results']) && isset($response['results'][0]) && isset($response['results'][0]['listing_image_id'])) {
                 $imageList[] = [
@@ -500,6 +517,7 @@ class StartListingService
         if (count($imageList)) {
             $this->imageHelper->save($listing['main']['variationId'], json_encode($imageList));
         }
+
     }
 
     /**
@@ -510,8 +528,10 @@ class StartListingService
      */
     private function addTranslations(Record $record, $listingId)
     {
-        foreach ($this->settingsHelper->getShopSettings('exportLanguages', [$this->settingsHelper->getShopSettings('mainLanguage', 'de')]) as $language) {
-            if ($language != $this->settingsHelper->getShopSettings('mainLanguage', 'de') && $record->itemDescription[$language]['name1'] && strip_tags($record->itemDescription[$language]['description'])) {
+        foreach ($this->settingsHelper->getShopSettings('exportLanguages',
+            [$this->settingsHelper->getShopSettings('mainLanguage', 'de')]) as $language) {
+            if ($language != $this->settingsHelper->getShopSettings('mainLanguage',
+                    'de') && $record->itemDescription[$language]['name1'] && strip_tags($record->itemDescription[$language]['description'])) {
                 try {
                     $title = trim(preg_replace('/\s+/', ' ', $record->itemDescription[$language]['name1']));
                     $title = ltrim($title, ' +-!?');
@@ -552,6 +572,5 @@ class StartListingService
 //        $this->listingService->updateListing($listingId, $data);
 
         //todo: skus aktiv schalten
-
     }
 }

@@ -69,4 +69,33 @@ class ImageHelper
 
 		return $default;
 	}
+
+    /**
+     * Sort the image array to make it look like the plenty image positions and iterate every position
+     * because Etsy image positions start at 1
+     *
+     * @param $imageList
+     * @return mixed
+     */
+    public function sortImagePosition($imageList)
+    {
+        foreach ($imageList as $key => $row) {
+            $position[$key]  = $row['position']++;
+
+        }
+
+        array_multisort($position, SORT_ASC, $imageList);
+
+        $counter = 1;
+
+        foreach ($imageList as $key => $imagePosition) {
+
+            $imageList[$key]['position'] = $counter;
+
+            $counter ++;
+
+        }
+
+        return $imageList;
+	}
 }

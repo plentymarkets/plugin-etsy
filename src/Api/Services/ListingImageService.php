@@ -22,16 +22,19 @@ class ListingImageService
 		$this->client = $client;
 	}
 
-	/**
-	 * @param int    $listingId
-	 * @param string $image
-	 *
-	 * @return mixed
-	 */
-	public function uploadListingImage($listingId, $image)
+    /**
+     * @param int $listingId
+     * @param string $image
+     * @param $position
+     *
+     * @return mixed
+     * @throws \Exception
+     */
+	public function uploadListingImage($listingId, $image, $position)
 	{
 		$data = [
 			'image' => $image,
+            'rank' => $position
 		];
 
 		return $this->client->call('uploadListingImage', [
