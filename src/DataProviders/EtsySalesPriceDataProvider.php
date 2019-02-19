@@ -4,11 +4,7 @@ namespace Etsy\DataProviders;
 
 use Plenty\Modules\Catalog\DataProviders\BaseDataProvider;
 
-/**
- * Class EtsyPropertyDataProvider
- * @package Etsy\DataProviders
- */
-class EtsyPropertyDataProvider extends BaseDataProvider
+class EtsySalesPriceDataProvider  extends BaseDataProvider
 {
     /**
      * @inheritdoc

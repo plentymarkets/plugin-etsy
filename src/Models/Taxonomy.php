@@ -1,12 +1,16 @@
 <?php
 
 namespace Etsy\Models;
+use Etsy\EtsyServiceProvider;
+use Plenty\Modules\Plugin\DataBase\Contracts\Model;
 
 /**
  * Class Taxonomy
  */
-class Taxonomy
+class Taxonomy extends Model
 {
+    const TABLE_NAME = 'taxonomies';
+
     /**
      * @var int
      */
@@ -71,6 +75,14 @@ class Taxonomy
                 $ref = $val;
             }
         }
+    }
+
+    /**
+     * @return string
+     */
+    public function getTableName()
+    {
+        return EtsyServiceProvider::PLUGIN_NAME.'::'.self::TABLE_NAME;
     }
 
     private function &getVarRef($varName)

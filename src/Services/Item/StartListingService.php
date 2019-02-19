@@ -88,8 +88,9 @@ class StartListingService
         ListingTranslationService $listingTranslationService,
         SettingsHelper $settingsHelper,
         ImageHelper $imageHelper,
-        ListingInventoryService $inventoryService,
-        StockRepository $stockRepository)
+        ListingInventoryService $inventoryService
+        //StockRepository $stockRepository
+        )
     {
         $this->itemHelper = $itemHelper;
         $this->listingTranslationService = $listingTranslationService;
@@ -99,7 +100,7 @@ class StartListingService
         $this->settingsHelper = $settingsHelper;
         $this->imageHelper = $imageHelper;
         $this->inventoryService = $inventoryService;
-        $this->stockRepository = $stockRepository;
+        //$this->stockRepository = $stockRepository;
     }
 
     /**
@@ -115,13 +116,16 @@ class StartListingService
             try {
                 //todo: translations
                 $this->fillInventory($listingId, $listing);
-                $this->addPictures($listingId, $listing);
+                //$this->addPictures($listingId, $listing);
+
+                throw new \Exception(); //todo: entfernen wenn fertig
+                $this->publish($listingId, $listing);
             } catch (\Exception $e) {
                 $this->itemHelper->deleteListingsSkus($listingId, $this->settingsHelper->get($this->settingsHelper::SETTINGS_ORDER_REFERRER));
                 $this->listingService->deleteListing($listingId);
             }
 
-            $this->publish($listingId, $listing);
+
             /*
             $listingId = $this->createListing($record);
 
@@ -196,14 +200,14 @@ class StartListingService
         }
 
         //quantity & price
-        $data['quantity'] = 0;
+        $data['quantity'] = 1;
         $hasActiveVariations = false;
 
         foreach ($listing as $variation) {
             if (!$variation['isActive']) {
                 continue;
             }
-
+/*
             $this->stockRepository->setFilters(['variationId' => $variation['variationId']]);
             $stock = $this->stockRepository->listStockByWarehouseType('sales')->getResult()->first();
 
@@ -211,10 +215,10 @@ class StartListingService
             {
                 continue;
             }
-
+*/
             $hasActiveVariations = true;
 
-            $data['quantity'] += $stock->stockNet;
+            //$data['quantity'] += $stock->stockNet;
 
             //loading default currency
             /** @var WebstoreConfigurationRepositoryContract $webstoreConfigurationRepository */
@@ -236,7 +240,7 @@ class StartListingService
             }
         }
 
-        $boolConvertableStrings = ['1', 'y', 'true'];
+        $boolConvertibleString = ['1', 'y', 'true'];
 
         //was ist mit mehreren Versandprofilen?? todo
         $data['shipping_template_id'] = $listing['main']['shipping_profiles'][0];
@@ -244,7 +248,7 @@ class StartListingService
         //who_made -> gemappte eigenschaft des kunden
         $data['who_made'] = $listing['main']['who_made'];
         //is_supply ->
-        $data['is_supply'] = (in_array(strtolower($listing['main']['is_supply']), $boolConvertableStrings)) ? true : false;
+        $data['is_supply'] = (in_array(strtolower($listing['main']['is_supply']), $boolConvertibleString)) ? true : false;
         //when_made -> ^
         $data['when_made'] = $listing['main']['when_made'];
 
@@ -291,11 +295,11 @@ class StartListingService
         }
 
         if (isset($listing['main']['is_customizable'])) {
-            $data['is_customizable'] = (in_array(strtolower($listing['main']['is_customizable']), $boolConvertableStrings)) ? true : false;
+            $data['is_customizable'] = (in_array(strtolower($listing['main']['is_customizable']), $boolConvertibleString)) ? true : false;
         }
 
         if (isset($listing['main']['non_taxable'])) {
-            $data['non_taxable'] = (in_array(strtolower($listing['main']['non_taxable']), $boolConvertableStrings)) ? true : false;
+            $data['non_taxable'] = (in_array(strtolower($listing['main']['non_taxable']), $boolConvertibleString)) ? true : false;
         }
 
         if (isset($listing['main']['processing_min'])) {
@@ -370,7 +374,7 @@ class StartListingService
 
             //initialising property values array for articles with no attributes (single variation)
             $products[$counter]['property_values'] = [];
-
+/*
             $this->stockRepository->setFilters(['variationId' => $variation['variationId']]);
             $stock = $this->stockRepository->listStockByWarehouseType('sales')->getResult()->first();
 
@@ -378,7 +382,7 @@ class StartListingService
             {
                 continue;
             }
-
+*/
             foreach ($variation['attributes'] as $attribute) {
 
                 foreach ($attribute['attribute']['names'] as $name) {

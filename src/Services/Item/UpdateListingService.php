@@ -154,8 +154,8 @@ class UpdateListingService
 			'listing_id'           => (int) $listingId,
 			'title'                => $title,
 			'description'          => $description,
-			'shipping_template_id' => $this->itemHelper->getShippingTemplateId($record),
-			'taxonomy_id'          => $this->itemHelper->getTaxonomyId($record),
+		//	'shipping_template_id' => $this->itemHelper->getShippingTemplateId($record),
+		//	'taxonomy_id'          => $this->itemHelper->getTaxonomyId($record),
 			// TODO: Pictures with dynamodb
 		];
 
