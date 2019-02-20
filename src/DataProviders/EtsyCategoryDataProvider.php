@@ -3,10 +3,21 @@
 namespace Etsy\DataProviders;
 
 
-use Plenty\Modules\Catalog\DataProviders\KeyDataProvider;
+use Etsy\Contracts\TaxonomyRepositoryContract;
+use Plenty\Modules\Catalog\DataProviders\NestedKeyDataProvider;
 
-class EtsyCategoryDataProvider extends KeyDataProvider
+class EtsyCategoryDataProvider extends NestedKeyDataProvider
 {
+    /**
+     * @var TaxonomyRepositoryContract $taxonomyRepository
+     */
+    protected $taxonomyRepository;
+
+    public function __construct(TaxonomyRepositoryContract $taxonomyRepository)
+    {
+        $this->taxonomyRepository = $taxonomyRepository;
+    }
+
     /**
      * @return string
      */
@@ -20,35 +31,15 @@ class EtsyCategoryDataProvider extends KeyDataProvider
      */
     public function getRows(): array
     {
-        return [
-            [
-                'value' => 1069,
-                'label' => 'Teetassen & Teesets',
-                'required' => false,
-            ],
-            [
-                'value' => 1102,
-                'label' => 'Büro- & Schulbedarf',
-                'required' => false,
-            ],
-        ];
+        return $this->taxonomyRepository->all();
     }
 
     /**
-     'id' => '1069',
-    'name' => 'Teetassen & Teesets',
-    'id' => '1102',
-    'name' => 'Büro- & Schulbedarf',
-    englisch:
-    'id' => '1069',
-    'name' => 'Tea Cups & Sets',
-    'id' => '1102',
-    'name' => 'Office & School Supplies',
-    französisch:
-    'id' => '1069',
-    'name' => 'Tasses et services à thé',
-    'id' => '1102',
-    'name' => 'Fournitures école et bureau',
+     * @return array
      */
+    public function getNestedRows($parentId): array
+    {
+        return [];
+    }
 }
 

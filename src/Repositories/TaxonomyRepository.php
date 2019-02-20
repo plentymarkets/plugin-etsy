@@ -40,7 +40,7 @@ class TaxonomyRepository implements TaxonomyRepositoryContract
      */
     public function all(array $filters = [], array $with = [])
     {
-        return [];
+        return $this->database->query(Taxonomy::class)->where('level', '=', 0);
     }
 
     /**

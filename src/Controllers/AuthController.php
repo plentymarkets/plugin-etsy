@@ -207,7 +207,7 @@ class AuthController extends Controller
             'id' => $taxonomy['id'],
             'level' => $taxonomy['level'],
             'nameEn' => $taxonomy['name'],
-            'parentId' => $taxonomy['parentId'] ? $taxonomy['parentId'] : 0,
+            'parentId' => (isset($taxonomy['parent_id']) && !is_null($taxonomy['parent_id'])) ? $taxonomy['parent_id'] : 0,
             'isLeaf' => true,
             'path' => $taxonomy['path'],
             'children' => ''
