@@ -24,11 +24,6 @@ class Taxonomy extends Model
     /**
      * @var string
      */
-    public $language;
-
-    /**
-     * @var string
-     */
     public $nameDe;
 
     /**
@@ -74,7 +69,6 @@ class Taxonomy extends Model
         return [
             'id'       => $this->id,
             'parentId' => $this->parentId,
-            'language' => $this->language,
             'nameDe'  => $this->nameDe,
             'nameEn'  => $this->nameEn,
             'nameFr'  => $this->nameFr,
@@ -111,9 +105,6 @@ class Taxonomy extends Model
 
             case 'parentId':
                 return $this->parentId;
-
-            case 'language':
-                return $this->language;
 
             case 'nameDe':
                 return $this->nameDe;
