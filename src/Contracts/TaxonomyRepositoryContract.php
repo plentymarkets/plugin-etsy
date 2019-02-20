@@ -13,12 +13,11 @@ interface TaxonomyRepositoryContract
      * Get taxonomy.
      *
 	 * @param int $taxonomyId
-	 * @param string $lang
      * @param array $with
      *
 	 * @return Taxonomy
 	 */
-	public function get(int $taxonomyId, string $lang, array $with = []): Taxonomy;
+	public function get(int $taxonomyId, array $with = []): Taxonomy;
 
 	/**
      * Get all taxonomies.
@@ -30,20 +29,11 @@ interface TaxonomyRepositoryContract
 	 */
 	public function all(array $filters = [], array $with = []);
 
-    /**
-     * Get all taxonomy correlations.
-     *
-     * @param string $lang
-     *
-     * @return array
-     */
-    public function getCorrelations(string $lang): array;
 
     /**
-     * Save given property correlations.
+     * Save given taxonomy.
      *
-     * @param array $correlations
-     * @param string $lang
+     * @param Taxonomy $taxonomy
      */
-    public function saveCorrelations(array $correlations, string $lang);
+    public function save(Taxonomy $taxonomy);
 }

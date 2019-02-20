@@ -24,7 +24,22 @@ class Taxonomy extends Model
     /**
      * @var string
      */
-    public $name;
+    public $language;
+
+    /**
+     * @var string
+     */
+    public $nameDe;
+
+    /**
+     * @var string
+     */
+    public $nameEn;
+
+    /**
+     * @var string
+     */
+    public $nameFr;
 
     /**
      * @var array
@@ -59,7 +74,10 @@ class Taxonomy extends Model
         return [
             'id'       => $this->id,
             'parentId' => $this->parentId,
-            'name'     => $this->name,
+            'language' => $this->language,
+            'nameDe'  => $this->nameDe,
+            'nameEn'  => $this->nameEn,
+            'nameFr'  => $this->nameFr,
             'children' => $this->children,
             'isLeaf'   => $this->isLeaf,
             'level'    => $this->level,
@@ -94,8 +112,17 @@ class Taxonomy extends Model
             case 'parentId':
                 return $this->parentId;
 
-            case 'name':
-                return $this->name;
+            case 'language':
+                return $this->language;
+
+            case 'nameDe':
+                return $this->nameDe;
+
+            case 'nameEn':
+                return $this->nameEn;
+
+            case 'nameFr':
+                return $this->nameFr;
 
             case 'children':
                 return $this->children;
