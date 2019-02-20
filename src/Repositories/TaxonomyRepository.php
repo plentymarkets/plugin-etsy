@@ -4,6 +4,7 @@ namespace Etsy\Repositories;
 
 use Etsy\Contracts\TaxonomyRepositoryContract;
 use Etsy\Models\Taxonomy;
+use PayPal\Api\Tax;
 use Plenty\Modules\Plugin\DataBase\Contracts\DataBase;
 
 /**
@@ -29,8 +30,8 @@ class TaxonomyRepository implements TaxonomyRepositoryContract
      */
     public function get(int $taxonomyId, array $with = []): Taxonomy
     {
-       //todo
-        $taxonomy = pluginApp(Taxonomy::class);
+        /** @var Taxonomy $taxonomy */
+        $taxonomy = $this->database->find(Taxonomy::class, $taxonomyId);
 
         return $taxonomy;
     }
@@ -40,7 +41,13 @@ class TaxonomyRepository implements TaxonomyRepositoryContract
      */
     public function all(array $filters = [], array $with = [])
     {
-        return $this->database->query(Taxonomy::class)->where('level', '=', 0);
+        $query = $this->database->query(Taxonomy::class);
+
+        foreach ($filters as $field => $filter) {
+            $query->where($field, '=', $filter);
+        }
+
+        return $query->get();
     }
 
     /**

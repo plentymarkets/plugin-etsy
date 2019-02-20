@@ -31,7 +31,7 @@ class EtsyCategoryDataProvider extends NestedKeyDataProvider
      */
     public function getRows(): array
     {
-        return $this->taxonomyRepository->all();
+       return $this->loadCategories(['level' => 0]);
     }
 
     /**
@@ -39,7 +39,24 @@ class EtsyCategoryDataProvider extends NestedKeyDataProvider
      */
     public function getNestedRows($parentId): array
     {
-        return [];
+        return $this->loadCategories(['parentId' => $parentId]);
+
+    }
+
+    protected function loadCategories($filter = []) {
+        $categories = $this->taxonomyRepository->all($filter);
+        $rows = [];
+
+        foreach ($categories as $category) {
+            $rows[] = [
+                'value' => $category->id,
+                'label' => $category->nameDe,
+                'required' => false,
+                'hasChildren' => !$category->isLeaf
+            ];
+        }
+
+        return $rows;
     }
 }
 
