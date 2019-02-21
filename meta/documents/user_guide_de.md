@@ -7,7 +7,7 @@
 
 **Etsy** ist ein amerikanischer Marktplatz für den Kauf und Verkauf von handgemachten Produkten, Vintage und Künstlerbedarf.
 
-Um das Plugin für Etsy einzurichten, registrieren Sie sich zunächst als Händler und erstellen Sie eine neue [App](https://www.etsy.com/developers/documentation/getting_started/register) bei Etsy. Loggen Sie sich dazu mit ihren Etsy-Zugangsdaten auf https://www.etsy.com/developers/ ein und klicken Sie im Bereich **Your Developer Account** auf **Create a New App**. Geben Sie unter **Application Name** einen Namen für die App ein und nehmen Sie weitere Einstellungen vor. Beachten Sie dazu die folgende Tabelle. Klicken Sie anschließend auf **Read Terms and Create App**.
+Um das Plugin für Etsy einzurichten, registrieren Sie sich zunächst als Händler und erstellen eine neue [App](https://www.etsy.com/developers/documentation/getting_started/register) bei Etsy. Loggen Sie sich dazu mit ihren Etsy-Zugangsdaten auf https://www.etsy.com/developers/ ein und klicken Sie im Bereich **Your Developer Account** auf **Create a New App**. Geben Sie unter **Application Name** einen Namen für die App ein und nehmen Sie weitere Einstellungen vor. Beachten Sie dazu die folgende Tabelle. Klicken Sie anschließend auf **Read Terms and Create App**.
 
 |Einstellung bei Etsy                           |Auswahl |
 |:---                                           |:--- |
