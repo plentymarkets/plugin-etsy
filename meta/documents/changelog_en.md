@@ -1,4 +1,9 @@
 # Release notes for Etsy
+
+## v1.3.8 (2019-02-21)
+### Changed
+- The user guide was adjusted.
+
 ## v1.3.7 (2019-01-29)
 ### Added
 - Added a log before the order import.

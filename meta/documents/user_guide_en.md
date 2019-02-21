@@ -5,7 +5,18 @@
 
 ## Registering with Etsy
 
-**Etsy** is an American online market focused on handmade or vintage items. In order to set up Etsy in your plentymarkets system, you have to register as a seller first an create and new [App](https://www.etsy.com/developers/documentation/getting_started/register). You will then receive the access data that you need for the configuration in plentymarkets.
+**Etsy** is an American online market focused on handmade or vintage items.
+
+In order to set up Etsy in your plentymarkets system, you first have to register as a seller and create a new [App](https://www.etsy.com/developers/documentation/getting_started/register) on Etsy. To do so, log into https://www.etsy.com/developers/ with your Etsy access data and click on **Create a New App** in the **Your Developer Account** section. Enter a name for the application into the **Application Name** field and carry out the further settings. Pay attention to the table below. Then click on **Read Terms and Create App**.
+
+|Setting on Etsy                                |Selection |
+|:---                                           |:--- |
+|**What type of application are you building?** |**Seller Tools** |
+|**Who will be the users of this application?** |**Just myself or colleagues** |
+|**Is your application commercial?**            |**No** |
+|**Will your app do any of the following?**     |**Upload or edit listings** |
+
+After you have created the app, it can be found under **Apps You've Made** in the **Your Developer Account** section. To see the access data required for setting up Etsy in plentymarkets, consisting of Keystring and Shared Secret, click on **See API Key Details** in the section of your app.
 
 ## Installing Etsy in plentymarkets
 
