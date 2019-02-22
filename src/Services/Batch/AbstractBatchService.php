@@ -29,7 +29,8 @@ abstract class AbstractBatchService
         'salesPrices' => 'salesPrices', //todo: Entfernen sobald es settings für Katalog gibt
         'defaultCategories' => 'defaultCategories',
         'attributes' => 'attributes',
-        'images' => 'images'
+        'images' => 'images',
+        'skus' => 'skus'
     ];
 
     /**

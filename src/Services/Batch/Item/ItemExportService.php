@@ -106,64 +106,6 @@ class ItemExportService extends AbstractBatchService
                 $test = true;
             }
         }
-        /*
-
-        $this->getLogger(__FUNCTION__)
-            ->addReference('etsyExportListCount', count($records))
-            ->debug('Etsy::item.exportRecord');
-
-        foreach($records as $record)
-        {
-            try
-            {
-                if($this->isListingCreated($record))
-                {
-                    $this->updateService->update($record);
-                }
-                else
-                {
-                    $this->startService->start($record);
-                }
-            }
-            catch(\Exception $ex)
-            {
-                if (strpos($ex->getMessage(), 'Invalid data param type "shipping_template_id"') !== false)
-                {
-                    $this->getLogger(__FUNCTION__)
-                        ->addReference('variationId', $record->variationBase->id)
-                        ->error('Etsy::item.startListingErrorShippingProfile', [
-                            'exception' => $ex->getMessage(),
-                            'instruction' => $this->translator->trans('Etsy::instructions.instructionShippingProfile')
-                        ]);
-                }
-                elseif (strpos($ex->getMessage(), 'Invalid data param type "taxonomy_id"') !== false)
-                {
-                    $this->getLogger(__FUNCTION__)
-                        ->addReference('variationId', $record->variationBase->id)
-                        ->error('Etsy::item.startListingErrorTaxonomyId', [
-                            'exception' => $ex->getMessage(),
-                            'instruction' => $this->translator->trans('Etsy::instructions.instructionShippingProfile')
-                        ]);
-                }
-                elseif (strpos($ex->getMessage(), 'Oh dear, you cannot sell this item on Etsy') !== false)
-                {
-                    $this->getLogger(__FUNCTION__)
-                        ->addReference('variationId', $record->variationBase->id)
-                        ->error('Etsy::item.startListingErrorInvalidItem', [
-                            'exception' => $ex->getMessage(),
-                            'instruction' => $this->translator->trans('Etsy::instructions.instructionInvalidItem')
-                        ]);
-                }
-                else
-                {
-                    $this->getLogger(__FUNCTION__)
-                        ->addReference('variationId', $record->variationBase->id)
-                        ->error('Etsy::item.startListingError', $ex->getMessage());
-                }
-            }
-        }
-
-         */
     }
 
     /**
@@ -173,25 +115,12 @@ class ItemExportService extends AbstractBatchService
      */
     private function isListingCreated(array $listing):bool
     {
-//todo: anpassen
-        if (isset($listing['main']['data']['skus'][0]['sku'])
-            && $listing['main']['data']['skus'][0]['marketId'] === $this->settingsHelper->get(SettingsHelper::SETTINGS_ORDER_REFERRER))
+        if (isset($listing['main']['skus'][0]['sku']))
         {
             return true;
         }
         else {
             return false;
         }
-
-        /*
-        $listingId = (string) $record->variationMarketStatus->sku;
-
-        if(strlen($listingId))
-        {
-            return true;
-        }
-
-        return false;
-         */
     }
 }
