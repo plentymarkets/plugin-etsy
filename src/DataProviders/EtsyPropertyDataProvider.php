@@ -2,7 +2,9 @@
 
 namespace Etsy\DataProviders;
 
+use Etsy\EtsyServiceProvider;
 use Plenty\Modules\Catalog\DataProviders\BaseDataProvider;
+use Plenty\Plugin\Translation\Translator;
 
 /**
  * Class EtsyPropertyDataProvider
@@ -10,6 +12,17 @@ use Plenty\Modules\Catalog\DataProviders\BaseDataProvider;
  */
 class EtsyPropertyDataProvider extends BaseDataProvider
 {
+    protected $translator;
+
+    /**
+     * EtsySalesPriceDataProvider constructor.
+     * @param Translator $translator
+     */
+    public function __construct(Translator $translator)
+    {
+        $this->translator = $translator;
+    }
+
     /**
      * @inheritdoc
      */
@@ -18,92 +31,82 @@ class EtsyPropertyDataProvider extends BaseDataProvider
         return [
             [
                 'key' => 'who_made',
-                'label' => 'who made',
+                'label' => $this->translator->trans(EtsyServiceProvider::PLUGIN_NAME.'catalog.who_made'),
                 'required' => true,
             ],
             [
                 'key' => 'when_made',
-                'label' => 'when made',
+                'label' => $this->translator->trans(EtsyServiceProvider::PLUGIN_NAME.'catalog.when_made'),
                 'required' => true,
             ],
             [
                 'key' => 'is_supply',
-                'label' => 'is supply',
+                'label' => $this->translator->trans(EtsyServiceProvider::PLUGIN_NAME.'catalog.is_supply'),
                 'required' => true,
             ],
             [
                 'key' => 'materials',
-                'label' => 'materials',
+                'label' => $this->translator->trans(EtsyServiceProvider::PLUGIN_NAME.'catalog.material'),
                 'required' => false,
             ],
             [
                 'key' => 'occasion',
-                'label' => 'occasion',
+                'label' => $this->translator->trans(EtsyServiceProvider::PLUGIN_NAME.'catalog.occasion'),
                 'required' => false,
             ],
             [
                 'key' => 'recipient',
-                'label' => 'recipient',
+                'label' => $this->translator->trans(EtsyServiceProvider::PLUGIN_NAME.'catalog.recipient'),
                 'required' => false,
             ],
             [
                 'key' => 'shop_section_id',
-                'label' => 'shop section',
+                'label' => $this->translator->trans(EtsyServiceProvider::PLUGIN_NAME.'catalog.shop'),
                 'required' => false,
             ],
             [
                 'key' => 'is_customizable',
-                'label' => 'is customizable',
-                'required' => false,
-            ],
-            [
-                'key' => 'recipient',
-                'label' => 'recipient',
+                'label' => $this->translator->trans(EtsyServiceProvider::PLUGIN_NAME.'catalog.is_customizable'),
                 'required' => false,
             ],
             [
                 'key' => 'non_taxable',
-                'label' => 'non taxable',
-                'required' => false,
-            ],
-            [
-                'key' => 'recipient',
-                'label' => 'recipient',
+                'label' => $this->translator->trans(EtsyServiceProvider::PLUGIN_NAME.'catalog.non_taxable'),
                 'required' => false,
             ],
             [
                 'key' => 'processing_min',
-                'label' => 'processing min',
+                'label' => $this->translator->trans(EtsyServiceProvider::PLUGIN_NAME.'catalog.processing_min'),
                 'required' => false,
             ],
             [
                 'key' => 'processing_max',
-                'label' => 'processing max',
+                'label' => $this->translator->trans(EtsyServiceProvider::PLUGIN_NAME.'catalog.processing_max'),
                 'required' => false,
             ],
             [
                 'key' => 'style',
-                'label' => 'style',
+                'label' => $this->translator->trans(EtsyServiceProvider::PLUGIN_NAME.'catalog.style'),
                 'required' => false,
             ],
             [
                 'key' => 'item_weight',
-                'label' => 'item weight',
+                'label' => $this->translator->trans(EtsyServiceProvider::PLUGIN_NAME.'catalog.item_weight'),
                 'required' => false,
             ],
             [
                 'key' => 'item_height',
-                'label' => 'item height',
+                'label' => $this->translator->trans(EtsyServiceProvider::PLUGIN_NAME.'catalog.item_height'),
                 'required' => false,
             ],
             [
                 'key' => 'item_length',
-                'label' => 'item length',
+                'label' => $this->translator->trans(EtsyServiceProvider::PLUGIN_NAME.'catalog.item_length'),
                 'required' => false,
             ],
             [
                 'key' => 'item_width',
-                'label' => 'item_width',
+                'label' => $this->translator->trans(EtsyServiceProvider::PLUGIN_NAME.'catalog.item_width'),
                 'required' => false,
             ]
         ];
