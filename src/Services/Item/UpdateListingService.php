@@ -56,17 +56,19 @@ class UpdateListingService
     /**
      * @var ListingInventoryService
      */
-    protected $inventoryService;
+    protected $listingInventoryService;
 
     /**
-	 * @param ItemHelper                $itemHelper
-	 * @param ConfigRepository          $config
-	 * @param ListingService            $listingService
-	 * @param SettingsHelper            $settingsHelper
-	 * @param ListingTranslationService $listingTranslationService
-	 * @param Translator                $translator
-     * @param ListingInventoryService $inventoryService
-	 */
+     * UpdateListingService constructor.
+     * @param ItemHelper $itemHelper
+     * @param ConfigRepository $config
+     * @param ListingService $listingService
+     * @param SettingsHelper $settingsHelper
+     * @param ImageHelper $imageHelper
+     * @param ListingTranslationService $listingTranslationService
+     * @param ListingInventoryService $listingInventoryService
+     * @param Translator $translator
+     */
 	public function __construct(
 	    ItemHelper $itemHelper,
         ConfigRepository $config,
@@ -74,7 +76,7 @@ class UpdateListingService
         SettingsHelper $settingsHelper,
         ImageHelper $imageHelper,
         ListingTranslationService $listingTranslationService,
-        ListingInventoryService $inventoryService,
+        ListingInventoryService $listingInventoryService,
         Translator $translator)
 	{
 		$this->config                    = $config;
@@ -82,7 +84,7 @@ class UpdateListingService
 		$this->itemHelper                = $itemHelper;
 		$this->listingService            = $listingService;
 		$this->listingTranslationService = $listingTranslationService;
-		$this->ListingInventoryService = $inventoryService;
+		$this->listingInventoryService = $listingInventoryService;
 		$this->translator = $translator;
 		$this->imageHelper = $imageHelper;
 	}
@@ -217,7 +219,7 @@ class UpdateListingService
         }
 
         if (isset($listing['main']['style'])){
-            $data['style'] = explode(',', $listing['main']['style']);
+            $data['style'] = explode(',', array_slice($listing['main']['style'], 0, 2));
         }
 
         if (isset($listing['main']['is_customizable'])) {
@@ -316,12 +318,12 @@ class UpdateListingService
 
         if (isset($listing['main']['attributes'][0])) {
             $attributeOneId = $listing['main']['attributes'][0]['attributeId'];
-            $dependencies[] = $this->inventoryService::CUSTOM_ATTRIBUTE_1;
+            $dependencies[] = $this->listingInventoryService::CUSTOM_ATTRIBUTE_1;
         }
 
         if (isset($listing['main']['attributes'][1])) {
             $attributeTwoId = $listing['main']['attributes'][1]['attributeId'];
-            $dependencies[] = $this->inventoryService::CUSTOM_ATTRIBUTE_2;
+            $dependencies[] = $this->listingInventoryService::CUSTOM_ATTRIBUTE_2;
         }
 
         $counter = 0;
@@ -363,13 +365,13 @@ class UpdateListingService
 
                 if (isset($attributeOneId) && $attribute['attributeId'] == $attributeOneId) {
                     $products[$counter]['property_values'][] = [
-                        'property_id' => $this->inventoryService::CUSTOM_ATTRIBUTE_1,
+                        'property_id' => $this->listingInventoryService::CUSTOM_ATTRIBUTE_1,
                         'property_name' => $attributeName,
                         'values' => [$attributeValueName],
                     ];
                 } elseif (isset($attributeTwoId) && $attribute['attributeId'] == $attributeTwoId) {
                     $products[$counter]['property_values'][] = [
-                        'property_id' => $this->inventoryService::CUSTOM_ATTRIBUTE_2,
+                        'property_id' => $this->listingInventoryService::CUSTOM_ATTRIBUTE_2,
                         'property_name' => $attributeName,
                         'values' => [$attributeValueName],
                     ];
@@ -410,14 +412,16 @@ class UpdateListingService
             'sku_on_property' => $dependencies
         ];
 
-        $this->inventoryService->updateInventory($listingId, $data, $language);
+        $this->listingInventoryService->updateInventory($listingId, $data, $language);
 	}
 
     public function updateImages()
     {
+        //todo Wenn Bilder gelöscht, geändert oder hinzugefügt werden müssen sie über die ID gematched werden um
+
         $etsyImages = $this->settingsHelper->get($this->imageHelper::TABLE_NAME);
 //        if ($etsyImages)
-        //todo Wenn Bilder gelöscht, geändert oder hinzugefügt werden müssen sie über die ID gematched werden um
+
 	}
 
 	/**
