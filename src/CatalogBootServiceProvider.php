@@ -18,26 +18,21 @@ use Plenty\Plugin\Translation\Translator;
  */
 class CatalogBootServiceProvider extends ServiceProvider
 {
-    /**
-     * @var Translator
-     */
-    protected $translator;
 
     /**
      * @param TemplateContainerContract $container
      *
      * @throws \Exception
      */
-    public function boot(TemplateContainerContract $container, Translator $translator)
+    public function boot(TemplateContainerContract $container)
     {
-        $this->translator = $translator;
 
         /** @var Template $template */
-        $template = $container->register('Etsy::catalog.test', 'Etsy::catalog.test');
+        $template = $container->register('Etsy::catalog.name', 'Etsy::catalog.type');
 
         $template->addMapping([
             'identifier' => 'categories',
-            'label' => $this->translator->trans(EtsyServiceProvider::PLUGIN_NAME.'catalog.categories'),
+            'label' => 'Kategorien',
             'isArray' => true,
             'isMapping' => true,
             'provider' => EtsyCategoryDataProvider::class,
@@ -48,7 +43,7 @@ class CatalogBootServiceProvider extends ServiceProvider
 
         $template->addMapping([
             'identifier' => 'shipping_profile',
-            'label' => $this->translator->trans(EtsyServiceProvider::PLUGIN_NAME.'catalog.shippingProfile'),
+            'label' => 'Versandprofile',
             'isArray' => true,
             'isMapping' => true,
             'provider' => EtsyShippingProfileDataProvider::class,
@@ -58,7 +53,7 @@ class CatalogBootServiceProvider extends ServiceProvider
 
         $template->addMapping([
             'identifier' => 'etsy_properties',
-            'label' => $this->translator->trans(EtsyServiceProvider::PLUGIN_NAME.'catalog.etsy'),
+            'label' => 'Eigenschaften',
             'isArray' => false,
             'isMapping' => false,
             'provider' => EtsyPropertyDataProvider::class,
@@ -86,7 +81,7 @@ class CatalogBootServiceProvider extends ServiceProvider
         $template->addSetting([
             'key' => 'marketId',
             'type' => 'market',
-            'label' => $this->translator->trans(EtsyServiceProvider::PLUGIN_NAME.'catalog.marketplace'),
+            'label' => 'Marktplatz',
             'defaultValue' => 0
         ]);
     }
