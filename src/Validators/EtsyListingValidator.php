@@ -72,7 +72,7 @@ class EtsyListingValidator extends Validator
         $this->add('categories')->required();//todo
         $this->add('shipping_profiles')->required();//todo
         $this->add('images')->required();//todo
-        $this->add('salesPrices')->required();//todo
+        $this->add('sales_price')->required();//todo
         $this->add('texts')->required();//todo
 
         $this->add('materials');//todo

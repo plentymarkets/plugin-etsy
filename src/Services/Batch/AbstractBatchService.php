@@ -17,7 +17,7 @@ abstract class AbstractBatchService
     /**
      * template uuid
      */
-    const TEMPLATE = 'c96973ee-0b1a-3ce0-b7a8-38e45bea658e';
+    const TEMPLATE = 'ccbc38e2-00f1-3995-9baa-3e3cc1fc6895';
 
     /**
      * Fields that should be returned by the catalog, even though they don't get mapped
@@ -26,7 +26,6 @@ abstract class AbstractBatchService
         'isActive' => 'variation.isActive',
         'isMain' => 'variation.isMain',
         'texts' => 'texts',
-        'salesPrices' => 'salesPrices', //todo: Entfernen sobald es settings für Katalog gibt
         'defaultCategories' => 'defaultCategories',
         'attributes' => 'attributes',
         'images' => 'images',

@@ -117,70 +117,78 @@ class StartListingService
      * Start the listing
      *
      * @param array $listing
+     * @throws \Exception
      */
     public function start(array $listing)
     {
-        if (isset($listing['main'])) {
-            $listingId = $this->createListing($listing);
+        if (!isset($listing['main'])) {
+            $this->getLogger(__FUNCTION__)->addReference('itemId', $listing['main']['itemId'])
+                //todo übersetzen
+                ->error('Article is not listable', 'Missing main variation');
 
-            try {
-
-                //todo: translations
-                $this->fillInventory($listingId, $listing);
-                //$this->addPictures($listingId, $listing);
-
-                throw new \Exception(); //todo: entfernen wenn fertig
-                $this->publish($listingId, $listing);
-            } catch (\Exception $e) {
-                $this->itemHelper->deleteListingsSkus($listingId, $this->settingsHelper->get($this->settingsHelper::SETTINGS_ORDER_REFERRER));
-                $this->listingService->deleteListing($listingId);
-            }
-
-
-            /*
-            $listingId = $this->createListing($record);
-
-            if(!is_null($listingId))
-            {u
-                try
-                {
-                    $this->addPictures($record, $listingId);
-
-                    $this->addTranslations($record, $listingId);
-
-                    $this->publish($listingId, $record->variationBase->id);
-
-                    $this->getLogger(__FUNCTION__)
-                         ->addReference('etsyListingId', $listingId)
-                         ->addReference('variationId', $record->variationBase->id)
-                         ->report('Etsy::item.itemExportSuccess');
-                }
-                catch(\Exception $ex)
-                {
-                    $this->deleteListingService->delete($listingId);
-
-                    $this->getLogger(__FUNCTION__)
-                         ->addReference('variationId', $record->variationBase->id)
-                         ->addReference('etsyListingId', $listingId)
-                         ->warning('Etsy::item.skuRemovalSuccess', [
-                             'sku' => $record->variationMarketStatus->sku
-                         ]);
-
-                    $this->getLogger(__FUNCTION__)
-                        ->addReference('variationId', $record->variationBase->id)
-                        ->addReference('etsyListingId', $listingId)
-                        ->error('Etsy::item.startListingError', $ex->getMessage());
-                }
-            }
-            else
-            {
-                $this->getLogger(__FUNCTION__)
-                    ->setReferenceType('variationId')
-                    ->setReferenceValue($record->variationBase->id)
-                    ->info('Etsy::item.startListingError');
-            }
-            */
+            throw new \Exception('Article is not listable. Missing main variation');
         }
+
+        $listing = $this->createListing($listing);
+        $listingId = $listing['main']['listingId'];
+
+        try {
+
+            //todo: translations
+            $this->fillInventory($listingId, $listing);
+            $this->addPictures($listingId, $listing);
+
+            throw new \Exception(); //todo: entfernen wenn fertig
+            $this->publish($listingId, $listing);
+        } catch (\Exception $e) {
+            $this->itemHelper->deleteListingsSkus($listingId, $this->settingsHelper->get($this->settingsHelper::SETTINGS_ORDER_REFERRER));
+            $this->listingService->deleteListing($listingId);
+        }
+
+
+        /*
+        $listingId = $this->createListing($record);
+
+        if(!is_null($listingId))
+        {u
+            try
+            {
+                $this->addPictures($record, $listingId);
+
+                $this->addTranslations($record, $listingId);
+
+                $this->publish($listingId, $record->variationBase->id);
+
+                $this->getLogger(__FUNCTION__)
+                     ->addReference('etsyListingId', $listingId)
+                     ->addReference('variationId', $record->variationBase->id)
+                     ->report('Etsy::item.itemExportSuccess');
+            }
+            catch(\Exception $ex)
+            {
+                $this->deleteListingService->delete($listingId);
+
+                $this->getLogger(__FUNCTION__)
+                     ->addReference('variationId', $record->variationBase->id)
+                     ->addReference('etsyListingId', $listingId)
+                     ->warning('Etsy::item.skuRemovalSuccess', [
+                         'sku' => $record->variationMarketStatus->sku
+                     ]);
+
+                $this->getLogger(__FUNCTION__)
+                    ->addReference('variationId', $record->variationBase->id)
+                    ->addReference('etsyListingId', $listingId)
+                    ->error('Etsy::item.startListingError', $ex->getMessage());
+            }
+        }
+        else
+        {
+            $this->getLogger(__FUNCTION__)
+                ->setReferenceType('variationId')
+                ->setReferenceValue($record->variationBase->id)
+                ->info('Etsy::item.startListingError');
+        }
+        */
     }
 
     /**
@@ -189,10 +197,11 @@ class StartListingService
      * @param array $listing
      *
      * @throws \Exception
-     * @return int
+     * @return array
      */
     private function createListing(array $listing)
     {
+        //todo Alle Exceptions und Loggernachrichten mit translator befüllen
         $data = [];
         $failedVariations = [];
         $variationExportService = $this->variationExportService;
@@ -234,25 +243,37 @@ class StartListingService
                 continue;
             }
 
+            $listing[$key]['failed'] = false;
+
             $variationExportService->preload($exportPreloadValueList);
             $stock = $variationExportService->getAll($variation['variationId']);
             $stock = $stock[$variationExportService::STOCK];
 
-            if (!isset($variation['sales_price']) || !isset($stock) || $stock[0]['stockNet'] < 1) {
-                unset($listing[$key]);
-                $failedVariations[] = $variation;
+            if (!isset($variation['sales_price'])) {
+                $listing[$key]['failed'] = true;
+                //todo übersetzten
+                $failedVariations[$variation['variationId']][] = 'Variation has no sales price for Etsy';
             }
+
+            if (!isset($stock) || $stock[0]['stockNet'] < 1) {
+                $listing[$key]['failed'] = true;
+                //todo übersetzten
+                $failedVariations[$variation['variationId']][] = 'Variation has no positive stock';
+            }
+
+            if ($listing[$key]['failed']) continue;
 
             $data['quantity'] += $stock[0]['stockNet'];
 
             if (!isset($data['price']) || $data['price'] > $variation['sales_price']) {
-                $data['price'] = $variation['sales_price'];
+                $data['price'] = (float)$variation['sales_price'];
             }
 
             $hasActiveVariations = true;
         }
 
         //was ist mit mehreren Versandprofilen?? todo
+        //shipping profiles
         $data['shipping_template_id'] = $listing['main']['shipping_profiles'][0];
 
         $data['who_made'] = $listing['main']['who_made'];
@@ -260,10 +281,11 @@ class StartListingService
             self::BOOL_CONVERTIBLE_STRINGS));
         $data['when_made'] = $listing['main']['when_made'];
 
-        //Kategorie todo: umbauen auf Standardkategorie
+        //Category todo: umbauen auf Standardkategorie
         //$data['taxonomy_id'] = $listing['main']['categories'][0];
         $data['taxonomy_id'] = 1069;
 
+        //Etsy properties
         if (false) {
             //todo: Still need to decide how to map tags for Etsy (plenty tags from main variation or maybe properties?)
             $data['tags'] = '';
@@ -318,40 +340,66 @@ class StartListingService
         if (isset($listing['main']['processing_max'])) {
             $data['processing_max'] = $listing['main']['processing_max'];
         }
+        /*
+                if (isset($listing['main']['style']) && is_array($listing['main']['style'])) {
+                    foreach($listing['main']['style'] as $style) {
+                        //todo Wird bisher als int übergeben, array benötigt
+                        if (preg_match('@[^\p{L}\p{Nd}\p{Zs}l]u', $style)) {
+                            //todo log
+                            continue;
+                        }
 
-        if (isset($listing['main']['style']) && is_array($listing['main']['style'])) {
-            foreach($listing['main']['style'] as $style) {
-                if (preg_match('@[^\p{L}\p{Nd}\p{Zs}l]u', $style)) {
-                    //todo log
-                    continue;
+                        $data['style'][] = $style;
+                    }
                 }
-
-                $data['style'][] = $style;
-            }
-        }
-
+        */
         if (isset($listing['main']['shop_section_id'])) {
             $data['shop_section_id'] = $listing['main']['shop_section_id'];
         }
 
+        $articleFailed = false;
+        $articleErrors = [];
+
+        //logging article errors
         if (!$hasActiveVariations) {
-            throw new \Exception('Failed to list item with id ' . $listing['main']['itemId'] .
-                '. No active variations with positive stock.');
+            $articleFailed = true;
+            //todo übersetzen
+            $articleErrors[] = 'No listable variations';
         }
 
         if ((!isset($data['title']) || $data['title'] == '')
-        ||  (!isset($data['description']) || $data['description'] == '')) {
-            throw new \Exception('Failed to list item with id ' . $listing['main']['itemId'] .
-                '. Title and description required');
+            || (!isset($data['description']) || $data['description'] == '')) {
+            $articleFailed = true;
+            //todo übersetzen
+            $articleErrors[] = 'Title and description required';
         }
 
         if (strlen($data['title']) > 140) {
-            throw new \Exception('Failed to list item with id ' . $listing['main']['itemId'] .
-                '. Title can not be longer than 140 characters');
+            $articleFailed = true;
+            //todo übersetzen
+            $articleErrors[] = 'Title can not be longer than 140 characters';
+        }
+
+        if (count($listing['main']['attributes']) > 2) {
+            $articleFailed = true;
+            //todo übersetzen
+            $articleErrors[] = 'Article is not allowed to have more than 2 attributes';
+        }
+
+        //Logging failed variations
+        foreach ($failedVariations as $id => $errors) {
+            $this->getLogger(__FUNCTION__)->addReference('variationId', $id)
+                //todo übersetzten
+                ->error('Variation is not listable', $errors);
+        }
+
+        if ($articleFailed) {
+            $this->getLogger(__FUNCTION__)->addReference('itemId', $listing['main']['itemId'])
+                //todo übersetzen
+                ->error('Article is not listable', $articleErrors);
         }
 
         $response = $this->listingService->createListing($language, $data);
-
 
         if (!isset($response['results']) || !is_array($response['results'])) {
             if (is_array($response) && isset($response['error_msg'])) {
@@ -360,6 +408,7 @@ class StartListingService
                 if (is_string($response)) {
                     $message = $response;
                 } else {
+                    //todo übersetzten
                     $message = 'Failed to create listing.';
                 }
             }
@@ -367,11 +416,10 @@ class StartListingService
             throw new \Exception($message);
         }
 
-        //todo: nicht listbare varianten loggen
-
         $results = (array)$response['results'];
+        $listing['main']['listingId'] = (int)reset($results)['listing_id'];
 
-        return (int)reset($results)['listing_id'];
+        return $listing;
     }
 
     /**
@@ -384,12 +432,9 @@ class StartListingService
     private function fillInventory($listingId, $listing)
     {
         $language = $this->settingsHelper->getShopSettings('mainLanguage', 'de');
+        $variationExportService = $this->variationExportService;
         $products = [];
         $dependencies = [];
-
-        if (count($listing['main']['attributes']) > 2) {
-            throw new \Exception("Can't list article " . $listing['main']['itemId'] . ". Too many attributes.");
-        }
 
         if (isset($listing['main']['attributes'][0])) {
             $attributeOneId = $listing['main']['attributes'][0]['attributeId'];
@@ -401,23 +446,39 @@ class StartListingService
             $dependencies[] = $this->inventoryService::CUSTOM_ATTRIBUTE_2;
         }
 
+        $exportPreloadValueList = [];
+        foreach ($listing as $variation) {
+            $exportPreloadValue = pluginApp(ExportPreloadValue::class, [
+                'itemId' => $variation['itemId'],
+                'variationId' => $variation['variationId']
+            ]);
+
+            $exportPreloadValueList[] = $exportPreloadValue;
+        }
+
+        $failedVariations = [];
+        $hasActiveVariations = false;
         $counter = 0;
 
-        foreach ($listing as $variation) {
+        foreach ($listing as $key => $variation) {
+            if (!$variation['isActive']) {
+                $counter++;
+                continue;
+            }
+
+            if (isset($variation['failed']) && $variation['failed']) {
+                $counter++;
+                continue;
+            }
+
+            $variationExportService->preload($exportPreloadValueList);
+            $stock = $variationExportService->getAll($variation['variationId']);
+            $stock = $stock[$variationExportService::STOCK];
 
             //initialising property values array for articles with no attributes (single variation)
             $products[$counter]['property_values'] = [];
-            /*
-                        $this->stockRepository->setFilters(['variationId' => $variation['variationId']]);
-                        $stock = $this->stockRepository->listStockByWarehouseType('sales')->getResult()->first();
 
-                        if ($stock->stockNet === NULL || !$variation['isActive'])
-                        {
-                            continue;
-                        }
-            */
             foreach ($variation['attributes'] as $attribute) {
-
                 foreach ($attribute['attribute']['names'] as $name) {
                     if ($name['lang'] == $language) {
                         $attributeName = $name['name'];
@@ -431,11 +492,15 @@ class StartListingService
                 }
 
                 if (!isset($attributeName)) {
-                    throw new \Exception("Can't list variation " . $variation['variationId'] . ". Undefined attribute name for language " . $language . ".");
+                    //todo übersetzen
+                    $failedVariations[$key][] = 'Undefined attribute name for language ' . $language . '.';
+                    continue 2;
                 }
 
                 if (!isset($attributeValueName)) {
-                    throw new \Exception("Can't list variation " . $variation['variationId'] . ". Undefined attribute value name for language " . $language . ".");
+                    //todo übersetzen
+                    $failedVariations[$key][] = 'Undefined attribute value name for language ' . $language . '.';
+                    continue 2;
                 }
 
                 if (isset($attributeOneId) && $attribute['attributeId'] == $attributeOneId) {
@@ -453,14 +518,7 @@ class StartListingService
                 }
             }
 
-            $orderReferrer = $this->settingsHelper->get(SettingsHelper::SETTINGS_ORDER_REFERRER);
-            foreach ($variation['salesPrices'] as $salesPrice) {
-
-                if (in_array($orderReferrer, $salesPrice['settings']['referrers'])) {
-                    $price = $salesPrice['price'];
-                    break;
-                }
-            }
+            $price = $variation['sales_price'];
 
             //Creating a formatted array so the method can use the data
             $products[$counter]['sku'] = $this->itemHelper->generateParentSku($listingId, [
@@ -474,20 +532,31 @@ class StartListingService
 
             $products[$counter]['offerings'] = [
                 [
-                    'quantity' => 1,
+                    'quantity' => $stock[0]['stockNet'],
                     'is_enabled' => $variation['isActive']
                 ]
             ];
 
-            if (isset($price)) {
-                $products[$counter]['offerings'][0]['price'] = $price;
-            }
+            $products[$counter]['offerings'][0]['price'] = $price;
 
+            $hasActiveVariations = true;
             $counter++;
         }
 
-        if ($counter == 0) {
-            throw new \Exception("Can't list article " . $listing['main']['itemId'] . ". No active variations");
+        //Logging failed variations
+        foreach ($failedVariations as $id => $errors) {
+            $this->getLogger(__FUNCTION__)->addReference('variationId', $id)
+                //todo übersetzten
+                ->error('Variation is not listable', $errors);
+        }
+
+        //logging failed article
+        if (!$hasActiveVariations) {
+            $this->getLogger(__FUNCTION__)->addReference('itemId', $listing['main']['itemId'])
+                //todo übersetzen
+                ->error('Article is not listable', 'Article has no listable variations');
+            //todo übersetzen
+            throw new \Exception("Can't list article " . $listing['main']['itemId'] . ". No listable variations");
         }
 
         $data = [
@@ -497,8 +566,22 @@ class StartListingService
             'sku_on_property' => $dependencies
         ];
 
-        $this->inventoryService->updateInventory($listingId, $data, $language);
+        $response = $this->inventoryService->updateInventory($listingId, $data, $language);
 
+        if (!isset($response['results']) || !is_array($response['results'])) {
+            if (is_array($response) && isset($response['error_msg'])) {
+                $message = $response['error_msg'];
+            } else {
+                if (is_string($response)) {
+                    $message = $response;
+                } else {
+                    //todo übersetzten
+                    $message = 'Failed to create listing.';
+                }
+            }
+
+            throw new \Exception($message);
+        }
     }
 
     /**
@@ -519,7 +602,10 @@ class StartListingService
 
         foreach ($list as $image) {
 
-            if ($image['availabilities']['market'] !== -1 && $image['availabilities']['market'] !== $this->settingsHelper->get($this->settingsHelper::SETTINGS_ORDER_REFERRER)) {
+            $test1 = ($image['availabilities']['market'][0] !== -1);
+            $test2 = ($image['availabilities']['market'][0] !== $this->settingsHelper->get($this->settingsHelper::SETTINGS_ORDER_REFERRER));
+
+            if ($image['availabilities']['market'][0] !== -1 && $image['availabilities']['market'][0] !== $this->settingsHelper->get($this->settingsHelper::SETTINGS_ORDER_REFERRER)) {
                 continue;
             }
 
@@ -527,21 +613,44 @@ class StartListingService
 
 
             if (isset($response['results']) && isset($response['results'][0]) && isset($response['results'][0]['listing_image_id'])) {
-                $imageList[] = [
-                    'imageId' => $image['id'],
-                    'listingImageId' => $response['results'][0]['listing_image_id'],
-                    'listingId' => $response['results'][0]['listing_id'],
-                    'imageUrl' => $image['url']
-                ];
 
             }
-            break;
+
+            if (!isset($response['results']) || !is_array($response['results'])
+                || isset($response['results'][0]) || isset($response['results'][0]['listing_image_id'])) {
+                if (is_array($response) && isset($response['error_msg'])) {
+                    $message = $response['error_msg'];
+                } else {
+                    if (is_string($response)) {
+                        $message = $response;
+                    } else {
+                        //todo übersetzten
+                        $message = 'Failed to create listing.';
+                    }
+                }
+
+                $this->getLogger(__FUNCTION__)->addReference('imageId', $image['id'])
+                    //todo übersetzen
+                    ->error('Image not listable', $message);
+            }
+
+            $imageList[] = [
+                'imageId' => $image['id'],
+                'listingImageId' => $response['results'][0]['listing_image_id'],
+                'listingId' => $response['results'][0]['listing_id'],
+                'imageUrl' => $image['url']
+            ];
         }
 
-        if (count($imageList)) {
-            $this->imageHelper->save($listing['main']['variationId'], json_encode($imageList));
+        if (!count($imageList)) {
+            $this->getLogger(__FUNCTION__)->addReference('itemId', $listing['main']['itemId'])
+                //todo übersetzen
+                ->error('Article is not listable', 'Article has no listable images');
+            //todo übersetzen
+            throw new \Exception("Can't list article " . $listing['main']['itemId'] . ". No listable images");
         }
 
+        $this->imageHelper->save($listing['main']['variationId'], json_encode($imageList));
     }
 
     /**
@@ -587,7 +696,8 @@ class StartListingService
      * @param int $listingId
      * @param int $variationId
      */
-    private function publish($listingId, $listing)
+    private
+    function publish($listingId, $listing)
     {
 //        $data = [
 //            'state' => 'active',
