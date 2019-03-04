@@ -47,7 +47,7 @@ class EtsyListingValidator extends Validator
     public function __construct()
     {
         /*
-        Validator::extend('is_bool', function ($attribute, $value, $parameters, $validator) {
+        \Validator::extend('is_bool', function ($attribute, $value, $parameters, $validator) {
             return $this->isBool($attribute, $value, $parameters, $validator);
         }, 'Has to be a bool convertible string');
 
@@ -66,9 +66,9 @@ class EtsyListingValidator extends Validator
         $this->addInt('itemId')->required();
         $this->addBool('isActive')->required();
         $this->addBool('isMain')->required();
-       // $this->addString('who_made')->in(static::WHO_MADE)->required();
-        //$this->addString('when_made')->in(static::WHEN_MADE)->required();
-       // $this->add('is_supply')->required()->customRule('is_bool', ['required']);
+        $this->addString('who_made')->in(static::WHO_MADE)->required();
+        $this->addString('when_made')->in(static::WHEN_MADE)->required();
+        //$this->add('is_supply')->required()->customRule('is_bool', ['required']);
         $this->add('categories')->required();//todo
         $this->add('shipping_profiles')->required();//todo
         $this->add('images')->required();//todo
@@ -76,12 +76,12 @@ class EtsyListingValidator extends Validator
         $this->add('texts')->required();//todo
 
         $this->add('materials');//todo
-        //$this->add('occasion')->in(static::OCCASIONS);
-        //$this->add('recipient')->in(static::RECIPIENTS);
+        $this->add('occasion')->in(static::OCCASIONS);
+        $this->add('recipient')->in(static::RECIPIENTS);
         $this->add('attributes');//todo
         $this->add('shop_section_id');//todo
-      //  $this->add('is_customizable')->customRule('is_bool', []);
-        ///$this->add('non_taxable')->customRule('is_bool', []);
+        //$this->add('is_customizable')->customRule('is_bool', []);
+        //$this->add('non_taxable')->customRule('is_bool', []);
         $this->add('processing_min');//todo
         $this->add('processing_max');//todo
         $this->add('style');//todo
