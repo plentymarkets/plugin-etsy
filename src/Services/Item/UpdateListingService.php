@@ -218,9 +218,9 @@ class UpdateListingService
             $data['materials'] = explode(',', $listing['main']['materials']);
         }
 
-        if (isset($listing['main']['style'])){
-            $data['style'] = explode(',', array_slice($listing['main']['style'], 0, 2));
-        }
+//        if (isset($listing['main']['style'])){
+//            $data['style'] = explode(',', array_slice($listing['main']['style'], 0, 2));
+//        }
 
         if (isset($listing['main']['is_customizable'])) {
             $data['is_customizable'] = (in_array(strtolower($listing['main']['is_customizable']), $boolConvertibleString)) ? true : false;
