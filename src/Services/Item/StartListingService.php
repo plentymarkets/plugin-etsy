@@ -13,6 +13,8 @@ use Etsy\Api\Services\ListingImageService;
 use Etsy\Helper\ItemHelper;
 use Etsy\Api\Services\ListingTranslationService;
 use Plenty\Modules\Item\ItemShippingProfiles\Contracts\ItemShippingProfilesRepositoryContract;
+use Plenty\Modules\Item\Variation\Contracts\VariationExportServiceContract;
+use Plenty\Modules\Item\Variation\Services\ExportPreloadValue\ExportPreloadValue;
 use Plenty\Modules\StockManagement\Stock\Repositories\StockRepository;
 use Plenty\Modules\System\Contracts\WebstoreConfigurationRepositoryContract;
 use Plenty\Plugin\Application;
@@ -66,9 +68,14 @@ class StartListingService
     private $inventoryService;
 
     /**
-     * @var StockRepository
+     * @var $variationExportService
      */
-    private $stockRepository;
+    private $variationExportService;
+
+    /**
+     * String values which can be used in properties to represent true
+     */
+    const BOOL_CONVERTIBLE_STRINGS = ['1', 'y', 'true'];
 
     /**
      * StartListingService constructor.
@@ -80,7 +87,8 @@ class StartListingService
      * @param SettingsHelper $settingsHelper
      * @param ImageHelper $imageHelper
      * @param ListingInventoryService $inventoryService
-     * @param StockRepository $stockRepository
+     * @param VariationExportServiceContract $variationExportService
+     * @internal param StockRepository $stockRepository
      */
     public function __construct(
         ListingService $listingService,
@@ -90,9 +98,9 @@ class StartListingService
         ListingTranslationService $listingTranslationService,
         SettingsHelper $settingsHelper,
         ImageHelper $imageHelper,
-        ListingInventoryService $inventoryService
-        //StockRepository $stockRepository
-        )
+        ListingInventoryService $inventoryService,
+        VariationExportServiceContract $variationExportService
+    )
     {
         $this->itemHelper = $itemHelper;
         $this->listingTranslationService = $listingTranslationService;
@@ -102,7 +110,7 @@ class StartListingService
         $this->settingsHelper = $settingsHelper;
         $this->imageHelper = $imageHelper;
         $this->inventoryService = $inventoryService;
-        //$this->stockRepository = $stockRepository;
+        $this->variationExportService = $variationExportService;
     }
 
     /**
@@ -113,9 +121,7 @@ class StartListingService
     public function start(array $listing)
     {
         if (isset($listing['main'])) {
-//            $listingId = $this->createListing($listing);
-
-            $listingId = 1;
+            $listingId = $this->createListing($listing);
 
             try {
 
@@ -188,7 +194,10 @@ class StartListingService
     private function createListing(array $listing)
     {
         $data = [];
+        $failedVariations = [];
+        $variationExportService = $this->variationExportService;
         EtsyListingValidator::validateOrFail($listing['main']);
+
 
         $data['state'] = 'draft';
 
@@ -205,64 +214,58 @@ class StartListingService
         }
 
         //quantity & price
-        $data['quantity'] = 1;
+        $data['quantity'] = 0;
         $hasActiveVariations = false;
 
+        $variationExportService->addPreloadTypes([$this->variationExportService::STOCK]);
+        $exportPreloadValueList = [];
+
         foreach ($listing as $variation) {
+            $exportPreloadValue = pluginApp(ExportPreloadValue::class, [
+                'itemId' => $variation['itemId'],
+                'variationId' => $variation['variationId']
+            ]);
+
+            $exportPreloadValueList[] = $exportPreloadValue;
+        }
+
+        foreach ($listing as $key => $variation) {
             if (!$variation['isActive']) {
                 continue;
             }
-/*
-            $this->stockRepository->setFilters(['variationId' => $variation['variationId']]);
-            $stock = $this->stockRepository->listStockByWarehouseType('sales')->getResult()->first();
 
-            if ($stock->stockNet === null) {
-                continue;
+            $variationExportService->preload($exportPreloadValueList);
+            $stock = $variationExportService->getAll($variation['variationId']);
+            $stock = $stock[$variationExportService::STOCK];
+
+            if (!isset($variation['sales_price']) || !isset($stock) || $stock[0]['stockNet'] < 1) {
+                unset($listing[$key]);
+                $failedVariations[] = $variation;
             }
-*/
+
+            $data['quantity'] += $stock[0]['stockNet'];
+
+            if (!isset($data['price']) || $data['price'] > $variation['sales_price']) {
+                $data['price'] = $variation['sales_price'];
+            }
+
             $hasActiveVariations = true;
-
-            //$data['quantity'] += $stock->stockNet;
-
-            //loading default currency
-            /** @var WebstoreConfigurationRepositoryContract $webstoreConfigurationRepository */
-            $webstoreConfigurationRepository = pluginApp(WebstoreConfigurationRepositoryContract::class);
-            $webStoreConfiguration = $webstoreConfigurationRepository->findByPlentyId(pluginApp(Application::class)->getPlentyId());
-            $defaultCurrency = $webStoreConfiguration->defaultCurrency;
-
-            //todo: Nur den in den Einstellungen definierten Preis für Etsy nutzen und auf Shopwährung prüfen. Ggf. umrechnen
-            foreach ($variation['salesPrices'] as $salesPrice) {
-                $orderReferrer = $this->settingsHelper->get(SettingsHelper::SETTINGS_ORDER_REFERRER);
-
-                //todo Falls die bei Etsy hinterlegte Währung von der Standardwährung abweicht muss umgerechnet werden
-                if (in_array($orderReferrer, $salesPrice['settings']['referrers'])) {
-                    if (!isset($data['price']) || $salesPrice['price'] < $data['price']) {
-                        $data['price'] = (float)$salesPrice['price'];
-                    }
-                    break;
-                }
-            }
         }
-
-        $boolConvertibleString = ['1', 'y', 'true'];
 
         //was ist mit mehreren Versandprofilen?? todo
         $data['shipping_template_id'] = $listing['main']['shipping_profiles'][0];
 
-        //who_made -> gemappte eigenschaft des kunden
         $data['who_made'] = $listing['main']['who_made'];
-        //is_supply ->
-        $data['is_supply'] = (in_array(strtolower($listing['main']['is_supply']), $boolConvertibleString)) ? true : false;
-        //when_made -> ^
+        $data['is_supply'] = (in_array(strtolower($listing['main']['is_supply']),
+            self::BOOL_CONVERTIBLE_STRINGS));
         $data['when_made'] = $listing['main']['when_made'];
 
         //Kategorie todo: umbauen auf Standardkategorie
-        $data['taxonomy_id'] = $listing['main']['categories'][0];
+        //$data['taxonomy_id'] = $listing['main']['categories'][0];
+        $data['taxonomy_id'] = 1069;
 
-
-        //Adding fields to data array if they are mapped and have a value
         if (false) {
-            //todo
+            //todo: Still need to decide how to map tags for Etsy (plenty tags from main variation or maybe properties?)
             $data['tags'] = '';
         }
 
@@ -299,11 +302,13 @@ class StartListingService
         }
 
         if (isset($listing['main']['is_customizable'])) {
-            $data['is_customizable'] = (in_array(strtolower($listing['main']['is_customizable']), $boolConvertibleString)) ? true : false;
+            $data['is_customizable'] = (in_array(strtolower($listing['main']['is_customizable']),
+                self::BOOL_CONVERTIBLE_STRINGS));
         }
 
         if (isset($listing['main']['non_taxable'])) {
-            $data['non_taxable'] = (in_array(strtolower($listing['main']['non_taxable']), $boolConvertibleString)) ? true : false;
+            $data['non_taxable'] = (in_array(strtolower($listing['main']['non_taxable']),
+                self::BOOL_CONVERTIBLE_STRINGS));
         }
 
         if (isset($listing['main']['processing_min'])) {
@@ -314,8 +319,15 @@ class StartListingService
             $data['processing_max'] = $listing['main']['processing_max'];
         }
 
-        if (isset($listing['main']['style'])){
-            //todo
+        if (isset($listing['main']['style']) && is_array($listing['main']['style'])) {
+            foreach($listing['main']['style'] as $style) {
+                if (preg_match('@[^\p{L}\p{Nd}\p{Zs}l]u', $style)) {
+                    //todo log
+                    continue;
+                }
+
+                $data['style'][] = $style;
+            }
         }
 
         if (isset($listing['main']['shop_section_id'])) {
@@ -323,11 +335,22 @@ class StartListingService
         }
 
         if (!$hasActiveVariations) {
-            throw new \Exception('Item with id ' . $listing['main']['itemId'] . 'has no active variations with positive stock.');
+            throw new \Exception('Failed to list item with id ' . $listing['main']['itemId'] .
+                '. No active variations with positive stock.');
         }
 
-        $response = $this->listingService->createListing($this->settingsHelper->getShopSettings('mainLanguage', 'de'), $data);
+        if ((!isset($data['title']) || $data['title'] == '')
+        ||  (!isset($data['description']) || $data['description'] == '')) {
+            throw new \Exception('Failed to list item with id ' . $listing['main']['itemId'] .
+                '. Title and description required');
+        }
 
+        if (strlen($data['title']) > 140) {
+            throw new \Exception('Failed to list item with id ' . $listing['main']['itemId'] .
+                '. Title can not be longer than 140 characters');
+        }
+
+        $response = $this->listingService->createListing($language, $data);
 
 
         if (!isset($response['results']) || !is_array($response['results'])) {
@@ -343,6 +366,8 @@ class StartListingService
 
             throw new \Exception($message);
         }
+
+        //todo: nicht listbare varianten loggen
 
         $results = (array)$response['results'];
 
@@ -382,15 +407,15 @@ class StartListingService
 
             //initialising property values array for articles with no attributes (single variation)
             $products[$counter]['property_values'] = [];
-/*
-            $this->stockRepository->setFilters(['variationId' => $variation['variationId']]);
-            $stock = $this->stockRepository->listStockByWarehouseType('sales')->getResult()->first();
+            /*
+                        $this->stockRepository->setFilters(['variationId' => $variation['variationId']]);
+                        $stock = $this->stockRepository->listStockByWarehouseType('sales')->getResult()->first();
 
-            if ($stock->stockNet === NULL || !$variation['isActive'])
-            {
-                continue;
-            }
-*/
+                        if ($stock->stockNet === NULL || !$variation['isActive'])
+                        {
+                            continue;
+                        }
+            */
             foreach ($variation['attributes'] as $attribute) {
 
                 foreach ($attribute['attribute']['names'] as $name) {
@@ -494,8 +519,7 @@ class StartListingService
 
         foreach ($list as $image) {
 
-            if ($image['availabilities']['market'] !== -1 && $image['availabilities']['market'] !== $this->settingsHelper->get($this->settingsHelper::SETTINGS_ORDER_REFERRER))
-            {
+            if ($image['availabilities']['market'] !== -1 && $image['availabilities']['market'] !== $this->settingsHelper->get($this->settingsHelper::SETTINGS_ORDER_REFERRER)) {
                 continue;
             }
 

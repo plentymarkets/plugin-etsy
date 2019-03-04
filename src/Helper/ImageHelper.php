@@ -79,9 +79,10 @@ class ImageHelper
      */
     public function sortImagePosition($imageList)
     {
-        foreach ($imageList as $key => $row) {
-            $position[$key]  = $row['position']++;
+        $position = [];
 
+        foreach ($imageList as $key => $row) {
+            $position[$key]  = $row['position'];
         }
 
         array_multisort($position, SORT_ASC, $imageList);
@@ -92,8 +93,7 @@ class ImageHelper
 
             $imageList[$key]['position'] = $counter;
 
-            $counter ++;
-
+            $counter++;
         }
 
         return $imageList;

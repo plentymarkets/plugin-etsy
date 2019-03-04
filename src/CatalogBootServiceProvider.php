@@ -5,6 +5,7 @@ namespace Etsy;
 use Etsy\DataProviders\EtsyCategoryDataProvider;
 use Etsy\DataProviders\EtsyCurrencyDataProvider;
 use Etsy\DataProviders\EtsyPropertyDataProvider;
+use Etsy\DataProviders\EtsySalesPriceDataProvider;
 use Etsy\DataProviders\EtsyShippingProfileDataProvider;
 use Plenty\Modules\Catalog\Contracts\TemplateContainerContract;
 use Plenty\Modules\Catalog\Templates\Template;
@@ -23,21 +24,13 @@ class CatalogBootServiceProvider extends ServiceProvider
     protected $translator;
 
     /**
-     * CatalogBootServiceProvider constructor.
-     * @param Translator $translator
-     */
-    public function __construct(Translator $translator)
-    {
-        $this->translator = $translator;
-    }
-
-    /**
      * @param TemplateContainerContract $container
      *
      * @throws \Exception
      */
-    public function boot(TemplateContainerContract $container)
+    public function boot(TemplateContainerContract $container, Translator $translator)
     {
+        $this->translator = $translator;
 
         /** @var Template $template */
         $template = $container->register('Etsy::catalog.test', 'Etsy::catalog.test');
@@ -69,6 +62,16 @@ class CatalogBootServiceProvider extends ServiceProvider
             'isArray' => false,
             'isMapping' => false,
             'provider' => EtsyPropertyDataProvider::class,
+            'mutators' => [
+            ]
+        ]);
+
+        $template->addMapping([
+            'identifier' => 'price',
+            'label' => 'Verkaufspreis',
+            'isArray' => false,
+            'isMapping' => false,
+            'provider' => EtsySalesPriceDataProvider::class,
             'mutators' => [
             ]
         ]);
