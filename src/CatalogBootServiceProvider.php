@@ -3,7 +3,6 @@
 namespace Etsy;
 
 use Etsy\DataProviders\EtsyCategoryDataProvider;
-use Etsy\DataProviders\EtsyCurrencyDataProvider;
 use Etsy\DataProviders\EtsyPropertyDataProvider;
 use Etsy\DataProviders\EtsyShippingProfileDataProvider;
 use Plenty\Modules\Catalog\Contracts\TemplateContainerContract;
@@ -17,34 +16,21 @@ use Plenty\Plugin\Translation\Translator;
  */
 class CatalogBootServiceProvider extends ServiceProvider
 {
-    /**
-     * @var Translator
-     */
-    protected $translator;
-
-    /**
-     * CatalogBootServiceProvider constructor.
-     * @param Translator $translator
-     */
-    public function __construct(Translator $translator)
-    {
-        $this->translator = $translator;
-    }
 
     /**
      * @param TemplateContainerContract $container
      *
-     * @throws \Exception
+     * @throws \Plenty\Exceptions\ValidationException
      */
     public function boot(TemplateContainerContract $container)
     {
 
         /** @var Template $template */
-        $template = $container->register('Etsy::catalog.test', 'Etsy::catalog.test');
+        $template = $container->register('Etsy::catalog.name', 'Etsy::catalog.type');
 
         $template->addMapping([
             'identifier' => 'categories',
-            'label' => $this->translator->trans(EtsyServiceProvider::PLUGIN_NAME.'catalog.categories'),
+            'label' => 'Kategorien',
             'isArray' => true,
             'isMapping' => true,
             'provider' => EtsyCategoryDataProvider::class,
@@ -55,7 +41,7 @@ class CatalogBootServiceProvider extends ServiceProvider
 
         $template->addMapping([
             'identifier' => 'shipping_profile',
-            'label' => $this->translator->trans(EtsyServiceProvider::PLUGIN_NAME.'catalog.shippingProfile'),
+            'label' => 'Versandprofile',
             'isArray' => true,
             'isMapping' => true,
             'provider' => EtsyShippingProfileDataProvider::class,
@@ -65,7 +51,7 @@ class CatalogBootServiceProvider extends ServiceProvider
 
         $template->addMapping([
             'identifier' => 'etsy_properties',
-            'label' => $this->translator->trans(EtsyServiceProvider::PLUGIN_NAME.'catalog.etsy'),
+            'label' => 'Eigenschaften',
             'isArray' => false,
             'isMapping' => false,
             'provider' => EtsyPropertyDataProvider::class,
@@ -83,7 +69,7 @@ class CatalogBootServiceProvider extends ServiceProvider
         $template->addSetting([
             'key' => 'marketId',
             'type' => 'market',
-            'label' => $this->translator->trans(EtsyServiceProvider::PLUGIN_NAME.'catalog.marketplace'),
+            'label' => 'Marketplace',
             'defaultValue' => 0
         ]);
     }
