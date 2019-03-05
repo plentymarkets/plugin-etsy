@@ -17,7 +17,7 @@ abstract class AbstractBatchService
     /**
      * template uuid
      */
-    const TEMPLATE = 'ccbc38e2-00f1-3995-9baa-3e3cc1fc6895';
+    const TEMPLATE = '53237d32-45f0-3aa6-ab69-5d3617004846';
 
     /**
      * Fields that should be returned by the catalog, even though they don't get mapped
