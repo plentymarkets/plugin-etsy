@@ -10,6 +10,7 @@ use Etsy\Api\Services\ListingService;
 use Etsy\Api\Services\ListingImageService;
 use Etsy\Helper\ItemHelper;
 use Etsy\Api\Services\ListingTranslationService;
+use Plenty\Modules\Frontend\Contracts\CurrencyExchangeRepositoryContract;
 use Plenty\Modules\Item\Variation\Contracts\VariationExportServiceContract;
 use Plenty\Modules\Item\Variation\Services\ExportPreloadValue\ExportPreloadValue;
 use Plenty\Plugin\Log\Loggable;
@@ -24,52 +25,62 @@ class StartListingService
     /**
      * @var ItemHelper
      */
-    private $itemHelper;
+    protected $itemHelper;
 
     /**
      * @var ListingService
      */
-    private $listingService;
+    protected $listingService;
 
     /**
      * @var DeleteListingService
      */
-    private $deleteListingService;
+    protected $deleteListingService;
 
     /**
      * @var ListingImageService
      */
-    private $listingImageService;
+    protected $listingImageService;
 
     /**
      * @var ListingTranslationService
      */
-    private $listingTranslationService;
+    protected $listingTranslationService;
 
     /**
      * @var SettingsHelper
      */
-    private $settingsHelper;
+    protected $settingsHelper;
 
     /**
      * @var ImageHelper
      */
-    private $imageHelper;
+    protected $imageHelper;
 
     /**
      * @var ListingInventoryService $inventoryService
      */
-    private $inventoryService;
+    protected $inventoryService;
 
     /**
      * @var $variationExportService
      */
-    private $variationExportService;
+    protected $variationExportService;
+
+    /**
+     * @var CurrencyExchangeRepositoryContract
+     */
+    protected $currencyExchangeRepository;
 
     /**
      * String values which can be used in properties to represent true
      */
     const BOOL_CONVERTIBLE_STRINGS = ['1', 'y', 'true'];
+
+    /**
+     * number of decimals an amount of money gets rounded to
+     */
+    const moneyDecimals = 2;
 
     /**
      * StartListingService constructor.
@@ -82,6 +93,7 @@ class StartListingService
      * @param ImageHelper $imageHelper
      * @param ListingInventoryService $inventoryService
      * @param VariationExportServiceContract $variationExportService
+     * @param CurrencyExchangeRepositoryContract $currencyExchangeRepository
      * @internal param StockRepository $stockRepository
      */
     public function __construct(
@@ -93,7 +105,8 @@ class StartListingService
         SettingsHelper $settingsHelper,
         ImageHelper $imageHelper,
         ListingInventoryService $inventoryService,
-        VariationExportServiceContract $variationExportService
+        VariationExportServiceContract $variationExportService,
+        CurrencyExchangeRepositoryContract $currencyExchangeRepository
     )
     {
         $this->itemHelper = $itemHelper;
@@ -105,6 +118,7 @@ class StartListingService
         $this->imageHelper = $imageHelper;
         $this->inventoryService = $inventoryService;
         $this->variationExportService = $variationExportService;
+        $this->currencyExchangeRepository = $currencyExchangeRepository;
     }
 
     /**
@@ -115,7 +129,7 @@ class StartListingService
      */
     public function start(array $listing)
     {
-        //todo: Bilder updaten/löschen (bei uns), Währung von Etsy abfragen
+        //todo: Bilder updaten/löschen (bei uns)
         if (!isset($listing['main'])) {
             $this->getLogger(__FUNCTION__)->addReference('itemId', $listing['main']['itemId'])
                 //todo übersetzen
@@ -192,7 +206,7 @@ class StartListingService
      * @throws \Exception
      * @return array
      */
-    private function createListing(array $listing)
+    protected function createListing(array $listing)
     {
         //todo Alle Exceptions und Loggernachrichten mit translator befüllen
         $data = [];
@@ -204,6 +218,12 @@ class StartListingService
         $data['state'] = 'draft';
 
         $language = $this->settingsHelper->getShopSettings('mainLanguage', 'de');
+        //loading etsy currency
+        $shops = json_decode($this->settingsHelper->get($this->settingsHelper::SETTINGS_ETSY_SHOPS), true);
+        $etsyCurrency = reset($shops)['currency_code'];
+
+        //loading default currency
+        $defaultCurrency = $this->currencyExchangeRepository->getDefaultCurrency();
 
         //title and description
         foreach ($listing['main']['texts'] as $text) {
@@ -259,7 +279,14 @@ class StartListingService
             $data['quantity'] += $stock[0]['stockNet'];
 
             if (!isset($data['price']) || $data['price'] > $variation['sales_price']) {
-                $data['price'] = (float)$variation['sales_price'];
+                if ($defaultCurrency == $etsyCurrency) {
+                    $data['price'] = (float)$variation['sales_price'];
+                } else {
+                    $data['price'] = $this->currencyExchangeRepository->convertFromDefaultCurrency($etsyCurrency,
+                        (float) $variation['sales_price'],
+                        $this->currencyExchangeRepository->getExchangeRatioByCurrency($etsyCurrency));
+                    $data['price'] = round($data['price'], self::moneyDecimals);
+                }
             }
 
             $hasActiveVariations = true;
@@ -427,7 +454,7 @@ class StartListingService
      * @param $listing
      * @throws \Exception
      */
-    private function fillInventory($listingId, $listing)
+    protected function fillInventory($listingId, $listing)
     {
         $language = $this->settingsHelper->getShopSettings('mainLanguage', 'de');
         $variationExportService = $this->variationExportService;
@@ -589,7 +616,7 @@ class StartListingService
      * @param $listing
      * @throws \Exception
      */
-    private function addPictures($listingId, $listing)
+    protected function addPictures($listingId, $listing)
     {
         $list = $listing['main']['images']['all'];
 
@@ -651,7 +678,7 @@ class StartListingService
      * @param $listingId
      * @throws \Exception
      */
-    private function addTranslations(array $listing, $listingId)
+    protected function addTranslations(array $listing, $listingId)
     {
         foreach ($this->settingsHelper->getShopSettings('exportLanguages',
             [$this->settingsHelper->getShopSettings('mainLanguage', 'de')]) as $language) {
@@ -697,7 +724,7 @@ class StartListingService
      * @param int $listingId
      * @param $listing
      */
-    private function publish($listingId, $listing)
+    protected function publish($listingId, $listing)
     {
         $data = [
             'state' => 'active',

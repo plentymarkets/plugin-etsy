@@ -32,6 +32,7 @@ class ShopImportService
 						'shopId' => $shopData['shop_id'],
 						'shopName' => $shopData['shop_name'],
 						'url' => $shopData['url'],
+                        'currency_code' => $shopData['currency_code']
 					];
 				}
 			}

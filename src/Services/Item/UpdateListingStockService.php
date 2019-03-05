@@ -92,13 +92,16 @@ class UpdateListingStockService
                 if ($variation['skus'][0]['sku'] != $product['sku']) {
                     continue;
                 }
-                $products[$key]['offerings'][0]['quantity'] = $variationExportService->getData($variationExportService::STOCK, $variation['variationId']);
+                $stock =  $variationExportService->getData($variationExportService::STOCK, $variation['variationId']);
+                $stock = $stock[0]['stockNet'];
+                $products[$key]['offerings'][0]['quantity'] = $stock;
             }
         }
 
-        $data = [];
+        $data = $etsyListing['results'];
         $data['products'] = json_encode($products);
 
-        $this->listingInventoryService->updateInventory($listingId, $data);
+        //todo prüfen
+        return $this->listingInventoryService->updateInventory($listingId, $data);
     }
 }

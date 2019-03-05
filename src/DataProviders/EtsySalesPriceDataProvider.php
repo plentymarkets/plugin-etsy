@@ -31,12 +31,7 @@ class EtsySalesPriceDataProvider  extends BaseDataProvider
             [
                 'key' => 'sales_price',
                 'label' => $this->translator->trans(EtsyServiceProvider::PLUGIN_NAME.'::catalog.sales_price'),
-                'required' => true,
-            ],
-            [
-                'key' => 'currency',
-                'label' => $this->translator->trans(EtsyServiceProvider::PLUGIN_NAME.'::catalog.currency'),
-                'required' => true,
+                'required' => true
             ]
         ];
     }

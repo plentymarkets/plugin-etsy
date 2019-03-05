@@ -44,8 +44,6 @@ class EtsyServiceProvider extends ServiceProvider
 		$this->getApplication()->bind('Etsy\item.dataprovider.export', ItemExportDataProvider::class);
 		$this->getApplication()->bind('Etsy\item.dataprovider.update', ItemUpdateDataProvider::class);
 
-		$this->getApplication()->bind('Etsy\taxonomy.dataprovider.de', TaxonomyDeDataProvider::class);
-
 		$this->getApplication()->singleton(ItemDataProviderFactory::class);
 
 		$this->getApplication()->register(EtsyRouteServiceProvider::class);

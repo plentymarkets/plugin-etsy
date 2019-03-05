@@ -114,7 +114,18 @@ class ItemUpdateStockService extends AbstractBatchService
     {
             try
             {
-                $this->updateListingStockService->updateStock($listing);
+                $response = $this->updateListingStockService->updateStock($listing);
+
+                if (isset($response['error']) && $response['error']) {
+                    //todo übersetzen
+                    $message = 'Updating stock for listing ' . $listing['main']['skus'][0]['parentSku'] . ' failed.';
+
+                    if (isset($response['error_msg'])) {
+                        $message .= PHP_EOL . $response['error_msg'];
+                    }
+
+                    throw new \Exception($message);
+                }
             }
             catch(\Exception $ex)
             {
