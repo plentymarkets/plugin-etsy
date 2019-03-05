@@ -64,6 +64,26 @@ class ItemHelper
     private $legalInformationRepository;
 
     /**
+     * Possible value for SKU status
+     */
+    const SKU_STATUS_ACTIVE = 'ACTIVE';
+
+    /**
+     * Possible value for SKU status
+     */
+    const SKU_STATUS_INACTIVE = 'INACTIVE';
+
+    /**
+     * Possible value for SKU status
+     */
+    const SKU_STATUS_ERROR = 'ERROR';
+
+    /**
+     * Possible value for SKU status
+     */
+    const SKU_STATUS_SENT = 'SENT';
+
+    /**
      * ItemHelper constructor.
      *
      * @param Application $app
@@ -88,56 +108,6 @@ class ItemHelper
         $this->orderHelper = $orderHelper;
         $this->legalInformationRepository = $legalInformationRepository;
     }
-
-	/**
-	 * Get the stock based on the settings.
-	 *
-	 * @param Record $item
-	 *
-	 * @return int
-	 */
-	public function getStock(Record $item)
-	{
-		if($item->variationBase->limitOrderByStockSelect == 2)
-		{
-			$stock = 999;
-		}
-		elseif($item->variationBase->limitOrderByStockSelect == 1 && $item->variationStock->stockNet > 0)
-		{
-			if($item->variationStock->stockNet > 999)
-			{
-				$stock = 999;
-			}
-			else
-			{
-				$stock = intval($item->variationStock->stockNet);
-			}
-		}
-		elseif($item->variationBase->limitOrderByStockSelect == 0)
-		{
-			if($item->variationStock->stockNet > 999)
-			{
-				$stock = 999;
-			}
-			else
-			{
-				if($item->variationStock->stockNet > 0)
-				{
-					$stock = intval($item->variationStock->stockNet);
-				}
-				else
-				{
-					$stock = 0;
-				}
-			}
-		}
-		else
-		{
-			$stock = 0;
-		}
-
-		return $stock;
-	}
 
     /**
      * Gets the legal information by language.
@@ -182,6 +152,18 @@ class ItemHelper
 		}
 
 	}
+
+	public function updateListingSkuStatuses($listing, $status = self::SKU_STATUS_INACTIVE)
+    {
+        foreach ($listing as $variation) {
+            $skus = $this->variationSkuRepository->search(['variationId' => $variation['variationId']]);
+
+            foreach ($skus as $sku) {
+                $sku->status = $status;
+                $this->variationSkuRepository->update($sku->toArray(), $sku->id);
+            }
+        }
+    }
 
     public function generateParentSku($listingId, $variationData)
     {

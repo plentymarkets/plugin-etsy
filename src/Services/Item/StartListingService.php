@@ -4,20 +4,14 @@ namespace Etsy\Services\Item;
 
 use Etsy\Api\Services\ListingInventoryService;
 use Etsy\Validators\EtsyListingValidator;
-use Illuminate\Database\Eloquent\Collection;
-use Plenty\Modules\Item\DataLayer\Models\Record;
 use Etsy\Helper\ImageHelper;
 use Etsy\Helper\SettingsHelper;
 use Etsy\Api\Services\ListingService;
 use Etsy\Api\Services\ListingImageService;
 use Etsy\Helper\ItemHelper;
 use Etsy\Api\Services\ListingTranslationService;
-use Plenty\Modules\Item\ItemShippingProfiles\Contracts\ItemShippingProfilesRepositoryContract;
 use Plenty\Modules\Item\Variation\Contracts\VariationExportServiceContract;
 use Plenty\Modules\Item\Variation\Services\ExportPreloadValue\ExportPreloadValue;
-use Plenty\Modules\StockManagement\Stock\Repositories\StockRepository;
-use Plenty\Modules\System\Contracts\WebstoreConfigurationRepositoryContract;
-use Plenty\Plugin\Application;
 use Plenty\Plugin\Log\Loggable;
 
 /**
@@ -121,6 +115,7 @@ class StartListingService
      */
     public function start(array $listing)
     {
+        //todo: Bilder updaten/löschen (bei uns), Währung von Etsy abfragen
         if (!isset($listing['main'])) {
             $this->getLogger(__FUNCTION__)->addReference('itemId', $listing['main']['itemId'])
                 //todo übersetzen
@@ -133,12 +128,10 @@ class StartListingService
         $listingId = $listing['main']['listingId'];
 
         try {
-
-            //todo: translations
+            $this->addTranslations($listing, $listingId);
             $this->fillInventory($listingId, $listing);
             $this->addPictures($listingId, $listing);
 
-            throw new \Exception(); //todo: entfernen wenn fertig
             $this->publish($listingId, $listing);
         } catch (\Exception $e) {
             $this->itemHelper->deleteListingsSkus($listingId, $this->settingsHelper->get($this->settingsHelper::SETTINGS_ORDER_REFERRER));
@@ -340,19 +333,24 @@ class StartListingService
         if (isset($listing['main']['processing_max'])) {
             $data['processing_max'] = $listing['main']['processing_max'];
         }
-        /*
-                if (isset($listing['main']['style']) && is_array($listing['main']['style'])) {
-                    foreach($listing['main']['style'] as $style) {
-                        //todo Wird bisher als int übergeben, array benötigt
-                        if (preg_match('@[^\p{L}\p{Nd}\p{Zs}l]u', $style)) {
-                            //todo log
-                            continue;
-                        }
 
-                        $data['style'][] = $style;
-                    }
+        if (isset($listing['main']['style']) && is_string($listing['main']['style'])) {
+            $styles = explode(',', $listing['main']['style']);
+            $counter = 0;
+
+            foreach ($styles as $style) {
+                if (preg_match('@[^\p{L}\p{Nd}\p{Zs}l]u', $style) || $counter > 1) {
+                    $this->getLogger(__FUNCTION__)->addReference('itemId', $listing['main']['itemId'])
+                        //todo übersetzen
+                        ->report('Mapped value for styles contains errors', [$listing['main']['style'], $style]);
+                    continue;
                 }
-        */
+
+                $data['style'][] = $style;
+                $counter++;
+            }
+        }
+
         if (isset($listing['main']['shop_section_id'])) {
             $data['shop_section_id'] = $listing['main']['shop_section_id'];
         }
@@ -589,6 +587,7 @@ class StartListingService
      *
      * @param int $listingId
      * @param $listing
+     * @throws \Exception
      */
     private function addPictures($listingId, $listing)
     {
@@ -602,22 +601,15 @@ class StartListingService
 
         foreach ($list as $image) {
 
-            $test1 = ($image['availabilities']['market'][0] !== -1);
-            $test2 = ($image['availabilities']['market'][0] !== $this->settingsHelper->get($this->settingsHelper::SETTINGS_ORDER_REFERRER));
-
             if ($image['availabilities']['market'][0] !== -1 && $image['availabilities']['market'][0] !== $this->settingsHelper->get($this->settingsHelper::SETTINGS_ORDER_REFERRER)) {
                 continue;
             }
 
             $response = $this->listingImageService->uploadListingImage($listingId, $image['url'], $image['position']);
 
-
-            if (isset($response['results']) && isset($response['results'][0]) && isset($response['results'][0]['listing_image_id'])) {
-
-            }
-
             if (!isset($response['results']) || !is_array($response['results'])
                 || isset($response['results'][0]) || isset($response['results'][0]['listing_image_id'])) {
+
                 if (is_array($response) && isset($response['error_msg'])) {
                     $message = $response['error_msg'];
                 } else {
@@ -653,38 +645,47 @@ class StartListingService
         $this->imageHelper->save($listing['main']['variationId'], json_encode($imageList));
     }
 
+
     /**
-     * Add translations to listing.
-     *
-     * @param Record $record
-     * @param int $listingId
+     * @param array $listing
+     * @param $listingId
+     * @throws \Exception
      */
-    private function addTranslations(Record $record, $listingId)
+    private function addTranslations(array $listing, $listingId)
     {
         foreach ($this->settingsHelper->getShopSettings('exportLanguages',
             [$this->settingsHelper->getShopSettings('mainLanguage', 'de')]) as $language) {
-            if ($language != $this->settingsHelper->getShopSettings('mainLanguage',
-                    'de') && $record->itemDescription[$language]['name1'] && strip_tags($record->itemDescription[$language]['description'])) {
-                try {
-                    $title = trim(preg_replace('/\s+/', ' ', $record->itemDescription[$language]['name1']));
-                    $title = ltrim($title, ' +-!?');
 
+            foreach ($listing['main']['texts'] as $text) {
+                if ($text['lang'] == $this->settingsHelper->getShopSettings('mainLanguage', 'de')
+                    || $text['lang'] != $language
+                    || !$text['name1']
+                    || !strip_tags($text['description'])
+                ) {
+                    continue;
+                }
+                try {
+                    $title = trim(preg_replace('/\s+/', ' ', $text['name1']));
+                    $title = ltrim($title, ' +-!?');
                     $legalInformation = $this->itemHelper->getLegalInformation($language);
+                    $description = html_entity_decode(strip_tags($text['description'] . $legalInformation));
 
                     $data = [
                         'title' => $title,
-                        'description' => html_entity_decode(strip_tags($record->itemDescription[$language]['description'] . $legalInformation)),
+                        'description' => $description
                     ];
 
+                    /*todo: tags need to be transalted as soon as they are implemented
                     if ($record->itemDescription[$language]['keywords']) {
                         $data['tags'] = $this->itemHelper->getTags($record, $language);
                     }
+                    */
 
                     $this->listingTranslationService->createListingTranslation($listingId, $language, $data);
                 } catch (\Exception $ex) {
                     $this->getLogger(__FUNCTION__)
                         ->addReference('etsyListingId', $listingId)
-                        ->addReference('variationId', $record->variationBase->id)
+                        ->addReference('variationId', $listing['main']['variationId'])
                         ->addReference('etsyLanguage', $language)
                         ->error('Etsy::item.translationUpdateError', $ex->getMessage());
                 }
@@ -694,17 +695,15 @@ class StartListingService
 
     /**
      * @param int $listingId
-     * @param int $variationId
+     * @param $listing
      */
-    private
-    function publish($listingId, $listing)
+    private function publish($listingId, $listing)
     {
-//        $data = [
-//            'state' => 'active',
-//        ];
-//
-//        $this->listingService->updateListing($listingId, $data);
+        $data = [
+            'state' => 'active',
+        ];
 
-        //todo: skus aktiv schalten
+        $this->listingService->updateListing($listingId, $data);
+        $this->itemHelper->updateListingSkuStatuses($listing, $this->itemHelper::SKU_STATUS_ACTIVE);
     }
 }
