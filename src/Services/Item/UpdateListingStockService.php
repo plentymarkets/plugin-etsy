@@ -1,8 +1,10 @@
 <?php
+
 namespace Etsy\Services\Item;
 
 use Etsy\Api\Services\ListingInventoryService;
 use Etsy\Helper\SettingsHelper;
+use modules\lib\calendar\lib\DAV\Exception;
 use Plenty\Modules\Item\DataLayer\Models\Record;
 
 use Etsy\Helper\OrderHelper;
@@ -17,7 +19,7 @@ use Plenty\Plugin\Log\Loggable;
  */
 class UpdateListingStockService
 {
-	use Loggable;
+    use Loggable;
 
     /**
      * @var $variationExportService
@@ -34,121 +36,69 @@ class UpdateListingStockService
      */
     private $settingsHelper;
 
-	/**
-	 * @param ItemHelper     $itemHelper
-	 * @param OrderHelper    $orderHelper
-	 * @param ListingService $listingService
-	 */
-	public function __construct(VariationExportServiceContract $variationExportService,
-                                ListingInventoryService $listingInventoryService,
-                                SettingsHelper $settingsHelper)
-	{
-	    $this->variationExportService = $variationExportService;
-	    $this->listingInventoryService = $listingInventoryService;
-	    $this->settingsHelper = $settingsHelper;
-	}
+    /**
+     * @param ItemHelper $itemHelper
+     * @param OrderHelper $orderHelper
+     * @param ListingService $listingService
+     */
+    public function __construct(
+        VariationExportServiceContract $variationExportService,
+        ListingInventoryService $listingInventoryService,
+        SettingsHelper $settingsHelper
+    ) {
+        $this->variationExportService = $variationExportService;
+        $this->listingInventoryService = $listingInventoryService;
+        $this->settingsHelper = $settingsHelper;
+    }
 
-	public function updateStock(array $listing)
-	{
+    public function updateStock(array $listing)
+    {
 
-//	    $listingId = $listing['skus'][0]['parentSku'];
+        $listingId = $listing['main']['skus'][0]['parentSku'];
 
-        $listingId = 674256898;
+        $etsyListing = $this->listingInventoryService->getInventory($listingId);
 
-        $test = $this->listingInventoryService->getInventory($listingId);
+        $products = $etsyListing['results']['products'];
+
+
+        $etsyListing['results']['products'][0]['sku'];
 
         $variationExportService = $this->variationExportService;
 
         $exportPreloadValueList = [];
 
+        foreach ($listing as $variation)
+        {
             $exportPreloadValue = pluginApp(ExportPreloadValue::class, [
-                'itemId' => $listing['itemId'],
-                'variationId' => $listing['variationId']
+                'itemId' => $variation['itemId'],
+                'variationId' => $variation['variationId']
             ]);
 
             $exportPreloadValueList[] = $exportPreloadValue;
+        }
 
 
-
-            $variationExportService->addPreloadTypes([$variationExportService::STOCK]);
-            $variationExportService->preload($exportPreloadValueList);
-            $stock = $variationExportService->getData($variationExportService::STOCK, $listing['variationId']);
+        $variationExportService->addPreloadTypes([$variationExportService::STOCK]);
+        $variationExportService->preload($exportPreloadValueList);
 
 
+        foreach ($products as $key => $product) {
+            if (!isset($product['sku']) || !$product['sku'])
+            {
+                //todo exception handling
+                throw new \Exception('variation not in plenty');
+            }
+            foreach ($listing as $variation) {
+                if ($variation['skus'][0]['sku'] != $product['sku']) {
+                    continue;
+                }
+                $products[$key]['offerings'][0]['quantity'] = $variationExportService->getData($variationExportService::STOCK, $variation['variationId']);
+            }
+        }
 
-            $this->listingInventoryService->updateInventory($listingId, $stock[0]);
+        $data = [];
+        $data['products'] = json_encode($products);
 
-
-
-	    //todo
-		/*
-		$listingId = $record->variationMarketStatus->sku;
-
-		if(!is_null($listingId))
-		{
-			try
-			{
-				$quantity = $this->itemHelper->getStock($record) > 0 ? $this->itemHelper->getStock($record) : 1;
-				$data = [
-					'listing_id' => (int) $listingId,
-					'state'      => $this->isVariationAvailable($record) ? ListingService::STATE_ACTIVE : ListingService::STATE_INACTIVE,
-					'quantity'   => (int) $quantity,
-					'price'      => number_format($record->variationRetailPrice->price, 2),
-				];
-
-				$this->listingService->updateListing($listingId, $data);
-
-				$this->getLogger(__FUNCTION__)
-					->addReference('etsyListingId', $listingId)
-					->addReference('variationId', $record->variationBase->id)
-					->report('Etsy::item.stockUpdateSuccess', $data);
-			}
-			catch(\Exception $ex)
-			{
-				$this->getLogger(__FUNCTION__)
-					->addReference('etsyListingId', $listingId)
-					->addReference('variationId', $record->variationBase->id)
-					->error('Etsy::item.stockUpdateError', $ex->getMessage());
-			}
-		}
-		else
-		{
-			$this->getLogger(__FUNCTION__)
-				->addReference('etsyListingId', $listingId)
-				->addReference('variationId', $record->variationBase->id)
-				->info('Etsy::item.stockUpdateError');
-		}
-		 */
-	}
-
-
-	/**
-	 * Checks if a variation is active and visible for the Etsy marketplace.
-	 *
-	 * @param Record $record
-	 *
-	 * @return bool
-	 */
-//	private function isVariationAvailable(Record $record)
-//	{
-//		if(!$record->variationBase->active)
-//		{
-//			return false;
-//		}
-//
-//		if($this->itemHelper->getStock($record) <= 0)
-//		{
-//			return false;
-//		}
-//
-//		foreach($record->variationLinkMarketplace as $marketLink)
-//		{
-//			if($marketLink->marketplaceId == $this->orderHelper->getReferrerId())
-//			{
-//				return true;
-//			}
-//		}
-//
-//		return false;
-//	}
+        $this->listingInventoryService->updateInventory($listingId, $data);
+    }
 }
