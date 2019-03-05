@@ -72,7 +72,27 @@ class ItemUpdateStockService extends AbstractBatchService
      */
     protected function export(array $catalogResult)
     {
-        //todo do stuff
+        $listings = [];
+
+        foreach ($catalogResult as $variation) {
+
+            if ($variation['isMain'] == true && isset($listing['main']['skus'][0]['sku'])) {
+                $listings[$variation['itemId']]['main'] = $variation;
+                continue;
+            }
+            $listings[$variation['itemId']][] = $variation;
+
+        }
+
+        foreach ($listings as $listing) {
+            try
+            {
+                $this->updateListingsStock($listing);
+
+            } catch (\Exception $exception) {
+                $test = true;
+            }
+        }
 
         /*
 
@@ -91,19 +111,19 @@ class ItemUpdateStockService extends AbstractBatchService
      *
      * @param RecordList $records
      */
-    private function updateListingsStock(RecordList $records)
+    private function updateListingsStock(array $listing)
     {
-        foreach($records as $record)
+        foreach($listing as $variation)
         {
             try
             {
-                $this->updateListingStockService->updateStock($record);
+                $this->updateListingStockService->updateStock($variation);
             }
             catch(\Exception $ex)
             {
                 $this->getLogger(__FUNCTION__)
                     ->setReferenceType('variationId')
-                    ->setReferenceValue($record->variationBase->id)
+                    ->setReferenceValue($listing)
                     ->error('Etsy::item.stockUpdateError', $ex->getMessage());
             }
         }
