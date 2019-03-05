@@ -1,11 +1,15 @@
 <?php
 namespace Etsy\Services\Item;
 
+use Etsy\Api\Services\ListingInventoryService;
+use Etsy\Helper\SettingsHelper;
 use Plenty\Modules\Item\DataLayer\Models\Record;
 
 use Etsy\Helper\OrderHelper;
 use Etsy\Api\Services\ListingService;
 use Etsy\Helper\ItemHelper;
+use Plenty\Modules\Item\Variation\Contracts\VariationExportServiceContract;
+use Plenty\Modules\Item\Variation\Services\ExportPreloadValue\ExportPreloadValue;
 use Plenty\Plugin\Log\Loggable;
 
 /**
@@ -15,39 +19,67 @@ class UpdateListingStockService
 {
 	use Loggable;
 
-	/**
-	 * @var ItemHelper
-	 */
-	private $itemHelper;
+    /**
+     * @var $variationExportService
+     */
+    private $variationExportService;
 
-	/**
-	 * @var OrderHelper
-	 */
-	private $orderHelper;
+    /**
+     * @var listingInventoryService
+     */
+    private $listingInventoryService;
 
-	/**
-	 * @var ListingService
-	 */
-	private $listingService;
+    /**
+     * @var SettingsHelper
+     */
+    private $settingsHelper;
 
 	/**
 	 * @param ItemHelper     $itemHelper
 	 * @param OrderHelper    $orderHelper
 	 * @param ListingService $listingService
 	 */
-	public function __construct(ItemHelper $itemHelper, OrderHelper $orderHelper, ListingService $listingService)
+	public function __construct(VariationExportServiceContract $variationExportService,
+                                ListingInventoryService $listingInventoryService,
+                                SettingsHelper $settingsHelper)
 	{
-		$this->itemHelper     = $itemHelper;
-		$this->orderHelper    = $orderHelper;
-		$this->listingService = $listingService;
+	    $this->variationExportService = $variationExportService;
+	    $this->listingInventoryService = $listingInventoryService;
+	    $this->settingsHelper = $settingsHelper;
 	}
 
-    /**
-     * Updates
-     * @param array $elasticSearchResult
-     */
-	public function updateStock(array $elasticSearchResult)
+	public function updateStock(array $listing)
 	{
+
+//	    $listingId = $listing['skus'][0]['parentSku'];
+
+        $listingId = 674256898;
+
+        $test = $this->listingInventoryService->getInventory($listingId);
+
+        $variationExportService = $this->variationExportService;
+
+        $exportPreloadValueList = [];
+
+            $exportPreloadValue = pluginApp(ExportPreloadValue::class, [
+                'itemId' => $listing['itemId'],
+                'variationId' => $listing['variationId']
+            ]);
+
+            $exportPreloadValueList[] = $exportPreloadValue;
+
+
+
+            $variationExportService->addPreloadTypes([$variationExportService::STOCK]);
+            $variationExportService->preload($exportPreloadValueList);
+            $stock = $variationExportService->getData($variationExportService::STOCK, $listing['variationId']);
+
+
+
+            $this->listingInventoryService->updateInventory($listingId, $stock[0]);
+
+
+
 	    //todo
 		/*
 		$listingId = $record->variationMarketStatus->sku;
@@ -89,6 +121,7 @@ class UpdateListingStockService
 		 */
 	}
 
+
 	/**
 	 * Checks if a variation is active and visible for the Etsy marketplace.
 	 *
@@ -96,26 +129,26 @@ class UpdateListingStockService
 	 *
 	 * @return bool
 	 */
-	private function isVariationAvailable(Record $record)
-	{
-		if(!$record->variationBase->active)
-		{
-			return false;
-		}
-
-		if($this->itemHelper->getStock($record) <= 0)
-		{
-			return false;
-		}
-
-		foreach($record->variationLinkMarketplace as $marketLink)
-		{
-			if($marketLink->marketplaceId == $this->orderHelper->getReferrerId())
-			{
-				return true;
-			}
-		}
-
-		return false;
-	}
+//	private function isVariationAvailable(Record $record)
+//	{
+//		if(!$record->variationBase->active)
+//		{
+//			return false;
+//		}
+//
+//		if($this->itemHelper->getStock($record) <= 0)
+//		{
+//			return false;
+//		}
+//
+//		foreach($record->variationLinkMarketplace as $marketLink)
+//		{
+//			if($marketLink->marketplaceId == $this->orderHelper->getReferrerId())
+//			{
+//				return true;
+//			}
+//		}
+//
+//		return false;
+//	}
 }
