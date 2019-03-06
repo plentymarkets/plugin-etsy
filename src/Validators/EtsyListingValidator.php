@@ -106,16 +106,10 @@ class EtsyListingValidator extends Validator
             return true;
         }
 
-
-
         if (in_array(strtolower($value), $allowed)) {
             return true;
         }
 
         return false;
-    }
-
-    protected function valuesInArray($attribute, $value, $parameters, $validator) {
-
     }
 }

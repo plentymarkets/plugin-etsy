@@ -618,7 +618,22 @@ class StartListingService
      */
     protected function addPictures($listingId, $listing)
     {
+        if (!isset($listing['main']['images']['all'])) {
+            $this->getLogger(__FUNCTION__)->addReference('itemId', $listing['main']['itemId'])
+                //todo übersetzen
+                ->error('Article is not listable', 'Article has no listable images');
+            //todo übersetzen
+            throw new \Exception("Can't list article " . $listing['main']['itemId'] . ". No listable images");
+        }
+
         $list = $listing['main']['images']['all'];
+        
+        foreach ($list as $key => $image) {
+            if (!isset($image['availabilities']['market'][0]) || ($image['availabilities']['market'][0] !== -1
+                && $image['availabilities']['market'][0] !== $this->settingsHelper->get($this->settingsHelper::SETTINGS_ORDER_REFERRER))) {
+                unset($list[$key]);
+            }
+        }
 
         $list = $this->imageHelper->sortImagePosition($list);
 
@@ -627,10 +642,6 @@ class StartListingService
         $list = array_slice($list, 0, 10);
 
         foreach ($list as $image) {
-
-            if ($image['availabilities']['market'][0] !== -1 && $image['availabilities']['market'][0] !== $this->settingsHelper->get($this->settingsHelper::SETTINGS_ORDER_REFERRER)) {
-                continue;
-            }
 
             $response = $this->listingImageService->uploadListingImage($listingId, $image['url'], $image['position']);
 

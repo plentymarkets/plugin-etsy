@@ -2,10 +2,27 @@
 
 namespace Etsy\DataProviders;
 
+use Etsy\Api\Services\ShippingTemplateService;
+use Etsy\Helper\SettingsHelper;
 use Plenty\Modules\Catalog\DataProviders\KeyDataProvider;
 
 class EtsyShippingProfileDataProvider extends KeyDataProvider
 {
+    /**
+     * @var $settingsHelper
+     */
+    protected $settingsHelper;
+
+    /**
+     * @var $shippingTemplateService
+     */
+    protected $shippingTemplateService;
+
+    public function __construct(SettingsHelper $settingsHelper, ShippingTemplateService $shippingTemplateService)
+    {
+        $this->settingsHelper = $settingsHelper;
+        $this->shippingTemplateService = $shippingTemplateService;
+    }
 
     public function getKey(): string
     {
@@ -14,12 +31,19 @@ class EtsyShippingProfileDataProvider extends KeyDataProvider
 
     public function getRows(): array
     {
-        return [
-            [
-                'value' => 67847086057,
-                'label' => 'DE 0,1 USA 0,2 Sonst 0,3 1-2 weeks',
-                'required' => false,
-            ]
-        ];
+        $language = $this->settingsHelper->getShopSettings('mainLanguage', 'de');
+
+        $shippingProfiles = $this->shippingTemplateService->findAllUserShippingProfiles('__SELF__', $language);
+        $data = [];
+
+        foreach ($shippingProfiles as $key => $shippingProfile) {
+            $data[] = [
+                'value' => $shippingProfile['shipping_template_id'],
+                'label' => $shippingProfile['title'],
+                'required' => false
+            ];
+        }
+
+        return $data;
     }
 }
