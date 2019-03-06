@@ -293,7 +293,7 @@ class OrderCreateService
 
         if (is_array($transactions)) {
             foreach ($transactions as $transaction) {
-                $itemVariationId = $this->matchVariationId((string)$transaction['listing_id']);
+                $itemVariationId = $this->matchVariationId($transaction['product_data']['sku']);
                 $variation       = $this->getVariationById($itemVariationId);
 
                 if (!$variation) {
