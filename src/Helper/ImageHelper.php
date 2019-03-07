@@ -70,6 +70,18 @@ class ImageHelper
 		return $default;
 	}
 
+    public function update($id, $value)
+    {
+        return $this->dynamoDbRepo->putItem(SettingsHelper::PLUGIN_NAME, self::TABLE_NAME, [
+            'id' => [
+                DynamoDbRepositoryContract::FIELD_TYPE_STRING => $id
+            ],
+            'value' => [
+                DynamoDbRepositoryContract::FIELD_TYPE_STRING => $value
+            ]
+        ]);
+	}
+
     /**
      * Sort the image array to make it look like the plenty image positions and iterate every position
      * because Etsy image positions start at 1

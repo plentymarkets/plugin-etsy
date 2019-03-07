@@ -1,6 +1,8 @@
 <?php
+
 namespace Etsy\Services\Item;
 
+use Etsy\Api\Services\ListingImageService;
 use Etsy\Api\Services\ListingInventoryService;
 use Etsy\Api\Services\ListingTranslationService;
 use Etsy\Helper\ImageHelper;
@@ -17,36 +19,36 @@ use Plenty\Plugin\Translation\Translator;
  */
 class UpdateListingService
 {
-	use Loggable;
+    use Loggable;
 
-	/**
-	 * @var ConfigRepository
-	 */
-	private $config;
+    /**
+     * @var ConfigRepository
+     */
+    private $config;
 
-	/**
-	 * @var SettingsHelper
-	 */
-	private $settingsHelper;
+    /**
+     * @var SettingsHelper
+     */
+    private $settingsHelper;
 
-	/**
-	 * @var ItemHelper
-	 */
-	private $itemHelper;
+    /**
+     * @var ItemHelper
+     */
+    private $itemHelper;
 
-	/**
-	 * @var ListingService
-	 */
-	private $listingService;
+    /**
+     * @var ListingService
+     */
+    private $listingService;
 
-	/**
-	 * @var ListingTranslationService
-	 */
-	private $listingTranslationService;
-	/**
-	 * @var Translator
-	 */
-	private $translator;
+    /**
+     * @var ListingTranslationService
+     */
+    private $listingTranslationService;
+    /**
+     * @var Translator
+     */
+    private $translator;
 
     /**
      * @var ImageHelper
@@ -59,6 +61,11 @@ class UpdateListingService
     protected $listingInventoryService;
 
     /**
+     * @var ListingImageService
+     */
+    protected $listingImageService;
+
+    /**
      * UpdateListingService constructor.
      * @param ItemHelper $itemHelper
      * @param ConfigRepository $config
@@ -68,116 +75,58 @@ class UpdateListingService
      * @param ListingTranslationService $listingTranslationService
      * @param ListingInventoryService $listingInventoryService
      * @param Translator $translator
+     * @param ListingImageService $listingImageService
      */
-	public function __construct(
-	    ItemHelper $itemHelper,
+    public function __construct(
+        ItemHelper $itemHelper,
         ConfigRepository $config,
         ListingService $listingService,
         SettingsHelper $settingsHelper,
         ImageHelper $imageHelper,
         ListingTranslationService $listingTranslationService,
         ListingInventoryService $listingInventoryService,
-        Translator $translator)
-	{
-		$this->config                    = $config;
-		$this->settingsHelper            = $settingsHelper;
-		$this->itemHelper                = $itemHelper;
-		$this->listingService            = $listingService;
-		$this->listingTranslationService = $listingTranslationService;
-		$this->listingInventoryService = $listingInventoryService;
-		$this->translator = $translator;
-		$this->imageHelper = $imageHelper;
-	}
+        Translator $translator,
+        ListingImageService $listingImageService
+    ) {
+        $this->config = $config;
+        $this->settingsHelper = $settingsHelper;
+        $this->itemHelper = $itemHelper;
+        $this->listingService = $listingService;
+        $this->listingTranslationService = $listingTranslationService;
+        $this->listingInventoryService = $listingInventoryService;
+        $this->translator = $translator;
+        $this->imageHelper = $imageHelper;
+        $this->listingImageService = $listingImageService;
+    }
 
     /**
      * Update the listing
      *
      * @param array $listing
      */
-	public function update(array $listing)
-	{
-	    //todo: an Katalog array anpassen
-	    $listingId = $listing['main']['skus'][0]['parentSku'];
+    public function update(array $listing)
+    {
+        $listingId = $listing['main']['skus'][0]['parentSku'];
 
-	    try {
-	        $this->updateListing($listing, $listingId);
-	        $this->updateInventory($listing, $listingId);
-//	        $this->
-        } catch (\Exception $e){
+        try {
+            $this->updateListing($listing, $listingId);
+            $this->updateInventory($listing, $listingId);
+	        $this->updateImages($listing, $listingId);
+	        $this->addTranslations($listing, $listingId);
+        } catch (\Exception $e) {
 
         }
-
-	    /*
-		$listingId = $record->variationMarketStatus->sku;
-
-		if(!is_null($listingId))
-		{
-			try
-			{
-				$this->addTranslations($record, $listingId);
-				
-				$this->updateListing($record, $listingId);
-
-				// TODO: Pictures in later sprints
-//				$this->addPictures($record, $listingId);
-
-				$this->getLogger(__FUNCTION__)
-				     ->addReference('etsyListingId', $listingId)
-				     ->addReference('variationId', $record->variationBase->id)
-				     ->info('Etsy::item.updateListingSuccess');
-			}
-			catch(\Exception $ex)
-			{
-				if(strpos($ex->getMessage(), 'must be active') !== false)
-				{
-					$this->itemHelper->deleteSku($record->variationMarketStatus->id);
-
-					$this->getLogger(__FUNCTION__)
-					     ->addReference('variationId', $record->variationBase->id)
-					     ->addReference('etsyListingId', $listingId)
-					     ->warning('Etsy::item.skuRemovalSuccess', [
-						     'sku' => $record->variationMarketStatus->sku
-					     ]);
-				}
-
-				if (strpos($ex->getMessage(), 'The listing is not editable, must be active or expired but is removed') !== false)
-				{
-					$this->getLogger(__FUNCTION__)
-						->addReference('variationId', $record->variationBase->id)
-						->addReference('etsyListingId', $listingId)
-						->error('Etsy::item.startListingErrorInvalidSku', [
-							'exception' => $ex->getMessage(),
-							'instruction' => $this->translator->trans('Etsy::instructions.instructionInvalidSku')
-						]);
-				}
-				else
-				{
-					$this->getLogger(__FUNCTION__)
-						->addReference('etsyListingId', $listingId)
-						->addReference('variationId', $record->variationBase->id)
-						->error('Etsy::item.updateListingError', $ex->getMessage());
-				}
-			}
-		}
-		else
-		{
-			$this->getLogger(__FUNCTION__)
-				->addReference('etsyListingId', $listingId)
-				->addReference('variationId', $record->variationBase->id)
-				->info('Etsy::item.updateListingError');
-		}
-		 */
-	}
+    }
 
     /**
      * @param array $listing
      * @param int $listingId
      */
-	private function updateListing(array $listing, int $listingId)
-	{
-	    $data = [];
+    private function updateListing(array $listing, int $listingId)
+    {
+        $data = [];
 
-	    $language = $this->settingsHelper->getShopSettings('mainLanguage', 'de');
+        $language = $this->settingsHelper->getShopSettings('mainLanguage', 'de');
 
         //title and description
         foreach ($listing['main']['texts'] as $text) {
@@ -210,7 +159,7 @@ class UpdateListingService
             $data['tags'] = explode(',', $listing['main']['tags']);
         }
 
-        if (isset($listing['main']['is_private'])){
+        if (isset($listing['main']['is_private'])) {
             $data['is_private'] = ($listing['main']['is_private'] == 1) ? true : false;
         }
 
@@ -218,9 +167,22 @@ class UpdateListingService
             $data['materials'] = explode(',', $listing['main']['materials']);
         }
 
-//        if (isset($listing['main']['style'])){
-//            $data['style'] = explode(',', array_slice($listing['main']['style'], 0, 2));
-//        }
+        if (isset($listing['main']['style']) && is_string($listing['main']['style'])) {
+            $styles = explode(',', $listing['main']['style']);
+            $counter = 0;
+
+            foreach ($styles as $style) {
+                if (preg_match('@[^\p{L}\p{Nd}\p{Zs}l]u', $style) || $counter > 1) {
+                    $this->getLogger(__FUNCTION__)->addReference('itemId', $listing['main']['itemId'])
+                        //todo übersetzen
+                        ->report('Mapped value for styles contains errors', [$listing['main']['style'], $style]);
+                    continue;
+                }
+
+                $data['style'][] = $style;
+                $counter++;
+            }
+        }
 
         if (isset($listing['main']['is_customizable'])) {
             $data['is_customizable'] = (in_array(strtolower($listing['main']['is_customizable']), $boolConvertibleString)) ? true : false;
@@ -228,12 +190,12 @@ class UpdateListingService
 
         if (isset($listing['main']['non_taxable'])) {
             $data['non_taxable'] = (in_array(strtolower($listing['main']['non_taxable']), $boolConvertibleString)) ? true : false;
-
-        if (isset($listing['main']['processing_min'])){
+        }
+        if (isset($listing['main']['processing_min'])) {
             $data['processing_min'] = $listing['main']['processing_min'];
         }
 
-        if (isset($listing['main']['processing_max'])){
+        if (isset($listing['main']['processing_max'])) {
             $data['processing_min'] = $listing['main']['processing_max'];
         }
 
@@ -241,7 +203,7 @@ class UpdateListingService
             $data['is_customizable'] = (in_array(strtolower($listing['main']['is_customizable']), $boolConvertibleString)) ? true : false;
         }
 
-        if (isset($listing['main']['renew'])){
+        if (isset($listing['main']['renew'])) {
             $data['renew'] = (in_array(strtolower($listing['main']['renew']), $boolConvertibleString)) ? true : false;
         }
 
@@ -277,6 +239,7 @@ class UpdateListingService
             $data['shop_section_id'] = $listing['main']['shop_section_id'];
         }
 
+
         $response = $this->listingService->updateListing($listingId, $data, $language);
 
         if (!isset($response['results']) || !is_array($response['results'])) {
@@ -292,13 +255,10 @@ class UpdateListingService
 
             throw new \Exception($message);
         }
-
         $results = (array)$response['results'];
 
         return (int)reset($results)['listing_id'];
-
-	}
-	}
+    }
 
 
     /**
@@ -330,17 +290,8 @@ class UpdateListingService
 
         foreach ($listing as $variation) {
 
-            //initialising property values array for articles with no attributes (single variation)
             $products[$counter]['property_values'] = [];
-            /*
-                        $this->stockRepository->setFilters(['variationId' => $variation['variationId']]);
-                        $stock = $this->stockRepository->listStockByWarehouseType('sales')->getResult()->first();
 
-                        if ($stock->stockNet === NULL || !$variation['isActive'])
-                        {
-                            continue;
-                        }
-            */
             foreach ($variation['attributes'] as $attribute) {
 
                 foreach ($attribute['attribute']['names'] as $name) {
@@ -413,57 +364,119 @@ class UpdateListingService
         ];
 
         $this->listingInventoryService->updateInventory($listingId, $data, $language);
-	}
+    }
 
-    public function updateImages()
+    public function updateImages($listing, $listingId)
     {
-        //todo Wenn Bilder gelöscht, geändert oder hinzugefügt werden müssen sie über die ID gematched werden um
+        $etsyImages = json_decode($this->settingsHelper->get($listing['main']['itemId']));
 
-        $etsyImages = $this->settingsHelper->get($this->imageHelper::TABLE_NAME);
-//        if ($etsyImages)
+        $list = $listing['main']['images']['all'];
 
-	}
+        foreach ($list as $key => $image) {
+            if (!isset($image['availabilities']['market'][0]) || ($image['availabilities']['market'][0] !== -1
+                    && $image['availabilities']['market'][0] !== $this->settingsHelper->get($this->settingsHelper::SETTINGS_ORDER_REFERRER))) {
+                unset($list[$key]);
+            }
+        }
 
-	/**
-	 * Add translations to listing.
-	 *
-	 * @param Record $record
-	 * @param int    $listingId
-	 */
-	private function addTranslations(Record $record, $listingId)
-	{
+        $list = array_slice($list, 0, 10);
 
-	    $mainLanguage = $this->settingsHelper->getShopSettings('mainLanguage', 'de');
-	    $exportLanguages = $this->settingsHelper->getShopSettings('exportLanguages', [$mainLanguage]);
+        foreach ($etsyImages as $etsyKey => $etsyImage){
+            foreach ($list as $plentyKey => $plentyImage){
+                if ($etsyImage['imageId'] == $plentyImage['imageId'])
+                {
+                    unset($list[$plentyKey]);
+                    unset($etsyImages[$etsyKey]);
+                }
+            }
+        }
 
-		foreach($exportLanguages as $language)
-		{
-			if($language != $mainLanguage && $record->itemDescription[$language]['name1'] && strip_tags($record->itemDescription[$language]['description'])) {
-				try
-				{
-					$title = trim(preg_replace('/\s+/', ' ', $record->itemDescription[ $language ]['name1']));
-					$title = ltrim($title, ' +-!?');
-					
-					$legalInformation = $this->itemHelper->getLegalInformation($language);
+        $imageList = [];
 
-					$data = [
+        $list = $this->imageHelper->sortImagePosition($list);
+
+        foreach ($list as $image) {
+
+            $response = $this->listingImageService->uploadListingImage($listingId, $image['url'], $image['position']);
+
+            if (!isset($response['results']) || !is_array($response['results'])
+                || isset($response['results'][0]) || isset($response['results'][0]['listing_image_id'])) {
+
+                if (is_array($response) && isset($response['error_msg'])) {
+                    $message = $response['error_msg'];
+                } else {
+                    if (is_string($response)) {
+                        $message = $response;
+                    } else {
+                        //todo übersetzten
+                        $message = 'Failed to create listing.';
+                    }
+                }
+
+                $this->getLogger(__FUNCTION__)->addReference('imageId', $image['id'])
+                    //todo übersetzen
+                    ->error('Image not listable', $message);
+            }
+
+            $imageList[] = [
+                'imageId' => $image['id'],
+                'listingImageId' => $response['results'][0]['listing_image_id'],
+                'listingId' => $response['results'][0]['listing_id'],
+                'imageUrl' => $image['url']
+            ];
+        }
+
+        foreach ($etsyImages as $etsyImage){
+            $response = $this->listingImageService->deleteListingImage($listingId, $etsyImage['imageId']);
+        }
+
+        $this->imageHelper->update($listing['main']['itemId'], json_encode($imageList));
+
+    }
+    /**
+     * @param array $listing
+     * @param $listingId
+     * @throws \Exception
+     */
+    protected function addTranslations(array $listing, $listingId)
+    {
+        foreach ($this->settingsHelper->getShopSettings('exportLanguages',
+            [$this->settingsHelper->getShopSettings('mainLanguage', 'de')]) as $language) {
+
+            foreach ($listing['main']['texts'] as $text) {
+                if ($text['lang'] == $this->settingsHelper->getShopSettings('mainLanguage', 'de')
+                    || $text['lang'] != $language
+                    || !$text['name1']
+                    || !strip_tags($text['description'])
+                ) {
+                    continue;
+                }
+                try {
+                    $title = trim(preg_replace('/\s+/', ' ', $text['name1']));
+                    $title = ltrim($title, ' +-!?');
+                    $legalInformation = $this->itemHelper->getLegalInformation($language);
+                    $description = html_entity_decode(strip_tags($text['description'] . $legalInformation));
+
+                    $data = [
                         'title' => $title,
-                        'description' => html_entity_decode(strip_tags($record->itemDescription[ $language ]['description'].$legalInformation)),
-					];
+                        'description' => $description
+                    ];
 
+                    /*todo: tags need to be transalted as soon as they are implemented
                     if ($record->itemDescription[$language]['keywords']) {
                         $data['tags'] = $this->itemHelper->getTags($record, $language);
                     }
+                    */
 
-                    $this->listingTranslationService->updateListingTranslation($listingId, $language, $data);
+                    $this->listingTranslationService->createListingTranslation($listingId, $language, $data);
                 } catch (\Exception $ex) {
                     $this->getLogger(__FUNCTION__)
                         ->addReference('etsyListingId', $listingId)
-                        ->addReference('variationId', $record->variationBase->id)
+                        ->addReference('variationId', $listing['main']['variationId'])
                         ->addReference('etsyLanguage', $language)
-						->error('Etsy::item.translationUpdateError', $ex->getMessage());
-				}
-			}
-		}
-	}
+                        ->error('Etsy::item.translationUpdateError', $ex->getMessage());
+                }
+            }
+        }
+    }
 }

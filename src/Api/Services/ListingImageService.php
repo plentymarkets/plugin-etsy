@@ -41,4 +41,18 @@ class ListingImageService
 			'listing_id' => $listingId,
 		], $data);
 	}
+
+    /**
+     * @param $listingId
+     * @param $imageId
+     * @return array
+     * @throws \Exception
+     */
+    public function deleteListingImage($listingId, $imageId)
+    {
+        return $this->client->call('deleteListingImage', [
+            'listing_id' => $listingId,
+            'listing_image_id' => $imageId
+        ]);
+	}
 }
