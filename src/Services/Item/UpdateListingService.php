@@ -385,7 +385,6 @@ class UpdateListingService
             foreach ($list as $plentyKey => $plentyImage){
                 if ($etsyImage['imageId'] == $plentyImage['imageId'])
                 {
-                    unset($list[$plentyKey]);
                     unset($etsyImages[$etsyKey]);
                 }
             }
@@ -427,6 +426,7 @@ class UpdateListingService
         }
 
         foreach ($etsyImages as $etsyImage){
+            //todo response handling
             $response = $this->listingImageService->deleteListingImage($listingId, $etsyImage['imageId']);
         }
 
