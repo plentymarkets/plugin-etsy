@@ -324,11 +324,6 @@ class OrderCreateService
                             'subTypeId' => 6,
                             'value'     => (string)$transaction['listing_id'],
                         ],
-                        [
-                            'typeId'    => 12,
-                            'subTypeId' => 6,
-                            'value'     => (string)$transaction['transaction_id'],
-                        ],
                     ],
                 ];
 
