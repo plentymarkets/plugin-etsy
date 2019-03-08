@@ -680,7 +680,7 @@ class StartListingService
             throw new \Exception("Can't list article " . $listing['main']['itemId'] . ". No listable images");
         }
 
-        $this->imageHelper->save($listing['main']['variationId'], json_encode($imageList));
+        $this->imageHelper->save($listing['main']['itemId'], json_encode($imageList));
     }
 
 
