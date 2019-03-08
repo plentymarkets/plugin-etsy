@@ -2,6 +2,7 @@
 
 namespace Etsy\Services\Batch\Item;
 
+use Etsy\Helper\SettingsHelper;
 use Plenty\Modules\Item\Search\Contracts\VariationElasticSearchScrollRepositoryContract;
 use Plenty\Modules\Item\Variation\Models\Variation;
 use Plenty\Modules\Item\VariationSku\Contracts\VariationSkuRepositoryContract;
@@ -72,6 +73,13 @@ class ItemUpdateStockService extends AbstractBatchService
      */
     protected function export(array $catalogResult)
     {
+
+        try {
+            $this->deleteDeprecatedListing();
+        } catch (\Exception $exception){
+
+        }
+
         $listings = [];
 
         foreach ($catalogResult as $variation) {
@@ -92,17 +100,6 @@ class ItemUpdateStockService extends AbstractBatchService
                 $test = true;
             }
         }
-
-        /*
-
-        if($this->accountHelper->isValidConfig())
-        {
-        $this->deleteDeprecatedListing();
-
-        $this->updateListingsStock($records);
-        }
-
-         */
     }
 
     /**
@@ -142,22 +139,23 @@ class ItemUpdateStockService extends AbstractBatchService
     private function deleteDeprecatedListing()
     {
         $filter = [
-            'marketId' => $this->orderHelper->getReferrerId(),
+            'marketId' => $this->settingshelper->get(SettingsHelper::SETTINGS_ORDER_REFERRER)
         ];
 
         /** @var VariationSkuRepositoryContract $variationSkuRepo */
-        $variationSkuRepo = pluginApp(VariationSkuRepositoryContract::class);
+        $variationSkuRepository = pluginApp(VariationSkuRepositoryContract::class);
 
-        $variationSkuList = $variationSkuRepo->search($filter);
+        $variationSkuList = $variationSkuRepository->search($filter);
 
         /** @var VariationSku $variationSku */
-        foreach($variationSkuList as $variationSku)
+        foreach ($variationSkuList as $variationSku)
         {
-            if($variationSku->deletedAt)
+            if ($variationSku->deletedAt)
             {
-                if($this->deleteListingService->delete($variationSku->sku))
+                if($this->deleteListingService->delete($variationSku->parentSku))
                 {
                     $variationSkuRepo->delete((int) $variationSku->id);
+                    // todo Bilder aus plugin_dynamo_db löschen
                 }
             }
         }
