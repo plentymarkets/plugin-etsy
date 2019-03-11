@@ -138,7 +138,13 @@ class StartListingService
             throw new \Exception('Article is not listable. Missing main variation');
         }
 
-        $listing = $this->createListing($listing);
+        //this should be replaced as soon as there is a suitable Exception class that can have multiple error messages
+        try {
+            $listing = $this->createListing($listing);
+        } catch(\Exception $e) {
+            return;
+        }
+
         $listingId = $listing['main']['listingId'];
 
         try {
@@ -150,52 +156,19 @@ class StartListingService
         } catch (\Exception $e) {
             $this->itemHelper->deleteListingsSkus($listingId, $this->settingsHelper->get($this->settingsHelper::SETTINGS_ORDER_REFERRER));
             $this->listingService->deleteListing($listingId);
-        }
 
-
-        /*
-        $listingId = $this->createListing($record);
-
-        if(!is_null($listingId))
-        {u
-            try
-            {
-                $this->addPictures($record, $listingId);
-
-                $this->addTranslations($record, $listingId);
-
-                $this->publish($listingId, $record->variationBase->id);
-
-                $this->getLogger(__FUNCTION__)
-                     ->addReference('etsyListingId', $listingId)
-                     ->addReference('variationId', $record->variationBase->id)
-                     ->report('Etsy::item.itemExportSuccess');
-            }
-            catch(\Exception $ex)
-            {
-                $this->deleteListingService->delete($listingId);
-
-                $this->getLogger(__FUNCTION__)
-                     ->addReference('variationId', $record->variationBase->id)
-                     ->addReference('etsyListingId', $listingId)
-                     ->warning('Etsy::item.skuRemovalSuccess', [
-                         'sku' => $record->variationMarketStatus->sku
-                     ]);
-
-                $this->getLogger(__FUNCTION__)
-                    ->addReference('variationId', $record->variationBase->id)
-                    ->addReference('etsyListingId', $listingId)
-                    ->error('Etsy::item.startListingError', $ex->getMessage());
-            }
-        }
-        else
-        {
             $this->getLogger(__FUNCTION__)
-                ->setReferenceType('variationId')
-                ->setReferenceValue($record->variationBase->id)
-                ->info('Etsy::item.startListingError');
+                ->addReference('variationId', $listing['main']['variationId'])
+                ->addReference('etsyListingId', $listingId)
+                ->warning('Etsy::item.skuRemovalSuccess', [
+                    'sku' => reset($listing['main']['skus'])['sku']
+                ]);
+
+            $this->getLogger(__FUNCTION__)
+                ->addReference('variationId', $listing['main']['variationId'])
+                ->addReference('etsyListingId', $listingId)
+                ->error('Etsy::item.startListingError', $e->getMessage());
         }
-        */
     }
 
     /**
@@ -225,13 +198,16 @@ class StartListingService
         //loading default currency
         $defaultCurrency = $this->currencyExchangeRepository->getDefaultCurrency();
 
+        //legal information
+        $legalInformation = $this->itemHelper->getLegalInformation($language);
+
         //title and description
         foreach ($listing['main']['texts'] as $text) {
             if ($text['lang'] == $language) {
                 $data['title'] = str_replace(':', ' -', $text['name1']);
                 $data['title'] = ltrim($data['title'], ' +-!?');
 
-                $data['description'] = html_entity_decode(strip_tags($text['description']));
+                $data['description'] = html_entity_decode(strip_tags($text['description'] . $legalInformation));
             }
         }
 
@@ -239,7 +215,7 @@ class StartListingService
         $data['quantity'] = 0;
         $hasActiveVariations = false;
 
-        $variationExportService->addPreloadTypes([$this->variationExportService::STOCK]);
+        $variationExportService->addPreloadTypes([$variationExportService::STOCK]);
         $exportPreloadValueList = [];
 
         foreach ($listing as $variation) {
@@ -292,18 +268,16 @@ class StartListingService
             $hasActiveVariations = true;
         }
 
-        //was ist mit mehreren Versandprofilen?? todo
         //shipping profiles
-        $data['shipping_template_id'] = $listing['main']['shipping_profiles'][0];
+        $data['shipping_template_id'] = reset($listing['main']['shipping_profiles']);
 
         $data['who_made'] = $listing['main']['who_made'];
-        $data['is_supply'] = (in_array(strtolower($listing['main']['is_supply']),
-            self::BOOL_CONVERTIBLE_STRINGS));
+        $data['is_supply'] = in_array(strtolower($listing['main']['is_supply']),
+            self::BOOL_CONVERTIBLE_STRINGS);
         $data['when_made'] = $listing['main']['when_made'];
 
-        //Category todo: umbauen auf Standardkategorie
-        //$data['taxonomy_id'] = $listing['main']['categories'][0];
-        $data['taxonomy_id'] = 1069;
+        //Category
+        $data['taxonomy_id'] = reset($listing['main']['categories']);
 
         //Etsy properties
         if (false) {
@@ -344,13 +318,13 @@ class StartListingService
         }
 
         if (isset($listing['main']['is_customizable'])) {
-            $data['is_customizable'] = (in_array(strtolower($listing['main']['is_customizable']),
-                self::BOOL_CONVERTIBLE_STRINGS));
+            $data['is_customizable'] = in_array(strtolower($listing['main']['is_customizable']),
+                self::BOOL_CONVERTIBLE_STRINGS);
         }
 
         if (isset($listing['main']['non_taxable'])) {
-            $data['non_taxable'] = (in_array(strtolower($listing['main']['non_taxable']),
-                self::BOOL_CONVERTIBLE_STRINGS));
+            $data['non_taxable'] = in_array(strtolower($listing['main']['non_taxable']),
+                self::BOOL_CONVERTIBLE_STRINGS);
         }
 
         if (isset($listing['main']['processing_min'])) {

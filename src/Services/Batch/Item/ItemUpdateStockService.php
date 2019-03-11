@@ -2,6 +2,7 @@
 
 namespace Etsy\Services\Batch\Item;
 
+use Etsy\Helper\ImageHelper;
 use Etsy\Helper\SettingsHelper;
 use Plenty\Modules\Item\Search\Contracts\VariationElasticSearchScrollRepositoryContract;
 use Plenty\Modules\Item\Variation\Models\Variation;
@@ -15,6 +16,7 @@ use Etsy\Helper\OrderHelper;
 use Etsy\Services\Item\DeleteListingService;
 use Etsy\Services\Item\UpdateListingStockService;
 use Etsy\Services\Batch\AbstractBatchService;
+use Plenty\Plugin\Application;
 use Plenty\Plugin\Log\Loggable;
 
 /**
@@ -27,22 +29,27 @@ class ItemUpdateStockService extends AbstractBatchService
     /**
      * @var UpdateListingStockService
      */
-    private $updateListingStockService;
+    protected $updateListingStockService;
 
     /**
      * @var DeleteListingService
      */
-    private $deleteListingService;
+    protected $deleteListingService;
 
     /**
      * @var AccountHelper
      */
-    private $accountHelper;
+    protected $accountHelper;
+
+    /**
+     * @var ImageHelper
+     */
+    protected $imageHelper;
 
     /**
      * @var OrderHelper
      */
-    private $orderHelper;
+    protected $orderHelper;
 
     /**
      * @param UpdateListingStockService      $updateListingStockService
@@ -54,14 +61,17 @@ class ItemUpdateStockService extends AbstractBatchService
         UpdateListingStockService $updateListingStockService,
         DeleteListingService $deleteListingService,
         AccountHelper $accountHelper,
-        OrderHelper $orderHelper)
+        OrderHelper $orderHelper,
+        ImageHelper $imageHelper,
+        Application $application)
     {
         $this->updateListingStockService = $updateListingStockService;
         $this->deleteListingService      = $deleteListingService;
         $this->accountHelper             = $accountHelper;
         $this->orderHelper               = $orderHelper;
+        $this->imageHelper               = $imageHelper;
 
-        parent::__construct(pluginApp(VariationElasticSearchScrollRepositoryContract::class));
+        parent::__construct(pluginApp(VariationElasticSearchScrollRepositoryContract::class), $application);
     }
 
     /**
@@ -73,7 +83,6 @@ class ItemUpdateStockService extends AbstractBatchService
      */
     protected function export(array $catalogResult)
     {
-
         try {
             $this->deleteDeprecatedListing();
         } catch (\Exception $exception){
@@ -107,7 +116,7 @@ class ItemUpdateStockService extends AbstractBatchService
      *
      * @param RecordList $records
      */
-    private function updateListingsStock(array $listing)
+    protected function updateListingsStock(array $listing)
     {
             try
             {
@@ -136,27 +145,40 @@ class ItemUpdateStockService extends AbstractBatchService
     /**
      * Delete listings on Etsy and the entry in the market status table if the variation was deleted.
      */
-    private function deleteDeprecatedListing()
+    protected function deleteDeprecatedListing()
     {
         $filter = [
             'marketId' => $this->settingshelper->get(SettingsHelper::SETTINGS_ORDER_REFERRER)
         ];
 
-        /** @var VariationSkuRepositoryContract $variationSkuRepo */
+        /** @var VariationSkuRepositoryContract $variationSkuRepository */
         $variationSkuRepository = pluginApp(VariationSkuRepositoryContract::class);
 
         $variationSkuList = $variationSkuRepository->search($filter);
 
+        //each listings id linked to true or false -> true means that the listing has active variations
+        $listings = [];
+
         /** @var VariationSku $variationSku */
-        foreach ($variationSkuList as $variationSku)
+        foreach ($variationSkuList as $key => $variationSku)
         {
-            if ($variationSku->deletedAt)
-            {
-                if($this->deleteListingService->delete($variationSku->parentSku))
-                {
-                    $variationSkuRepo->delete((int) $variationSku->id);
-                    // todo Bilder aus plugin_dynamo_db löschen
-                }
+            if (!isset($listings[$variationSku->parentSku])) {
+                $listings[$variationSku->parentSku] = false;
+            }
+
+            if (!isset($variationSku->deletedAt)) {
+                $listings[$variationSku->parentSku] = true;
+                continue;
+            }
+
+            $variationSkuRepository->delete((int) $variationSku->id);
+            $this->imageHelper->delete($variationSku->variationId);
+            unset($variationSkuList[$key]);
+        }
+
+        foreach ($listings as $listingId => $hasVariations) {
+            if (!$hasVariations) {
+                $this->deleteListingService->delete($listingId);
             }
         }
     }

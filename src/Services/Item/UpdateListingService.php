@@ -6,8 +6,11 @@ use Etsy\Api\Services\ListingImageService;
 use Etsy\Api\Services\ListingInventoryService;
 use Etsy\Api\Services\ListingTranslationService;
 use Etsy\Helper\ImageHelper;
+use Etsy\Validators\EtsyListingValidator;
+use Plenty\Modules\Frontend\Contracts\CurrencyExchangeRepositoryContract;
+use Plenty\Modules\Item\Variation\Contracts\VariationExportServiceContract;
+use Plenty\Modules\Item\Variation\Services\ExportPreloadValue\ExportPreloadValue;
 use Plenty\Plugin\ConfigRepository;
-use Plenty\Modules\Item\DataLayer\Models\Record;
 use Etsy\Api\Services\ListingService;
 use Etsy\Helper\ItemHelper;
 use Etsy\Helper\SettingsHelper;
@@ -66,6 +69,26 @@ class UpdateListingService
     protected $listingImageService;
 
     /**
+     * @var $variationExportService
+     */
+    protected $variationExportService;
+
+    /**
+     * @var CurrencyExchangeRepositoryContract
+     */
+    protected $currencyExchangeRepository;
+
+    /**
+     * String values which can be used in properties to represent true
+     */
+    const BOOL_CONVERTIBLE_STRINGS = ['1', 'y', 'true'];
+
+    /**
+     * number of decimals an amount of money gets rounded to
+     */
+    const moneyDecimals = 2;
+
+    /**
      * UpdateListingService constructor.
      * @param ItemHelper $itemHelper
      * @param ConfigRepository $config
@@ -76,6 +99,7 @@ class UpdateListingService
      * @param ListingInventoryService $listingInventoryService
      * @param Translator $translator
      * @param ListingImageService $listingImageService
+     * @param CurrencyExchangeRepositoryContract $currencyExchangeRepository
      */
     public function __construct(
         ItemHelper $itemHelper,
@@ -86,7 +110,9 @@ class UpdateListingService
         ListingTranslationService $listingTranslationService,
         ListingInventoryService $listingInventoryService,
         Translator $translator,
-        ListingImageService $listingImageService
+        ListingImageService $listingImageService,
+        VariationExportServiceContract $variationExportService,
+        CurrencyExchangeRepositoryContract $currencyExchangeRepository
     ) {
         $this->config = $config;
         $this->settingsHelper = $settingsHelper;
@@ -97,6 +123,8 @@ class UpdateListingService
         $this->translator = $translator;
         $this->imageHelper = $imageHelper;
         $this->listingImageService = $listingImageService;
+        $this->currencyExchangeRepository = $currencyExchangeRepository;
+        $this->variationExportService = $variationExportService;
     }
 
     /**
@@ -121,12 +149,27 @@ class UpdateListingService
     /**
      * @param array $listing
      * @param int $listingId
+     * @return int
+     * @throws \Exception
      */
     private function updateListing(array $listing, int $listingId)
     {
+        //todo Alle Exceptions und Loggernachrichten mit translator befüllen
         $data = [];
+        $failedVariations = [];
+        $variationExportService = $this->variationExportService;
+        EtsyListingValidator::validateOrFail($listing['main']);
+
+
+        $data['state'] = 'draft';
 
         $language = $this->settingsHelper->getShopSettings('mainLanguage', 'de');
+        //loading etsy currency
+        $shops = json_decode($this->settingsHelper->get($this->settingsHelper::SETTINGS_ETSY_SHOPS), true);
+        $etsyCurrency = reset($shops)['currency_code'];
+
+        //loading default currency
+        $defaultCurrency = $this->currencyExchangeRepository->getDefaultCurrency();
 
         //title and description
         foreach ($listing['main']['texts'] as $text) {
@@ -134,77 +177,73 @@ class UpdateListingService
                 $data['title'] = str_replace(':', ' -', $text['name1']);
                 $data['title'] = ltrim($data['title'], ' +-!?');
 
-
                 $data['description'] = html_entity_decode(strip_tags($text['description']));
             }
         }
 
-        $boolConvertibleString = ['1', 'y', 'true'];
+        //quantity & price
+        $data['quantity'] = 0;
+        $hasActiveVariations = false;
 
-        //was ist mit mehreren Versandprofilen?? todo
-        $data['shipping_template_id'] = $listing['main']['shipping_profiles'][0];
+        $variationExportService->addPreloadTypes([$this->variationExportService::STOCK]);
+        $exportPreloadValueList = [];
 
-        //who_made -> gemappte eigenschaft des kunden
+        foreach ($listing as $variation) {
+            $exportPreloadValue = pluginApp(ExportPreloadValue::class, [
+                'itemId' => $variation['itemId'],
+                'variationId' => $variation['variationId']
+            ]);
+
+            $exportPreloadValueList[] = $exportPreloadValue;
+        }
+
+        foreach ($listing as $key => $variation) {
+            if (!$variation['isActive']) {
+               // if (isset(reset($variation['skus'])))
+                //$this->itemHelper->de
+                //todo sku der variante löschen
+                continue;
+            }
+
+            $listing[$key]['failed'] = false;
+
+            if (!isset($variation['sales_price'])) {
+                $listing[$key]['failed'] = true;
+                //todo übersetzten
+                $failedVariations[$variation['variationId']][] = 'Variation has no sales price for Etsy';
+            }
+
+            if ($listing[$key]['failed']) continue;
+
+            if (!isset($data['price']) || $data['price'] > $variation['sales_price']) {
+                if ($defaultCurrency == $etsyCurrency) {
+                    $data['price'] = (float)$variation['sales_price'];
+                } else {
+                    $data['price'] = $this->currencyExchangeRepository->convertFromDefaultCurrency($etsyCurrency,
+                        (float) $variation['sales_price'],
+                        $this->currencyExchangeRepository->getExchangeRatioByCurrency($etsyCurrency));
+                    $data['price'] = round($data['price'], self::moneyDecimals);
+                }
+            }
+
+            $hasActiveVariations = true;
+        }
+
+        //shipping profiles
+        $data['shipping_template_id'] = reset($listing['main']['shipping_profiles']);
+
         $data['who_made'] = $listing['main']['who_made'];
-        //is_supply ->
-        $data['is_supply'] = ($listing['main']['is_supply'] == 1) ? true : false;
-        //when_made -> ^
+        $data['is_supply'] = in_array(strtolower($listing['main']['is_supply']),
+            self::BOOL_CONVERTIBLE_STRINGS);
         $data['when_made'] = $listing['main']['when_made'];
 
-        //Kategorie todo: umbauen auf Standardkategorie
-        $data['taxonomy_id'] = $listing['main']['categories'][0];
+        //Category
+        $data['taxonomy_id'] = reset($listing['main']['categories']);
 
-
-        if (isset($listing['main']['tags'])) {
-            $data['tags'] = explode(',', $listing['main']['tags']);
-        }
-
-        if (isset($listing['main']['is_private'])) {
-            $data['is_private'] = ($listing['main']['is_private'] == 1) ? true : false;
-        }
-
-        if (isset($listing['main']['materials'])) {
-            $data['materials'] = explode(',', $listing['main']['materials']);
-        }
-
-        if (isset($listing['main']['style']) && is_string($listing['main']['style'])) {
-            $styles = explode(',', $listing['main']['style']);
-            $counter = 0;
-
-            foreach ($styles as $style) {
-                if (preg_match('@[^\p{L}\p{Nd}\p{Zs}l]u', $style) || $counter > 1) {
-                    $this->getLogger(__FUNCTION__)->addReference('itemId', $listing['main']['itemId'])
-                        //todo übersetzen
-                        ->report('Mapped value for styles contains errors', [$listing['main']['style'], $style]);
-                    continue;
-                }
-
-                $data['style'][] = $style;
-                $counter++;
-            }
-        }
-
-        if (isset($listing['main']['is_customizable'])) {
-            $data['is_customizable'] = (in_array(strtolower($listing['main']['is_customizable']), $boolConvertibleString)) ? true : false;
-        }
-
-        if (isset($listing['main']['non_taxable'])) {
-            $data['non_taxable'] = (in_array(strtolower($listing['main']['non_taxable']), $boolConvertibleString)) ? true : false;
-        }
-        if (isset($listing['main']['processing_min'])) {
-            $data['processing_min'] = $listing['main']['processing_min'];
-        }
-
-        if (isset($listing['main']['processing_max'])) {
-            $data['processing_min'] = $listing['main']['processing_max'];
-        }
-
-        if (isset($listing['main']['is_customizable'])) {
-            $data['is_customizable'] = (in_array(strtolower($listing['main']['is_customizable']), $boolConvertibleString)) ? true : false;
-        }
-
-        if (isset($listing['main']['renew'])) {
-            $data['renew'] = (in_array(strtolower($listing['main']['renew']), $boolConvertibleString)) ? true : false;
+        //Etsy properties
+        if (false) {
+            //todo: Still need to decide how to map tags for Etsy (plenty tags from main variation or maybe properties?)
+            $data['tags'] = '';
         }
 
         if (isset($listing['main']['occasion'])) {
@@ -235,11 +274,94 @@ class UpdateListingService
             $data['item_dimensions_unit'] = 'mm';
         }
 
+        if (isset($listing['main']['materials'])) {
+            $data['materials'] = explode(',', $listing['main']['materials']);
+        }
+
+        if (isset($listing['main']['is_customizable'])) {
+            $data['is_customizable'] = in_array(strtolower($listing['main']['is_customizable']),
+                self::BOOL_CONVERTIBLE_STRINGS);
+        }
+
+        if (isset($listing['main']['non_taxable'])) {
+            $data['non_taxable'] = in_array(strtolower($listing['main']['non_taxable']),
+                self::BOOL_CONVERTIBLE_STRINGS);
+        }
+
+        if (isset($listing['main']['processing_min'])) {
+            $data['processing_min'] = $listing['main']['processing_min'];
+        }
+
+        if (isset($listing['main']['processing_max'])) {
+            $data['processing_max'] = $listing['main']['processing_max'];
+        }
+
+        if (isset($listing['main']['style']) && is_string($listing['main']['style'])) {
+            $styles = explode(',', $listing['main']['style']);
+            $counter = 0;
+
+            foreach ($styles as $style) {
+                if (preg_match('@[^\p{L}\p{Nd}\p{Zs}l]u', $style) || $counter > 1) {
+                    $this->getLogger(__FUNCTION__)->addReference('itemId', $listing['main']['itemId'])
+                        //todo übersetzen
+                        ->report('Mapped value for styles contains errors', [$listing['main']['style'], $style]);
+                    continue;
+                }
+
+                $data['style'][] = $style;
+                $counter++;
+            }
+        }
+
         if (isset($listing['main']['shop_section_id'])) {
             $data['shop_section_id'] = $listing['main']['shop_section_id'];
         }
 
+        $articleFailed = false;
+        $articleErrors = [];
 
+        //logging article errors
+        if (!$hasActiveVariations) {
+            $articleFailed = true;
+            //todo übersetzen
+            $articleErrors[] = 'No listable variations';
+        }
+
+        if ((!isset($data['title']) || $data['title'] == '')
+            || (!isset($data['description']) || $data['description'] == '')) {
+            $articleFailed = true;
+            //todo übersetzen
+            $articleErrors[] = 'Title and description required';
+        }
+
+        if (strlen($data['title']) > 140) {
+            $articleFailed = true;
+            //todo übersetzen
+            $articleErrors[] = 'Title can not be longer than 140 characters';
+        }
+
+        if (count($listing['main']['attributes']) > 2) {
+            $articleFailed = true;
+            //todo übersetzen
+            $articleErrors[] = 'Article is not allowed to have more than 2 attributes';
+        }
+
+        //Logging failed variations
+        foreach ($failedVariations as $id => $errors) {
+            $this->getLogger(__FUNCTION__)->addReference('variationId', $id)
+                //todo übersetzten
+                ->error('Variation is not listable', $errors);
+        }
+
+        if ($articleFailed) {
+            $this->getLogger(__FUNCTION__)->addReference('itemId', $listing['main']['itemId'])
+                //todo übersetzen
+                ->error('Article is not listable', $articleErrors);
+
+            $this->listingService->updateListing($listingId, ['state' => 'inactive']);
+
+            throw new \Exception('Listing of article' . $listing['main']['itemId'] . ' got set to inactive');
+        }
         $response = $this->listingService->updateListing($listingId, $data, $language);
 
         if (!isset($response['results']) || !is_array($response['results'])) {
@@ -249,7 +371,7 @@ class UpdateListingService
                 if (is_string($response)) {
                     $message = $response;
                 } else {
-                    $message = 'Failed to create listing.';
+                    $message = 'Failed to update listing.';
                 }
             }
 
@@ -260,21 +382,16 @@ class UpdateListingService
         return (int)reset($results)['listing_id'];
     }
 
-
     /**
      * @param array $listing
      * @param int $listingId
+     * @throws \Exception
      */
     public function updateInventory(array $listing, int $listingId)
     {
-
         $language = $this->settingsHelper->getShopSettings('mainLanguage', 'de');
         $products = [];
         $dependencies = [];
-
-        if (count($listing['main']['attributes']) > 2) {
-            throw new \Exception("Can't list article " . $listing['main']['itemId'] . ". Too many attributes.");
-        }
 
         if (isset($listing['main']['attributes'][0])) {
             $attributeOneId = $listing['main']['attributes'][0]['attributeId'];
@@ -424,6 +541,7 @@ class UpdateListingService
                 'imageUrl' => $image['url']
             ];
         }
+
 
         foreach ($etsyImages as $etsyImage){
             //todo response handling

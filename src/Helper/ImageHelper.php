@@ -26,6 +26,14 @@ class ImageHelper
 		$this->dynamoDbRepo = $dynamoDbRepository;
 	}
 
+	public function delete($id) {
+        return $this->dynamoDbRepo->deleteItem(SettingsHelper::PLUGIN_NAME, self::TABLE_NAME, [
+            'id' => [
+                DynamoDbRepositoryContract::FIELD_TYPE_STRING => $id
+            ]
+        ]);
+    }
+
 	/**
 	 * Save image data to database.
 	 *

@@ -26,22 +26,22 @@ class ItemExportService extends AbstractBatchService
     /**
      * @var Application
      */
-    private $app;
+    protected $app;
 
     /**
      * @var StartListingService
      */
-    private $startService;
+    protected $startService;
 
     /**
      * @var UpdateListingService
      */
-    private $updateService;
+    protected $updateService;
 
     /**
      * @var Translator
      */
-    private $translator;
+    protected $translator;
 
     /**
      * @var SettingsHelper
@@ -103,7 +103,13 @@ class ItemExportService extends AbstractBatchService
                     $this->startService->start($listing);
                 }
             } catch (\Exception $exception) {
-                $test = true;
+                //todo übersetzen
+                $this->getLogger(__FUNCTION__)
+                    ->addReference('itemId', $listing['main']['itemId'])
+                    ->warning('Listing export error', [
+                        $exception->getMessage()
+                    ]);
+            }
             }
         }
     }
@@ -113,7 +119,7 @@ class ItemExportService extends AbstractBatchService
      * @param array $listing
      * @return bool
      */
-    private function isListingCreated(array $listing):bool
+    protected function isListingCreated(array $listing):bool
     {
         if (isset($listing['main']['skus'][0]['sku']))
         {
