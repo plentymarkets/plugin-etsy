@@ -19,7 +19,7 @@
   "type": "general",
   "serviceProvider": "Etsy\\EtsyServiceProvider",
   "dependencies": {
-    "inakiabt/etsy-php": "dev-master"
+    "hmalicha/etsy-php": "dev-master"
   },
   "runOnBuild": [
     "Etsy\\Migrations\\CreatePaymentMethod",
