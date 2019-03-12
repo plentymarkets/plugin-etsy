@@ -2,18 +2,22 @@
 
 namespace Etsy\Services\Batch;
 
+use Etsy\Helper\ImageHelper;
 use Etsy\Helper\SettingsHelper;
+use Etsy\Services\Item\DeleteListingService;
 use Plenty\Modules\Catalog\Contracts\CatalogExportRepositoryContract;
 use Plenty\Modules\Catalog\Contracts\CatalogExportServiceContract;
 use Plenty\Modules\Catalog\Contracts\CatalogRepositoryContract;
 use Plenty\Modules\Item\Search\Contracts\VariationElasticSearchScrollRepositoryContract;
-use Plenty\Modules\System\Contracts\WebstoreConfigurationRepositoryContract;
+use Plenty\Modules\Item\VariationSku\Contracts\VariationSkuRepositoryContract;
+use Plenty\Modules\Item\VariationSku\Models\VariationSku;
 
 /**
  * Class AbstractBatchService
  */
 abstract class AbstractBatchService
 {
+
     /**
      * template uuid
      */
@@ -66,11 +70,58 @@ abstract class AbstractBatchService
      */
     final public function run()
     {
+        $this->deleteDeprecatedListing();
+
         $result = $this->catalogExportService->getResult();
 
-       foreach ($result as $page) {
-           $this->export($page);
-       }
+        foreach ($result as $page) {
+            $this->export($page);
+        }
+    }
+
+
+    /**
+     * Delete listings on Etsy and the entry in the market status table if the variation was deleted.
+     */
+    private function deleteDeprecatedListing()
+    {
+        $imageHelper = pluginApp(ImageHelper::class);
+        $deleteListingService = pluginApp(DeleteListingService::class);
+
+        $filter = [
+            'marketId' => $this->settingshelper->get(SettingsHelper::SETTINGS_ORDER_REFERRER)
+        ];
+
+        /** @var VariationSkuRepositoryContract $variationSkuRepository */
+        $variationSkuRepository = pluginApp(VariationSkuRepositoryContract::class);
+
+        $variationSkuList = $variationSkuRepository->search($filter);
+
+        //each listings id linked to true or false -> true means that the listing has active variations
+        $listings = [];
+
+        /** @var VariationSku $variationSku */
+        foreach ($variationSkuList as $key => $variationSku)
+        {
+            if (!isset($listings[$variationSku->parentSku])) {
+                $listings[$variationSku->parentSku] = false;
+            }
+
+            if (!isset($variationSku->deletedAt)) {
+                $listings[$variationSku->parentSku] = true;
+                continue;
+            }
+
+            $variationSkuRepository->delete((int) $variationSku->id);
+            $imageHelper->delete($variationSku->variationId);
+            unset($variationSkuList[$key]);
+        }
+
+        foreach ($listings as $listingId => $hasVariations) {
+            if (!$hasVariations) {
+                $deleteListingService->delete($listingId);
+            }
+        }
     }
 
     /**
