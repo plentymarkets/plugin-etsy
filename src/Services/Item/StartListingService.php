@@ -145,19 +145,20 @@ class StartListingService
      */
     public function start(array $listing)
     {
-        //todo: Bilder updaten/löschen (bei uns)
         if (!isset($listing['main'])) {
             $this->getLogger(__FUNCTION__)->addReference('itemId', $listing['main']['itemId'])
-                //todo übersetzen
-                ->error('Article is not listable', 'Missing main variation');
-
-            throw new \Exception('Article is not listable. Missing main variation');
+                ->error( $this->translator->trans(EtsyServiceProvider::PLUGIN_NAME . '::item.startListingError'),
+                    $this->translator->trans(EtsyServiceProvider::PLUGIN_NAME . '::log.noMainVariation');
+            return;
         }
 
         //this should be replaced as soon as there is a suitable Exception class that can have multiple error messages
         try {
             $listing = $this->createListing($listing);
-        } catch(\Exception $e) {
+        } catch(ListingException $listingException) {
+            $this->getLogger(__FUNCTION__)
+                ->addReference('itemId', $listing['main']['itemId'])
+                ->error($listingException->getMessage(), $listingException->getMessageBag());
             return;
         }
 
@@ -171,7 +172,7 @@ class StartListingService
 
             throw new \Exception('nur tzum testen');
             $this->publish($listingId, $listing);
-        }catch (ListingException $listingException) {
+        } catch (ListingException $listingException) {
             $skus = [];
             foreach ($listing as $variation) {
                 $sku = $this->itemHelper->getVariationSku($variation['variationId']);
@@ -195,22 +196,28 @@ class StartListingService
                 ->error($listingException->getMessage(), $listingException->getMessageBag());
         }
 
-        catch (\Exception $e) {
-            //todo
-            $this->itemHelper->deleteListingsSkus($listingId, $this->settingsHelper->get($this->settingsHelper::SETTINGS_ORDER_REFERRER));
-            $this->listingService->deleteListing($listingId);
+        catch (\Exception $exception) {
+            $skus = [];
+            foreach ($listing as $variation) {
+                $sku = $this->itemHelper->getVariationSku($variation['variationId']);
+                if ($sku) $skus[$variation['variationId']] = $sku->sku;
+            }
 
-            $this->getLogger(__FUNCTION__)
-                ->addReference('variationId', $listing['main']['variationId'])
-                ->addReference('etsyListingId', $listingId)
-                ->warning('Etsy::item.skuRemovalSuccess', [
-                    'sku' => reset($listing['main']['skus'])['sku']
-                ]);
+            if (count($skus)) {
+                $this->itemHelper->deleteListingsSkus($listingId, $this->settingsHelper->get($this->settingsHelper::SETTINGS_ORDER_REFERRER));
+
+                $this->getLogger(__FUNCTION__)
+                    ->addReference('itemId', $listing['main']['itemId'])
+                    ->addReference('etsyListingId', $listingId)
+                    ->warning('Etsy::item.skuRemovalSuccess', $skus);
+            }
+
+            $this->listingService->deleteListing($listingId);
 
             $this->getLogger(__FUNCTION__)
                 ->addReference('itemId', $listing['main']['itemId'])
                 ->addReference('etsyListingId', $listingId)
-                ->error('Etsy::item.startListingError', $e->getMessage());
+                ->error($exception->getMessage());
         }
     }
 
@@ -451,9 +458,15 @@ class StartListingService
                 $failedVariations[$variationId] = implode(",\n", $variationErrors);
             }
 
-            $errors = array_merge($articleErrors, $failedVariations);
-            $messageBag = new MessageBag($errors);
-            throw new ListingException($messageBag, $exceptionMessage);
+            if ($articleFailed) {
+                $errors = array_merge($articleErrors, $failedVariations);
+                $messageBag = new MessageBag($errors);
+                throw new ListingException($messageBag, $exceptionMessage);
+            }
+
+            $this->getLogger(__FUNCTION__)
+                ->addReference('itemId', $listing['main']['itemId'])
+                ->error($exceptionMessage, $failedVariations);
         }
 
         $response = $this->listingService->createListing($language, $data);
@@ -617,14 +630,7 @@ class StartListingService
             $counter++;
         }
 
-        //Logging failed variations
-        foreach ($failedVariations as $id => $errors) {
-            $this->getLogger(__FUNCTION__)->addReference('variationId', $id)
-                //todo übersetzten
-                ->error('Variation is not listable', $errors);
-        }
-
-        //logging failed article
+        //logging failed article / variations
         if (!$hasActiveVariations || count($failedVariations)) {
             $exceptionMessage = (!$hasActiveVariations) ? 'log.articleNotListable' : 'log.variationsNotListed';
 
@@ -632,10 +638,17 @@ class StartListingService
                 $failedVariations[$variationId] = implode(",\n", $variationErrors);
             }
 
-            $errors = array_unshift($failedVariations, $this->translator
-                ->trans(EtsyServiceProvider::PLUGIN_NAME . '::log.noVariations'));
-            $messageBag = new MessageBag($errors);
-            throw new ListingException($messageBag, $exceptionMessage);
+            if (!$hasActiveVariations) {
+                $errors = array_unshift($failedVariations, $this->translator
+                    ->trans(EtsyServiceProvider::PLUGIN_NAME . '::log.noVariations'));
+                $messageBag = new MessageBag($errors);
+                throw new ListingException($messageBag, $exceptionMessage);
+            }
+
+            $this->getLogger(__FUNCTION__)
+                ->addReference('itemId', $listing['main']['itemId'])
+                ->addReference('etsyListingId', $listingId)
+                ->error($exceptionMessage, $failedVariations);
         }
 
         $data = [
