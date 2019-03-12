@@ -62,8 +62,7 @@ class ItemUpdateStockService extends AbstractBatchService
         DeleteListingService $deleteListingService,
         AccountHelper $accountHelper,
         OrderHelper $orderHelper,
-        ImageHelper $imageHelper,
-        Application $application)
+        ImageHelper $imageHelper)
     {
         $this->updateListingStockService = $updateListingStockService;
         $this->deleteListingService      = $deleteListingService;
@@ -71,7 +70,7 @@ class ItemUpdateStockService extends AbstractBatchService
         $this->orderHelper               = $orderHelper;
         $this->imageHelper               = $imageHelper;
 
-        parent::__construct(pluginApp(VariationElasticSearchScrollRepositoryContract::class), $application);
+        parent::__construct(pluginApp(VariationElasticSearchScrollRepositoryContract::class));
     }
 
     /**
@@ -83,12 +82,6 @@ class ItemUpdateStockService extends AbstractBatchService
      */
     protected function export(array $catalogResult)
     {
-        try {
-            $this->deleteDeprecatedListing();
-        } catch (\Exception $exception){
-
-        }
-
         $listings = [];
 
         foreach ($catalogResult as $variation) {
@@ -140,46 +133,5 @@ class ItemUpdateStockService extends AbstractBatchService
                     ->setReferenceValue($listing)
                     ->error('Etsy::item.stockUpdateError', $ex->getMessage());
             }
-    }
-
-    /**
-     * Delete listings on Etsy and the entry in the market status table if the variation was deleted.
-     */
-    protected function deleteDeprecatedListing()
-    {
-        $filter = [
-            'marketId' => $this->settingshelper->get(SettingsHelper::SETTINGS_ORDER_REFERRER)
-        ];
-
-        /** @var VariationSkuRepositoryContract $variationSkuRepository */
-        $variationSkuRepository = pluginApp(VariationSkuRepositoryContract::class);
-
-        $variationSkuList = $variationSkuRepository->search($filter);
-
-        //each listings id linked to true or false -> true means that the listing has active variations
-        $listings = [];
-
-        /** @var VariationSku $variationSku */
-        foreach ($variationSkuList as $key => $variationSku)
-        {
-            if (!isset($listings[$variationSku->parentSku])) {
-                $listings[$variationSku->parentSku] = false;
-            }
-
-            if (!isset($variationSku->deletedAt)) {
-                $listings[$variationSku->parentSku] = true;
-                continue;
-            }
-
-            $variationSkuRepository->delete((int) $variationSku->id);
-            $this->imageHelper->delete($variationSku->variationId);
-            unset($variationSkuList[$key]);
-        }
-
-        foreach ($listings as $listingId => $hasVariations) {
-            if (!$hasVariations) {
-                $this->deleteListingService->delete($listingId);
-            }
-        }
     }
 }
