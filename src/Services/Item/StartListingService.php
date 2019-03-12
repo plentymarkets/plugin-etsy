@@ -185,7 +185,7 @@ class StartListingService
                 $this->getLogger(__FUNCTION__)
                     ->addReference('itemId', $listing['main']['itemId'])
                     ->addReference('etsyListingId', $listingId)
-                    ->warning('Etsy::item.skuRemovalSuccess', $skus);
+                    ->report(EtsyServiceProvider::PLUGIN_NAME.'::item.skuRemovalSuccess', $skus);
             }
 
             $this->listingService->deleteListing($listingId);
@@ -209,7 +209,7 @@ class StartListingService
                 $this->getLogger(__FUNCTION__)
                     ->addReference('itemId', $listing['main']['itemId'])
                     ->addReference('etsyListingId', $listingId)
-                    ->warning('Etsy::item.skuRemovalSuccess', $skus);
+                    ->report(EtsyServiceProvider::PLUGIN_NAME.'::item.skuRemovalSuccess', $skus);
             }
 
             $this->listingService->deleteListing($listingId);
