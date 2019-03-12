@@ -19,24 +19,6 @@
       "menu": "settings/markets/etsy",
       "urlKey": "etsy-legal-information",
       "entryPoint": "index.html?action=legal-information"
-    },
-    {
-      "label": "menu.shippingProfiles",
-      "menu": "settings/markets/etsy",
-      "urlKey": "etsy-shipping-profiles",
-      "entryPoint": "index.html?action=shippingProfiles"
-    },
-    {
-      "label": "menu.categories",
-      "menu": "settings/markets/etsy",
-      "urlKey": "etsy-categories",
-      "entryPoint": "index.html?action=taxonomies"
-    },
-    {
-      "label": "menu.properties",
-      "menu": "settings/markets/etsy",
-      "urlKey": "etsy-properties",
-      "entryPoint": "index.html?action=properties"
     }
   ]
 }
