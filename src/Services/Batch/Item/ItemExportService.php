@@ -112,7 +112,6 @@ class ItemExportService extends AbstractBatchService
             }
             }
         }
-    }
 
     /**
      * Check if listing is created.

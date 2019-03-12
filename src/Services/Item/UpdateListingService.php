@@ -160,7 +160,6 @@ class UpdateListingService
         $variationExportService = $this->variationExportService;
         EtsyListingValidator::validateOrFail($listing['main']);
 
-
         $data['state'] = 'draft';
 
         $language = $this->settingsHelper->getShopSettings('mainLanguage', 'de');
@@ -390,8 +389,16 @@ class UpdateListingService
     public function updateInventory(array $listing, int $listingId)
     {
         $language = $this->settingsHelper->getShopSettings('mainLanguage', 'de');
+        $variationExportService = $this->variationExportService;
         $products = [];
         $dependencies = [];
+
+        //loading etsy currency
+        $shops = json_decode($this->settingsHelper->get($this->settingsHelper::SETTINGS_ETSY_SHOPS), true);
+        $etsyCurrency = reset($shops)['currency_code'];
+
+        //loading default currency
+        $defaultCurrency = $this->currencyExchangeRepository->getDefaultCurrency();
 
         if (isset($listing['main']['attributes'][0])) {
             $attributeOneId = $listing['main']['attributes'][0]['attributeId'];
@@ -403,9 +410,26 @@ class UpdateListingService
             $dependencies[] = $this->listingInventoryService::CUSTOM_ATTRIBUTE_2;
         }
 
+        $exportPreloadValueList = [];
+        foreach ($listing as $variation) {
+            $exportPreloadValue = pluginApp(ExportPreloadValue::class, [
+                'itemId' => $variation['itemId'],
+                'variationId' => $variation['variationId']
+            ]);
+
+            $exportPreloadValueList[] = $exportPreloadValue;
+        }
+
         $counter = 0;
 
         foreach ($listing as $variation) {
+            if (!$variation['isActive']) {
+                continue;
+            }
+
+            if (isset($variation['failed']) && $variation['failed']) {
+                continue;
+            }
 
             $products[$counter]['property_values'] = [];
 
@@ -446,18 +470,22 @@ class UpdateListingService
                 }
             }
 
-            $orderReferrer = $this->settingsHelper->get(SettingsHelper::SETTINGS_ORDER_REFERRER);
-            foreach ($variation['salesPrices'] as $salesPrice) {
+            $variationExportService->preload($exportPreloadValueList);
+            $stock = $variationExportService->getAll($variation['variationId']);
+            $stock = $stock[$variationExportService::STOCK];
 
-                if (in_array($orderReferrer, $salesPrice['settings']['referrers'])) {
-                    $price = $salesPrice['price'];
-                    break;
-                }
+            if ($defaultCurrency == $etsyCurrency) {
+                $price = (float)$variation['sales_price'];
+            } else {
+                $price = $this->currencyExchangeRepository->convertFromDefaultCurrency($etsyCurrency,
+                    (float) $variation['sales_price'],
+                    $this->currencyExchangeRepository->getExchangeRatioByCurrency($etsyCurrency));
+                $price = round($price, self::moneyDecimals);
             }
 
             $products[$counter]['offerings'] = [
                 [
-                    'quantity' => 1,
+                    'quantity' => $stock[0]['stockNet'],
                     'is_enabled' => $variation['isActive']
                 ]
             ];
@@ -465,6 +493,24 @@ class UpdateListingService
             if (isset($price)) {
                 $products[$counter]['offerings'][0]['price'] = $price;
             }
+
+            if (!$this->itemHelper->updateVariationSkuTimestamp($variation['variationId']))
+            {
+                //Creating a formatted array so the method can use the data
+                $sku = $this->itemHelper->generateParentSku($listingId, [
+                    'id' => $variation['variationId'],
+                    'data' => [
+                        'item' => [
+                            'id' => $variation['itemId']
+                        ]
+                    ]
+                ]);
+            }
+            else {
+                $sku = $this->itemHelper->getVariationSku($variation['variationId']);
+            }
+
+            $products[$counter]['sku'] = $sku;
 
             $counter++;
         }

@@ -2,6 +2,7 @@
 
 namespace Etsy\Helper;
 
+use Carbon\Carbon;
 use Etsy\Contracts\LegalInformationRepositoryContract;
 use Etsy\Models\LegalInformation;
 use Illuminate\Database\Eloquent\Collection;
@@ -132,6 +133,44 @@ class ItemHelper
         }
         
         return $this->legalInformationCache[$lang];
+    }
+
+    /**
+     * Searches the etsy SKU for given variation. Returns null if none exists yet
+     *
+     * @param $variationId
+     * @return null|VariationSku
+     */
+    public function getVariationSku($variationId)
+    {
+        $skus = $this->variationSkuRepository->search([
+            'marketId' => $this->orderHelper->getReferrerId(),
+            'variationId' => $variationId
+        ]);
+
+        if (!is_null($skus)) {
+            return reset($skus);
+        }
+
+        return null;
+    }
+
+    /**
+     * Sets the updated timestamp for an sku if it exists. Returns false if the variation has no sku for etsy yet
+     *
+     * @param $variationId
+     * @return bool
+     */
+    public function updateVariationSkuTimestamp($variationId)
+    {
+        $sku = $this->getVariationSku($variationId);
+
+        if ($sku) {
+            $sku->save();
+            return true;
+        }
+
+        return false;
     }
 
 	/**

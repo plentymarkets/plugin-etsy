@@ -269,7 +269,7 @@ class StartListingService
         }
 
         //shipping profiles
-        $data['shipping_template_id'] = reset($listing['main']['shipping_profiles']);
+        $data['shipping_template_id'] = (int) reset($listing['main']['shipping_profiles']);
 
         $data['who_made'] = $listing['main']['who_made'];
         $data['is_supply'] = in_array(strtolower($listing['main']['is_supply']),
@@ -277,7 +277,7 @@ class StartListingService
         $data['when_made'] = $listing['main']['when_made'];
 
         //Category
-        $data['taxonomy_id'] = reset($listing['main']['categories']);
+        $data['taxonomy_id'] = (int) reset($listing['main']['categories']);
 
         //Etsy properties
         if (false) {
@@ -435,6 +435,13 @@ class StartListingService
         $products = [];
         $dependencies = [];
 
+        //loading etsy currency
+        $shops = json_decode($this->settingsHelper->get($this->settingsHelper::SETTINGS_ETSY_SHOPS), true);
+        $etsyCurrency = reset($shops)['currency_code'];
+
+        //loading default currency
+        $defaultCurrency = $this->currencyExchangeRepository->getDefaultCurrency();
+
         if (isset($listing['main']['attributes'][0])) {
             $attributeOneId = $listing['main']['attributes'][0]['attributeId'];
             $dependencies[] = $this->inventoryService::CUSTOM_ATTRIBUTE_1;
@@ -517,7 +524,14 @@ class StartListingService
                 }
             }
 
-            $price = $variation['sales_price'];
+            if ($defaultCurrency == $etsyCurrency) {
+                $price = (float)$variation['sales_price'];
+            } else {
+                $price = $this->currencyExchangeRepository->convertFromDefaultCurrency($etsyCurrency,
+                    (float) $variation['sales_price'],
+                    $this->currencyExchangeRepository->getExchangeRatioByCurrency($etsyCurrency));
+                $price = round($price, self::moneyDecimals);
+            }
 
             //Creating a formatted array so the method can use the data
             $products[$counter]['sku'] = $this->itemHelper->generateParentSku($listingId, [
@@ -629,7 +643,7 @@ class StartListingService
                         $message = $response;
                     } else {
                         //todo übersetzten
-                        $message = 'Failed to create listing.';
+                        $message = 'Failed to upload image.';
                     }
                 }
 
