@@ -460,7 +460,7 @@ class StartListingService
 
             if ($articleFailed) {
                 $errors = array_merge($articleErrors, $failedVariations);
-                $messageBag = new MessageBag($errors);
+                $messageBag = pluginApp(MessageBag::class, ['messages' => $errors]);
                 throw new ListingException($messageBag, $exceptionMessage);
             }
 
@@ -484,7 +484,7 @@ class StartListingService
                 }
             }
 
-            $messageBag = new MessageBag($messages);
+            $messageBag = pluginApp(MessageBag::class, ['messages' => $messages]);
             throw new ListingException($messageBag,
                 $this->translator->trans(EtsyServiceProvider::PLUGIN_NAME . '::item.startListingError'));
         }
@@ -641,7 +641,7 @@ class StartListingService
             if (!$hasActiveVariations) {
                 $errors = array_unshift($failedVariations, $this->translator
                     ->trans(EtsyServiceProvider::PLUGIN_NAME . '::log.noVariations'));
-                $messageBag = new MessageBag($errors);
+                $messageBag = pluginApp(MessageBag::class, ['messages' => $errors]);
                 throw new ListingException($messageBag, $exceptionMessage);
             }
 
@@ -673,7 +673,7 @@ class StartListingService
                 }
             }
 
-            $messageBag = new MessageBag($messages);
+            $messageBag = pluginApp(MessageBag::class, ['messages' => $messages]);
             throw new ListingException($messageBag,
                 $this->translator->trans(EtsyServiceProvider::PLUGIN_NAME . '::item.startListingError'));
         }
@@ -689,7 +689,7 @@ class StartListingService
     protected function addPictures($listingId, $listing)
     {
         if (!isset($listing['main']['images']['all'])) {
-            $messageBag = new MessageBag([$this->translator->trans(EtsyServiceProvider::PLUGIN_NAME . '::log.noImages')]);
+            $messageBag = pluginApp(MessageBag::class, ['messages' => [$this->translator->trans(EtsyServiceProvider::PLUGIN_NAME . '::log.noImages')]]);
             throw new ListingException($messageBag,
                 $this->translator->trans(EtsyServiceProvider::PLUGIN_NAME . '::item.startListingError'));
         }
@@ -740,7 +740,8 @@ class StartListingService
         }
 
         if (!count($imageList)) {
-            $messageBag = new MessageBag([$this->translator->trans(EtsyServiceProvider::PLUGIN_NAME . '::log.noImages')]);
+            $messageBag = pluginApp(MessageBag::class, ['messages' =>
+                [$this->translator->trans(EtsyServiceProvider::PLUGIN_NAME . '::log.noImages')]]);
             throw new ListingException($messageBag,
                 $this->translator->trans(EtsyServiceProvider::PLUGIN_NAME . '::item.startListingError'));
         }
