@@ -148,7 +148,7 @@ class StartListingService
         if (!isset($listing['main'])) {
             $this->getLogger(__FUNCTION__)->addReference('itemId', $listing['main']['itemId'])
                 ->error( $this->translator->trans(EtsyServiceProvider::PLUGIN_NAME . '::item.startListingError'),
-                    $this->translator->trans(EtsyServiceProvider::PLUGIN_NAME . '::log.noMainVariation');
+                    $this->translator->trans(EtsyServiceProvider::PLUGIN_NAME . '::log.noMainVariation'));
             return;
         }
 
