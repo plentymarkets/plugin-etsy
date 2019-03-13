@@ -222,12 +222,10 @@ class StartListingService
     }
 
     /**
-     * Create a listing base.
-     *
      * @param array $listing
-     *
-     * @throws ListingException
      * @return array
+     * @throws ListingException
+     * @throws \Plenty\Exceptions\ValidationException
      */
     protected function createListing(array $listing)
     {
@@ -559,6 +557,9 @@ class StartListingService
              * @var array $variation
              */
             foreach ($variation['attributes'] as $attribute) {
+                /**
+                 * @var array $attribute
+                 */
                 foreach ($attribute['attribute']['names'] as $name) {
                     if ($name['lang'] == $language) {
                         $attributeName = $name['name'];
