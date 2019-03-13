@@ -13,7 +13,7 @@ Nachdem Sie das Etsy-Plugin im plentymarkets Marketplace gekauft haben, installi
 
 ### Berechtigung erteilen
 
-Im Menü **Einstellungen » Märkte » Etsy » Authentifizierung** muss zunächst die Schnittstelle freigeschalten werden. Klicken Sie dazu auf **Etsy-Login**. Sie werden direkt zu Etsy weitergeleitet, wo Sie die Schnittstelle freischalten.
+Im Menü **Einstellungen » Märkte » Etsy » Authentifizierung** muss zunächst die Schnittstelle freigeschaltet werden. Klicken Sie dazu auf **Etsy-Login**. Sie werden direkt zu Etsy weitergeleitet, wo Sie die Schnittstelle freischalten.
 
 ### Etsy einrichten
 
@@ -61,34 +61,52 @@ Gehen Sie wie im Folgenden beschrieben vor, um für die Auftragsherkunft Etsy ei
 2. Setzen Sie ein Häkchen bei der Herkunft **Etsy**.
 3. **Speichern** Sie die Einstellungen.
 
-## Kategorien verknüpfen
+## Katalog erstellen
 
-Verknüpfen Sie Ihre Webshop-Kategorien mit den Kategorien von Etsy, damit Ihre Artikel in diesen Etsy-Kategorien angezeigt werden. Weitere Artikel der verknüpften Kategorien werden dann automatisch zugewiesen.
+Artikeldaten werden über Katalog-Templates zu Etsy übertragen. Damit Sie Ihre Artikel zu Etsy übertragen können, müssen Sie im Menü **Daten » Kataloge** ein Katalog-Template erstellen. Weitere Informationen zu Katalogen finden Sie auf der Handbuchseite [Kataloge verwalten](https://knowledge.plentymarkets.com/daten/daten-exportieren/kataloge-verwalten).
 
-##### Kategorien verknüpfen:
+→ **Hinweis**: Beachten Sie, dass das Menü **Daten » Kataloge** erst sichtbar ist, wenn Sie ein Plugin installieren, das ein Katalog-Template verfügbar macht.
 
-1. Öffnen Sie das Menü **Einstellungen » Märkte » Etsy » Kategorieverknüpfung**.
-2. Klicken Sie auf **Suchen**.
-    → Das Fenster **Kategorie wählen** wird geöffnet.
-3. Wählen Sie die Etsy-Kategorie, die am besten zu Ihrer Webshop-Kategorie passt.
-4. Klicken Sie auf **Übernehmen**.
-    → Die Bezeichnung der Etsy-Kategorie und der Kategoriepfad werden angezeigt.
-5. Wenn Sie die Bezeichnung der Etsy-Kategorie bereits kennen, geben Sie sie in das Feld **Marktplatzkategorie** ein, um sie mit Ihrer Webshop-Kategorie zu verknüpfen.
+#### Katalog erstellen
+
+1. Öffnen Sie das Menü **Daten » Kataloge**.
+2. Klicken Sie auf **Katalog erstellen**.
+3. Geben Sie einen Namen für den Katalog ein.
+4. Wählen Sie das Katalog-Template **Listing - Etsy** aus der Dropdown-Liste.
+5. **Speichern** Sie die Einstellungen.<br/>
+→ Der Katalog wird erstellt.<br/>
+→ Der Katalog wird zur weiteren Bearbeitung geöffnet.
+
+Nachdem Sie einen Katalog erstellt haben, verknüpfen Sie die Datenfelder des Marktplatzes mit in plentymarkets gespeicherten Artikeldaten. Weitere Informationen zu den plentymarkets Datenquellen, die Sie zuordnen können, finden Sie im Kapitel [Datenquellen zuordnen](https://knowledge.plentymarkets.com/daten/daten-exportieren/kataloge-verwalten#_datenquellen_zuordnen).
+
+#### Datenfelder im Katalog verknüpfen:
+
+1. Öffnen Sie das Menü **Daten » Kataloge**.
+2. Klicken Sie auf den erstellten Katalog.<br/>
+→ Der Katalog wird geöffnet.<br/>
+→ Links werden die Datenfelder des Marktplatzes angezeigt.<br/>
+→ **Tipp**: Pflichtfelder sind mit Sternchen gekennzeichnet.
+3. Wählen Sie für die Datenfelder des Marktplatzes eine plentymarkets Datenquelle aus der Dropdown-Liste.
+4. Um einem Datenfeld eine weitere plentmarkets Datenquelle zuzuordnen, klicken Sie auf **Quelle hinzufügen**.<br/>
+→ Eine neue Zeile wird eingeblendet.<br/>
+→ **Hinweis**: Auch wenn Sie einem Datenfeld mehr als eine Datenquelle zuordnen, wird nur ein Wert übertragen. Die Daten werden in der Reihenfolge der Zuordnung geprüft. Wenn also das erste Datenfeld keinen Wert liefert, wird das zweite Datenfeld übertragen usw.
+5. Nehmen Sie alle gewünschten Zuordnungen vor.<br/>
+→ Alle Pflichtfelder müssen mit einer plentymarkets Datenquelle verknüpft werden.
 6. **Speichern** Sie die Einstellungen.
 
-## Merkmale verknüpfen
+## Etsy-Kategorien aktualisieren
 
-Um Merkmale für den Marktplatz Etsy zu nutzen, verknüpfen Sie diese mit Etsy. Beachten Sie, dass es sich bei **Hersteller** und **Hergestellt** um Pflichtmerkamle handelt.
+Um Etsy-Kategorien in plentymarkets zu aktualisieren, löschen Sie Ihre Credentials im Menü **System » Märkte » Etsy » Authentifizierung** und fügen diese neu hinzu.
 
-##### Merkmale verknüpfen:
+#### Etsy-Kategorien aktualisieren:
 
-1. Öffnen Sie das Menü **Einstellungen » Märkte » Etsy » Merkmalverknüpfung**.
-2. Klicken Sie auf **Suchen**.
-    → Das Fenster **Merkmale wählen** wird geöffnet.
-3. Wählen Sie das Etsy-Merkmal, das am besten zu Ihrem Webshop-Merkmal passt.
-4. Klicken Sie auf **Übernehmen**.
-    → Die Bezeichnung des Etsy-Merkmals und der Merkmalpfad werden angezeigt.
-5. **Speichern** Sie die Einstellungen.
+1. Öffnen Sie das Menü **System » Märkte » Etsy » Authentifizierung**.
+2. Klicken Sie auf **Löschen**, um die Credentials zu löschen.
+3. Klicken Sie auf das Weltkugel-Icon, um neue Credentials hinzuzufügen.<br/>
+→ Sie werden zu Etsy weitergeleitet.
+4. Klicken Sie bei Etsy auf **Zugang gewähren**.<br/>
+→ Neue Credentials werden erstellt und in plentymarkets hinterlegt.<br/>
+→ Die Etsy-Kategorien werden aktualisiert.
 
 ## Rechtliche Hinweise übertragen 
 
@@ -100,17 +118,6 @@ Um rechtliche Hinweise an den Marktplatz Etsy zu übertragen, hinterlegen Sie di
 → Das Fenster **Rechtliche Hinweise** wird geöffnet. 
 2. Wählen Sie die Sprache aus, für die rechtliche Hinweise hinterlegt werden sollen. 
 3. Geben Sie Ihren Text ein. 
-4. **Speichern** Sie die Einstellungen.
-
-## Versandprofile verknüpfen
-
-Im Menü **Einstellungen » Märkte » Etsy » Versandprofilverknüpfungen** verknüpfen Sie Etsy-Versandprofile, die Sie zuvor bei Etsy angelegt und in plentymarkets importiert haben, mit den Versandprofilen Ihres Webshops.
-
-##### Versandprofile verknüpfen:
-
-1. Öffnen Sie das Menü **Einstellungen » Märkte » Etsy » Versandprofilverknüpfung**.
-2. Wählen Sie das Etsy-Versandprofil, das am besten zu Ihrem Webshop-Versandprofil passt.
-3. Klicken Sie auf **Übernehmen**.
 4. **Speichern** Sie die Einstellungen.
 
 ## Zahlungsbestätigung automatisch senden
