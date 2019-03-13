@@ -4,7 +4,6 @@ namespace Etsy\Exceptions;
 
 use Exception;
 use Illuminate\Support\MessageBag;
-use Throwable;
 
 /**
  * @author H.Malicha
@@ -19,15 +18,14 @@ class ListingException extends Exception
 
     /**
      * ListingException constructor.
-     * @param string $message
      * @param MessageBag $messageBag
+     * @param string $message
      * @param int $code
-     * @param Throwable|null $previous
      */
-    public function __construct(MessageBag $messageBag, $message = "", $code = 0, Throwable $previous = null)
+    public function __construct(MessageBag $messageBag, $message = "", $code = 0)
     {
         $this->messageBag = $messageBag;
-        parent::__construct($message, $code, $previous);
+        parent::__construct($message, $code);
     }
 
     /**
