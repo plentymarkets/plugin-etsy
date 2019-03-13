@@ -553,12 +553,15 @@ class StartListingService
             //initialising property values array for articles with no attributes (single variation)
             $products[$counter]['property_values'] = [];
 
+
+            $attributes = $variation['attributes'];
+
             /**
-             * @var array $variation
+             * @var array $attributes
              */
-            foreach ($variation['attributes'] as $attribute) {
+            foreach ($attributes as $attribute) {
                 /**
-                 * @var array $attribute
+                 * @var array $attribute['attribute']
                  */
                 foreach ($attribute['attribute']['names'] as $name) {
                     if ($name['lang'] == $language) {
