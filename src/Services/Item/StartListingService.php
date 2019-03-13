@@ -170,7 +170,7 @@ class StartListingService
             $this->addPictures($listingId, $listing);
 
 
-            throw new \Exception('nur tzum testen');
+            throw new \Exception('$test = true');
             $this->publish($listingId, $listing);
         } catch (ListingException $listingException) {
             $skus = [];
@@ -226,12 +226,11 @@ class StartListingService
      *
      * @param array $listing
      *
-     * @throws \Exception
+     * @throws ListingException
      * @return array
      */
     protected function createListing(array $listing)
     {
-        //todo Alle Exceptions und Loggernachrichten mit translator befüllen
         $data = [];
         $failedVariations = [];
         $variationExportService = $this->variationExportService;
@@ -394,7 +393,6 @@ class StartListingService
             foreach ($styles as $style) {
                 if (preg_match('@[^\p{L}\p{Nd}\p{Zs}l]u', $style) || $counter > 1) {
                     $this->getLogger(__FUNCTION__)->addReference('itemId', $listing['main']['itemId'])
-                        //todo übersetzen
                         ->warning(EtsyServiceProvider::PLUGIN_NAME.'::log.wrongStyleFormat', [$listing['main']['style'], $style]);
                     continue;
                 }
@@ -427,7 +425,6 @@ class StartListingService
 
         if (strlen($data['title']) > 140) {
             $articleFailed = true;
-            //todo übersetzen
             $articleErrors[] = $this->translator
                 ->trans(EtsyServiceProvider::PLUGIN_NAME.'::log.longTitle');
         }
@@ -452,7 +449,7 @@ class StartListingService
 
         //Error handling
         if ($articleFailed || count($failedVariations)) {
-            $exceptionMessage = ($articleFailed) ? 'log.articleNotListable' : 'log.variationsNotListed';
+            $exceptionMessage = ($articleFailed) ? '::log.articleNotListable' : '::log.variationsNotListed';
 
             foreach ($failedVariations as $variationId => $variationErrors) {
                 $failedVariations[$variationId] = implode(",\n", $variationErrors);
@@ -461,7 +458,7 @@ class StartListingService
             if ($articleFailed) {
                 $errors = array_merge($articleErrors, $failedVariations);
                 $messageBag = pluginApp(MessageBag::class, ['messages' => $errors]);
-                throw new ListingException($messageBag, $exceptionMessage);
+                throw new ListingException($messageBag, EtsyServiceProvider::PLUGIN_NAME.$exceptionMessage);
             }
 
             $this->getLogger(__FUNCTION__)
@@ -500,7 +497,7 @@ class StartListingService
      *
      * @param $listingId
      * @param $listing
-     * @throws \Exception
+     * @throws ListingException
      */
     protected function fillInventory($listingId, $listing)
     {
@@ -572,12 +569,14 @@ class StartListingService
                 }
 
                 if (!isset($attributeName)) {
+                    $variation['failed'] = true;
                     $failedVariations['variation-' . $variation['variationId']][] = $this->translator
                         ->trans(EtsyServiceProvider::PLUGIN_NAME.'::log.attributeNameMissing');
                     continue 2;
                 }
 
                 if (!isset($attributeValueName)) {
+                    $variation['failed'] = true;
                     $failedVariations['variation-' . $variation['variationId']][] = $this->translator
                         ->trans(EtsyServiceProvider::PLUGIN_NAME.'::log.attributeValueNameMissing');
                     continue 2;
@@ -684,12 +683,13 @@ class StartListingService
      *
      * @param int $listingId
      * @param $listing
-     * @throws \Exception
+     * @throws ListingException
      */
     protected function addPictures($listingId, $listing)
     {
         if (!isset($listing['main']['images']['all'])) {
-            $messageBag = pluginApp(MessageBag::class, ['messages' => [$this->translator->trans(EtsyServiceProvider::PLUGIN_NAME . '::log.noImages')]]);
+            $messageBag = pluginApp(MessageBag::class, ['messages' => [$this->translator
+                ->trans(EtsyServiceProvider::PLUGIN_NAME . '::log.noImages')]]);
             throw new ListingException($messageBag,
                 $this->translator->trans(EtsyServiceProvider::PLUGIN_NAME . '::item.startListingError'));
         }
@@ -698,7 +698,8 @@ class StartListingService
         
         foreach ($list as $key => $image) {
             if (!isset($image['availabilities']['market'][0]) || ($image['availabilities']['market'][0] !== -1
-                && $image['availabilities']['market'][0] !== $this->settingsHelper->get($this->settingsHelper::SETTINGS_ORDER_REFERRER))) {
+                && $image['availabilities']['market'][0] !== $this->settingsHelper
+                        ->get($this->settingsHelper::SETTINGS_ORDER_REFERRER))) {
                 unset($list[$key]);
             }
         }
@@ -808,6 +809,12 @@ class StartListingService
         ];
 
         $this->listingService->updateListing($listingId, $data);
-        $this->itemHelper->updateListingSkuStatuses($listing, $this->itemHelper::SKU_STATUS_ACTIVE);
+
+        foreach ($listing as $variation) {
+            if (!$variation['isActive']) continue;
+
+            $status = $variation['failed'] ? $this->itemHelper::SKU_STATUS_INACTIVE : $this->itemHelper::SKU_STATUS_ACTIVE;
+            $this->itemHelper->updateVariationSkuStatus($variation['variationId'], $status);
+        }
     }
 }
