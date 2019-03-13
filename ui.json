@@ -4,19 +4,19 @@
   "menuEntries": [
     {
       "label": "menu.authentication",
-      "menu": "markets/etsy",
+      "menu": "settings/markets/etsy",
       "urlKey": "etsy-authentication",
       "entryPoint": "index.html?action=auth"
     },
     {
       "label": "menu.settings",
-      "menu": "markets/etsy",
+      "menu": "settings/markets/etsy",
       "urlKey": "etsy-settings",
       "entryPoint": "index.html?action=settings"
     },
     {
       "label": "menu.legalInformation",
-      "menu": "markets/etsy",
+      "menu": "settings/markets/etsy",
       "urlKey": "etsy-legal-information",
       "entryPoint": "index.html?action=legal-information"
     }
