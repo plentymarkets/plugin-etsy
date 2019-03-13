@@ -192,16 +192,21 @@ class ItemHelper
 
 	}
 
-	public function updateListingSkuStatuses($listing, $status = self::SKU_STATUS_INACTIVE)
+    public function updateVariationSkuStatus($variationId, $status = self::SKU_STATUS_INACTIVE)
     {
-        foreach ($listing as $variation) {
-            $skus = $this->variationSkuRepository->search(['variationId' => $variation['variationId']]);
+        $skus = $this->variationSkuRepository->search([
+            'variationId' => $variationId,
+            'marketId' => $this->orderHelper->getReferrerId()
+        ]);
 
-            foreach ($skus as $sku) {
-                $sku->status = $status;
-                $this->variationSkuRepository->update($sku->toArray(), $sku->id);
-            }
+        if (count($skus) < 1) return false;
+
+        foreach ($skus as $sku) {
+            $sku->status = $status;
+            $this->variationSkuRepository->update($sku->toArray(), $sku->id);
         }
+
+        return true;
     }
 
     public function generateParentSku($listingId, $variationData)
