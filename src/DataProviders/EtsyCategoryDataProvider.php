@@ -64,7 +64,7 @@ class EtsyCategoryDataProvider extends NestedKeyDataProvider
      * @param string $id
      * @return array
      */
-    public function getDataByValue($id): array
+    public function getDataByValue(string $id): array
     {
         $category = $this->loadCategories(['id' => $id]);
 
