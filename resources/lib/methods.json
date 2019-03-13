@@ -387,7 +387,7 @@
       "taxonomy_id": "int",
       "currency_code": "string",
       "is_digital": "string",
-      "should_auto_renew": "string",
+      "should_auto_renew": "boolean",
       "tags": "string",
       "who_made": "string",
       "is_supply": "string",
