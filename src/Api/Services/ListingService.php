@@ -26,6 +26,22 @@ class ListingService
 		$this->client = $client;
 	}
 
+    /**
+     * Performs a getListing call to Etsy.
+     *
+     * @param $listingId
+     * @param $language
+     * @return array
+     */
+	public function getListing($listingId)
+    {
+        $params = [
+          'listing_id' => $listingId
+        ];
+
+        return $this->client->call('getListing', $params);
+    }
+
 	/**
 	 * Performs an createListing call to Etsy.
 	 *

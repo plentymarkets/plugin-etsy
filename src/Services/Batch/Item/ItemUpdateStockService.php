@@ -86,10 +86,26 @@ class ItemUpdateStockService extends AbstractBatchService
 
         foreach ($catalogResult as $variation) {
 
+            //for convenience we get rid of all skus that are not related to Etsy
+            $skus = [];
+
+
+            foreach ($variation['skus'] as $sku) {
+                if ($sku['marketId'] == $this->settingshelper->get($this->settingshelper::SETTINGS_ORDER_REFERRER)) {
+                    $skus[] = $sku;
+                    break;
+                }
+            }
+
+            if (count($skus) < 1) continue;
+
+            $variation['skus'] = $skus;
+
             if ($variation['isMain'] == true) {
                 $listings[$variation['itemId']]['main'] = $variation;
                 continue;
             }
+
             $listings[$variation['itemId']][] = $variation;
 
         }
@@ -105,26 +121,14 @@ class ItemUpdateStockService extends AbstractBatchService
     }
 
     /**
-     * Update listings on Etsy.
-     *
-     * @param RecordList $records
+     * Update listings stock on Etsy.
+     * @param array $listing
      */
     protected function updateListingsStock(array $listing)
     {
             try
             {
                 $response = $this->updateListingStockService->updateStock($listing);
-
-                if (isset($response['error']) && $response['error']) {
-                    //todo übersetzen
-                    $message = 'Updating stock for listing ' . $listing['main']['skus'][0]['parentSku'] . ' failed.';
-
-                    if (isset($response['error_msg'])) {
-                        $message .= PHP_EOL . $response['error_msg'];
-                    }
-
-                    throw new \Exception($message);
-                }
             }
             catch(\Exception $ex)
             {

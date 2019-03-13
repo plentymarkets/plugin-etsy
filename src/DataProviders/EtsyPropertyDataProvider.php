@@ -30,6 +30,11 @@ class EtsyPropertyDataProvider extends BaseDataProvider
     {
         return [
             [
+                'key' => 'renew',
+                'label' => $this->translator->trans(EtsyServiceProvider::PLUGIN_NAME.'::catalog.renew'),
+                'required' => false,
+            ],
+            [
                 'key' => 'who_made',
                 'label' => $this->translator->trans(EtsyServiceProvider::PLUGIN_NAME.'::catalog.who_made'),
                 'required' => true,

@@ -137,7 +137,14 @@ class UpdateListingService
      */
     public function update(array $listing)
     {
-        $listingId = $listing['main']['skus'][0]['parentSku'];
+        $listingId = 0;
+
+        foreach ($listing as $variation) {
+            if (isset($variation['skus'][0]['parentSku'])) {
+                $listingId = $variation['skus'][0]['parentSku'];
+                break;
+            }
+        }
 
         try {
             $this->updateListing($listing, $listingId);

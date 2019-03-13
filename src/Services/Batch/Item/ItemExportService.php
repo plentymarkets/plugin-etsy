@@ -84,10 +84,23 @@ class ItemExportService extends AbstractBatchService
 
         foreach ($catalogResult as $variation) {
 
+            //for convenience we get rid of all skus that are not related to Etsy
+            $skus = [];
+
+            foreach ($variation['skus'] as $sku) {
+                if ($sku['marketId'] == $this->settingshelper->get($this->settingshelper::SETTINGS_ORDER_REFERRER)) {
+                    $skus[] = $sku;
+                    break;
+                }
+            }
+
+            $variation['skus'] = $skus;
+
             if ($variation['isMain'] == true) {
                 $listings[$variation['itemId']]['main'] = $variation;
                 continue;
             }
+
             $listings[$variation['itemId']][] = $variation;
         }
 
@@ -120,12 +133,14 @@ class ItemExportService extends AbstractBatchService
      */
     protected function isListingCreated(array $listing):bool
     {
-        if (isset($listing['main']['skus'][0]['sku']))
-        {
-            return true;
+        $isListed = false;
+
+        foreach ($listing as $variation) {
+            if (isset($variation['skus'][0]['parentSku'])) {
+                $isListed = true;
+            }
         }
-        else {
-            return false;
-        }
+
+        return $isListed;
     }
 }

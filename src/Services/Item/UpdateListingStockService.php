@@ -3,6 +3,7 @@
 namespace Etsy\Services\Item;
 
 use Etsy\Api\Services\ListingInventoryService;
+use Etsy\EtsyServiceProvider;
 use Etsy\Helper\SettingsHelper;
 use modules\lib\calendar\lib\DAV\Exception;
 use Plenty\Modules\Item\DataLayer\Models\Record;
@@ -27,41 +28,81 @@ class UpdateListingStockService
     private $variationExportService;
 
     /**
-     * @var listingInventoryService
+     * @var ListingInventoryService
      */
     private $listingInventoryService;
+
+    /**
+     * @var ItemHelper
+     */
+    private $itemHelper;
+
+    /**
+     * @var ListingService
+     */
+    private $listingService;
 
     /**
      * @var SettingsHelper
      */
     private $settingsHelper;
 
+
+    const SOLD_OUT = "sold_out";
+
     /**
-     * @param ItemHelper $itemHelper
-     * @param OrderHelper $orderHelper
+     * UpdateListingStockService constructor.
+     * @param VariationExportServiceContract $variationExportService
+     * @param ListingInventoryService $listingInventoryService
      * @param ListingService $listingService
+     * @param ItemHelper $itemHelper
+     * @param SettingsHelper $settingsHelper
      */
     public function __construct(
         VariationExportServiceContract $variationExportService,
         ListingInventoryService $listingInventoryService,
+        ListingService $listingService,
+        ItemHelper $itemHelper,
         SettingsHelper $settingsHelper
     ) {
         $this->variationExportService = $variationExportService;
         $this->listingInventoryService = $listingInventoryService;
         $this->settingsHelper = $settingsHelper;
+        $this->listingService = $listingService;
+        $this->itemHelper = $itemHelper;
     }
 
+    /**
+     * @param array $listing
+     * @return array|null
+     * @throws \Exception
+     */
     public function updateStock(array $listing)
     {
+        $listingId = 0;
 
-        $listingId = $listing['main']['skus'][0]['parentSku'];
+        foreach ($listing as $variation) {
+            if (isset($variation['skus'][0]['parentSku'])) {
+                $listingId = $variation['skus'][0]['parentSku'];
+                break;
+            }
+        }
 
-        $etsyListing = $this->listingInventoryService->getInventory($listingId);
+        $etsyListing = $this->listingService->getListing($listingId);
+        $state = $etsyListing['results'][0]['state'];
+        $renew = $etsyListing['results'][0]['should_auto_renew'];
 
-        $products = $etsyListing['results']['products'];
+        if ($state == self::SOLD_OUT && !$renew){
+            $this->getLogger(__FUNCTION__)
+                ->addReference('listingId', $listingId)
+                ->addReference('itemId', $listing['main']['itemId'])
+                ->report(EtsyServiceProvider::PLUGIN_NAME . '::log.soldOut',
+                    EtsyServiceProvider::PLUGIN_NAME . '::log.needManualRenew');
+        }
 
+        $etsyInventory = $this->listingInventoryService->getInventory($listingId);
 
-        $etsyListing['results']['products'][0]['sku'];
+        $products = $etsyInventory['results']['products'];
 
         $variationExportService = $this->variationExportService;
 
@@ -81,6 +122,7 @@ class UpdateListingStockService
         $variationExportService->addPreloadTypes([$variationExportService::STOCK]);
         $variationExportService->preload($exportPreloadValueList);
 
+        $hasPositiveStock = false;
 
         foreach ($products as $key => $product) {
             if (!isset($product['sku']) || !$product['sku'])
@@ -94,14 +136,58 @@ class UpdateListingStockService
                 }
                 $stock =  $variationExportService->getData($variationExportService::STOCK, $variation['variationId']);
                 $stock = $stock[0]['stockNet'];
+                $products[$key]['offerings'][0]['is_enabled'] = false;
+
+                if ($stock > 0) {
+                    $products[$key]['offerings'][0]['is_enabled'] = true;
+                    $hasPositiveStock = true;
+                }
+
                 $products[$key]['offerings'][0]['quantity'] = $stock;
             }
         }
 
-        $data = $etsyListing['results'];
+        if (!$hasPositiveStock && $state == self::SOLD_OUT) {
+            return null;
+        }
+
+        $data = $etsyInventory['results'];
         $data['products'] = json_encode($products);
 
-        //todo prüfen
-        return $this->listingInventoryService->updateInventory($listingId, $data);
+        $response = $this->listingInventoryService->updateInventory($listingId, $data);
+
+        if (isset($response['error']) && $response['error']) {
+            //todo übersetzen
+            $message = 'Updating stock for listing ' . $listing['main']['skus'][0]['parentSku'] . ' failed.';
+
+            if (isset($response['error_msg'])) {
+                $message .= PHP_EOL . $response['error_msg'];
+            }
+
+            throw new \Exception($message);
+        }
+
+        foreach ($response['results']['products'] as $variation)
+        {
+            $status = $this->itemHelper::SKU_STATUS_INACTIVE;
+
+            if ($hasPositiveStock) {
+                $status = ($variation['offerings'][0]['quantity'] > 0) ? $this->itemHelper::SKU_STATUS_ACTIVE
+                    : $this->itemHelper::SKU_STATUS_INACTIVE;
+            }
+
+            $matches = [];
+            if (!preg_match('@(?!.*-)(.*)@', $variation['sku'], $matches)) {
+                //todo
+                throw new \Exception('');
+            }
+
+            /** @var array $matches */
+            $variationId = $matches[0];
+
+            $this->itemHelper->updateVariationSkuStatus($variationId, $status);
+        }
+
+        return $response;
     }
 }

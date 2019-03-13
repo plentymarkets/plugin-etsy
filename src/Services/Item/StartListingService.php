@@ -234,6 +234,9 @@ class StartListingService
         $variationExportService = $this->variationExportService;
         EtsyListingValidator::validateOrFail($listing['main']);
 
+        //this parameter decides if the listing get automatically renewed on etsy when it's stock gets positive after
+        //being 0. This creates costs for the customer, so he has the possibility to set it to false
+        $data['should_auto_renew'] = true;
 
         $data['state'] = 'draft';
 
@@ -332,6 +335,11 @@ class StartListingService
         if (false) {
             //todo: Still need to decide how to map tags for Etsy (plenty tags from main variation or maybe properties?)
             $data['tags'] = '';
+        }
+
+        if (isset($listing['main']['renew'])) {
+            $data['should_auto_renew'] = in_array(strtolower($listing['main']['renew']),
+                self::BOOL_CONVERTIBLE_STRINGS);
         }
 
         if (isset($listing['main']['occasion'])) {
