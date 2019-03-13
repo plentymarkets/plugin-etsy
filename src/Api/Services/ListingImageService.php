@@ -23,11 +23,10 @@ class ListingImageService
 	}
 
     /**
-     * @param int $listingId
-     * @param string $image
+     * @param $listingId
+     * @param $image
      * @param $position
-     *
-     * @return mixed
+     * @return array
      * @throws \Exception
      */
 	public function uploadListingImage($listingId, $image, $position)

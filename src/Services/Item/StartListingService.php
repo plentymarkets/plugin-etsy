@@ -170,7 +170,7 @@ class StartListingService
             $this->addPictures($listingId, $listing);
 
 
-            throw new \Exception('nur tzum testen');
+            throw new \Exception('$test = true');
             $this->publish($listingId, $listing);
         } catch (ListingException $listingException) {
             $skus = [];
@@ -226,7 +226,7 @@ class StartListingService
      *
      * @param array $listing
      *
-     * @throws \Exception
+     * @throws ListingException
      * @return array
      */
     protected function createListing(array $listing)
@@ -449,7 +449,7 @@ class StartListingService
 
         //Error handling
         if ($articleFailed || count($failedVariations)) {
-            $exceptionMessage = ($articleFailed) ? 'log.articleNotListable' : 'log.variationsNotListed';
+            $exceptionMessage = ($articleFailed) ? '::log.articleNotListable' : '::log.variationsNotListed';
 
             foreach ($failedVariations as $variationId => $variationErrors) {
                 $failedVariations[$variationId] = implode(",\n", $variationErrors);
@@ -458,7 +458,7 @@ class StartListingService
             if ($articleFailed) {
                 $errors = array_merge($articleErrors, $failedVariations);
                 $messageBag = pluginApp(MessageBag::class, ['messages' => $errors]);
-                throw new ListingException($messageBag, $exceptionMessage);
+                throw new ListingException($messageBag, EtsyServiceProvider::PLUGIN_NAME.$exceptionMessage);
             }
 
             $this->getLogger(__FUNCTION__)
@@ -497,7 +497,7 @@ class StartListingService
      *
      * @param $listingId
      * @param $listing
-     * @throws \Exception
+     * @throws ListingException
      */
     protected function fillInventory($listingId, $listing)
     {
@@ -683,7 +683,7 @@ class StartListingService
      *
      * @param int $listingId
      * @param $listing
-     * @throws \Exception
+     * @throws ListingException
      */
     protected function addPictures($listingId, $listing)
     {
