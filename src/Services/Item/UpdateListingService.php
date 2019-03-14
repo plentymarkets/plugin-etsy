@@ -152,8 +152,11 @@ class UpdateListingService
 	        $this->updateImages($listing, $listingId);
 	        $this->addTranslations($listing, $listingId);
 	        $this->publish($listingId, $listing);
-        } catch (\Exception $e) {
-
+        } catch (\Exception $exception) {
+            $this->getLogger(EtsyServiceProvider::UPDATE_LISTING_SERVICE)
+                ->addReference('itemId', $listing['main']['itemId'])
+                ->addReference('etsyListingId', $listingId)
+                ->error($exception->getMessage());
         }
     }
 
@@ -237,7 +240,7 @@ class UpdateListingService
         }
 
         //shipping profiles
-        $data['shipping_template_id'] = reset($listing['main']['shipping_profiles']);
+        $data['shipping_template_id'] = (int) reset($listing['main']['shipping_profiles']);
 
         $data['who_made'] = $listing['main']['who_made'];
         $data['is_supply'] = in_array(strtolower($listing['main']['is_supply']),
@@ -245,7 +248,7 @@ class UpdateListingService
         $data['when_made'] = $listing['main']['when_made'];
 
         //Category
-        $data['taxonomy_id'] = reset($listing['main']['categories']);
+        $data['taxonomy_id'] = (int) reset($listing['main']['categories']);
 
         //Etsy properties
         if (false) {
@@ -263,7 +266,7 @@ class UpdateListingService
 
         if (isset($listing['main']['item_weight'])) {
             $data['item_weight'] = $listing['main']['item_weight'];
-            $data['item_weight_units'] = 'g';
+            $data['item_weight_unit'] = 'g';
         }
 
         if (isset($listing['main']['item_height'])) {
@@ -652,7 +655,6 @@ class UpdateListingService
 
 
         foreach ($etsyImages as $etsyImage){
-            //todo response handling
             $response = $this->listingImageService->deleteListingImage($listingId, $etsyImage['imageId']);
 
             if (!isset($response['results']) || !is_array($response['results'])) {

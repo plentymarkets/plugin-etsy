@@ -360,7 +360,7 @@ class StartListingService
 
         if (isset($listing['main']['item_weight'])) {
             $data['item_weight'] = $listing['main']['item_weight'];
-            $data['item_weight_units'] = 'g';
+            $data['item_weight_unit'] = 'g';
         }
 
         if (isset($listing['main']['item_height'])) {
