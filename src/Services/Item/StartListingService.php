@@ -18,6 +18,7 @@ use Plenty\Modules\Item\Variation\Contracts\VariationExportServiceContract;
 use Plenty\Modules\Item\Variation\Services\ExportPreloadValue\ExportPreloadValue;
 use Plenty\Plugin\Log\Loggable;
 use Plenty\Plugin\Translation\Translator;
+use Plenty\Exceptions\ValidationException;
 
 /**
  * Class StartListingService
@@ -159,6 +160,11 @@ class StartListingService
             $this->getLogger(EtsyServiceProvider::START_LISTING_SERVICE)
                 ->addReference('itemId', $listing['main']['itemId'])
                 ->error($listingException->getMessage(), $listingException->getMessageBag());
+            return;
+        } catch(ValidationException $validationException) {
+            $this->getLogger(EtsyServiceProvider::START_LISTING_SERVICE)
+                ->addReference('itemId', $listing['main']['itemId'])
+                ->error($validationException->getMessage(), $validationException->getMessageBag());
             return;
         }
 
@@ -751,6 +757,7 @@ class StartListingService
                 'imageId' => $image['id'],
                 'listingImageId' => $response['results'][0]['listing_image_id'],
                 'listingId' => $response['results'][0]['listing_id'],
+                'itemId' => $image['itemId'],
                 'imageUrl' => $image['url']
             ];
         }
@@ -762,7 +769,7 @@ class StartListingService
                 $this->translator->trans(EtsyServiceProvider::PLUGIN_NAME . '::item.startListingError'));
         }
 
-        $this->imageHelper->save($listing['main']['itemId'], json_encode($imageList));
+        $this->imageHelper->save($listingId, json_encode($imageList));
     }
 
 

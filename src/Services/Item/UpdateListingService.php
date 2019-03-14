@@ -209,9 +209,6 @@ class UpdateListingService
 
         foreach ($listing as $key => $variation) {
             if (!$variation['isActive']) {
-               // if (isset(reset($variation['skus'])))
-                //$this->itemHelper->de
-                //todo sku der variante löschen
                 continue;
             }
 
@@ -454,7 +451,7 @@ class UpdateListingService
         $variationError = [];
 
         foreach ($listing as $variation) {
-            if (!$variation['isActive']) {
+            if (!$variation['isActive'] && !isset($variation['skus'][0]['sku'])) {
                 continue;
             }
 
@@ -481,11 +478,13 @@ class UpdateListingService
                 if (!isset($attributeName)) {
                     $variationFailed[] = true;
                     $variationError[] = $this->translator->trans(EtsyServiceProvider::PLUGIN_NAME.'::log.noAttributeName');
+                    continue 2;
                 }
 
                 if (!isset($attributeValueName)) {
                     $variationFailed[] = true;
                     $variationError[] = $this->translator->trans(EtsyServiceProvider::PLUGIN_NAME.'::log.noAttributeValueName');
+                    continue 2;
                 }
 
                 if (isset($attributeOneId) && $attribute['attributeId'] == $attributeOneId) {
@@ -646,6 +645,7 @@ class UpdateListingService
                 'imageId' => $image['id'],
                 'listingImageId' => $response['results'][0]['listing_image_id'],
                 'listingId' => $response['results'][0]['listing_id'],
+                'itemId' => $image['itemId'],
                 'imageUrl' => $image['url']
             ];
         }
@@ -674,7 +674,7 @@ class UpdateListingService
             }
         }
 
-        $this->imageHelper->update($listing['main']['itemId'], json_encode($imageList));
+        $this->imageHelper->update($listingId, json_encode($imageList));
 
     }
     /**

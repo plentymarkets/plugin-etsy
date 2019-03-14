@@ -9,6 +9,7 @@ use Plenty\Modules\Catalog\Contracts\CatalogExportRepositoryContract;
 use Plenty\Modules\Catalog\Contracts\CatalogExportServiceContract;
 use Plenty\Modules\Catalog\Contracts\CatalogRepositoryContract;
 use Plenty\Modules\Item\Search\Contracts\VariationElasticSearchScrollRepositoryContract;
+use Plenty\Modules\Item\Variation\Contracts\VariationRepositoryContract;
 use Plenty\Modules\Item\VariationSku\Contracts\VariationSkuRepositoryContract;
 use Plenty\Modules\Item\VariationSku\Models\VariationSku;
 
@@ -85,8 +86,10 @@ abstract class AbstractBatchService
      */
     private function deleteDeprecatedListing()
     {
+        /** @var ImageHelper $imageHelper */
         $imageHelper = pluginApp(ImageHelper::class);
         $deleteListingService = pluginApp(DeleteListingService::class);
+        /** @var VariationRepositoryContract $variationRepo */
 
         $filter = [
             'marketId' => $this->settingshelper->get(SettingsHelper::SETTINGS_ORDER_REFERRER)
@@ -113,12 +116,12 @@ abstract class AbstractBatchService
             }
 
             $variationSkuRepository->delete((int) $variationSku->id);
-            $imageHelper->delete($variationSku->variationId);
             unset($variationSkuList[$key]);
         }
 
         foreach ($listings as $listingId => $hasVariations) {
             if (!$hasVariations) {
+                $imageHelper->delete($listingId);
                 $deleteListingService->delete($listingId);
             }
         }
