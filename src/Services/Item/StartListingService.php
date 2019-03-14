@@ -174,9 +174,6 @@ class StartListingService
             $this->addTranslations($listing, $listingId);
             $this->fillInventory($listingId, $listing);
             $this->addPictures($listingId, $listing);
-
-
-            throw new \Exception('$test = true');
             $this->publish($listingId, $listing);
         } catch (ListingException $listingException) {
             $skus = [];
