@@ -171,18 +171,11 @@ class UpdateListingService
         //todo Alle Exceptions und Loggernachrichten mit translator befüllen
         $data = [];
         $failedVariations = [];
-        $variationExportService = $this->variationExportService;
         EtsyListingValidator::validateOrFail($listing['main']);
 
         $data['state'] = 'draft';
 
         $language = $this->settingsHelper->getShopSettings('mainLanguage', 'de');
-        //loading etsy currency
-        $shops = json_decode($this->settingsHelper->get($this->settingsHelper::SETTINGS_ETSY_SHOPS), true);
-        $etsyCurrency = reset($shops)['currency_code'];
-
-        //loading default currency
-        $defaultCurrency = $this->currencyExchangeRepository->getDefaultCurrency();
 
         //title and description
         foreach ($listing['main']['texts'] as $text) {
@@ -194,21 +187,7 @@ class UpdateListingService
             }
         }
 
-        //quantity & price
-        $data['quantity'] = 0;
         $hasActiveVariations = false;
-
-        $variationExportService->addPreloadTypes([$this->variationExportService::STOCK]);
-        $exportPreloadValueList = [];
-
-        foreach ($listing as $variation) {
-            $exportPreloadValue = pluginApp(ExportPreloadValue::class, [
-                'itemId' => $variation['itemId'],
-                'variationId' => $variation['variationId']
-            ]);
-
-            $exportPreloadValueList[] = $exportPreloadValue;
-        }
 
         foreach ($listing as $key => $variation) {
             if (!$variation['isActive']) {
@@ -219,22 +198,10 @@ class UpdateListingService
 
             if (!isset($variation['sales_price'])) {
                 $listing[$key]['failed'] = true;
-                //todo übersetzten
                 $failedVariations[$variation['variationId']][] = $this->translator->trans(EtsyServiceProvider::PLUGIN_NAME.'log.variationPriceMissing');
             }
 
             if ($listing[$key]['failed']) continue;
-
-            if (!isset($data['price']) || $data['price'] > $variation['sales_price']) {
-                if ($defaultCurrency == $etsyCurrency) {
-                    $data['price'] = (float)$variation['sales_price'];
-                } else {
-                    $data['price'] = $this->currencyExchangeRepository->convertFromDefaultCurrency($etsyCurrency,
-                        (float) $variation['sales_price'],
-                        $this->currencyExchangeRepository->getExchangeRatioByCurrency($etsyCurrency));
-                    $data['price'] = round($data['price'], self::moneyDecimals);
-                }
-            }
 
             $hasActiveVariations = true;
         }
