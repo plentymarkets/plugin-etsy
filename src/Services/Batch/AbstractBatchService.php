@@ -69,9 +69,13 @@ abstract class AbstractBatchService
     /**
      * Run the batch service.
      */
-    final public function run()
+    final public function run($lastRun = null)
     {
         $this->deleteDeprecatedListing();
+
+        if ($lastRun) {
+            $this->catalogExportService->setUpdatedSince($lastRun);
+        }
 
         $result = $this->catalogExportService->getResult();
 

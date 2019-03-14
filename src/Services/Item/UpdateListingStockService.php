@@ -130,6 +130,9 @@ class UpdateListingStockService
                 //todo exception handling
                 throw new \Exception('variation not in plenty');
             }
+
+            $variationStillAvailable = false;
+
             foreach ($listing as $variation) {
                 if ($variation['skus'][0]['sku'] != $product['sku']) {
                     continue;
@@ -144,6 +147,11 @@ class UpdateListingStockService
                 }
 
                 $products[$key]['offerings'][0]['quantity'] = $stock;
+                $variationStillAvailable = true;
+            }
+
+            if (!$variationStillAvailable) {
+                unset($products[$key]);
             }
         }
 
