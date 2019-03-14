@@ -173,8 +173,6 @@ class UpdateListingService
         $failedVariations = [];
         EtsyListingValidator::validateOrFail($listing['main']);
 
-        $data['state'] = 'draft';
-
         $language = $this->settingsHelper->getShopSettings('mainLanguage', 'de');
 
         //title and description
