@@ -1,6 +1,7 @@
 <?php
 namespace Etsy\Services\Item;
 
+use Etsy\EtsyServiceProvider;
 use Plenty\Plugin\ConfigRepository;
 use Etsy\Api\Services\ListingService;
 use Plenty\Plugin\Log\Loggable;
@@ -43,7 +44,7 @@ class DeleteListingService
 			}
 			catch(\Exception $ex)
 			{
-				$this->getLogger(__FUNCTION__)
+				$this->getLogger(EtsyServiceProvider::DELETE_LISTING_SERVICE)
 					->setReferenceType('listingId')
 					->setReferenceValue($listingId)
 					->error('Etsy::item.deleteListingError', $ex->getMessage());
@@ -51,7 +52,7 @@ class DeleteListingService
 		}
 		else
 		{
-			$this->getLogger(__FUNCTION__)
+			$this->getLogger(EtsyServiceProvider::DELETE_LISTING_SERVICE)
 				->setReferenceType('listingId')
 				->setReferenceValue($listingId)
 				->info('Etsy::item.deleteListingError');

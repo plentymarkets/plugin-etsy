@@ -151,6 +151,7 @@ class UpdateListingService
             $this->updateInventory($listing, $listingId);
 	        $this->updateImages($listing, $listingId);
 	        $this->addTranslations($listing, $listingId);
+	        $this->publish($listingId, $listing);
         } catch (\Exception $e) {
 
         }
@@ -311,7 +312,7 @@ class UpdateListingService
 
             foreach ($styles as $style) {
                 if (preg_match('@[^\p{L}\p{Nd}\p{Zs}]@', $style) || $counter > 1) {
-                    $this->getLogger(__FUNCTION__)->addReference('itemId', $listing['main']['itemId'])
+                    $this->getLogger(EtsyServiceProvider::UPDATE_LISTING_SERVICE)->addReference('itemId', $listing['main']['itemId'])
                         //todo übersetzen
                         ->warning(EtsyServiceProvider::PLUGIN_NAME.'::log.wrongStyleFormat', [$listing['main']['style'], $style]);
                     continue;
@@ -361,7 +362,7 @@ class UpdateListingService
 
         //Logging failed variations
         foreach ($failedVariations as $id => $errors) {
-            $this->getLogger(__FUNCTION__)->addReference('variationId', $id)
+            $this->getLogger(EtsyServiceProvider::UPDATE_LISTING_SERVICE)->addReference('variationId', $id)
                 //todo übersetzten
                 ->error(EtsyServiceProvider::PLUGIN_NAME.'::log.', $errors);
         }
@@ -379,7 +380,7 @@ class UpdateListingService
                 throw new ListingException($messageBag, EtsyServiceProvider::PLUGIN_NAME.$exceptionMessage);
             }
 
-            $this->getLogger(__FUNCTION__)
+            $this->getLogger(EtsyServiceProvider::UPDATE_LISTING_SERVICE)
                 ->addReference('itemId', $listing['main']['itemId'])
                 ->error($exceptionMessage, $failedVariations);
         }
@@ -713,13 +714,29 @@ class UpdateListingService
 
                     $this->listingTranslationService->createListingTranslation($listingId, $language, $data);
                 } catch (\Exception $ex) {
-                    $this->getLogger(__FUNCTION__)
+                    $this->getLogger(EtsyServiceProvider::ADD_LISTING_TRANSLATIONS)
                         ->addReference('etsyListingId', $listingId)
                         ->addReference('variationId', $listing['main']['variationId'])
                         ->addReference('etsyLanguage', $language)
                         ->error('Etsy::item.translationUpdateError', $ex->getMessage());
                 }
             }
+        }
+    }
+
+    public function publish($listingId, $listing)
+    {
+        $data = [
+            'state' => 'active',
+        ];
+
+        $this->listingService->updateListing($listingId, $data);
+
+        foreach ($listing as $variation) {
+            if (!$variation['isActive']) continue;
+
+            $status = $variation['failed'] ? $this->itemHelper::SKU_STATUS_INACTIVE : $this->itemHelper::SKU_STATUS_ACTIVE;
+            $this->itemHelper->updateVariationSkuStatus($variation['variationId'], $status);
         }
     }
 }

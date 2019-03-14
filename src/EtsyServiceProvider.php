@@ -21,7 +21,6 @@ use Etsy\Crons\OrderImportCron;
 use Etsy\Factories\ItemDataProviderFactory;
 use Etsy\DataProviders\ItemExportDataProvider;
 use Etsy\DataProviders\ItemUpdateDataProvider;
-use Etsy\DataProviders\TaxonomyDeDataProvider;
 use Etsy\Contracts\TaxonomyRepositoryContract;
 
 /**
@@ -30,6 +29,24 @@ use Etsy\Contracts\TaxonomyRepositoryContract;
 class EtsyServiceProvider extends ServiceProvider
 {
     const PLUGIN_NAME = 'Etsy';
+
+    const START_LISTING_SERVICE = 'StartListingService';
+    const START_LISTING_INVENTORY = 'AddInventory';
+    const UPDATE_LISTING_SERVICE = 'UpdateListingService';
+    const UPDATE_LISTING_INVENTORY = 'UpdateInventory';
+    const DELETE_LISTING_SERVICE = 'DeleteListingService';
+    const ADD_LISTING_TRANSLATIONS = 'AddListingTranslations';
+
+    const UPLOAD_LISTING_IMAGE = 'UpdateListingImages';
+    const DELETE_LISTING_IMAGE = 'DeleteListingImages';
+
+    const ITEM_EXPORT_SERVICE = 'ItemExportService';
+
+    const LISTING_UPDATE_STOCK_SERVICE = 'UpdateStock';
+
+    const ITEM_EXPORT_CRON = 'ItemExportCron';
+
+
     
 	/**
 	 * @return void

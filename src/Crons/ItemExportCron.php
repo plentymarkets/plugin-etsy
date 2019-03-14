@@ -2,6 +2,7 @@
 
 namespace Etsy\Crons;
 
+use Etsy\EtsyServiceProvider;
 use Plenty\Modules\Cron\Contracts\CronHandler as Cron;
 
 use Etsy\Services\Batch\Item\ItemExportService;
@@ -48,7 +49,7 @@ class ItemExportCron extends Cron
 		}
 		catch(\Exception $ex)
 		{
-			$this->getLogger(__FUNCTION__)->error('Etsy::item.itemExportError', $ex->getMessage());
+			$this->getLogger(EtsyServiceProvider::ITEM_EXPORT_CRON)->error('Etsy::item.itemExportError', $ex->getMessage());
 		}
 	}
 

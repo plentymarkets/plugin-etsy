@@ -146,7 +146,7 @@ class StartListingService
     public function start(array $listing)
     {
         if (!isset($listing['main'])) {
-            $this->getLogger(__FUNCTION__)->addReference('itemId', $listing['main']['itemId'])
+            $this->getLogger(EtsyServiceProvider::START_LISTING_SERVICE)->addReference('itemId', $listing['main']['itemId'])
                 ->error( $this->translator->trans(EtsyServiceProvider::PLUGIN_NAME . '::item.startListingError'),
                     $this->translator->trans(EtsyServiceProvider::PLUGIN_NAME . '::log.noMainVariation'));
             return;
@@ -156,7 +156,7 @@ class StartListingService
         try {
             $listing = $this->createListing($listing);
         } catch(ListingException $listingException) {
-            $this->getLogger(__FUNCTION__)
+            $this->getLogger(EtsyServiceProvider::START_LISTING_SERVICE)
                 ->addReference('itemId', $listing['main']['itemId'])
                 ->error($listingException->getMessage(), $listingException->getMessageBag());
             return;
@@ -182,7 +182,7 @@ class StartListingService
             if (count($skus)) {
                 $this->itemHelper->deleteListingsSkus($listingId, $this->settingsHelper->get($this->settingsHelper::SETTINGS_ORDER_REFERRER));
 
-                $this->getLogger(__FUNCTION__)
+                $this->getLogger(EtsyServiceProvider::START_LISTING_SERVICE)
                     ->addReference('itemId', $listing['main']['itemId'])
                     ->addReference('etsyListingId', $listingId)
                     ->report(EtsyServiceProvider::PLUGIN_NAME.'::item.skuRemovalSuccess', $skus);
@@ -190,7 +190,7 @@ class StartListingService
 
             $this->listingService->deleteListing($listingId);
 
-            $this->getLogger(__FUNCTION__)
+            $this->getLogger(EtsyServiceProvider::START_LISTING_SERVICE)
                 ->addReference('itemId', $listing['main']['itemId'])
                 ->addReference('etsyListingId', $listingId)
                 ->error($listingException->getMessage(), $listingException->getMessageBag());
@@ -206,7 +206,7 @@ class StartListingService
             if (count($skus)) {
                 $this->itemHelper->deleteListingsSkus($listingId, $this->settingsHelper->get($this->settingsHelper::SETTINGS_ORDER_REFERRER));
 
-                $this->getLogger(__FUNCTION__)
+                $this->getLogger(EtsyServiceProvider::START_LISTING_SERVICE)
                     ->addReference('itemId', $listing['main']['itemId'])
                     ->addReference('etsyListingId', $listingId)
                     ->report(EtsyServiceProvider::PLUGIN_NAME.'::item.skuRemovalSuccess', $skus);
@@ -214,7 +214,7 @@ class StartListingService
 
             $this->listingService->deleteListing($listingId);
 
-            $this->getLogger(__FUNCTION__)
+            $this->getLogger(EtsyServiceProvider::START_LISTING_SERVICE)
                 ->addReference('itemId', $listing['main']['itemId'])
                 ->addReference('etsyListingId', $listingId)
                 ->error($exception->getMessage());
@@ -398,7 +398,7 @@ class StartListingService
 
             foreach ($styles as $style) {
                 if (preg_match('@[^\p{L}\p{Nd}\p{Zs}l]u', $style) || $counter > 1) {
-                    $this->getLogger(__FUNCTION__)->addReference('itemId', $listing['main']['itemId'])
+                    $this->getLogger(EtsyServiceProvider::START_LISTING_SERVICE)->addReference('itemId', $listing['main']['itemId'])
                         ->warning(EtsyServiceProvider::PLUGIN_NAME.'::log.wrongStyleFormat', [$listing['main']['style'], $style]);
                     continue;
                 }
@@ -467,7 +467,7 @@ class StartListingService
                 throw new ListingException($messageBag, EtsyServiceProvider::PLUGIN_NAME.$exceptionMessage);
             }
 
-            $this->getLogger(__FUNCTION__)
+            $this->getLogger(EtsyServiceProvider::START_LISTING_SERVICE)
                 ->addReference('itemId', $listing['main']['itemId'])
                 ->error($exceptionMessage, $failedVariations);
         }
@@ -659,7 +659,7 @@ class StartListingService
                 throw new ListingException($messageBag, $exceptionMessage);
             }
 
-            $this->getLogger(__FUNCTION__)
+            $this->getLogger(EtsyServiceProvider::START_LISTING_INVENTORY)
                 ->addReference('itemId', $listing['main']['itemId'])
                 ->addReference('etsyListingId', $listingId)
                 ->error($exceptionMessage, $failedVariations);
@@ -742,7 +742,7 @@ class StartListingService
                     }
                 }
 
-                $this->getLogger(__FUNCTION__)->addReference('imageId', $image['id'])
+                $this->getLogger(EtsyServiceProvider::UPLOAD_LISTING_IMAGE)->addReference('imageId', $image['id'])
                     ->warning($this->translator->trans(EtsyServiceProvider::PLUGIN_NAME . '::log.imageFailed'),
                         $message);
             }
@@ -803,7 +803,7 @@ class StartListingService
 
                     $this->listingTranslationService->createListingTranslation($listingId, $language, $data);
                 } catch (\Exception $ex) {
-                    $this->getLogger(__FUNCTION__)
+                    $this->getLogger(EtsyServiceProvider::ADD_LISTING_TRANSLATIONS)
                         ->addReference('etsyListingId', $listingId)
                         ->addReference('variationId', $listing['main']['variationId'])
                         ->addReference('etsyLanguage', $language)
@@ -826,9 +826,9 @@ class StartListingService
         $this->listingService->updateListing($listingId, $data);
 
         foreach ($listing as $variation) {
-            if (!$variation['isActive']) continue;
+            if (!$variation['isActive'] || $variation['failed']) continue;
 
-            $status = $variation['failed'] ? $this->itemHelper::SKU_STATUS_INACTIVE : $this->itemHelper::SKU_STATUS_ACTIVE;
+            $status = $this->itemHelper::SKU_STATUS_ACTIVE;
             $this->itemHelper->updateVariationSkuStatus($variation['variationId'], $status);
         }
     }

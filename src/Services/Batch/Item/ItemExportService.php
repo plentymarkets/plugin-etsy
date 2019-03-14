@@ -2,6 +2,7 @@
 
 namespace Etsy\Services\Batch\Item;
 
+use Etsy\EtsyServiceProvider;
 use Etsy\Helper\SettingsHelper;
 use Plenty\Modules\Item\DataLayer\Models\Record;
 use Plenty\Modules\Item\Search\Contracts\VariationElasticSearchScrollRepositoryContract;
@@ -117,7 +118,7 @@ class ItemExportService extends AbstractBatchService
                 }
             } catch (\Exception $exception) {
                 //todo übersetzen
-                $this->getLogger(__FUNCTION__)
+                $this->getLogger(EtsyServiceProvider::ITEM_EXPORT_SERVICE)
                     ->addReference('itemId', $listing['main']['itemId'])
                     ->warning('Listing export error', [
                         $exception->getMessage()
