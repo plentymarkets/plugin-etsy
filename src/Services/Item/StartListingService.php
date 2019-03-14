@@ -170,6 +170,7 @@ class StartListingService
             $this->getLogger(EtsyServiceProvider::START_LISTING_SERVICE)
                 ->addReference('itemId', $listing['main']['itemId'])
                 ->error($exception->getMessage());
+            return;
         }
 
         $listingId = $listing['main']['listingId'];
