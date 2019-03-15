@@ -57,30 +57,52 @@ Proceed as described below to define a sales price for the order referrer Etsy. 
 2. Place a check mark next to the referrer **Etsy**. 
 3. **Save** the settings.
 
-## Link categories
+## Creating a catalogue
 
-Link your store categories to the Etsy categories in order to display your items in these categories. Further items from the linked category will be assigned automatically.
+Item data is exported to Etsy via catalogue templates. In order to export your items to Etsy, go to **Data » Catalogs** and create a catalogue template. For further information about catalogues, refer to the [Managing catalogues](https://knowledge.plentymarkets.com/en/data/exporting-data/Managing-catalogs) page of the manual.
 
-##### Linking categories:
+→ **Note**: Note that the menu **Data » Catalogs** only becomes visible after you have installed a plugin which provides a catalogue template.
 
-1. Go to **Settings » Markets » Etsy » Category link**. 
-2. Click on **Search**. → The **Select category** window will open. 
-3. Select the Etsy category that best matches your online store category. 
-4. Click on **Apply**. → The name and category path of the Etsy category will be displayed. 
-5. If you know the name of the Etsy category, enter it directly into the **Market category** field to link it to your online store category. 
+#### Creating a catalogue:
+
+1. Go to **Data » Catalogs**.
+2. Click on **Create catalog**.
+3. Enter a name for the catalogue.
+4. Select the **Listing - Etsy** catalogue template from the drop-down list.
+4. **Save** the settings.<br/>
+→ The catalogue is created.<br/>
+→ The catalogue is opened for further editing.
+
+After you have created a catalogue, link the market's data fields with item data saved in plentymarkets. For further information about the plentymarkets data sources which can be linked, refer to the [Mapping data sources](https://knowledge.plentymarkets.com/en/data/exporting-data/Managing-catalogs#_mapping_data_sources) chapter.
+
+#### Linking data fields in the catalogue:
+
+1. Go to **Data » Catalogs**.
+2. Click on the catalogue that you have created.<br/>
+→ The catalogue opens.<br/>
+→ The market's data fields are displayed on the left-hand side.<br/>
+→ **Tip**: Mandatory fields are marked with an asterisk.
+3. Select a plentymarkets data source for the market's data fields from the drop-down list.
+4. Click on **Add source** to assign another plentymarkets data source to a data field.<br/>
+→ A new line is displayed.<br/>
+→ **Note**: Only one value is exported even if you assign more than one data source to a data field. The data is checked in the order of how you assigned it. This means that if the first data field does not provide a value, the second data field is exported etc.
+5. Link the desired data fields.<br/>
+→ The mandatory fields must be linked to a plentymarkets data source.
 6. **Save** the settings.
 
-## Linking properties
+## Updating Etsy categories
 
-In order to use properties for the Etsy market, these properties have to be linked with Etsy. Please note that the properties **Who made** and **When made** are mandatory for the item export.
+In order to update Etsy categories in plentymarkets, delete your credentials in the **System » Markets » Etsy » Authentication** menu and add them again.
 
-##### Linking properties:
+#### Updating Etsy categories:
 
-1. Go to **Settings » Markets » Etsy » Property link**. 
-2. Click on **Search**. → The **Select property** window will open. 
-3. Select the Etsy property that best matches to your online store property. 
-4. Click on **Apply**. → The name and property path of the Etsy property will be displayed. 
-5. **Save** the settings.
+1. Open the **System » Markets » Etsy » Authentication** menu.
+2. Click on **Delete** to delete the credentials.
+3. Click on the globe icon to add new credentials.<br/>
+→ You are forwarded to Etsy.
+4. Click on **Allow access** at Etsy.<br/>
+→ New credentials are created and saved in plentymarkets.<br/>
+→ The Etsy categories are updated.
 
 ## Transferring legal information
 
@@ -92,17 +114,6 @@ In order to transfer legal information to Etsy, you have to save the information
 -> The window **Legal information** opens.
 2. Select the language for which you want to save legal information.
 3. Enter the text.
-4. **Save** the settings.
-
-## Linking shipping profiles
-
-Link the shipping profiles that you created on Etsy to the shipping profiles of your online store in the menu **Settings » Markets » Etsy » Shipping profile links**. 
-
-##### Linking shipping profiles:
-
-1. Go to **Settings » Markets » Etsy » Shipping profile links**. 
-2. Select the Etsy shipping profile that best matches to your online store shipping profile. 
-3. Click on **Apply**. 
 4. **Save** the settings.
 
 ## Automatically sending payment confirmations
@@ -159,7 +170,7 @@ Set up an event procedure to automatically send payment confirmations to Etsy wh
 	</caption>
 </table>
 
-## Automatically send shipping confirmation
+## Automatically sending shipping confirmations
 
 Set up an event procedure to automatically send shipping confirmations to Etsy when the outgoing items are booked.
 
@@ -213,7 +224,7 @@ Set up an event procedure to automatically send shipping confirmations to Etsy w
 	</caption>
 </table>
 
-## Overview API-Calls
+## Overview of API-Calls
 
 <table>
 <thead>
