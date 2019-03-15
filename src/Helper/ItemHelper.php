@@ -143,13 +143,14 @@ class ItemHelper
      */
     public function getVariationSku($variationId)
     {
+        /** @var Collection $skus */
         $skus = $this->variationSkuRepository->search([
             'marketId' => $this->orderHelper->getReferrerId(),
             'variationId' => $variationId
         ]);
 
-        if (!is_null($skus)) {
-            return reset($skus);
+        if (isset($skus[0])) {
+            return $skus[0];
         }
 
         return null;
@@ -225,17 +226,7 @@ class ItemHelper
 	 */
 	public function deleteSku(int $skuId)
 	{
-		try
-		{
-			$this->variationSkuRepository->delete($skuId);
-		}
-		catch(\Exception $ex)
-		{
-			$this->getLogger(__FUNCTION__)->debug('Etsy::item.skuRemovalError', [
-				'skuId' => $skuId,
-				'error' => $ex->getMessage(),
-			]);
-		}
+        $this->variationSkuRepository->delete($skuId);
 	}
 
 	public function deleteListingsSkus($listingId, $marketId) {
@@ -245,7 +236,16 @@ class ItemHelper
         ]);
 
 	    foreach ($skus as $sku) {
-	        $this->deleteSku($sku->id);
+	        try {
+                $this->deleteSku($sku->id);
+            } catch(\Exception $ex)
+            {
+                $this->getLogger(__FUNCTION__)->debug('Etsy::item.skuRemovalError', [
+                    'skuId' => $sku->id,
+                    'listingId' => $listingId,
+                    'error' => $ex->getMessage()
+                ]);
+            }
         }
     }
 

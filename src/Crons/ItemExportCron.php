@@ -2,6 +2,7 @@
 
 namespace Etsy\Crons;
 
+use Carbon\Carbon;
 use Etsy\EtsyServiceProvider;
 use Plenty\Modules\Cron\Contracts\CronHandler as Cron;
 
@@ -42,7 +43,13 @@ class ItemExportCron extends Cron
 		{
 			if($accountHelper->isProcessActive(SettingsHelper::SETTINGS_PROCESS_ITEM_EXPORT))
 			{
-				$service->run();
+			    $lastRun = $this->lastRun();
+
+			    if ($lastRun) {
+                    $lastRun = Carbon::createFromFormat('Y-m-d H:i:s', $lastRun);
+                }
+
+				$service->run(/*$lastRun*/);
 
 				$this->saveLastRun();
 			}

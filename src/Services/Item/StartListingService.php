@@ -16,6 +16,7 @@ use Illuminate\Support\MessageBag;
 use Plenty\Modules\Frontend\Contracts\CurrencyExchangeRepositoryContract;
 use Plenty\Modules\Item\Variation\Contracts\VariationExportServiceContract;
 use Plenty\Modules\Item\Variation\Services\ExportPreloadValue\ExportPreloadValue;
+use Plenty\Modules\Item\VariationSku\Models\VariationSku;
 use Plenty\Plugin\Log\Loggable;
 use Plenty\Plugin\Translation\Translator;
 use Plenty\Exceptions\ValidationException;
@@ -88,12 +89,12 @@ class StartListingService
     const BOOL_CONVERTIBLE_STRINGS = ['1', 'y', 'true'];
 
     /**
-     * number of decimals an amount of money gets rounded to
+     * number of decimals an counter of money gets rounded to
      */
     const MONEY_DECIMALS = 2;
 
     /**
-     * number of decimals an amount of money gets rounded to
+     * number of decimals an counter of money gets rounded to
      */
     const MINIMUM_PRICE = 0.18;
 
@@ -147,13 +148,13 @@ class StartListingService
     public function start(array $listing)
     {
         if (!isset($listing['main'])) {
-            $this->getLogger(EtsyServiceProvider::START_LISTING_SERVICE)->addReference('itemId', $listing['main']['itemId'])
+            $this->getLogger(EtsyServiceProvider::START_LISTING_SERVICE)
+                ->addReference('itemId', $listing['main']['itemId'])
                 ->error( $this->translator->trans(EtsyServiceProvider::PLUGIN_NAME . '::item.startListingError'),
                     $this->translator->trans(EtsyServiceProvider::PLUGIN_NAME . '::log.noMainVariation'));
             return;
         }
 
-        //this should be replaced as soon as there is a suitable Exception class that can have multiple error messages
         try {
             $listing = $this->createListing($listing);
         } catch(ListingException $listingException) {
@@ -177,7 +178,7 @@ class StartListingService
 
         try {
             $this->addTranslations($listing, $listingId);
-            $this->fillInventory($listingId, $listing);
+            $listing = $this->fillInventory($listingId, $listing);
             $this->addPictures($listingId, $listing);
             $this->publish($listingId, $listing);
         } catch (ListingException $listingException) {
@@ -188,7 +189,8 @@ class StartListingService
             }
 
             if (count($skus)) {
-                $this->itemHelper->deleteListingsSkus($listingId, $this->settingsHelper->get($this->settingsHelper::SETTINGS_ORDER_REFERRER));
+                $this->itemHelper->deleteListingsSkus($listingId, $this->settingsHelper
+                    ->get($this->settingsHelper::SETTINGS_ORDER_REFERRER));
 
                 $this->getLogger(EtsyServiceProvider::START_LISTING_SERVICE)
                     ->addReference('itemId', $listing['main']['itemId'])
@@ -207,12 +209,14 @@ class StartListingService
         catch (\Exception $exception) {
             $skus = [];
             foreach ($listing as $variation) {
+                /** @var VariationSku $sku */
                 $sku = $this->itemHelper->getVariationSku($variation['variationId']);
                 if ($sku) $skus[$variation['variationId']] = $sku->sku;
             }
 
             if (count($skus)) {
-                $this->itemHelper->deleteListingsSkus($listingId, $this->settingsHelper->get($this->settingsHelper::SETTINGS_ORDER_REFERRER));
+                $this->itemHelper->deleteListingsSkus($listingId, $this->settingsHelper
+                    ->get($this->settingsHelper::SETTINGS_ORDER_REFERRER));
 
                 $this->getLogger(EtsyServiceProvider::START_LISTING_SERVICE)
                     ->addReference('itemId', $listing['main']['itemId'])
@@ -241,10 +245,6 @@ class StartListingService
         $failedVariations = [];
         $variationExportService = $this->variationExportService;
         EtsyListingValidator::validateOrFail($listing['main']);
-
-        //this parameter decides if the listing get automatically renewed on etsy when it's stock gets positive after
-        //being 0. This creates costs for the customer, so he has the possibility to set it to false
-        $data['should_auto_renew'] = true;
 
         $data['state'] = 'draft';
 
@@ -345,11 +345,6 @@ class StartListingService
             $data['tags'] = '';
         }
 
-        if (isset($listing['main']['renew'])) {
-            $data['should_auto_renew'] = in_array(strtolower($listing['main']['renew']),
-                self::BOOL_CONVERTIBLE_STRINGS);
-        }
-
         if (isset($listing['main']['occasion'])) {
             $data['occasion'] = $listing['main']['occasion'];
         }
@@ -379,7 +374,27 @@ class StartListingService
         }
 
         if (isset($listing['main']['materials'])) {
-            $data['materials'] = explode(',', $listing['main']['materials']);
+            $materials = explode(',', $listing['main']['materials']);
+            $counter = 0;
+
+            foreach ($materials as $key => $material) {
+                if ($counter > 13) break;
+
+                if (preg_match('@[^\p{L}\p{Nd}\p{Zs}l]@u', $material) > 0 || $material == "") {
+                    $this->getLogger(EtsyServiceProvider::START_LISTING_SERVICE)
+                        ->addReference('itemId', $listing['main']['itemId'])
+                        ->warning(EtsyServiceProvider::PLUGIN_NAME . '::log.wrongMaterialFormat',
+                            [$listing['main']['materials'], $material]);
+                    continue;
+                }
+
+                $data['materials'][] = $material;
+                $counter++;
+            }
+
+            if ($counter > 0){
+                $data['materials'] = implode(',', $data['materials']);
+            }
         }
 
         if (isset($listing['main']['is_customizable'])) {
@@ -405,14 +420,22 @@ class StartListingService
             $counter = 0;
 
             foreach ($styles as $style) {
-                if (preg_match('@[^\p{L}\p{Nd}\p{Zs}l]u', $style) || $counter > 1) {
-                    $this->getLogger(EtsyServiceProvider::START_LISTING_SERVICE)->addReference('itemId', $listing['main']['itemId'])
-                        ->warning(EtsyServiceProvider::PLUGIN_NAME.'::log.wrongStyleFormat', [$listing['main']['style'], $style]);
+                if ($counter > 1) break;
+
+                if (preg_match('@[^\p{L}\p{Nd}\p{Zs}l]@u', $style) > 0 || $style == "") {
+                    $this->getLogger(EtsyServiceProvider::START_LISTING_SERVICE)
+                        ->addReference('itemId', $listing['main']['itemId'])
+                        ->warning(EtsyServiceProvider::PLUGIN_NAME.'::log.wrongStyleFormat',
+                            [$listing['main']['style'], $style]);
                     continue;
                 }
 
                 $data['style'][] = $style;
                 $counter++;
+            }
+
+            if ($counter > 0) {
+                $data['style'] = implode(',', $data['style']);
             }
         }
 
@@ -537,6 +560,7 @@ class StartListingService
             $dependencies[] = $this->inventoryService::CUSTOM_ATTRIBUTE_2;
         }
 
+        $variationExportService->addPreloadTypes([$variationExportService::STOCK]);
         $exportPreloadValueList = [];
         foreach ($listing as $variation) {
             $exportPreloadValue = pluginApp(ExportPreloadValue::class, [
@@ -559,8 +583,6 @@ class StartListingService
             if (isset($variation['failed']) && $variation['failed']) {
                 continue;
             }
-            
-            if (!isset($variation['sales_price']) || (float) $variation['sales_price'] <= 0.18)
 
             $variationExportService->preload($exportPreloadValueList);
             $stock = $variationExportService->getAll($variation['variationId']);
@@ -568,7 +590,6 @@ class StartListingService
 
             //initialising property values array for articles with no attributes (single variation)
             $products[$counter]['property_values'] = [];
-
 
             $attributes = $variation['attributes'];
 
@@ -699,6 +720,8 @@ class StartListingService
             throw new ListingException($messageBag,
                 $this->translator->trans(EtsyServiceProvider::PLUGIN_NAME . '::item.startListingError'));
         }
+
+        return $listing;
     }
 
     /**
@@ -750,7 +773,8 @@ class StartListingService
                     }
                 }
 
-                $this->getLogger(EtsyServiceProvider::UPLOAD_LISTING_IMAGE)->addReference('imageId', $image['id'])
+                $this->getLogger(EtsyServiceProvider::UPLOAD_LISTING_IMAGE)
+                    ->addReference('imageId', $image['id'])
                     ->warning($this->translator->trans(EtsyServiceProvider::PLUGIN_NAME . '::log.imageFailed'),
                         $message);
             }
@@ -831,6 +855,14 @@ class StartListingService
         $data = [
             'state' => 'active',
         ];
+
+        if (isset($listing['main']['renew'])) {
+            //this parameter decides if the listing gets automatically renewed on etsy when it's stock gets positive after
+            //being 0. This creates costs for the customer, so he has the possibility to set it to false
+            //IMPORTANT, will always set the listing state to active if it's possible
+            $data['should_auto_renew'] = in_array(strtolower($listing['main']['renew']),
+                self::BOOL_CONVERTIBLE_STRINGS);
+        }
 
         $this->listingService->updateListing($listingId, $data);
 

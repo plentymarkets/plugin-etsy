@@ -117,10 +117,9 @@ class ItemExportService extends AbstractBatchService
                     $this->startService->start($listing);
                 }
             } catch (\Exception $exception) {
-                //todo übersetzen
                 $this->getLogger(EtsyServiceProvider::ITEM_EXPORT_SERVICE)
                     ->addReference('itemId', $listing['main']['itemId'])
-                    ->warning('Listing export error', [
+                    ->warning(EtsyServiceProvider::PLUGIN_NAME . 'item.itemExportError', [
                         $exception->getMessage()
                     ]);
             }
