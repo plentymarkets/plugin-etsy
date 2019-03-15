@@ -100,14 +100,9 @@ In order to update Etsy categories in plentymarkets, delete your credentials in 
 2. Click on **Delete** to delete the credentials.
 3. Click on the globe icon to add new credentials.<br/>
 → You are forwarded to Etsy.
-
-4. Click on **Zugang gewähren** at Etsy.<br/>
-
+4. Click on **Allow access** at Etsy.<br/>
 → New credentials are created and saved in plentymarkets.<br/>
 → The Etsy categories are updated.
-
-
-
 
 ## Transferring legal information
 
@@ -175,7 +170,7 @@ Set up an event procedure to automatically send payment confirmations to Etsy wh
 	</caption>
 </table>
 
-## Automatically send shipping confirmation
+## Automatically sending shipping confirmations
 
 Set up an event procedure to automatically send shipping confirmations to Etsy when the outgoing items are booked.
 
@@ -229,7 +224,7 @@ Set up an event procedure to automatically send shipping confirmations to Etsy w
 	</caption>
 </table>
 
-## Overview API-Calls
+## Overview of API-Calls
 
 <table>
 <thead>
