@@ -262,27 +262,27 @@ Richten Sie eine Ereignisaktion ein, um Versandbestätigungen automatisch an Ets
 
 ## Erforderliche Berechtigungen für das Etsy-Plugin
  
- Damit Benutzer der Benutzerklasse **Variabel** das **Etsy-Plugin** nutzen können, sind REST-API Berechtigungen erforderlich.
+Damit Benutzer der Benutzerklasse **Variabel** das **Etsy-Plugin** nutzen können, sind REST-API Berechtigungen erforderlich.
  
- Berechtigungen werden im Menü **System » Einstellungen » Benutzer » Konten » Benutzerkonto » Tab: Berechtigung** zugewiesen.
+Berechtigungen werden im Menü **System » Einstellungen » Benutzer » Konten » Benutzerkonto » Tab: Berechtigung** zugewiesen.
  
- → **Tipp**: Nutzen Sie die Filterfunktion, um nach Benutzern der Benutzerklasse **Variabel** zu suchen. Wählen Sie dazu im **Tab: Filter** in der Dropdown-Liste **Klasse** den Filter **Variabel** aus. Klicken Sie auf **Suchen**.
+→ **Tipp**: Nutzen Sie die Filterfunktion, um nach Benutzern der Benutzerklasse **Variabel** zu suchen. Wählen Sie dazu im **Tab: Filter** in der Dropdown-Liste **Klasse** den Filter **Variabel** aus. Klicken Sie auf **Suchen**.
  
  #### Erforderliche REST-API Berechtigungen
  
- Die folgenden REST-API Berechtigungen sind für variable Benutzerklassen erforderlich.
+Die folgenden REST-API Berechtigungen sind für variable Benutzerklassen erforderlich.
  
  - **Kategorien** und alle untergeordneten Berechtigungen
  - Artikel » **Merkmale** und alle untergeordneten Berechtigungen
  - Märkte » **Zugangsdaten** und alle untergeordneten Berechtigungen
  
- #### REST-API Berechtigungen zuweisen:
+#### REST-API Berechtigungen zuweisen:
  
- 1. Öffnen Sie das Menü **System » Einstellungen » Benutzer » Konten**.
- 2. Klicken Sie auf den **Benutzer**, dem sie Berechtigungen zuweisen wollen.
- 3. Wechseln Sie zu **Tab: Berechtigung » Tab: REST-API**.
- 4. Setzen Sie ein Häkchen neben den benötigten Berechtigungen.
- 5. **Speichern** Sie die Einstellungen.
+1. Öffnen Sie das Menü **System » Einstellungen » Benutzer » Konten**.
+2. Klicken Sie auf den **Benutzer**, dem Sie Berechtigungen zuweisen wollen.
+3. Wechseln Sie zu **Tab: Berechtigung » Tab: REST-API**.
+4. Setzen Sie ein Häkchen neben den benötigten Berechtigungen.
+5. **Speichern** Sie die Einstellungen.
 
 ## Lizenz
 
