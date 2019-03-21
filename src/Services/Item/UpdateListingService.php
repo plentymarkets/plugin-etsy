@@ -589,9 +589,7 @@ class UpdateListingService
             'sku_on_property' => $dependencies
         ];
 
-        //$response = $this->listingInventoryService->updateInventory($listingId, $data, $language);
-
-        $response = false;
+        $response = $this->listingInventoryService->updateInventory($listingId, $data, $language);
 
         if (!isset($response['results']) || !is_array($response['results'])) {
             $messages = [];

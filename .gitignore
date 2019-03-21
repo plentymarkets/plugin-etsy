@@ -2,3 +2,4 @@
 /.idea
 /config/.idea
 /config/config.iml
+*.iml
