@@ -856,6 +856,8 @@ class StartListingService
             'state' => 'active',
         ];
 
+        $data['should_auto_renew'] = true;
+
         if (isset($listing['main']['renew'])) {
             //this parameter decides if the listing gets automatically renewed on etsy when it's stock gets positive after
             //being 0. This creates costs for the customer, so he has the possibility to set it to false
