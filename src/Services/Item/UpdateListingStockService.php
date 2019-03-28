@@ -128,7 +128,7 @@ class UpdateListingStockService
             if (!isset($product['sku']) || !$product['sku'])
             {
                 //todo exception handling
-                throw new \Exception('variation not in plenty');
+                throw new \Exception('variation not in plenty. Product id ' . $product['product_id']);
             }
 
             $variationStillAvailable = false;
@@ -185,13 +185,17 @@ class UpdateListingStockService
             }
 
             $matches = [];
-            if (!preg_match('@(?!.*-)(.*)@', $variation['sku'], $matches)) {
-                //todo
-                throw new \Exception('');
+            if (!preg_match('@^([0-9]+)-([0-9]+)$@', $variation['sku'], $matches)) {
+                //given variation has no usable sku
+                $this->getLogger(EtsyServiceProvider::LISTING_UPDATE_STOCK_SERVICE)
+                    ->addReference('listingId', $listingId)
+                    ->report('log.unknownEtsyVariation', $variation);
+
+                continue;
             }
 
             /** @var array $matches */
-            $variationId = $matches[0];
+            $variationId = $matches[2];
 
             $this->itemHelper->updateVariationSkuStatus($variationId, $status);
         }
