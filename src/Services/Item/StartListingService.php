@@ -744,7 +744,7 @@ class StartListingService
         
         foreach ($list as $key => $image) {
             if (!isset($image['availabilities']['market'][0]) || ($image['availabilities']['market'][0] !== -1
-                && $image['availabilities']['market'][0] !== $this->settingsHelper
+                && $image['availabilities']['market'][0] != $this->settingsHelper
                         ->get($this->settingsHelper::SETTINGS_ORDER_REFERRER))) {
                 unset($list[$key]);
             }
@@ -761,7 +761,7 @@ class StartListingService
             $response = $this->listingImageService->uploadListingImage($listingId, $image['url'], $image['position']);
 
             if (!isset($response['results']) || !is_array($response['results'])
-                || isset($response['results'][0]) || isset($response['results'][0]['listing_image_id'])) {
+                || !isset($response['results'][0]) || !isset($response['results'][0]['listing_image_id'])) {
 
                 if (is_array($response) && isset($response['error_msg'])) {
                     $message = $response['error_msg'];
