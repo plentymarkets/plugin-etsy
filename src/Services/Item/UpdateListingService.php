@@ -640,6 +640,7 @@ class UpdateListingService
     public function updateImages($listing, $listingId)
     {
         $etsyImages = json_decode($this->imageHelper->get((string) $listingId), true);
+        $imageList = [];
 
         $list = $listing['main']['images']['all'];
 
@@ -652,11 +653,14 @@ class UpdateListingService
         }
 
         $list = array_slice($list, 0, 10);
+        $list = $this->imageHelper->sortImagePosition($list);
 
         foreach ($etsyImages as $etsyKey => $etsyImage){
             foreach ($list as $plentyKey => $plentyImage){
-                if ($etsyImage['imageId'] == $plentyImage['id'])
+                if ($etsyImage['imageId'] == $plentyImage['id'] && $etsyImage['position'] == $plentyImage['position'])
                 {
+                    $imageList[] = $etsyImage;
+                    unset($list[$plentyKey]);
                     unset($etsyImages[$etsyKey]);
                 }
             }
@@ -683,10 +687,6 @@ class UpdateListingService
                     $this->translator->trans(EtsyServiceProvider::PLUGIN_NAME . '::item.deleteListingImageError'));
             }
         }
-
-        $imageList = [];
-
-        $list = $this->imageHelper->sortImagePosition($list);
 
         foreach ($list as $image) {
 
@@ -716,6 +716,7 @@ class UpdateListingService
                 'listingImageId' => $response['results'][0]['listing_image_id'],
                 'listingId' => $response['results'][0]['listing_id'],
                 'itemId' => $image['itemId'],
+                'position' => $image['position'],
                 'imageUrl' => $image['url']
             ];
         }
