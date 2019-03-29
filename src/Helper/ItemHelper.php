@@ -174,6 +174,22 @@ class ItemHelper
         return false;
     }
 
+    /**
+     * @param $variationId
+     * @return bool
+     */
+    public function updateVariationSkuStockTimestamp($variationId)
+    {
+        $sku = $this->getVariationSku($variationId);
+
+        if (!$sku) return false;
+
+        $sku->stockUpdatedAt = date('Y-m-d H:i:s');
+        $sku->save();
+
+        return true;
+    }
+
 	/**
 	 * @param int $sku
 	 * @param int $variationId

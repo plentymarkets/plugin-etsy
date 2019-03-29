@@ -41,8 +41,9 @@ class EtsyServiceProvider extends ServiceProvider
     const DELETE_LISTING_IMAGE = 'DeleteListingImages';
 
     const ITEM_EXPORT_SERVICE = 'ItemExportService';
+    const STOCK_UPDATE_SERVICE = 'ItemUpdateStockService';
 
-    const LISTING_UPDATE_STOCK_SERVICE = 'UpdateStock';
+    const LISTING_UPDATE_STOCK_SERVICE = 'UpdateListingStockService';
 
     const ITEM_EXPORT_CRON = 'ItemExportCron';
 

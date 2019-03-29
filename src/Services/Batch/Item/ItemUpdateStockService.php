@@ -2,6 +2,7 @@
 
 namespace Etsy\Services\Batch\Item;
 
+use Etsy\EtsyServiceProvider;
 use Etsy\Helper\ImageHelper;
 use Etsy\Helper\SettingsHelper;
 use Plenty\Modules\Item\Search\Contracts\VariationElasticSearchScrollRepositoryContract;
@@ -115,7 +116,11 @@ class ItemUpdateStockService extends AbstractBatchService
                 $this->updateListingsStock($listing);
 
             } catch (\Exception $exception) {
-                $test = true;
+                $this->getLogger(EtsyServiceProvider::STOCK_UPDATE_SERVICE)
+                    ->addReference('itemId', $listing['main']['itemId'])
+                    ->warning(EtsyServiceProvider::PLUGIN_NAME . 'item.stockUpdateError', [
+                        $exception->getMessage()
+                    ]);
             }
         }
     }

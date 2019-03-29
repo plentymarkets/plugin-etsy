@@ -214,9 +214,8 @@ class UpdateListingService
                 $listing[$key]['failed'] = true;
                 $failedVariations[$variation['variationId']][] = $this->translator
                     ->trans(EtsyServiceProvider::PLUGIN_NAME.'log.variationPriceMissing');
+                continue;
             }
-
-            if ($listing[$key]['failed']) continue;
 
             $hasActiveVariations = true;
         }
@@ -344,6 +343,7 @@ class UpdateListingService
             $articleFailed = true;
             $articleErrors[] = $this->translator
                 ->trans(EtsyServiceProvider::PLUGIN_NAME.'::log.noVariations');
+            $this->listingService->updateListing($listingId, ['state' => 'inactive'], $language);
         }
 
         if ((!isset($data['title']) || $data['title'] == '')
@@ -575,6 +575,7 @@ class UpdateListingService
             }
 
             if (!$hasActiveVariations) {
+                $this->listingService->updateListing($listingId, ['state' => 'inactive'], $language);
                 $errors = array_unshift($failedVariations, $this->translator
                     ->trans(EtsyServiceProvider::PLUGIN_NAME . '::log.noVariations'));
                 $messageBag = pluginApp(MessageBag::class, ['messages' => $errors]);
@@ -777,20 +778,10 @@ class UpdateListingService
             'state' => 'active',
         ];
 
-        if (isset($listing['main']['renew'])) {
-            //this parameter decides if the listing gets automatically renewed on etsy when it's stock gets positive after
-            //being 0. This creates costs for the customer, so he has the possibility to set it to false
-            //IMPORTANT, will always set the listing state to active if it's possible
-            $data['should_auto_renew'] = in_array(strtolower($listing['main']['renew']),
-                self::BOOL_CONVERTIBLE_STRINGS);
-        }
-
         $this->listingService->updateListing($listingId, $data);
 
         foreach ($listing as $variation) {
-            if (!$variation['isActive']) continue;
-
-            $status = $variation['failed'] ? $this->itemHelper::SKU_STATUS_INACTIVE : $this->itemHelper::SKU_STATUS_ACTIVE;
+            $status = $variation['failed'] ? $this->itemHelper::SKU_STATUS_ERROR : $this->itemHelper::SKU_STATUS_ACTIVE;
             $this->itemHelper->updateVariationSkuStatus($variation['variationId'], $status);
         }
     }
