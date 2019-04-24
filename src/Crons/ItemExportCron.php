@@ -46,10 +46,11 @@ class ItemExportCron extends Cron
 			    $lastRun = $this->lastRun();
 
 			    if ($lastRun) {
-                    $lastRun = Carbon::createFromFormat('Y-m-d H:i:s', $lastRun);
+                    /** @var Carbon $lastRun */
+                    $lastRun = pluginApp(Carbon::class, [$lastRun]);
                 }
 
-				$service->run(/*$lastRun*/);
+				$service->run($lastRun);
 
 				$this->saveLastRun();
 			}

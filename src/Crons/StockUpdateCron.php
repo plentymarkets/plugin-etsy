@@ -46,10 +46,10 @@ class StockUpdateCron extends Cron
 
                 if ($lastRun) {
                     /** @var Carbon $lastRun */
-                    $lastRun = Carbon::createFromFormat('Y-m-d H:i:s', $lastRun);
+                    $lastRun = pluginApp(Carbon::class, [$lastRun]);
                 }
 
-                $service->run(/*$lastRun*/);
+                $service->run($lastRun);
 
                 $this->saveLastRun();
 			}
