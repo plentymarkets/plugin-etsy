@@ -13,11 +13,11 @@ Nachdem Sie das Etsy-Plugin im plentymarkets Marketplace gekauft haben, installi
 
 ### Berechtigung erteilen
 
-Im Menü **Einstellungen » Märkte » Etsy » Authentifizierung** muss zunächst die Schnittstelle freigeschaltet werden. Klicken Sie dazu auf **Etsy-Login**. Sie werden direkt zu Etsy weitergeleitet, wo Sie die Schnittstelle freischalten.
+Im Menü **System » Systemeinstellungen » Märkte » Etsy » Authentifizierung** muss zunächst die Schnittstelle freigeschaltet werden. Klicken Sie dazu auf **Etsy-Login**. Sie werden direkt zu Etsy weitergeleitet, wo Sie die Schnittstelle freischalten.
 
 ### Etsy einrichten
 
-Im Menü **Einstellungen » Märkte » Etsy » Einstellungen** geben Sie u.a. Ihre Shop-ID ein und aktivieren den Artikelexport, Bestandsabgleich und Auftragsimport.
+Im Menü **System » Systemeinstellungen » Märkte » Etsy » Einstellungen** geben Sie u.a. Ihre Shop-ID ein und aktivieren den Artikelexport, Bestandsabgleich und Auftragsimport.
 Etsy erlaubt 500 Calls am Tag. Sollten mehr Calls benötigt werden, setzen Sie sich direkt mit Etsy in Verbindung.
 
 ## Auftragsherkunft aktivieren
@@ -26,7 +26,7 @@ Damit Sie Artikel, Merkmale etc. mit Etsy verknüpfen können, muss im Menü Ein
 
 ##### Auftragsherkunft für Etsy aktivieren:
 
-1. Öffnen Sie das Menü **Einstellungen » Aufträge » Auftrgsherkunft**.
+1. Öffnen Sie das Menü **System » Systemeinstellungen » Aufträge » Auftrgsherkunft**.
 2. Setzen Sie bei **Etsy** ein Häkchen.
 3. **Speichern** Sie die Einstellungen.
 
@@ -57,7 +57,7 @@ Gehen Sie wie im Folgenden beschrieben vor, um für die Auftragsherkunft Etsy ei
 
 ##### Verkaufspreise für Etsy festlegen:
 
-1. Öffnen Sie das Menü **Einstellungen » Artikel » Verkaufspreise » Verkaufspreis öffnen » Tab: Einstellungen**.
+1. Öffnen Sie das Menü **System » Systemeinstellungen » Artikel » Verkaufspreise » Verkaufspreis öffnen » Tab: Einstellungen**.
 2. Setzen Sie ein Häkchen bei der Herkunft **Etsy**.
 3. **Speichern** Sie die Einstellungen.
 
@@ -100,7 +100,7 @@ Um Etsy-Kategorien in plentymarkets zu aktualisieren, löschen Sie Ihre Credenti
 
 #### Etsy-Kategorien aktualisieren:
 
-1. Öffnen Sie das Menü **System » Märkte » Etsy » Authentifizierung**.
+1. Öffnen Sie das Menü **System » Systemeinstellungen » Märkte » Etsy » Authentifizierung**.
 2. Klicken Sie auf **Löschen**, um die Credentials zu löschen.
 3. Klicken Sie auf das Weltkugel-Icon, um neue Credentials hinzuzufügen.<br/>
 → Sie werden zu Etsy weitergeleitet.
@@ -114,7 +114,7 @@ Um rechtliche Hinweise an den Marktplatz Etsy zu übertragen, hinterlegen Sie di
 
 ##### Rechtliche Hinweise hinterlegen: 
 
-1. Öffnen Sie das Menü **Einstellungen » Märkte » Etsy » Rechtliche Hinweise**. 
+1. Öffnen Sie das Menü **System » Systemeinstellungen » Märkte » Etsy » Rechtliche Hinweise**. 
 → Das Fenster **Rechtliche Hinweise** wird geöffnet. 
 2. Wählen Sie die Sprache aus, für die rechtliche Hinweise hinterlegt werden sollen. 
 3. Geben Sie Ihren Text ein. 
@@ -126,7 +126,7 @@ Richten Sie eine Ereignisaktion ein, um Zahlungsbestätigungen automatisch an Et
 
 ##### Ereignisaktion einrichten:
 
-1. Öffnen Sie das Menü **Einstellungen » Aufträge » Ereignisaktionen**.
+1. Öffnen Sie das Menü **System » Systemeinstellungen » Aufträge » Ereignisaktionen**.
 2. Klicken Sie auf **Ereignisaktion hinzufügen**.
 → Das Fenster **Neue Ereignisaktion erstellen** wird geöffnet.
 3. Geben Sie einen Namen ein.
@@ -178,7 +178,7 @@ Richten Sie eine Ereignisaktion ein, um Versandbestätigungen automatisch an Ets
 
 ##### Ereignisaktion einrichten:
 
-1. Öffnen Sie das Menü **Einstellungen » Aufträge » Ereignisaktionen**.
+1. Öffnen Sie das Menü **System » Systemeinstellungen » Aufträge » Ereignisaktionen**.
 2. Klicken Sie auf **Ereignisaktion hinzufügen**.
 → Das Fenster **Neue Ereignisaktion erstellen** wird geöffnet.
 3. Geben Sie einen Namen ein.
@@ -260,29 +260,26 @@ Richten Sie eine Ereignisaktion ein, um Versandbestätigungen automatisch an Ets
 </tbody>
 </table>
 
-## Erforderliche Berechtigungen für das Etsy-Plugin
+## Erforderliche Rechte für das Etsy-Plugin
  
-Damit Benutzer der Benutzerklasse **Variabel** das **Etsy-Plugin** nutzen können, sind REST-API Berechtigungen erforderlich.
+Damit Benutzer mit dem Zugang **Backend** das **Etsy-Plugin** nutzen können, sind REST-API-Rechte erforderlich.
  
-Berechtigungen werden im Menü **System » Einstellungen » Benutzer » Konten » Benutzerkonto » Tab: Berechtigung** zugewiesen.
+Rechte werden im Menü **System » Systemeinstellungen » Einstellungen » Benutzer » Rechte » Benutzer** zugewiesen.
  
-→ **Tipp**: Nutzen Sie die Filterfunktion, um nach Benutzern der Benutzerklasse **Variabel** zu suchen. Wählen Sie dazu im **Tab: Filter** in der Dropdown-Liste **Klasse** den Filter **Variabel** aus. Klicken Sie auf **Suchen**.
+ #### Erforderliche REST-API-Rechte
  
- #### Erforderliche REST-API Berechtigungen
+Die folgenden REST-API-Rechte sind für Benutzer mit **Backend**-Zugang erforderlich.
  
-Die folgenden REST-API Berechtigungen sind für variable Benutzerklassen erforderlich.
- 
- - **Kategorien** und alle untergeordneten Berechtigungen
- - Artikel » **Merkmale** und alle untergeordneten Berechtigungen
+ - Artikel » **Kategorie** und alle untergeordneten Berechtigungen
+ - Artikel » **Merkmal** und alle untergeordneten Berechtigungen
  - Märkte » **Zugangsdaten** und alle untergeordneten Berechtigungen
  
-#### REST-API Berechtigungen zuweisen:
+#### REST-API-Rechte zuweisen:
  
-1. Öffnen Sie das Menü **System » Einstellungen » Benutzer » Konten**.
-2. Klicken Sie auf den **Benutzer**, dem Sie Berechtigungen zuweisen wollen.
-3. Wechseln Sie zu **Tab: Berechtigung » Tab: REST-API**.
-4. Setzen Sie ein Häkchen neben den benötigten Berechtigungen.
-5. **Speichern** Sie die Einstellungen.
+1. Öffnen Sie das Menü **System » Systemeinstellungen » Einstellungen » Benutzer » Rechte » Benutzer**.
+2. Klicken Sie auf den **Benutzer**, welcher Rechte erhalten soll.
+3. Setzen Sie im Bereich **Autorisierung** ein Häkchen neben den benötigten Berechtigungen.
+4. **Speichern** Sie die Einstellungen.
 
 ## Lizenz
 

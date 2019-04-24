@@ -13,19 +13,19 @@ After buying the Etsy plugin in the plentyMarketplace, install the market in the
 
 ### Granting rights
 
-First, the interface has to be activated in the menu **Settings » Markets » Etsy » Authentication**. Click on **Etsy login** to do so. Afterwards, you are forwarded directly to Etsy where the interface can be activated.
+First, the interface has to be activated in the menu **System » System settings » Markets » Etsy » Authentication**. Click on **Etsy login** to do so. Afterwards, you are forwarded directly to Etsy where the interface can be activated.
 
 ### Setting up Etsy
 
-Go to **Settings » Markets » Etsy » Settings** to enter your Store ID and to activate the item export, stock update and order import. Etsy allows 500 calls per day. If you need more than 500 calls, contact Etsy directly.
+Go to **System » System settings » Markets » Etsy » Settings** to enter your Store ID and to activate the item export, stock update and order import. Etsy allows 500 calls per day. If you need more than 500 calls, contact Etsy directly.
 
 ## Activating the order referrer
 
-In order to link items, properties etc. with Etsy you will have to activate the order referrer Etsy in the menu **Settings » Orders » Order referrer**.
+In order to link items, properties etc. with Etsy you will have to activate the order referrer Etsy in the menu **System » System settings » Orders » Order referrer**.
 
 ##### Activating the order referrer for Etsy:
 
-1. Open the **Settings » Orders » Order referrer** menu. 
+1. Open the **System » System settings » Orders » Order referrer** menu. 
 2. Place a check mark for **Etsy**.  
 3. **Save** the settings.
 
@@ -53,7 +53,7 @@ Proceed as described below to define a sales price for the order referrer Etsy. 
 
 ##### Defining a sales price for Etsy:
 
-1. Open the menu **Settings » Item » Sales price » Open sales price » Tab: Settings**. 
+1. Open the menu **System » System settings » Item » Sales price » Open sales price » Tab: Settings**. 
 2. Place a check mark next to the referrer **Etsy**. 
 3. **Save** the settings.
 
@@ -92,11 +92,11 @@ After you have created a catalogue, link the market's data fields with item data
 
 ## Updating Etsy categories
 
-In order to update Etsy categories in plentymarkets, delete your credentials in the **System » Markets » Etsy » Authentication** menu and add them again.
+In order to update Etsy categories in plentymarkets, delete your credentials in the **System » System settings » Markets » Etsy » Authentication** menu and add them again.
 
 #### Updating Etsy categories:
 
-1. Open the **System » Markets » Etsy » Authentication** menu.
+1. Open the **System » System settings » Markets » Etsy » Authentication** menu.
 2. Click on **Delete** to delete the credentials.
 3. Click on the globe icon to add new credentials.<br/>
 → You are forwarded to Etsy.
@@ -110,7 +110,7 @@ In order to transfer legal information to Etsy, you have to save the information
 
 ##### Transferring legal information:
 
-1. Go to **Settings » Markets » Etsy » Legal information**
+1. Go to **System » System settings » Markets » Etsy » Legal information**
 -> The window **Legal information** opens.
 2. Select the language for which you want to save legal information.
 3. Enter the text.
@@ -122,7 +122,7 @@ Set up an event procedure to automatically send payment confirmations to Etsy wh
 
 ##### Setting up an event procedure:
 
-1. Go to **Settings » Orders » Event procedures**. 
+1. Go to **System » System settings » Orders » Event procedures**. 
 2. Click on **Add event procedure**. → The **Create new event procedure** window will open. 
 3. Enter a name. 
 4. Select the Event listed in table 1. 
@@ -176,7 +176,7 @@ Set up an event procedure to automatically send shipping confirmations to Etsy w
 
 ##### Setting up an event procedure:
 
-1. Go to **Settings » Orders » Event procedures**. 
+1. Go to **System » System settings » Orders » Event procedures**. 
 2. Click on **Add event procedure**. → The **Create new event procedure** window will open. 
 3. Enter a name. 
 4. Select the event listed in table 2. 
@@ -261,27 +261,24 @@ Set up an event procedure to automatically send shipping confirmations to Etsy w
 
 ## Required rights for the Etsy plugin
     
-Users of the user class **Variable** need REST-API rights to use the **Etsy plugin**.
+Users with **Backend** access need REST-API rights to use the **Etsy plugin**.
 
-Use the **System » Settings » User » Accounts » User account » Tab: Right** menu to assign rights.
-
-→ **Tip**: Use the filter function to search for users of the user class **Variable**. To do so, go to **Tab: Filter** and select the filter **Variable** within the drop-down list **Class**. Click on **Search**.
+Use the **System » System settings » Settings » User » Rights » User** menu to assign rights.
     
 #### Required REST-API rights
     
-The required REST-API rights for variable user classes are listed below.
+The required REST-API rights for users with **Backend** access are listed below.
     
- - **Categories** and all subordinate rights
+ - Item » **Category** and all subordinate rights
  - Items » **Properties** and all subordinate rights
  - Markets » **Credentials** and all subordinate rights
     
-#### Assigning REST-API rights
+#### Assigning REST-API rights:
     
-1. Go to **System » Settings » User » Accounts**.
+1. Go to **System » System settings » Settings » User » Rights » User**.
 2. Click on the **user** that you want to assign rights to.
-3. Go to **Tab: Right » Tab: REST-API**.
-4. Place a check mark next to the required rights.
-5. **Save** the settings.
+3. In the section **Authorisations**, place a check mark next to the required rights.
+4. **Save** the settings.
 
 ## License
 
