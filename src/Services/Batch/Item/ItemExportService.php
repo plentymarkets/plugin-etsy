@@ -4,15 +4,12 @@ namespace Etsy\Services\Batch\Item;
 
 use Etsy\EtsyServiceProvider;
 use Etsy\Helper\SettingsHelper;
-use Plenty\Modules\Item\DataLayer\Models\Record;
 use Plenty\Modules\Item\Search\Contracts\VariationElasticSearchScrollRepositoryContract;
 use Plenty\Plugin\Application;
 use Plenty\Exceptions\ValidationException;
-use Plenty\Modules\Item\DataLayer\Models\RecordList;
 
 use Etsy\Services\Item\UpdateListingService;
 use Etsy\Services\Batch\AbstractBatchService;
-use Etsy\Factories\ItemDataProviderFactory;
 use Etsy\Services\Item\StartListingService;
 use Plenty\Plugin\Log\Loggable;
 use Plenty\Plugin\Translation\Translator;
@@ -123,8 +120,8 @@ class ItemExportService extends AbstractBatchService
                         $exception->getMessage()
                     ]);
             }
-            }
         }
+    }
 
     /**
      * Check if listing is created.
