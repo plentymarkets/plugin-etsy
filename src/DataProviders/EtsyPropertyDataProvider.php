@@ -95,6 +95,11 @@ class EtsyPropertyDataProvider extends BaseDataProvider
                 'required' => false,
             ],
             [
+                'key' => 'tags',
+                'label' => $this->translator->trans(EtsyServiceProvider::PLUGIN_NAME.'::catalog.tags'),
+                'required' => false,
+            ],
+            [
                 'key' => 'item_weight',
                 'label' => $this->translator->trans(EtsyServiceProvider::PLUGIN_NAME.'::catalog.item_weight'),
                 'required' => false,

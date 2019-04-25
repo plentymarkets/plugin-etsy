@@ -232,9 +232,21 @@ class UpdateListingService
         $data['taxonomy_id'] = (int) reset($listing['main']['categories']);
 
         //Etsy properties
-        if (false) {
-            //todo: Still need to decide how to map tags for Etsy (plenty tags from main variation or maybe properties?)
-            $data['tags'] = '';
+        if (isset($listing['main']['tags']) && $listing['main']['tags'] != "") {
+            $tags = explode(',', $listing['main']['tags']);
+            $tagCounter = 0;
+
+            foreach ($tags as $key => $tag) {
+                if ($tagCounter > 13) break;
+
+
+                $data['tags'][] = $tag;
+                $tagCounter++;
+            }
+
+            if ($tagCounter > 0){
+                $data['tags'] = implode(',', $data['tags']);
+            }
         }
 
         if (isset($listing['main']['occasion'])) {
