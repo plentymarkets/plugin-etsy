@@ -5,6 +5,7 @@ namespace Etsy\Services\Batch;
 use Etsy\Helper\ImageHelper;
 use Etsy\Helper\SettingsHelper;
 use Etsy\Services\Item\DeleteListingService;
+use Illuminate\Support\Collection;
 use Plenty\Modules\Catalog\Contracts\CatalogExportRepositoryContract;
 use Plenty\Modules\Catalog\Contracts\CatalogExportServiceContract;
 use Plenty\Modules\Catalog\Contracts\CatalogRepositoryContract;
@@ -12,6 +13,7 @@ use Plenty\Modules\Item\Search\Contracts\VariationElasticSearchScrollRepositoryC
 use Plenty\Modules\Item\Variation\Contracts\VariationRepositoryContract;
 use Plenty\Modules\Item\VariationSku\Contracts\VariationSkuRepositoryContract;
 use Plenty\Modules\Item\VariationSku\Models\VariationSku;
+use Plenty\Repositories\Models\PaginatedResult;
 
 /**
  * Class AbstractBatchService
@@ -58,8 +60,9 @@ abstract class AbstractBatchService
         $catalogExportRepository = pluginApp(CatalogExportRepositoryContract::class);
         $catalogRepository = pluginApp(CatalogRepositoryContract::class);
         $catalogRepository->setFilters(['template' => self::TEMPLATE]);
-        $mappings = $catalogRepository->all();
-        $id = $mappings->getResult()[0]['id'];
+        $mappings = $catalogRepository->all()->getResult();
+        /** @var Collection $mappings */
+        $id = $mappings->first()['id'];
 
         $this->catalogExportService = $catalogExportRepository->exportById($id);
         $this->catalogExportService->setSettings(['marketId' => $this->settingshelper->get($this->settingshelper::SETTINGS_ORDER_REFERRER)]);
