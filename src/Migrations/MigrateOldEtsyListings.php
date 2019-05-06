@@ -37,7 +37,6 @@ class MigrateOldEtsyListings
         ];
 
         $listings = $variationSkuRepository->search($filter);
-        $listings = ['test'];
 
         /** @var VariationSku $listing */
         foreach ($listings as $listing) {
