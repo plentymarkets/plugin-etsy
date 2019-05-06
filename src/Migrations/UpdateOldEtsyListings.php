@@ -4,19 +4,24 @@ namespace Etsy\Migrations;
 
 use Etsy\Api\Services\ListingInventoryService;
 use Etsy\Api\Services\ListingService;
+use Etsy\EtsyServiceProvider;
 use Etsy\Helper\ImageHelper;
 use Etsy\Helper\ItemHelper;
 use Etsy\Helper\SettingsHelper;
+use Etsy\Services\Item\UpdateListingService;
 use Plenty\Modules\Item\Variation\Contracts\VariationRepositoryContract;
 use Plenty\Modules\Item\VariationSku\Contracts\VariationSkuRepositoryContract;
 use Plenty\Modules\Item\VariationSku\Models\VariationSku;
 use Plenty\Modules\Property\Contracts\PropertyNameRepositoryContract;
 use Plenty\Modules\Property\Contracts\PropertyRelationRepositoryContract;
 use Plenty\Modules\Property\Contracts\PropertyRepositoryContract;
+use Plenty\Plugin\Log\Loggable;
 
 
 class UpdateOldEtsyListings
 {
+    use Loggable;
+
     public function run()
     {
         /** @var SettingsHelper $settingsHelper */
@@ -66,6 +71,8 @@ class UpdateOldEtsyListings
             $variationId = $listing->variationId;
 
             try {
+                if (isset($listing['plenty_item_variation_market_status_deleted_timestamp'])) continue;
+
                 $propertyRelationRepository->createRelation([
                     'relationTargetId' => $variationId,
                     'propertyId' => $property->id,
@@ -82,6 +89,7 @@ class UpdateOldEtsyListings
                 $etsyListing = $listingInventoryService->getInventory($listingId)['results'];
                 $etsyListing['products'][0]['sku'] = $listingId . '-' . $variationId;
                 $data['should_auto_renew'] = false;
+                $data['write_missing_inventory'] = true;
 
                 if ($etsyListing['products'][0]['offerings'][0]['quantity']) {
                     $data['state'] = 'inactive';
@@ -89,11 +97,41 @@ class UpdateOldEtsyListings
                     $etsyListing['products'][0]['offerings'][0]['quantity'] = 1;
                 }
 
-                $listingService->updateListing($listingId, $data);
+                $response = $listingService->updateListing($listingId, $data);
+
+                if (!isset($response['results']) || !is_array($response['results'])) {
+                    throw new \Exception();
+                }
+
+                $etsyListing = $listingInventoryService->getInventory($listingId)['results'];
+                if (count($etsyListing['products']) > 1) throw new \Exception();
+
+                $etsyListing['products'][0]['sku'] = $listingId . '-' . $listing->variationId;
+
+                $quantity =  $etsyListing['products'][0]['offerings'][0]['quantity'];
+                $price =  (float) ($etsyListing['products'][0]['offerings'][0]['price']['amount'] /
+                    $etsyListing['products'][0]['offerings'][0]['price']['divisor']);
+                $price = round($price, UpdateListingService::MONEY_DECIMALS);
+
+                if ($etsyListing['products'][0]['offerings'][0]['quantity'] < 1) {
+                    $listing->status = ItemHelper::SKU_STATUS_INACTIVE;
+                    $quantity = 1;
+                }
+
+                $etsyListing['products'][0]['offerings'] = [
+                    [
+                        'quantity' => $quantity,
+                        'price' => $price
+                    ]
+                ];
 
                 $etsyListing['products'] = json_encode($etsyListing['products']);
 
-                $listingInventoryService->updateInventory($listingId, $etsyListing);
+                $response = $listingInventoryService->updateInventory($listingId, $etsyListing);
+
+                if (!isset($response['results']) || !is_array($response['results'])) {
+                    throw new \Exception();
+                }
                 $listing->sku = $listingId . '-' . $variationId;
                 $listing->parentSku = $listingId;
                 $listing->save();
@@ -121,8 +159,10 @@ class UpdateOldEtsyListings
                 $imageHelper->save($listingId, json_encode($newImages));
                 $imageHelper->delete($variationId);
 
-            } catch (\Throwable $exception) {
-
+            }  catch (\Throwable $exception) {
+                $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
+                    ->addReference('variationId', $listing->variationId)
+                    ->error('Migration failed');
             }
         }
     }
