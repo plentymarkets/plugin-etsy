@@ -60,6 +60,8 @@ class MigrateOldEtsyListings
                 }
 
                 $etsyListing = $listingInventoryService->getInventory($listingId)['results'];
+                if (count($etsyListing['products']) > 1) throw new \Exception();
+
                 $etsyListing['products'][0]['sku'] = $listingId . '-' . $listing->variationId;
 
                 $quantity =  $etsyListing['products'][0]['offerings'][0]['quantity'];
