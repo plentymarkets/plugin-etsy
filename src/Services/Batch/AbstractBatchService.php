@@ -60,9 +60,13 @@ abstract class AbstractBatchService
         $catalogExportRepository = pluginApp(CatalogExportRepositoryContract::class);
         $catalogRepository = pluginApp(CatalogRepositoryContract::class);
         $catalogRepository->setFilters(['template' => self::TEMPLATE]);
-        $mappings = $catalogRepository->all()->getResult();
+        $id = null;
         /** @var Collection $mappings */
-        $id = $mappings->first()['id'];
+        $mappings = $catalogRepository->all()->getResult();
+        foreach ($mappings as $mapping) {
+            $id = $mapping['id'];
+            break;
+        }
 
         $this->catalogExportService = $catalogExportRepository->exportById($id);
         $this->catalogExportService->setSettings(['marketId' => $this->settingshelper->get($this->settingshelper::SETTINGS_ORDER_REFERRER)]);
