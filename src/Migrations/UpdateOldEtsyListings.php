@@ -14,11 +14,7 @@ use Plenty\Modules\Property\Contracts\PropertyNameRepositoryContract;
 use Plenty\Modules\Property\Contracts\PropertyRelationRepositoryContract;
 use Plenty\Modules\Property\Contracts\PropertyRepositoryContract;
 
-/**
- * @author H.Malicha
- * Class MigrateOldEtsyListings
- * @package Etsy\Migrations
- */
+
 class UpdateOldEtsyListings
 {
     public function run()
@@ -47,7 +43,7 @@ class UpdateOldEtsyListings
         $listings = $variationSkuRepository->search($filter);
 
         $doNotExportProperty = [
-            'cast' => 'empty',
+            'cast' => 'shortText',
             'typeIdentifier' => 'item',
             'position' => 0,
             'names' => [
@@ -73,7 +69,14 @@ class UpdateOldEtsyListings
                 $propertyRelationRepository->createRelation([
                     'relationTargetId' => $variationId,
                     'propertyId' => $property->id,
-                    'relationTypeIdentifier' => 'item'
+                    'relationTypeIdentifier' => 'item',
+                    'relationValues' => [
+                        [
+                            'lang' => 'de',
+                            'value' => 'true',
+                            'description' => ''
+                        ]
+                    ]
                 ]);
 
                 $etsyListing = $listingInventoryService->getInventory($listingId)['results'];

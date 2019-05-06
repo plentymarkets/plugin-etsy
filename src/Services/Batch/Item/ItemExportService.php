@@ -82,6 +82,10 @@ class ItemExportService extends AbstractBatchService
 
         foreach ($catalogResult as $variation) {
 
+            if (isset($variation['do_not_export'])){
+                continue;
+            }
+
             //for convenience we get rid of all skus that are not related to Etsy
             $skus = [];
 

@@ -118,6 +118,11 @@ class EtsyPropertyDataProvider extends BaseDataProvider
                 'key' => 'item_width',
                 'label' => $this->translator->trans(EtsyServiceProvider::PLUGIN_NAME.'::catalog.item_width'),
                 'required' => false,
+            ],
+            [
+                'key' => 'do_not_export',
+                'label' => $this->translator->trans(EtsyServiceProvider::PLUGIN_NAME.'::catalog.do_not_export'),
+                'required' => false,
             ]
         ];
     }
