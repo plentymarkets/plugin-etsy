@@ -1,28 +1,27 @@
 <?php
+/**
+ * Created by IntelliJ IDEA.
+ * User: henrymalicha
+ * Date: 07.05.19
+ * Time: 14:28
+ */
 
-namespace Etsy\Migrations;
+namespace Etsy\Helper;
+
 
 use Etsy\Api\Services\ListingInventoryService;
 use Etsy\Api\Services\ListingService;
 use Etsy\EtsyServiceProvider;
-use Etsy\Helper\ItemHelper;
-use Etsy\Helper\SettingsHelper;
 use Etsy\Services\Item\UpdateListingService;
 use Plenty\Modules\Item\VariationSku\Contracts\VariationSkuRepositoryContract;
 use Plenty\Modules\Item\VariationSku\Models\VariationSku;
 use Plenty\Plugin\Log\Loggable;
 
-/**
- * @author H.Malicha
- * Class MigrateOldEtsyListings
- * @package Etsy\Migrations
- */
-class MigrateOldEtsyListings
+class OldListingHelper
 {
     use Loggable;
 
-    public function run()
-    {
+    public function migrateOldListings() {
         /** @var SettingsHelper $settingsHelper */
         $settingsHelper = pluginApp(SettingsHelper::class);
         /** @var VariationSkuRepositoryContract $variationSkuRepository */
