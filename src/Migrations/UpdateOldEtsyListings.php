@@ -5,7 +5,6 @@ namespace Etsy\Migrations;
 
 use Etsy\Api\Services\ListingService;
 use Etsy\Helper\SettingsHelper;
-use Plenty\Modules\Item\VariationMarket\Repositories\VariationMarketRepository;
 use Plenty\Modules\Item\VariationSku\Contracts\VariationSkuRepositoryContract;
 use Plenty\Modules\Item\VariationSku\Repositories\VariationSkuRepository;
 
