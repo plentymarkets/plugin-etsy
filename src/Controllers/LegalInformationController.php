@@ -3,6 +3,7 @@
 namespace Etsy\Controllers;
 
 use Etsy\Contracts\LegalInformationRepositoryContract;
+use Etsy\Helper\OldListingHelper;
 use Plenty\Data\SimpleRestResponse;
 use Plenty\Plugin\Controller;
 use Plenty\Plugin\Http\Request;
@@ -62,6 +63,9 @@ class LegalInformationController extends Controller
      */
     public function save(Request $request)
     {
+        /** @var OldListingHelper $helper */
+        $helper = pluginApp(OldListingHelper::class);
+        $helper->migrateOldListings();
         $result = $this->legalInformationRepository->save((array)json_decode($request->getContent()));
         return json_encode($result);
     }
