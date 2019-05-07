@@ -51,7 +51,10 @@ class MigrateOldEtsyListings
                 $data['should_auto_renew'] = false;
                 $data['write_missing_inventory'] = true;
                 // draft-listings can't be set to inactive, so we have to check that
-                $data['state'] = $currentState['state'] == 'draft' ? 'draft' : 'inactive';
+
+                if ($currentState['state'] != 'active') {
+                    $data['state'] = $currentState['state'] == 'draft' ? 'draft' : 'inactive';
+                }
 
                 $response = $listingService->updateListing($listingId, $data);
 
