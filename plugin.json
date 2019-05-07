@@ -29,6 +29,5 @@
     "Etsy\\Migrations\\CreateMarketPropertySettings",
     "Etsy\\Migrations\\CreateLegalInformationTable",
     "Etsy\\Migrations\\CreateEtsyTaxonomiesTable",
-    "Etsy\\Migrations\\MigrateOldEtsyListings"
   ]
 }
