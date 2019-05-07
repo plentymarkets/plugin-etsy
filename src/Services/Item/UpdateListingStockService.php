@@ -66,6 +66,11 @@ class UpdateListingStockService
     const SOLD_OUT = "sold_out";
 
     /**
+     * state of sold out listings
+     */
+    const EXPIRED = "expired";
+
+    /**
      * State of active listings
      */
     const ACTIVE = "active";
@@ -202,8 +207,8 @@ class UpdateListingStockService
                 'state' => $newState
             ];
 
-            //we have positiv stock and the listing was sold out
-            if ($state == self::SOLD_OUT && $renew) {
+            //we have positiv stock and the listing was sold out or expired
+            if (($state == self::SOLD_OUT || $state == self::EXPIRED) && $renew) {
                 $data['renew'] = true;
             }
 
