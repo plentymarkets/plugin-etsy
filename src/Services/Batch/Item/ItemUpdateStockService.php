@@ -138,7 +138,7 @@ class ItemUpdateStockService extends AbstractBatchService
             catch(\Exception $ex)
             {
                 $this->getLogger(__FUNCTION__)
-                    ->addReference('variationId', $listing['main']['variationId'])
+                    ->addReference('itemId', $listing['main']['itemId'])
                     ->error('Etsy::item.stockUpdateError', $ex->getMessage());
             }
     }
