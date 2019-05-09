@@ -275,6 +275,8 @@ class UpdateListingStockService
                 }
                 $stock =  $variationExportService->getData($variationExportService::STOCK, $variation['variationId']);
                 $stock = $stock[0]['stockNet'];
+                // etsy only takes int´s as quantity, so we round it down. For example 9,5 will now be 9
+                $stock = round($stock, 0, PHP_ROUND_HALF_DOWN);
 
                 if ($stock > 0 && $variation['skus'][0] != $this->itemHelper::SKU_STATUS_ERROR) {
                     $hasPositiveStock = true;
