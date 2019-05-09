@@ -567,7 +567,7 @@ class UpdateListingService
 
             $products[$counter]['offerings'] = [
                 [
-                    'quantity' => $stock[0]['stockNet'],
+                    'quantity' => (int) $stock[0]['stockNet'],
                     'is_enabled' => $variation['isActive']
                 ]
             ];
