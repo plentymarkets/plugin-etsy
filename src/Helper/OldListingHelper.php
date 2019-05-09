@@ -1,20 +1,23 @@
 <?php
+/**
+ * Created by IntelliJ IDEA.
+ * User: henrymalicha
+ * Date: 09.05.19
+ * Time: 13:51
+ */
 
-namespace Etsy\Migrations;
+namespace Etsy\Helper;
 
 
 use Etsy\Api\Services\ListingService;
-use Etsy\Helper\SettingsHelper;
 use Plenty\Modules\Item\VariationSku\Contracts\VariationSkuRepositoryContract;
-use Plenty\Modules\Item\VariationSku\Repositories\VariationSkuRepository;
 
-class UpdateOldEtsyListings
+class OldListingHelper
 {
-    public function run()
-    {
+    public function migrateOldListings() {
         /** @var SettingsHelper $settingsHelper */
         $settingsHelper = pluginApp(SettingsHelper::class);
-        /** @var VariationSkuRepository $variationSkuRepository */
+        /** @var VariationSkuRepositoryContract $variationSkuRepository */
         $variationSkuRepository = pluginApp(VariationSkuRepositoryContract::class);
         /** @var ListingService $listingService */
         $listingService = pluginApp(ListingService::class);
