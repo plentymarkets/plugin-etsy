@@ -86,6 +86,11 @@ class UpdateListingStockService
     const EDIT = "edit";
 
     /**
+     * Maximum value of stock allowed from etsy
+     */
+    const MAXIMUM_ALLOWED_STOCK = 999;
+
+    /**
      * UpdateListingStockService constructor.
      * @param VariationExportServiceContract $variationExportService
      * @param ListingInventoryService $listingInventoryService
@@ -312,8 +317,8 @@ class UpdateListingStockService
                     $products[$key]['offerings'][0]['is_enabled'] = true;
                 }
 
-                if ($stock > 999) {
-                    $stock = 999;
+                if ($stock > self::MAXIMUM_ALLOWED_STOCK) {
+                    $stock = self::MAXIMUM_ALLOWED_STOCK;
                 }
 
                 $products[$key]['offerings'][0]['quantity'] = $stock;
