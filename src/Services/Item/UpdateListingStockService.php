@@ -236,7 +236,36 @@ class UpdateListingStockService
      */
     protected function update($listingId, array $listing)
     {
-        $etsyInventory = $this->listingInventoryService->getInventory($listingId);
+        $retrys = 3;
+        $etsyInventory = null;
+
+        //we retry reading the inventory since we've already successfully loaded the listing itself at this point
+        //which means the inventory must be loadable. An error at this point probably is caused by connection issues
+        for ($counter = 0; $counter < $retrys; $counter++) {
+            $etsyInventory = $this->listingInventoryService->getInventory($listingId);
+
+            if (isset($etsyInventory['results']) && is_array($etsyInventory['results'])) {
+                break;
+            }
+        }
+
+        if (!isset($etsyInventory['results']) || !is_array($etsyInventory['results'])) {
+            $messages = [];
+
+            if (is_array($etsyInventory) && isset($etsyInventory['error_msg'])) {
+                $messages[] = $etsyInventory['error_msg'];
+            } else {
+                if (is_string($etsyInventory)) {
+                    $messages[] = $etsyInventory;
+                } else {
+                    $messages[] = $this->translator->trans(EtsyServiceProvider::PLUGIN_NAME . '::log.emptyResponse');
+                }
+            }
+
+            $messageBag = pluginApp(MessageBag::class, ['messages' => $messages]);
+            throw new ListingException($messageBag,
+                $this->translator->trans(EtsyServiceProvider::PLUGIN_NAME . '::item.updateStockError'));
+        }
 
         $products = $etsyInventory['results']['products'];
 
@@ -281,6 +310,10 @@ class UpdateListingStockService
                 if ($stock > 0 && $variation['skus'][0] != $this->itemHelper::SKU_STATUS_ERROR) {
                     $hasPositiveStock = true;
                     $products[$key]['offerings'][0]['is_enabled'] = true;
+                }
+
+                if ($stock > 999) {
+                    $stock = 999;
                 }
 
                 $products[$key]['offerings'][0]['quantity'] = $stock;
