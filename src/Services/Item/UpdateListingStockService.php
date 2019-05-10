@@ -7,10 +7,6 @@ use Etsy\EtsyServiceProvider;
 use Etsy\Exceptions\ListingException;
 use Etsy\Helper\SettingsHelper;
 use Illuminate\Support\MessageBag;
-use modules\lib\calendar\lib\DAV\Exception;
-use Plenty\Modules\Item\DataLayer\Models\Record;
-
-use Etsy\Helper\OrderHelper;
 use Etsy\Api\Services\ListingService;
 use Etsy\Helper\ItemHelper;
 use Plenty\Modules\Item\Variation\Contracts\VariationExportServiceContract;
