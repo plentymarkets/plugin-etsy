@@ -2,7 +2,7 @@
 
 ## v1.3.9 (2019-05-13)
 ### Fixed
-- Ein fehlerhafter Log beim Artikelexport wurde korrigiert
+- Ein fehlerhafter Log beim Artikelexport wurde korrigiert.
 
 ## v1.3.8 (2019-02-21)
 ### Geändert
