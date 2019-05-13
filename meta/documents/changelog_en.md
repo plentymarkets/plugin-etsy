@@ -1,5 +1,9 @@
 # Release notes for Etsy
 
+## v1.3.9 (2019-05-13)
+### Fixed
+- A faulty log while item export was corrected.
+
 ## v1.3.8 (2019-02-21)
 ### Changed
 - The user guide was adjusted.
