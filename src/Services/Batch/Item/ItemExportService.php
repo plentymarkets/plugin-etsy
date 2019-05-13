@@ -105,7 +105,7 @@ class ItemExportService extends AbstractBatchService
 						->addReference('variationId', $record->variationBase->id)
 						->error('Etsy::item.startListingErrorTaxonomyId', [
 							'exception' => $ex->getMessage(),
-							'instruction' => $this->translator->trans('Etsy::instructions.instructionShippingProfile')
+							'instruction' => $this->translator->trans('Etsy::instructions.instructionTaxonomyId')
 						]);
 				}
 				elseif (strpos($ex->getMessage(), 'Oh dear, you cannot sell this item on Etsy') !== false)
