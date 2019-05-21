@@ -28,6 +28,10 @@ use Etsy\Contracts\TaxonomyRepositoryContract;
  */
 class EtsyServiceProvider extends ServiceProvider
 {
+
+    const CONSUMER_KEY = "6d6s53b0qd09nhw37253ero8";
+    const CONSUMER_SECRET = "dzi5pnxwxm";
+
     const PLUGIN_NAME = 'Etsy';
 
     const START_LISTING_SERVICE = 'StartListingService';
