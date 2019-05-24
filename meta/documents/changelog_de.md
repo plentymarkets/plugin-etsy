@@ -1,5 +1,9 @@
 # Release Notes für Etsy
 
+## v1.3.10 (2019-05-24)
+### Hinzugefügt
+- Plugin Marketplace Dokumentation angepasst
+
 ## v1.3.9 (2019-05-13)
 ### Fixed
 - Ein fehlerhafter Log beim Artikelexport wurde korrigiert.
