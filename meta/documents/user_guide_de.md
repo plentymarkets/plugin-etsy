@@ -291,3 +291,7 @@ Richten Sie eine Ereignisaktion ein, um Versandbestätigungen automatisch an Ets
 ## Lizenz
 
 Das gesamte Projekt unterliegt der GNU AFFERO GENERAL PUBLIC LICENSE – weitere Informationen finden Sie in der [LICENSE.md](https://github.com/plentymarkets/plugin-etsy/blob/master/LICENSE.md).
+
+## Hinweis
+
+Der Begriff 'Etsy' ist ein Markenzeichen von Etsy, Inc. Diese Anwendung verwendet die Etsy-API, sie wurde jedoch von Etsy weder befürwortet noch zertifiziert.
