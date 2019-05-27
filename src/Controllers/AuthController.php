@@ -150,7 +150,7 @@ class AuthController extends Controller
 
             pluginApp(ShopImportService::class)->run();
 
-//            $this->loadTaxonomies(); //todo: wenn möglich in neue Route auslagern
+            $this->loadTaxonomies(); //todo: wenn möglich in neue Route auslagern
 
             return "<script>window.close()</script>";
         } catch (\Exception $e) {
