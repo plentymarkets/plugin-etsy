@@ -7,10 +7,6 @@ use Etsy\EtsyServiceProvider;
 use Etsy\Exceptions\ListingException;
 use Etsy\Helper\SettingsHelper;
 use Illuminate\Support\MessageBag;
-use modules\lib\calendar\lib\DAV\Exception;
-use Plenty\Modules\Item\DataLayer\Models\Record;
-
-use Etsy\Helper\OrderHelper;
 use Etsy\Api\Services\ListingService;
 use Etsy\Helper\ItemHelper;
 use Plenty\Modules\Item\Variation\Contracts\VariationExportServiceContract;
@@ -84,6 +80,11 @@ class UpdateListingStockService
      * State etsy returns if a listing is inactive
      */
     const EDIT = "edit";
+
+    /**
+     * Maximum value of stock allowed from etsy
+     */
+    const MAXIMUM_ALLOWED_STOCK = 999;
 
     /**
      * UpdateListingStockService constructor.
@@ -236,7 +237,36 @@ class UpdateListingStockService
      */
     protected function update($listingId, array $listing)
     {
-        $etsyInventory = $this->listingInventoryService->getInventory($listingId);
+        $retrys = 3;
+        $etsyInventory = null;
+
+        //we retry reading the inventory since we've already successfully loaded the listing itself at this point
+        //which means the inventory must be loadable. An error at this point probably is caused by connection issues
+        for ($counter = 0; $counter < $retrys; $counter++) {
+            $etsyInventory = $this->listingInventoryService->getInventory($listingId);
+
+            if (isset($etsyInventory['results']) && is_array($etsyInventory['results'])) {
+                break;
+            }
+        }
+
+        if (!isset($etsyInventory['results']) || !is_array($etsyInventory['results'])) {
+            $messages = [];
+
+            if (is_array($etsyInventory) && isset($etsyInventory['error_msg'])) {
+                $messages[] = $etsyInventory['error_msg'];
+            } else {
+                if (is_string($etsyInventory)) {
+                    $messages[] = $etsyInventory;
+                } else {
+                    $messages[] = $this->translator->trans(EtsyServiceProvider::PLUGIN_NAME . '::log.emptyResponse');
+                }
+            }
+
+            $messageBag = pluginApp(MessageBag::class, ['messages' => $messages]);
+            throw new ListingException($messageBag,
+                $this->translator->trans(EtsyServiceProvider::PLUGIN_NAME . '::item.updateStockError'));
+        }
 
         $products = $etsyInventory['results']['products'];
 
@@ -281,6 +311,10 @@ class UpdateListingStockService
                 if ($stock > 0 && $variation['skus'][0] != $this->itemHelper::SKU_STATUS_ERROR) {
                     $hasPositiveStock = true;
                     $products[$key]['offerings'][0]['is_enabled'] = true;
+                }
+
+                if ($stock > self::MAXIMUM_ALLOWED_STOCK) {
+                    $stock = self::MAXIMUM_ALLOWED_STOCK;
                 }
 
                 $products[$key]['offerings'][0]['quantity'] = $stock;

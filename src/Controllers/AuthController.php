@@ -54,12 +54,9 @@ class AuthController extends Controller
     {
         $tokenData = $this->accountHelper->getTokenData();
 
-        /** @var ConfigRepository $configRepo */
-        $configRepo = pluginApp(ConfigRepository::class);
-
         $status = false;
 
-        if (isset($tokenData['accessToken']) && strlen($tokenData['accessToken']) && isset($tokenData['accessTokenSecret']) && strlen($tokenData['accessTokenSecret']) && isset($tokenData['consumerKey']) && strlen($tokenData['consumerKey']) && ($configRepo->get('Etsy.consumerKey', '') == $tokenData['consumerKey']) && isset($tokenData['consumerSecret']) && strlen($tokenData['consumerSecret']) && ($configRepo->get('Etsy.consumerSecret', '') == $tokenData['consumerSecret'])) {
+        if (isset($tokenData['accessToken']) && strlen($tokenData['accessToken']) && isset($tokenData['accessTokenSecret']) && strlen($tokenData['accessTokenSecret']) && isset($tokenData['consumerKey']) && strlen($tokenData['consumerKey']) && isset($tokenData['consumerSecret']) && strlen($tokenData['consumerSecret'])) {
             $status = true;
         }
 
@@ -143,6 +140,7 @@ class AuthController extends Controller
      */
     public function getAccessToken(Request $request)
     {
+
         try {
             $tokenRequestData = $this->accountHelper->getTokenRequest();
 
@@ -154,7 +152,7 @@ class AuthController extends Controller
 
             $this->loadTaxonomies(); //todo: wenn möglich in neue Route auslagern
 
-            return 'Login was successful. This window will close automatically.<script>window.close();</script>';
+            return "<script>window.close()</script>";
         } catch (\Exception $e) {
             throw new \Exception($e->getMessage(), $e->getCode());
         }
