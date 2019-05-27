@@ -33,13 +33,21 @@ class AuthController extends Controller
     private $accountHelper;
 
     /**
+     * @var SettingsHelper
+     */
+    protected $settingsHelper;
+
+
+    /**
      * @param AuthService   $service
      * @param AccountHelper $accountHelper
      */
-    public function __construct(AuthService $service, AccountHelper $accountHelper)
+    public function __construct(AuthService $service, AccountHelper $accountHelper, SettingsHelper $settingsHelper)
     {
         $this->service       = $service;
         $this->accountHelper = $accountHelper;
+        $this->settingsHelper = $settingsHelper;
+
     }
 
     /**
@@ -50,13 +58,14 @@ class AuthController extends Controller
     public function status()
     {
         $tokenData = $this->accountHelper->getTokenData();
+        $shopData = json_decode($this->settingsHelper->get($this->settingsHelper::SETTINGS_ETSY_SHOPS), true);
+        $shopId = key($shopData);
 
-        /** @var ConfigRepository $configRepo */
-        $configRepo = pluginApp(ConfigRepository::class);
 
         $status = false;
 
-        if (isset($tokenData['accessToken']) && strlen($tokenData['accessToken']) && isset($tokenData['accessTokenSecret']) && strlen($tokenData['accessTokenSecret']) && isset($tokenData['consumerKey']) && strlen($tokenData['consumerKey']) && ($configRepo->get('Etsy.consumerKey', '') == $tokenData['consumerKey']) && isset($tokenData['consumerSecret']) && strlen($tokenData['consumerSecret']) && ($configRepo->get('Etsy.consumerSecret', '') == $tokenData['consumerSecret'])) {
+        if (isset($tokenData['accessToken']) && strlen($tokenData['accessToken']) && isset($tokenData['accessTokenSecret']) && strlen($tokenData['accessTokenSecret']) && isset($tokenData['consumerKey']) && strlen($tokenData['consumerKey']) && isset($tokenData['consumerSecret']) && strlen($tokenData['consumerSecret'])) {
+
             $status = true;
         }
 
@@ -64,8 +73,8 @@ class AuthController extends Controller
             return [
                 [
                     'status'            => $status,
-                    'consumerKey'       => $tokenData['consumerKey'],
-                    'sharedSecret'      => $tokenData['consumerSecret'],
+                    'shopId' => $shopData[$shopId]['shopName']
+
                 ]
             ];
         }

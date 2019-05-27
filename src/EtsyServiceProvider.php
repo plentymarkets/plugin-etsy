@@ -30,8 +30,13 @@ use Etsy\Contracts\TaxonomyRepositoryContract;
 class EtsyServiceProvider extends ServiceProvider
 {
     const PLUGIN_NAME = 'Etsy';
-    
-	/**
+
+    const CONSUMER_KEY = "6d6s53b0qd09nhw37253ero8";
+    const CONSUMER_SECRET = "dzi5pnxwxm";
+
+
+
+    /**
 	 * @return void
 	 */
 	public function register()
