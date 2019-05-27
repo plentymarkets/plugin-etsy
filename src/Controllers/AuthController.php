@@ -36,13 +36,19 @@ class AuthController extends Controller
     private $accountHelper;
 
     /**
+     * @var SettingsHelper
+     */
+    protected $settingsHelper;
+
+    /**
      * @param AuthService   $service
      * @param AccountHelper $accountHelper
      */
-    public function __construct(AuthService $service, AccountHelper $accountHelper)
+    public function __construct(AuthService $service, AccountHelper $accountHelper, SettingsHelper $settingsHelper)
     {
         $this->service       = $service;
         $this->accountHelper = $accountHelper;
+        $this->settingsHelper = $settingsHelper;
     }
 
     /**
@@ -53,6 +59,9 @@ class AuthController extends Controller
     public function status()
     {
         $tokenData = $this->accountHelper->getTokenData();
+        $shopData = json_decode($this->settingsHelper->get($this->settingsHelper::SETTINGS_ETSY_SHOPS), true);
+
+        $shopId = key($shopData);
 
         $status = false;
 
@@ -63,9 +72,8 @@ class AuthController extends Controller
         if ($status) {
             return [
                 [
-                    'status'            => $status,
-                    'consumerKey'       => $tokenData['consumerKey'],
-                    'sharedSecret'      => $tokenData['consumerSecret'],
+                    'status' => $status,
+                    'shopId' => $shopData[$shopId]['shopName'],
                 ]
             ];
         }

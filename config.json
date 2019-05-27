@@ -1,5 +1,20 @@
 [
   {
+    "tab": "Config.appSettings",
+    "key": "consumerKey",
+    "label": "Config.keyString",
+    "type": "text",
+    "default": ""
+  },
+
+  {
+    "tab": "Config.appSettings",
+    "key": "consumerSecret",
+    "label": "Config.sharedSecret",
+    "type": "text",
+    "default": ""
+  },
+  {
     "tab": "Config.general",
     "key": "readCapacityUnits",
     "label": "Config.readCapacityUnits",
