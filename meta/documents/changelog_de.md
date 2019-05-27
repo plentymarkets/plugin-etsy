@@ -1,5 +1,11 @@
 # Release Notes für Etsy
 
+## v1.3.11 (2019-05-27)
+### Geändert
+- Authentifizierungsprozess umgezogen.
+- Developer Apps werden nicht mehr benötigt.
+- Consumer Key und Shared Secret müssen nicht mehr in der Plugin Config gepflegt werden.
+
 ## v1.3.10 (2019-05-24)
 ### Hinzugefügt
 - Plugin Marketplace Dokumentation angepasst
