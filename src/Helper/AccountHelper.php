@@ -2,6 +2,7 @@
 
 namespace Etsy\Helper;
 
+use Etsy\EtsyServiceProvider;
 use Plenty\Plugin\Application;
 
 use Etsy\Helper\OrderHelper;
@@ -79,7 +80,7 @@ class AccountHelper
 	 */
 	public function getConsumerKey():string
 	{
-		return (string) $this->config->get('Etsy.consumerKey');
+		return (string) EtsyServiceProvider::CONSUMER_KEY;
 	}
 
 	/**
@@ -89,7 +90,7 @@ class AccountHelper
 	 */
 	public function getConsumerSecret():string
 	{
-		return (string) $this->config->get('Etsy.consumerSecret');
+		return (string) EtsyServiceProvider::CONSUMER_SECRET;
 	}
 
 	/**
