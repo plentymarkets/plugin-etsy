@@ -7,12 +7,7 @@
 
 **Etsy** ist ein amerikanischer Marktplatz für den Kauf und Verkauf von handgemachten Produkten, Vintage und Künstlerbedarf.
 
-|Einstellung bei Etsy                           |Auswahl |
-|:---                                           |:--- |
-|**What type of application are you building?** |**Seller Tools** |
-|**Who will be the users of this application?** |**Just myself or colleagues** |
-|**Is your application commercial?**            |**No** |
-|**Will your app do any of the following?**     |**Upload or edit listings** |
+Um das Plugin für Etsy einzurichten, registrieren Sie sich zunächst als Händler.
 
 ## Etsy in plentymarkets installieren
 
@@ -20,11 +15,11 @@ Nachdem Sie das Etsy-Plugin im plentymarkets Marketplace gekauft haben, installi
 
 ### Berechtigung erteilen
 
-Im Menü **Einstellungen » Märkte » Etsy » Authentifizierung** muss zunächst die Schnittstelle freigeschalten werden. Klicken Sie dazu auf **Etsy-Login**. Sie werden direkt zu Etsy weitergeleitet, wo Sie die Schnittstelle freischalten.
+Im Menü **System » Systemeinstellungen » Märkte » Etsy » Authentifizierung** muss zunächst die Schnittstelle freigeschaltet werden. Klicken Sie dazu auf **Etsy-Login**. Sie werden direkt zu Etsy weitergeleitet, wo Sie die Schnittstelle freischalten.
 
 ### Etsy einrichten
 
-Im Menü **Einstellungen » Märkte » Etsy » Einstellungen** geben Sie u.a. Ihre Shop-ID ein und aktivieren den Artikelexport, Bestandsabgleich und Auftragsimport.
+Im Menü **System » Systemeinstellungen » Märkte » Etsy » Einstellungen** geben Sie u.a. Ihre Shop-ID ein und aktivieren den Artikelexport, Bestandsabgleich und Auftragsimport.
 Etsy erlaubt 500 Calls am Tag. Sollten mehr Calls benötigt werden, setzen Sie sich direkt mit Etsy in Verbindung.
 
 ## Auftragsherkunft aktivieren
