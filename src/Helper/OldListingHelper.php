@@ -68,9 +68,7 @@ class OldListingHelper
         $listings = $variationSkuRepository->search($filter);
 
 
-        $counter = 0;
 
-        while ($counter < 5) {
             foreach ($listings as $listing) {
                 $variationId = $listing->variationId;
                 $listingId = $listing->parentSku;
@@ -113,16 +111,13 @@ class OldListingHelper
 
 
 
-                    $counter ++;
 
                 } catch (\Throwable $exception) {
                     $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
                         ->addReference('variationId', $listing->variationId)
                         ->error($exception->getMessage());
-                    $counter++;
                 }
             }
-        }
 
 }
     public function migrateOldListings() {
