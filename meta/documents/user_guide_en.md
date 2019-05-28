@@ -7,12 +7,7 @@
 
 **Etsy** is an American online market focused on handmade or vintage items.
 
-|Setting on Etsy                                |Selection |
-|:---                                           |:--- |
-|**What type of application are you building?** |**Seller Tools** |
-|**Who will be the users of this application?** |**Just myself or colleagues** |
-|**Is your application commercial?**            |**No** |
-|**Will your app do any of the following?**     |**Upload or edit listings** |
+In order to use the Etsy plugin, you need to register as a seller first.
 
 ## Installing Etsy in plentymarkets
 
@@ -20,11 +15,11 @@ After buying the Etsy plugin in the plentyMarketplace, install the market in the
 
 ### Granting rights
 
-First, the interface has to be activated in the menu **Settings » Markets » Etsy » Authentication**. Click on **Etsy login** to do so. Afterwards, you are forwarded directly to Etsy where the interface can be activated.
+First, the interface has to be activated in the menu **System » System settings » Markets » Etsy » Authentication**. Click on **Etsy login** to do so. Afterwards, you are forwarded directly to Etsy where the interface can be activated.
 
 ### Setting up Etsy
 
-Go to **Settings » Markets » Etsy » Settings** to enter your Store ID and to activate the item export, stock update and order import. Etsy allows 500 calls per day. If you need more than 500 calls, contact Etsy directly.
+Go to **System » System settings » Markets » Etsy » Settings** to enter your Store ID and to activate the item export, stock update and order import. Etsy allows 500 calls per day. If you need more than 500 calls, contact Etsy directly.
 
 ## Activating the order referrer
 
