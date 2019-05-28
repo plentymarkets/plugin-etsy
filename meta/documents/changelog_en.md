@@ -1,5 +1,9 @@
 # Release notes for Etsy
 
+## v1.3.12 (2019-05-28)
+### Changed 
+- Userguide was adjusted and now contains information about authentication.
+
 ## v1.3.11 (2019-05-27)
 ### Changed
 - Authenticationprocess changed.
