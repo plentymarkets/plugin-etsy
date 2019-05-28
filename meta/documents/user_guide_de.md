@@ -7,28 +7,19 @@
 
 **Etsy** ist ein amerikanischer Marktplatz für den Kauf und Verkauf von handgemachten Produkten, Vintage und Künstlerbedarf.
 
-Um das Plugin für Etsy einzurichten, registrieren Sie sich zunächst als Händler und erstellen eine neue [App](https://www.etsy.com/developers/documentation/getting_started/register) bei Etsy. Loggen Sie sich dazu mit ihren Etsy-Zugangsdaten auf https://www.etsy.com/developers/ ein und klicken Sie im Bereich **Your Developer Account** auf **Create a New App**. Geben Sie unter **Application Name** einen Namen für die App ein und nehmen Sie weitere Einstellungen vor. Beachten Sie dazu die folgende Tabelle. Klicken Sie anschließend auf **Read Terms and Create App**.
-
-|Einstellung bei Etsy                           |Auswahl |
-|:---                                           |:--- |
-|**What type of application are you building?** |**Seller Tools** |
-|**Who will be the users of this application?** |**Just myself or colleagues** |
-|**Is your application commercial?**            |**No** |
-|**Will your app do any of the following?**     |**Upload or edit listings** |
-
-Nachdem Sie die App erstellt haben, erscheint die App bei Etsy im Bereich **Your Developer Account** unter **Apps You've Made** und Sie erhalten die nötigen Zugangsdaten bestehend aus Keystring und Shared Secret, die Sie für die Einstellungen in plentymarkets benötigen. Klicken Sie bei der App auf **See API Key Details**, um die Zugangsdaten anzuzeigen.
+Um das Plugin für Etsy einzurichten, registrieren Sie sich zunächst als Händler.
 
 ## Etsy in plentymarkets installieren
 
-Nachdem Sie das Etsy-Plugin im plentymarkets Marketplace gekauft haben, installieren Sie den Marktplatz im Menü **Plugins » Plugin-Übersicht**. Wählen Sie den Filter **Nicht installiert** oder **Alle**, um nicht installierte Plugins anzuzeigen und zu installieren. Öffnen Sie nach der Installation **Etsy**. Geben Sie nun unter **Konfiguration » App-Einstellungen** den Keystring und das Shared secret ein. Beides sollten Sie bei der Erstellung der App in Etsy erhalten haben. Speichern Sie die Einstellung.
+Nachdem Sie das Etsy-Plugin im plentymarkets Marketplace gekauft haben, installieren Sie den Marktplatz im Menü **Plugins » Plugin-Übersicht**. Wählen Sie den Filter **Nicht installiert** oder **Alle**, um nicht installierte Plugins anzuzeigen und zu installieren. Öffnen Sie nach der Installation **Etsy**. 
 
 ### Berechtigung erteilen
 
-Im Menü **Einstellungen » Märkte » Etsy » Authentifizierung** muss zunächst die Schnittstelle freigeschalten werden. Klicken Sie dazu auf **Etsy-Login**. Sie werden direkt zu Etsy weitergeleitet, wo Sie die Schnittstelle freischalten.
+Im Menü **System » Systemeinstellungen » Märkte » Etsy » Authentifizierung** muss zunächst die Schnittstelle freigeschaltet werden. Klicken Sie dazu auf **Etsy-Login**. Sie werden direkt zu Etsy weitergeleitet, wo Sie die Schnittstelle freischalten.
 
 ### Etsy einrichten
 
-Im Menü **Einstellungen » Märkte » Etsy » Einstellungen** geben Sie u.a. Ihre Shop-ID ein und aktivieren den Artikelexport, Bestandsabgleich und Auftragsimport.
+Im Menü **System » Systemeinstellungen » Märkte » Etsy » Einstellungen** geben Sie u.a. Ihre Shop-ID ein und aktivieren den Artikelexport, Bestandsabgleich und Auftragsimport.
 Etsy erlaubt 500 Calls am Tag. Sollten mehr Calls benötigt werden, setzen Sie sich direkt mit Etsy in Verbindung.
 
 ## Auftragsherkunft aktivieren
