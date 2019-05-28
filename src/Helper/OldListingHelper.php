@@ -13,13 +13,23 @@ use Etsy\Api\Services\ListingInventoryService;
 use Etsy\Api\Services\ListingService;
 use Etsy\EtsyServiceProvider;
 use Etsy\Services\Item\UpdateListingService;
-use Plenty\Modules\Item\VariationSalesPrice\Repositories\VariationSalesPriceRepository;
+use Plenty\Modules\Item\SalesPrice\Contracts\SalesPriceNameRepositoryContract;
+use Plenty\Modules\Item\SalesPrice\Contracts\SalesPriceRepositoryContract;
+use Plenty\Modules\Item\VariationSalesPrice\Contracts\VariationSalesPriceRepositoryContract;
 use Plenty\Modules\Item\VariationSku\Contracts\VariationSkuRepositoryContract;
 use Plenty\Modules\Item\VariationSku\Models\VariationSku;
 use Plenty\Plugin\Log\Loggable;
 
 class OldListingHelper
 {
+
+    CONST SALES_PRICE_NAME = "Marktplätze";
+
+    /**
+     * number of decimals an counter of money gets rounded to
+     */
+    const MONEY_DECIMALS = 2;
+
     use Loggable;
 
     public function changePrices()
@@ -30,6 +40,26 @@ class OldListingHelper
         $listingInventoryService = pluginApp(ListingInventoryService::class);
         /** @var SettingsHelper $settingsHelper */
         $settingsHelper = pluginApp(SettingsHelper::class);
+        /** @var  VariationSalesPriceRepositoryContract $variationSalesPriceRepository */
+        $variationSalesPriceRepository = pluginApp(VariationSalesPriceRepositoryContract::class);
+        /** @var SalesPriceNameRepositoryContract $salesPriceNameRepository */
+        $salesPriceNameRepository = pluginApp(SalesPriceNameRepositoryContract::class);
+        /** @var SalesPriceRepositoryContract $salesPriceRepository */
+        $salesPriceRepository = pluginApp(SalesPriceRepositoryContract::class);
+
+        $finalPriceId = '';
+
+        $results = $salesPriceRepository->all();
+        foreach ($results->getResult() as $result) {
+            $priceId = $result->id;
+
+            $salesPriceData = $salesPriceNameRepository->findOne($priceId, 'de');
+
+            if ($salesPriceData->nameExternal === self::SALES_PRICE_NAME) {
+                $finalPriceId = $priceId;
+                break;
+            }
+        }
 
         $filter = [
             'marketId' => $settingsHelper->get(SettingsHelper::SETTINGS_ORDER_REFERRER)
@@ -37,8 +67,64 @@ class OldListingHelper
 
         $listings = $variationSkuRepository->search($filter);
 
-    }
 
+        $counter = 0;
+
+        while ($counter < 5) {
+            foreach ($listings as $listing) {
+                $variationId = $listing->variationId;
+                $listingId = $listing->parentSku;
+
+                try {
+                    $etsyListing = $listingInventoryService->getInventory($listingId)['results'];
+
+                    $salesPrices = $variationSalesPriceRepository->findByVariationIdWithInheritance($variationId);
+
+                    $finalPrice = "";
+
+                    foreach ($salesPrices as $salesPrice) {
+                        if ($salesPrice->salesPriceId === $finalPriceId) {
+                            $finalPrice = (float) round($salesPrice->price, self::MONEY_DECIMALS);
+                            break;
+                        }
+                    }
+
+                    $quantity =  $etsyListing['products'][0]['offerings'][0]['quantity'];
+
+                    $etsyListing['products'][0]['offerings'] = [
+                        [
+                            'quantity' => $quantity,
+                            'price' => $finalPrice
+                        ]
+                    ];
+
+                    $etsyListing['products'] = json_encode($etsyListing['products']);
+
+                    $response = $listingInventoryService->updateInventory($listingId, $etsyListing);
+
+                    if (!isset($response['results']) || !is_array($response['results'])) {
+                        throw new \Exception();
+                    }
+
+                    $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
+                        ->addReference('variationId', $variationId)
+                        ->error('Price Updated for'.$variationId);
+
+
+
+
+                    $counter ++;
+
+                } catch (\Throwable $exception) {
+                    $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
+                        ->addReference('variationId', $listing->variationId)
+                        ->error($exception->getMessage());
+                    $counter++;
+                }
+            }
+        }
+
+}
     public function migrateOldListings() {
         /** @var SettingsHelper $settingsHelper */
         $settingsHelper = pluginApp(SettingsHelper::class);
@@ -48,8 +134,6 @@ class OldListingHelper
         $listingInventoryService = pluginApp(ListingInventoryService::class);
         /** @var ListingService $listingService */
         $listingService = pluginApp(ListingService::class);
-        /** @var  $variationSalesPriceRepository */
-        $variationSalesPriceRepository = pluginApp(VariationSalesPriceRepository::class);
 
         $filter = [
             'marketId' => $settingsHelper->get(SettingsHelper::SETTINGS_ORDER_REFERRER)
