@@ -63,10 +63,6 @@ class LegalInformationController extends Controller
      */
     public function save(Request $request)
     {
-        /** @var OldListingHelper $test */
-        $test = pluginApp(OldListingHelper::class);
-        $test->changePrices();
-
         $result = $this->legalInformationRepository->save((array)json_decode($request->getContent()));
         return json_encode($result);
     }
