@@ -13,6 +13,7 @@ use Etsy\Api\Services\ListingInventoryService;
 use Etsy\Api\Services\ListingService;
 use Etsy\EtsyServiceProvider;
 use Etsy\Services\Item\UpdateListingService;
+use Plenty\Modules\Item\VariationSalesPrice\Repositories\VariationSalesPriceRepository;
 use Plenty\Modules\Item\VariationSku\Contracts\VariationSkuRepositoryContract;
 use Plenty\Modules\Item\VariationSku\Models\VariationSku;
 use Plenty\Plugin\Log\Loggable;
@@ -20,6 +21,23 @@ use Plenty\Plugin\Log\Loggable;
 class OldListingHelper
 {
     use Loggable;
+
+    public function changePrices()
+    {
+        /** @var VariationSkuRepositoryContract $variationSkuRepository */
+        $variationSkuRepository = pluginApp(VariationSkuRepositoryContract::class);
+        /** @var ListingInventoryService $listingInventoryService */
+        $listingInventoryService = pluginApp(ListingInventoryService::class);
+        /** @var SettingsHelper $settingsHelper */
+        $settingsHelper = pluginApp(SettingsHelper::class);
+
+        $filter = [
+            'marketId' => $settingsHelper->get(SettingsHelper::SETTINGS_ORDER_REFERRER)
+        ];
+
+        $listings = $variationSkuRepository->search($filter);
+
+    }
 
     public function migrateOldListings() {
         /** @var SettingsHelper $settingsHelper */
@@ -30,6 +48,8 @@ class OldListingHelper
         $listingInventoryService = pluginApp(ListingInventoryService::class);
         /** @var ListingService $listingService */
         $listingService = pluginApp(ListingService::class);
+        /** @var  $variationSalesPriceRepository */
+        $variationSalesPriceRepository = pluginApp(VariationSalesPriceRepository::class);
 
         $filter = [
             'marketId' => $settingsHelper->get(SettingsHelper::SETTINGS_ORDER_REFERRER)
