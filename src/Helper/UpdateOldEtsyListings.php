@@ -106,11 +106,13 @@ class UpdateOldEtsyListings
 
         $listings = $variationSkuRepository->search($filter);
 
+        $counter = 0;
+
         foreach ($listings as $listing) {
             $listingId = $listing->sku;
             $variationId = $listing->variationId;
 
-            for ($counter = 0; $counter < 5; $counter++) {
+
                 try {
                     $etsyListing = $listingInventoryService->getInventory($listingId)['results'];
                     if (count($etsyListing['products']) > 1) {
@@ -170,8 +172,10 @@ class UpdateOldEtsyListings
                         ->addReference('variationId', $listing->variationId)
                         ->error('Migration failed');
                 }
-            }
 
+                $counter ++;
+
+                if ($counter >= 5) break;
         }
     }
 
