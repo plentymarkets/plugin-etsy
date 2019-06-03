@@ -119,7 +119,6 @@ class UpdateOldEtsyListings
 
                 $etsyListing['products'][0]['sku'] = $listingId . '-' . $variationId;
                 if ($etsyListing['products'][0]['offerings'][0]['quantity']) {
-                    $data['state'] = 'inactive';
                     $quantity = $etsyListing['products'][0]['offerings'][0]['quantity'];
 
                     if (!isset($etsyListing['products'][0]['offerings'][0]['price']['before_conversion'])) {
@@ -155,7 +154,6 @@ class UpdateOldEtsyListings
                 } catch (\Throwable $exception) {
                     $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
                         ->addReference('variationId', $listing->variationId);
-
                 }
 
 
