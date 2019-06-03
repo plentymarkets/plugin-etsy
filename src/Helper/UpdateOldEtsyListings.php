@@ -110,66 +110,68 @@ class UpdateOldEtsyListings
             $listingId = $listing->sku;
             $variationId = $listing->variationId;
 
-            try {
-
-                $etsyListing = $listingInventoryService->getInventory($listingId)['results'];
-                if (count($etsyListing['products']) > 1) {
-                    throw new \Exception();
-                }
-
-                $etsyListing['products'][0]['sku'] = $listingId . '-' . $variationId;
-                if ($etsyListing['products'][0]['offerings'][0]['quantity']) {
-                    $quantity = $etsyListing['products'][0]['offerings'][0]['quantity'];
-
-                    if (!isset($etsyListing['products'][0]['offerings'][0]['price']['before_conversion'])) {
-                        $price = (float)($etsyListing['products'][0]['offerings'][0]['price']['amount'] /
-                            $etsyListing['products'][0]['offerings'][0]['price']['divisor']);
-                        $price = round($price, UpdateListingService::MONEY_DECIMALS);
-                    } else {
-                        $price = (float)($etsyListing['products'][0]['offerings'][0]['price']['before_conversion']['amount'] /
-                            $etsyListing['products'][0]['offerings'][0]['price']['before_conversion']['divisor']);
-                        $price = round($price, UpdateListingService::MONEY_DECIMALS);
-                    }
-
-                    if ($etsyListing['products'][0]['offerings'][0]['quantity'] < 1) {
-                        $listing->status = ItemHelper::SKU_STATUS_INACTIVE;
-                        $etsyListing['products'][0]['offerings'][0]['quantity'] = 1;
-                        $quantity = 1;
-                    }
-                }
-                $etsyListing['products'][0]['offerings'] = [
-                    [
-                        'quantity' => $quantity,
-                        'price' => $price
-                    ]
-                ];
-
-                $etsyListing['products'] = json_encode($etsyListing['products']);
+            for ($counter = 0; $counter < 5; $counter++) {
                 try {
-                    if (isset($listing['plenty_item_variation_market_status_deleted_timestamp'])) {
-                        continue;
+                    $etsyListing = $listingInventoryService->getInventory($listingId)['results'];
+                    if (count($etsyListing['products']) > 1) {
+                        throw new \Exception();
                     }
 
-                    $response = $listingInventoryService->updateInventory($listingId, $etsyListing);
+                    $etsyListing['products'][0]['sku'] = $listingId . '-' . $variationId;
+                    if ($etsyListing['products'][0]['offerings'][0]['quantity']) {
+                        $quantity = $etsyListing['products'][0]['offerings'][0]['quantity'];
+
+                        if (!isset($etsyListing['products'][0]['offerings'][0]['price']['before_conversion'])) {
+                            $price = (float)($etsyListing['products'][0]['offerings'][0]['price']['amount'] /
+                                $etsyListing['products'][0]['offerings'][0]['price']['divisor']);
+                            $price = round($price, UpdateListingService::MONEY_DECIMALS);
+                        } else {
+                            $price = (float)($etsyListing['products'][0]['offerings'][0]['price']['before_conversion']['amount'] /
+                                $etsyListing['products'][0]['offerings'][0]['price']['before_conversion']['divisor']);
+                            $price = round($price, UpdateListingService::MONEY_DECIMALS);
+                        }
+
+                        if ($etsyListing['products'][0]['offerings'][0]['quantity'] < 1) {
+                            $listing->status = ItemHelper::SKU_STATUS_INACTIVE;
+                            $etsyListing['products'][0]['offerings'][0]['quantity'] = 1;
+                            $quantity = 1;
+                        }
+                    }
+                    $etsyListing['products'][0]['offerings'] = [
+                        [
+                            'quantity' => $quantity,
+                            'price' => $price
+                        ]
+                    ];
+
+                    $etsyListing['products'] = json_encode($etsyListing['products']);
+                    try {
+                        if (isset($listing['plenty_item_variation_market_status_deleted_timestamp'])) {
+                            continue;
+                        }
+
+                        $response = $listingInventoryService->updateInventory($listingId, $etsyListing);
+                    } catch (\Throwable $exception) {
+                        $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
+                            ->addReference('variationId', $listing->variationId);
+                    }
+
+
+                    if (!isset($response['results']) || !is_array($response['results'])) {
+                        throw new \Exception();
+                    }
+
+                    $listing->sku = $listingId . '-' . $variationId;
+                    $listing->parentSku = $listingId;
+                    $listing->save();
+
                 } catch (\Throwable $exception) {
                     $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
-                        ->addReference('variationId', $listing->variationId);
+                        ->addReference('variationId', $listing->variationId)
+                        ->error('Migration failed');
                 }
-
-
-                if (!isset($response['results']) || !is_array($response['results'])) {
-                    throw new \Exception();
-                }
-
-                $listing->sku = $listingId . '-' . $variationId;
-                $listing->parentSku = $listingId;
-                $listing->save();
-
-            } catch (\Throwable $exception) {
-                $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
-                    ->addReference('variationId', $listing->variationId)
-                    ->error('Migration failed');
             }
+
         }
     }
 
