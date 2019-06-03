@@ -3,12 +3,11 @@
 namespace Etsy\Helper;
 
 use Etsy\Api\Services\ListingInventoryService;
-use Etsy\Api\Services\ListingService;
 use Etsy\EtsyServiceProvider;
 use Etsy\Services\Item\UpdateListingService;
 use Plenty\Modules\Item\Variation\Contracts\VariationRepositoryContract;
+use Plenty\Modules\Item\VariationMarket\Contracts\VariationMarketRepositoryContract;
 use Plenty\Modules\Item\VariationSku\Contracts\VariationSkuRepositoryContract;
-use Plenty\Modules\Item\VariationSku\Models\VariationSku;
 use Plenty\Modules\Property\Contracts\PropertyNameRepositoryContract;
 use Plenty\Modules\Property\Contracts\PropertyRelationRepositoryContract;
 use Plenty\Modules\Property\Contracts\PropertyRepositoryContract;
@@ -34,12 +33,14 @@ class UpdateOldEtsyListings
         $propertyNameRepository = pluginApp(PropertyNameRepositoryContract::class);
         /** @var PropertyRelationRepositoryContract $propertyRelationRepository */
         $propertyRelationRepository = pluginApp(PropertyRelationRepositoryContract::class);
+        /** @var VariationMarketRepositoryContract $variationMarketRepository */
+        $variationMarketRepository= pluginApp(VariationMarketRepositoryContract::class);
 
-        $filter = [
+        $variationMarketRepository->setFilters([
             'marketId' => $settingsHelper->get(SettingsHelper::SETTINGS_ORDER_REFERRER)
-        ];
+        ]);
 
-        $listings = $variationSkuRepository->search($filter);
+        $listings = $variationMarketRepository->getVariationMarkets();
 
         $doNotExportProperty = [
             'cast' => 'shortText',
@@ -59,14 +60,11 @@ class UpdateOldEtsyListings
         $doNotExportProperty['names'][0]['propertyId'] = $property->id;
         $propertyNameRepository->createName($doNotExportProperty['names'][0]);
 
-        foreach ($listings as $listing) {
+        foreach ($listings->getResult() as $listing) {
+
             $variationId = $listing->variationId;
 
             try {
-                if (isset($listing['plenty_item_variation_market_status_deleted_timestamp'])) {
-                    continue;
-                }
-
                 $propertyRelationRepository->createRelation([
                     'relationTargetId' => $variationId,
                     'propertyId' => $property->id,
@@ -153,6 +151,9 @@ class UpdateOldEtsyListings
                         }
 
                         $response = $listingInventoryService->updateInventory($listingId, $etsyListing);
+
+//                        $this->getLogger('Sku update')
+//                            ->addReference($response,)
                     } catch (\Throwable $exception) {
                         $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
                             ->addReference('variationId', $listing->variationId);
