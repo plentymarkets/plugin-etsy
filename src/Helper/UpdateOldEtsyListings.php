@@ -38,8 +38,6 @@ class UpdateOldEtsyListings
             'marketId' => $settingsHelper->get(SettingsHelper::SETTINGS_ORDER_REFERRER)
         ]);
 
-        $listings = $variationMarketRepository->getVariationMarkets(1);
-
         $doNotExportProperty = [
             'cast' => 'shortText',
             'typeIdentifier' => 'item',
@@ -47,7 +45,7 @@ class UpdateOldEtsyListings
             'names' => [
                 [
                     'lang' => 'de',
-                    'name' => 'Vom Export ausgeschlossen',
+                    'name' => 'Vom Export ausgeschlossene Varianten',
                     'description' => 'Ist diese Eigenschaft hinterlegt, wird der Artikel nicht exportiert!'
                 ]
             ]
@@ -58,11 +56,12 @@ class UpdateOldEtsyListings
         $doNotExportProperty['names'][0]['propertyId'] = $property->id;
         $propertyNameRepository->createName($doNotExportProperty['names'][0]);
 
-        $paginatedResult = $listings->paginate();
+
+        $page = 1;
 
         do {
-            $result = $paginatedResult->getResult();
-            foreach ($result as $listing) {
+            $paginatedResult = $variationMarketRepository->getVariationMarkets(50, $page);
+            foreach ($paginatedResult->getResult() as $listing) {
 
                 $variationId = $listing->variationId;
 
@@ -89,6 +88,7 @@ class UpdateOldEtsyListings
                         ->error('Migration failed');
                 }
             }
+            $page ++;
         } while (!$paginatedResult->isLastPage());
 
 
