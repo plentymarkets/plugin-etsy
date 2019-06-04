@@ -38,7 +38,7 @@ class UpdateOldEtsyListings
             'marketId' => $settingsHelper->get(SettingsHelper::SETTINGS_ORDER_REFERRER)
         ]);
 
-        $listings = $variationMarketRepository->getVariationMarkets();
+        $listings = $variationMarketRepository->getVariationMarkets(1);
 
         $doNotExportProperty = [
             'cast' => 'shortText',
@@ -58,35 +58,42 @@ class UpdateOldEtsyListings
         $doNotExportProperty['names'][0]['propertyId'] = $property->id;
         $propertyNameRepository->createName($doNotExportProperty['names'][0]);
 
-        $listings = $listings->getResult();
+        $paginatedResult = $listings->paginate();
 
-        foreach ($listings as $listing) {
+        do {
+            $result = $paginatedResult->getResult();
+            foreach ($result as $listing) {
 
-            $variationId = $listing->variationId;
+                $variationId = $listing->variationId;
 
-            try {
-                $propertyRelationRepository->createRelation([
-                    'relationTargetId' => $variationId,
-                    'propertyId' => $property->id,
-                    'relationTypeIdentifier' => 'item',
-                    'relationValues' => [
-                        [
-                            'lang' => 'de',
-                            'value' => 'true',
-                            'description' => ''
+                try {
+                    $propertyRelationRepository->createRelation([
+                        'relationTargetId' => $variationId,
+                        'propertyId' => $property->id,
+                        'relationTypeIdentifier' => 'item',
+                        'relationValues' => [
+                            [
+                                'lang' => 'de',
+                                'value' => 'true',
+                                'description' => ''
+                            ]
                         ]
-                    ]
-                ]);
+                    ]);
 
-                $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
-                    ->addReference('variationId', $variationId)
-                    ->error('Eigenschaft angelegt');
-            } catch (\Throwable $exception) {
-                $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
-                    ->addReference('variationId', $variationId)
-                    ->error('Migration failed');
+                    $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
+                        ->addReference('variationId', $variationId)
+                        ->error('Eigenschaft angelegt');
+                } catch (\Throwable $exception) {
+                    $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
+                        ->addReference('variationId', $variationId)
+                        ->error('Migration failed');
+                }
             }
-        }
+        } while (!$paginatedResult->isLastPage());
+
+
+
+
     }
 
     /**
