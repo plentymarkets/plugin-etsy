@@ -77,6 +77,10 @@ class UpdateOldEtsyListings
                         ]
                     ]
                 ]);
+
+                $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
+                    ->addReference('variation Id', $listing->variationId)
+                    ->info('Eigenschaft angelegt');
             } catch (\Throwable $exception) {
                 $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
                     ->addReference('variationId', $listing->variationId)
