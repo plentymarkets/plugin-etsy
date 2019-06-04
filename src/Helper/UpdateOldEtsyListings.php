@@ -25,8 +25,6 @@ class UpdateOldEtsyListings
     {
         /** @var SettingsHelper $settingsHelper */
         $settingsHelper = pluginApp(SettingsHelper::class);
-        /** @var VariationSkuRepositoryContract $variationSkuRepository */
-        $variationSkuRepository = pluginApp(VariationSkuRepositoryContract::class);
         /** @var PropertyRepositoryContract $propertyRepository */
         $propertyRepository = pluginApp(PropertyRepositoryContract::class);
         /** @var PropertyNameRepositoryContract $propertyNameRepository */
@@ -60,7 +58,13 @@ class UpdateOldEtsyListings
         $doNotExportProperty['names'][0]['propertyId'] = $property->id;
         $propertyNameRepository->createName($doNotExportProperty['names'][0]);
 
-        foreach ($listings->getResult() as $listing) {
+        $listings = $listings->getResult();
+
+        $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
+            ->addReference('listingInfo', $listings->count())
+            ->error('Listing');
+
+        foreach ($listings as $listing) {
 
             $variationId = $listing->variationId;
 
@@ -79,11 +83,11 @@ class UpdateOldEtsyListings
                 ]);
 
                 $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
-                    ->addReference('variation Id', $listing->variationId)
-                    ->info('Eigenschaft angelegt');
+                    ->addReference('variationId', $variationId)
+                    ->error('Eigenschaft angelegt');
             } catch (\Throwable $exception) {
                 $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
-                    ->addReference('variationId', $listing->variationId)
+                    ->addReference('variationId', $variationId)
                     ->error('Migration failed');
             }
         }
