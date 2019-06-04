@@ -60,10 +60,6 @@ class UpdateOldEtsyListings
 
         $listings = $listings->getResult();
 
-        $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
-            ->addReference('listingInfo', $listings->count())
-            ->error('Listing');
-
         foreach ($listings as $listing) {
 
             $variationId = $listing->variationId;
