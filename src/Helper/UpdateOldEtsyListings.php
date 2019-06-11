@@ -171,6 +171,20 @@ class UpdateOldEtsyListings
                     continue;
                 }
 
+                if ($etsyListingState['results'][0]['state'] === "edit") {
+                    $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
+                        ->addReference('variationId', $variationId)
+                        ->error('Listing was in state sold_out');
+                    continue;
+                }
+
+                if ($etsyListingState['results'][0]['state'] === "sold_out") {
+                    $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
+                        ->addReference('variationId', $variationId)
+                        ->error('Listing was in state sold_out');
+                    continue;
+                }
+
                 if ($etsyListingState['results'][0]['state'] === "active") {
                     $listing->status = ItemHelper::SKU_STATUS_ACTIVE;
                     $etsyListing = $listingInventoryService->getInventory($listingId)['results'];
@@ -217,21 +231,6 @@ class UpdateOldEtsyListings
                     $listing->status = ItemHelper::SKU_STATUS_ACTIVE;
                     $listing->parentSku = $listingId;
                     $listing->save();
-
-                }
-
-                if ($etsyListingState['results'][0]['state'] === "edit") {
-                    $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
-                        ->addReference('variationId', $variationId)
-                        ->error('Listing was in state sold_out');
-                    continue;
-                }
-
-                if ($etsyListingState['results'][0]['state'] === "sold_out") {
-                    $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
-                        ->addReference('variationId', $variationId)
-                        ->error('Listing was in state sold_out');
-                    continue;
                 }
             } catch (\Throwable $exception) {
                 $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
