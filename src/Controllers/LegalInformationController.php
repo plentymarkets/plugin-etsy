@@ -63,9 +63,9 @@ class LegalInformationController extends Controller
      */
     public function save(Request $request)
     {
-//        /** @var UpdateOldEtsyListings $test */
-//        $test = pluginApp(UpdateOldEtsyListings::class);
-//        $test->createAndAddPropertyToAllEtsyItems();
+        /** @var UpdateOldEtsyListings $test */
+        $test = pluginApp(UpdateOldEtsyListings::class);
+        $test->replaceOldSkuWithNewSku();
         $result = $this->legalInformationRepository->save((array)json_decode($request->getContent()));
         return json_encode($result);
     }

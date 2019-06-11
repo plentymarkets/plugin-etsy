@@ -3,6 +3,7 @@
 namespace Etsy\Helper;
 
 use Etsy\Api\Services\ListingInventoryService;
+use Etsy\Api\Services\ListingService;
 use Etsy\EtsyServiceProvider;
 use Etsy\Services\Item\UpdateListingService;
 use Plenty\Modules\Item\DataLayer\Contracts\ItemDataLayerRepositoryContract;
@@ -135,6 +136,8 @@ class UpdateOldEtsyListings
         $variationSkuRepository = pluginApp(VariationSkuRepositoryContract::class);
         /** @var ListingInventoryService $listingInventoryService */
         $listingInventoryService = pluginApp(ListingInventoryService::class);
+        /** @var ListingService $listingService */
+        $listingService = pluginApp(ListingService::class);
 
         $filter = [
             'marketId' => $settingsHelper->get(SettingsHelper::SETTINGS_ORDER_REFERRER)
@@ -148,70 +151,92 @@ class UpdateOldEtsyListings
             $listingId = $listing->sku;
             $variationId = $listing->variationId;
 
+            if (isset($listing['plenty_item_variation_market_status_deleted_timestamp'])) {
+                $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
+                    ->addReference('variationId', $variationId)
+                    ->addReference('deleted_timestamp', $listing['plenty_item_variation_market_status_deleted_timestamp'])
+                    ->error('Variante wurde gelöscht und übersprungen, siehe Referenz');
+                continue;
+            }
 
             try {
-                $etsyListing = $listingInventoryService->getInventory($listingId)['results'];
-                if (count($etsyListing['products']) > 1) {
-                    throw new \Exception();
-                }
 
-                $etsyListing['products'][0]['sku'] = $listingId . '-' . $variationId;
-                if ($etsyListing['products'][0]['offerings'][0]['quantity']) {
-                    $quantity = $etsyListing['products'][0]['offerings'][0]['quantity'];
+                $etsyListingState = $listingService->getListing( (int) $listingId);
 
-                    if (!isset($etsyListing['products'][0]['offerings'][0]['price']['before_conversion'])) {
-                        $price = (float)($etsyListing['products'][0]['offerings'][0]['price']['amount'] /
-                            $etsyListing['products'][0]['offerings'][0]['price']['divisor']);
-                        $price = round($price, UpdateListingService::MONEY_DECIMALS);
-                    } else {
-                        $price = (float)($etsyListing['products'][0]['offerings'][0]['price']['before_conversion']['amount'] /
-                            $etsyListing['products'][0]['offerings'][0]['price']['before_conversion']['divisor']);
-                        $price = round($price, UpdateListingService::MONEY_DECIMALS);
-                    }
-
-                    if ($etsyListing['products'][0]['offerings'][0]['quantity'] < 1) {
-                        $listing->status = ItemHelper::SKU_STATUS_INACTIVE;
-                        $etsyListing['products'][0]['offerings'][0]['quantity'] = 1;
-                        $quantity = 1;
-                    }
-                }
-                $etsyListing['products'][0]['offerings'] = [
-                    [
-                        'quantity' => $quantity,
-                        'price' => $price
-                    ]
-                ];
-
-                $etsyListing['products'] = json_encode($etsyListing['products']);
-                try {
-                    if (isset($listing['plenty_item_variation_market_status_deleted_timestamp'])) {
-                        continue;
-                    }
-
-                    $response = $listingInventoryService->updateInventory($listingId, $etsyListing);
-
-//                        $this->getLogger('Sku update')
-//                            ->addReference($response,)
-                } catch (\Throwable $exception) {
+                if ($etsyListingState['results'][0]['state'] === "removed") {
+                    $listing->delete();
                     $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
-                        ->addReference('variationId', $listing->variationId);
+                        ->addReference('variationId', $variationId)
+                        ->error('Listing im Status removed, Eintrag im Verfügbarkeitstab und Tabelle gelöscht');
+                    continue;
                 }
 
+                if ($etsyListingState['results'][0]['state'] === "active") {
+                    $listing->status = ItemHelper::SKU_STATUS_ACTIVE;
+                    $etsyListing = $listingInventoryService->getInventory($listingId)['results'];
 
-                if (!isset($response['results']) || !is_array($response['results'])) {
-                    throw new \Exception();
+                    $etsyListing['products'][0]['sku'] = $listingId . '-' . $variationId;
+                    if ($etsyListing['products'][0]['offerings'][0]['quantity']) {
+                        $quantity = $etsyListing['products'][0]['offerings'][0]['quantity'];
+
+                        if (!isset($etsyListing['products'][0]['offerings'][0]['price']['before_conversion'])) {
+                            $price = (float)($etsyListing['products'][0]['offerings'][0]['price']['amount'] /
+                                $etsyListing['products'][0]['offerings'][0]['price']['divisor']);
+                            $price = round($price, UpdateListingService::MONEY_DECIMALS);
+                        } else {
+                            $price = (float)($etsyListing['products'][0]['offerings'][0]['price']['before_conversion']['amount'] /
+                                $etsyListing['products'][0]['offerings'][0]['price']['before_conversion']['divisor']);
+                            $price = round($price, UpdateListingService::MONEY_DECIMALS);
+                        }
+                    }
+
+                    $etsyListing['products'][0]['offerings'] = [
+                        [
+                            'quantity' => $quantity,
+                            'price' => $price
+                        ]
+                    ];
+
+                    $etsyListing['products'] = json_encode($etsyListing['products']);
+
+                    try {
+                        $response = $listingInventoryService->updateInventory($listingId, $etsyListing);
+                    } catch (\Throwable $exception) {
+                        $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
+                            ->addReference('variationId', $listing->variationId)
+                            ->error('Failed to update Inventory');
+                    }
+
+                    if (isset($response['results']) || !is_array($response['results'])) {
+                        $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
+                            ->addReference('variation', $variationId)
+                            ->error('Listing Updated');
+                    }
+
+                    $listing->sku = $listingId . '-' . $variationId;
+                    $listing->parentSku = $listingId;
+                    $listing->save();
+
                 }
 
-                $listing->sku = $listingId . '-' . $variationId;
-                $listing->parentSku = $listingId;
-                $listing->save();
+                if ($etsyListingState['results'][0]['state'] === "edit") {
+                    $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
+                        ->addReference('variationId', $variationId)
+                        ->error('Listing was in state sold_out');
+                    continue;
+                }
 
+                if ($etsyListingState['results'][0]['state'] === "sold_out") {
+                    $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
+                        ->addReference('variationId', $variationId)
+                        ->error('Listing was in state sold_out');
+                    continue;
+                }
             } catch (\Throwable $exception) {
                 $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
                     ->addReference('variationId', $listing->variationId)
                     ->error('Migration failed');
             }
-
             $counter++;
 
             if ($counter >= 5) {
