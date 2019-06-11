@@ -85,6 +85,8 @@ class UpdateOldEtsyListings
 
         } catch (\Throwable $e) {
             $e->getMessage();
+            $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
+                ->error('itemDataLayer Error');
         }
 
         $property = $propertyRepository->createProperty($doNotExportProperty);
