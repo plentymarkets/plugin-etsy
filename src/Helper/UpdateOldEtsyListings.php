@@ -214,6 +214,7 @@ class UpdateOldEtsyListings
                     }
 
                     $listing->sku = $listingId . '-' . $variationId;
+                    $listing->status = ItemHelper::SKU_STATUS_ACTIVE;
                     $listing->parentSku = $listingId;
                     $listing->save();
 
