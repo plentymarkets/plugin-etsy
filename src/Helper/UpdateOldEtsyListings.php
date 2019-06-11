@@ -5,8 +5,8 @@ namespace Etsy\Helper;
 use Etsy\Api\Services\ListingInventoryService;
 use Etsy\EtsyServiceProvider;
 use Etsy\Services\Item\UpdateListingService;
+use Plenty\Modules\Item\DataLayer\Contracts\ItemDataLayerRepositoryContract;
 use Plenty\Modules\Item\Variation\Contracts\VariationRepositoryContract;
-use Plenty\Modules\Item\VariationMarket\Contracts\VariationMarketRepositoryContract;
 use Plenty\Modules\Item\VariationSku\Contracts\VariationSkuRepositoryContract;
 use Plenty\Modules\Property\Contracts\PropertyNameRepositoryContract;
 use Plenty\Modules\Property\Contracts\PropertyRelationRepositoryContract;
@@ -23,6 +23,8 @@ class UpdateOldEtsyListings
      */
     public function createAndAddPropertyToAllEtsyItems()
     {
+        /** @var OrderHelper $orderHelper */
+        $orderHelper = pluginApp(OrderHelper::class);
         /** @var SettingsHelper $settingsHelper */
         $settingsHelper = pluginApp(SettingsHelper::class);
         /** @var PropertyRepositoryContract $propertyRepository */
@@ -31,12 +33,8 @@ class UpdateOldEtsyListings
         $propertyNameRepository = pluginApp(PropertyNameRepositoryContract::class);
         /** @var PropertyRelationRepositoryContract $propertyRelationRepository */
         $propertyRelationRepository = pluginApp(PropertyRelationRepositoryContract::class);
-        /** @var VariationMarketRepositoryContract $variationMarketRepository */
-        $variationMarketRepository= pluginApp(VariationMarketRepositoryContract::class);
-
-        $variationMarketRepository->setFilters([
-            'marketId' => $settingsHelper->get(SettingsHelper::SETTINGS_ORDER_REFERRER)
-        ]);
+        /** @var ItemDataLayerRepositoryContract $itemDataLayerRepository */
+        $itemDataLayerRepository = pluginApp(ItemDataLayerRepositoryContract::class);
 
         $doNotExportProperty = [
             'cast' => 'shortText',
@@ -45,55 +43,82 @@ class UpdateOldEtsyListings
             'names' => [
                 [
                     'lang' => 'de',
-                    'name' => 'Vom Export ausgeschlossene Varianten',
-                    'description' => 'Ist diese Eigenschaft hinterlegt, wird der Artikel nicht exportiert!'
+                    'name' => 'Vom Export ausgeschlossene Variante',
+                    'description' => 'Ist diese Eigenschaft hinterlegt, wird die Variante nicht exportiert!'
                 ]
             ]
         ];
+
+        $resultFields = [
+            'variationBase' => [
+                'id'
+            ],
+            'variationMarketStatus' => [
+                'params' => [
+                    'marketId' => $orderHelper->getReferrerId()
+                ],
+                'fields' => [
+                    'id',
+                    'sku',
+                    'marketStatus',
+                    'additionalInformation',
+                ]
+            ]
+        ];
+
+        $filters = [
+            'variationBase.isActive?' => [],
+            'variationVisibility.isVisibleForMarketplace' => [
+                'mandatoryOneMarketplace' => [],
+                'mandatoryAllMarketplace' => [
+                    $orderHelper->getReferrerId()
+                ]
+            ]
+        ];
+
+        $params = [
+            'referrerId' => $orderHelper->getReferrerId(),
+        ];
+
+        try {
+            $itemDataResult = $itemDataLayerRepository->search($resultFields, $filters, $params);
+
+        } catch (\Throwable $e) {
+            $e->getMessage();
+        }
 
         $property = $propertyRepository->createProperty($doNotExportProperty);
 
         $doNotExportProperty['names'][0]['propertyId'] = $property->id;
         $propertyNameRepository->createName($doNotExportProperty['names'][0]);
 
+        foreach ($itemDataResult->toArray() as $variation) {
 
-        $page = 1;
+            $variationId = $variation->variationBase->id;
 
-        do {
-            $paginatedResult = $variationMarketRepository->getVariationMarkets(50, $page);
-            foreach ($paginatedResult->getResult() as $listing) {
-
-                $variationId = $listing->variationId;
-
-                try {
-                    $propertyRelationRepository->createRelation([
-                        'relationTargetId' => $variationId,
-                        'propertyId' => $property->id,
-                        'relationTypeIdentifier' => 'item',
-                        'relationValues' => [
-                            [
-                                'lang' => 'de',
-                                'value' => 'true',
-                                'description' => ''
-                            ]
+            try {
+                $propertyRelationRepository->createRelation([
+                    'relationTargetId' => $variationId,
+                    'propertyId' => $property->id,
+                    'relationTypeIdentifier' => 'item',
+                    'relationValues' => [
+                        [
+                            'lang' => 'de',
+                            'value' => 'true',
+                            'description' => ''
                         ]
-                    ]);
+                    ]
+                ]);
 
-                    $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
-                        ->addReference('variationId', $variationId)
-                        ->error('Eigenschaft angelegt');
-                } catch (\Throwable $exception) {
-                    $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
-                        ->addReference('variationId', $variationId)
-                        ->error('Migration failed');
-                }
+                $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
+                    ->addReference('variationId', $variationId)
+                    ->error('Eigenschaft verknüpft');
+            } catch (\Throwable $exception) {
+                $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
+                    ->addReference('variationId', $variationId)
+                    ->error('Migration failed');
             }
-            $page ++;
-        } while (!$paginatedResult->isLastPage());
-
-
-
-
+        }
     }
 
     /**
@@ -122,72 +147,74 @@ class UpdateOldEtsyListings
             $variationId = $listing->variationId;
 
 
+            try {
+                $etsyListing = $listingInventoryService->getInventory($listingId)['results'];
+                if (count($etsyListing['products']) > 1) {
+                    throw new \Exception();
+                }
+
+                $etsyListing['products'][0]['sku'] = $listingId . '-' . $variationId;
+                if ($etsyListing['products'][0]['offerings'][0]['quantity']) {
+                    $quantity = $etsyListing['products'][0]['offerings'][0]['quantity'];
+
+                    if (!isset($etsyListing['products'][0]['offerings'][0]['price']['before_conversion'])) {
+                        $price = (float)($etsyListing['products'][0]['offerings'][0]['price']['amount'] /
+                            $etsyListing['products'][0]['offerings'][0]['price']['divisor']);
+                        $price = round($price, UpdateListingService::MONEY_DECIMALS);
+                    } else {
+                        $price = (float)($etsyListing['products'][0]['offerings'][0]['price']['before_conversion']['amount'] /
+                            $etsyListing['products'][0]['offerings'][0]['price']['before_conversion']['divisor']);
+                        $price = round($price, UpdateListingService::MONEY_DECIMALS);
+                    }
+
+                    if ($etsyListing['products'][0]['offerings'][0]['quantity'] < 1) {
+                        $listing->status = ItemHelper::SKU_STATUS_INACTIVE;
+                        $etsyListing['products'][0]['offerings'][0]['quantity'] = 1;
+                        $quantity = 1;
+                    }
+                }
+                $etsyListing['products'][0]['offerings'] = [
+                    [
+                        'quantity' => $quantity,
+                        'price' => $price
+                    ]
+                ];
+
+                $etsyListing['products'] = json_encode($etsyListing['products']);
                 try {
-                    $etsyListing = $listingInventoryService->getInventory($listingId)['results'];
-                    if (count($etsyListing['products']) > 1) {
-                        throw new \Exception();
+                    if (isset($listing['plenty_item_variation_market_status_deleted_timestamp'])) {
+                        continue;
                     }
 
-                    $etsyListing['products'][0]['sku'] = $listingId . '-' . $variationId;
-                    if ($etsyListing['products'][0]['offerings'][0]['quantity']) {
-                        $quantity = $etsyListing['products'][0]['offerings'][0]['quantity'];
-
-                        if (!isset($etsyListing['products'][0]['offerings'][0]['price']['before_conversion'])) {
-                            $price = (float)($etsyListing['products'][0]['offerings'][0]['price']['amount'] /
-                                $etsyListing['products'][0]['offerings'][0]['price']['divisor']);
-                            $price = round($price, UpdateListingService::MONEY_DECIMALS);
-                        } else {
-                            $price = (float)($etsyListing['products'][0]['offerings'][0]['price']['before_conversion']['amount'] /
-                                $etsyListing['products'][0]['offerings'][0]['price']['before_conversion']['divisor']);
-                            $price = round($price, UpdateListingService::MONEY_DECIMALS);
-                        }
-
-                        if ($etsyListing['products'][0]['offerings'][0]['quantity'] < 1) {
-                            $listing->status = ItemHelper::SKU_STATUS_INACTIVE;
-                            $etsyListing['products'][0]['offerings'][0]['quantity'] = 1;
-                            $quantity = 1;
-                        }
-                    }
-                    $etsyListing['products'][0]['offerings'] = [
-                        [
-                            'quantity' => $quantity,
-                            'price' => $price
-                        ]
-                    ];
-
-                    $etsyListing['products'] = json_encode($etsyListing['products']);
-                    try {
-                        if (isset($listing['plenty_item_variation_market_status_deleted_timestamp'])) {
-                            continue;
-                        }
-
-                        $response = $listingInventoryService->updateInventory($listingId, $etsyListing);
+                    $response = $listingInventoryService->updateInventory($listingId, $etsyListing);
 
 //                        $this->getLogger('Sku update')
 //                            ->addReference($response,)
-                    } catch (\Throwable $exception) {
-                        $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
-                            ->addReference('variationId', $listing->variationId);
-                    }
-
-
-                    if (!isset($response['results']) || !is_array($response['results'])) {
-                        throw new \Exception();
-                    }
-
-                    $listing->sku = $listingId . '-' . $variationId;
-                    $listing->parentSku = $listingId;
-                    $listing->save();
-
                 } catch (\Throwable $exception) {
                     $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
-                        ->addReference('variationId', $listing->variationId)
-                        ->error('Migration failed');
+                        ->addReference('variationId', $listing->variationId);
                 }
 
-                $counter ++;
 
-                if ($counter >= 5) break;
+                if (!isset($response['results']) || !is_array($response['results'])) {
+                    throw new \Exception();
+                }
+
+                $listing->sku = $listingId . '-' . $variationId;
+                $listing->parentSku = $listingId;
+                $listing->save();
+
+            } catch (\Throwable $exception) {
+                $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
+                    ->addReference('variationId', $listing->variationId)
+                    ->error('Migration failed');
+            }
+
+            $counter++;
+
+            if ($counter >= 5) {
+                break;
+            }
         }
     }
 
