@@ -223,7 +223,7 @@ class UpdateOldEtsyListings
                     if (isset($response['results']) || !is_array($response['results'])) {
                         $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
                             ->addReference('variationId', $variationId)
-                            ->error('Listing Updated');
+                            ->error('Listing im Status abgelaufen Updated');
                     }
 
                     $listing->sku = $listingId . '-' . $variationId;
@@ -269,8 +269,8 @@ class UpdateOldEtsyListings
 
                     if (isset($response['results']) || !is_array($response['results'])) {
                         $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
-                            ->addReference('variation', $variationId)
-                            ->error('Listing Updated');
+                            ->addReference('variationId', $variationId)
+                            ->error('Listing im Status aktiv Updated');
                     }
 
                     $listing->sku = $listingId . '-' . $variationId;
