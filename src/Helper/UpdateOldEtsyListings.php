@@ -185,6 +185,54 @@ class UpdateOldEtsyListings
                     continue;
                 }
 
+                if ($etsyListingState['results'][0]['state'] === "expired") {
+                    $listing->status = ItemHelper::SKU_STATUS_INACTIVE;
+                    $etsyListing = $listingInventoryService->getInventory($listingId)['results'];
+
+                    $etsyListing['products'][0]['sku'] = $listingId . '-' . $variationId;
+                    if ($etsyListing['products'][0]['offerings'][0]['quantity']) {
+                        $quantity = $etsyListing['products'][0]['offerings'][0]['quantity'];
+
+                        if (!isset($etsyListing['products'][0]['offerings'][0]['price']['before_conversion'])) {
+                            $price = (float)($etsyListing['products'][0]['offerings'][0]['price']['amount'] /
+                                $etsyListing['products'][0]['offerings'][0]['price']['divisor']);
+                            $price = round($price, UpdateListingService::MONEY_DECIMALS);
+                        } else {
+                            $price = (float)($etsyListing['products'][0]['offerings'][0]['price']['before_conversion']['amount'] /
+                                $etsyListing['products'][0]['offerings'][0]['price']['before_conversion']['divisor']);
+                            $price = round($price, UpdateListingService::MONEY_DECIMALS);
+                        }
+                    }
+
+                    $etsyListing['products'][0]['offerings'] = [
+                        [
+                            'quantity' => $quantity,
+                            'price' => $price
+                        ]
+                    ];
+
+                    $etsyListing['products'] = json_encode($etsyListing['products']);
+
+                    try {
+                        $response = $listingInventoryService->updateInventory($listingId, $etsyListing);
+                    } catch (\Throwable $exception) {
+                        $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
+                            ->addReference('variationId', $listing->variationId)
+                            ->error('Failed to update Inventory');
+                    }
+
+                    if (isset($response['results']) || !is_array($response['results'])) {
+                        $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
+                            ->addReference('variation', $variationId)
+                            ->error('Listing Updated');
+                    }
+
+                    $listing->sku = $listingId . '-' . $variationId;
+                    $listing->status = ItemHelper::SKU_STATUS_ACTIVE;
+                    $listing->parentSku = $listingId;
+                    $listing->save();
+                }
+
                 if ($etsyListingState['results'][0]['state'] === "active") {
                     $listing->status = ItemHelper::SKU_STATUS_ACTIVE;
                     $etsyListing = $listingInventoryService->getInventory($listingId)['results'];
