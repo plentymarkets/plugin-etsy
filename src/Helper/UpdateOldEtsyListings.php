@@ -216,13 +216,13 @@ class UpdateOldEtsyListings
                         $response = $listingInventoryService->updateInventory($listingId, $etsyListing);
                     } catch (\Throwable $exception) {
                         $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
-                            ->addReference('variationId', $listing->variationId)
+                            ->addReference('variationId', $variationId)
                             ->error('Failed to update Inventory');
                     }
 
                     if (isset($response['results']) || !is_array($response['results'])) {
                         $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
-                            ->addReference('variation', $variationId)
+                            ->addReference('variationId', $variationId)
                             ->error('Listing Updated');
                     }
 
@@ -263,7 +263,7 @@ class UpdateOldEtsyListings
                         $response = $listingInventoryService->updateInventory($listingId, $etsyListing);
                     } catch (\Throwable $exception) {
                         $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
-                            ->addReference('variationId', $listing->variationId)
+                            ->addReference('variationId', $variationId)
                             ->error('Failed to update Inventory');
                     }
 
