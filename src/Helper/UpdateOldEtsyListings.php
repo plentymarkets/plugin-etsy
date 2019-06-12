@@ -186,7 +186,6 @@ class UpdateOldEtsyListings
                 }
 
                 if ($etsyListingState['results'][0]['state'] === "expired") {
-                    $listing->status = ItemHelper::SKU_STATUS_INACTIVE;
                     $etsyListing = $listingInventoryService->getInventory($listingId)['results'];
 
                     $etsyListing['products'][0]['sku'] = $listingId . '-' . $variationId;
@@ -228,13 +227,12 @@ class UpdateOldEtsyListings
                     }
 
                     $listing->sku = $listingId . '-' . $variationId;
-                    $listing->status = ItemHelper::SKU_STATUS_ACTIVE;
+                    $listing->status = ItemHelper::SKU_STATUS_INACTIVE;
                     $listing->parentSku = $listingId;
                     $listing->save();
                 }
 
                 if ($etsyListingState['results'][0]['state'] === "active") {
-                    $listing->status = ItemHelper::SKU_STATUS_ACTIVE;
                     $etsyListing = $listingInventoryService->getInventory($listingId)['results'];
 
                     $etsyListing['products'][0]['sku'] = $listingId . '-' . $variationId;
