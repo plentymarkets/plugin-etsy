@@ -7,7 +7,6 @@ use Etsy\Api\Services\ListingService;
 use Etsy\EtsyServiceProvider;
 use Etsy\Services\Item\UpdateListingService;
 use Plenty\Modules\Item\DataLayer\Contracts\ItemDataLayerRepositoryContract;
-use Plenty\Modules\Item\Variation\Contracts\VariationRepositoryContract;
 use Plenty\Modules\Item\VariationSku\Contracts\VariationSkuRepositoryContract;
 use Plenty\Modules\Property\Contracts\PropertyNameRepositoryContract;
 use Plenty\Modules\Property\Contracts\PropertyRelationRepositoryContract;
@@ -284,64 +283,6 @@ class UpdateOldEtsyListings
         }
     }
 
-    public function updateImageData()
-    {
-        /** @var SettingsHelper $settingsHelper */
-        $settingsHelper = pluginApp(SettingsHelper::class);
-        /** @var VariationSkuRepositoryContract $variationSkuRepository */
-        $variationSkuRepository = pluginApp(VariationSkuRepositoryContract::class);
-        /** @var ImageHelper $imageHelper */
-        $imageHelper = pluginApp(ImageHelper::class);
-
-        $filter = [
-            'marketId' => $settingsHelper->get(SettingsHelper::SETTINGS_ORDER_REFERRER)
-        ];
-
-        $listings = $variationSkuRepository->search($filter);
-
-        foreach ($listings as $listing) {
-            $listingId = $listing->parentSku;
-            $variationId = $listing->variationId;
-
-            $images = $imageHelper->get($variationId);
-            if ($images === NULL)
-            {
-                $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
-                    ->addReference('variationId', $variationId)
-                    ->error('Keine Bilder zur Variante abgespeichert.');
-                continue;
-            }
-
-            /** @var VariationRepositoryContract $variationRepository */
-            $variationRepository = pluginApp(VariationRepositoryContract::class);
-            $variation = $variationRepository->show($variationId, [], 'de');
-
-            $position = 1;
-            $newImages = [];
-
-            try {
-                foreach ($images as $image) {
-                    $newImages[] = [
-                        'imageId' => $image['id'],
-                        'listingImageId' => $image['listingImageId'],
-                        'listingId' => $listingId,
-                        'itemId' => $variation->itemId,
-                        'position' => $position++,
-                        'imageUrl' => $image['url']
-                    ];
-                }
-
-                $imageHelper->save($listingId, json_encode($newImages));
-                $imageHelper->delete($variationId);
-            } catch (\Throwable $exception) {
-                $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
-                    ->addReference('variationId', $listing->variationId)
-                    ->error('Migration failed');
-            }
-        }
-
-    }
-
     public function changeFuckedUpSku()
     {
         /** @var VariationSkuRepositoryContract $variationSkuRepository */
@@ -406,6 +347,5 @@ class UpdateOldEtsyListings
                         ->error('Failed to update Inventory');
                 }
             }
-
         }
 }
