@@ -82,7 +82,12 @@ class ItemExportService extends AbstractBatchService
 
         foreach ($catalogResult as $variation) {
 
-            if (isset($variation['do_not_export'])) continue;
+            if (isset($variation['do_not_export'])){
+                $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
+                    ->addReference('variation', $variation)
+                    ->error('variation übersprungen, da eigenschaft angelegt ist.');
+                continue;
+            }
 
 
             //for convenience we get rid of all skus that are not related to Etsy
