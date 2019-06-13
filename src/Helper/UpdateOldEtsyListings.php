@@ -340,7 +340,7 @@ class UpdateOldEtsyListings
                 $dbRow->sku = $listingId . '-' . $variationId;
                 $dbRow->parentSku = $listingId;
                 if ($dbRow instanceof VariationSku ) {
-                    $dbRow->save();
+                    $dbRow->update();
                 }
                 $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
                     ->addReference('variationId', $variationId)
