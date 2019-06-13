@@ -393,10 +393,13 @@ class UpdateOldEtsyListings
                 $etsyListing['products'] = json_encode($etsyListing['products']);
 
                 try {
-                    $response = $listingInventoryService->updateInventory($listingId, $etsyListing);
+                    $listingInventoryService->updateInventory($listingId, $etsyListing);
                     $dbRow->sku = $listingId . '-' . $variationId;
                     $dbRow->parentSku = $listingId;
                     $dbRow->save();
+                    $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
+                        ->addReference('variationId', $variationId)
+                        ->error('Sku updated');
                 } catch (\Throwable $exception) {
                     $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
                         ->addReference('variationId', $variationId)
