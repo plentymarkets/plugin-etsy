@@ -306,7 +306,7 @@ class UpdateOldEtsyListings
 
         foreach ($skuIdAndListingIds as $skuId => $listingId) {
 
-            /** @var $dbRow VariationSku */
+            /** @var VariationSku $dbRow */
             $dbRow = $variationSkuRepository->show($skuId);
             $variationId = $dbRow->variationId;
             $etsyListing = $listingInventoryService->getInventory($listingId)['results'];
