@@ -349,40 +349,26 @@ class UpdateOldEtsyListings
         /** @var ListingInventoryService $listingInventoryService */
         $listingInventoryService = pluginApp(ListingInventoryService::class);
 
-        $fuckedUpListings = [
-            559410525,
-            545841196,
-            559635179,
-            545841228,
-            547281130,
-            561080431,
-            547281276,
-            561264021,
-            547714874,
-            561512807
+        $skuIdAndListingIds = [
+            19913 => 559410525,
+            20024 => 545841196,
+            20025 => 559635179,
+            20026 => 545841228,
+            20208 => 547281130,
+            20209 => 561080431,
+            20210 => 547281276,
+            20227 => 561264021,
+            20290 => 547714874,
+            20291 => 561512807
         ];
 
-        $skuIds = [
-            19913,
-            20024,
-            20025,
-            20026,
-            20208,
-            20209,
-            20210,
-            20227,
-            20290,
-            20291
-        ];
+        foreach ($skuIdAndListingIds as $skuId => $listingId) {
 
-        foreach ($fuckedUpListings as $fuckedUpListing) {
-            foreach ($skuIds as $skuId)
-            {
                 $dbRow = $variationSkuRepository->show($skuId);
                 $variationId = $dbRow->variationId;
-                $etsyListing = $listingInventoryService->getInventory($fuckedUpListing)['results'];
+                $etsyListing = $listingInventoryService->getInventory($listingId)['results'];
 
-                $etsyListing['products'][0]['sku'] = $fuckedUpListing . '-' . $variationId;
+                $etsyListing['products'][0]['sku'] = $listingId . '-' . $variationId;
                 if ($etsyListing['products'][0]['offerings'][0]['quantity']) {
                     $quantity = $etsyListing['products'][0]['offerings'][0]['quantity'];
 
@@ -407,7 +393,10 @@ class UpdateOldEtsyListings
                 $etsyListing['products'] = json_encode($etsyListing['products']);
 
                 try {
-                    $response = $listingInventoryService->updateInventory($fuckedUpListing, $etsyListing);
+                    $response = $listingInventoryService->updateInventory($listingId, $etsyListing);
+                    $dbRow->sku = $listingId . '-' . $variationId;
+                    $dbRow->parentSku = $listingId;
+                    $dbRow->save();
                 } catch (\Throwable $exception) {
                     $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
                         ->addReference('variationId', $variationId)
@@ -416,5 +405,4 @@ class UpdateOldEtsyListings
             }
 
         }
-    }
 }
