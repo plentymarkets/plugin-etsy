@@ -8,6 +8,7 @@ use Etsy\EtsyServiceProvider;
 use Etsy\Services\Item\UpdateListingService;
 use Plenty\Modules\Item\DataLayer\Contracts\ItemDataLayerRepositoryContract;
 use Plenty\Modules\Item\VariationSku\Contracts\VariationSkuRepositoryContract;
+use Plenty\Modules\Item\VariationSku\Models\VariationSku;
 use Plenty\Modules\Property\Contracts\PropertyNameRepositoryContract;
 use Plenty\Modules\Property\Contracts\PropertyRelationRepositoryContract;
 use Plenty\Modules\Property\Contracts\PropertyRepositoryContract;
@@ -143,7 +144,7 @@ class UpdateOldEtsyListings
         ];
 
         $listings = $variationSkuRepository->search($filter);
-        
+
         foreach ($listings as $listing) {
             $listingId = $listing->sku;
             $variationId = $listing->variationId;
@@ -158,7 +159,7 @@ class UpdateOldEtsyListings
 
             try {
 
-                $etsyListingState = $listingService->getListing( (int) $listingId);
+                $etsyListingState = $listingService->getListing((int)$listingId);
 
                 if ($etsyListingState['results'][0]['state'] === "removed") {
                     $listing->delete();
@@ -305,47 +306,48 @@ class UpdateOldEtsyListings
 
         foreach ($skuIdAndListingIds as $skuId => $listingId) {
 
-                $dbRow = $variationSkuRepository->show($skuId);
-                $variationId = $dbRow->variationId;
-                $etsyListing = $listingInventoryService->getInventory($listingId)['results'];
+            /** @var VariationSku $dbRow */
+            $dbRow = $variationSkuRepository->show($skuId);
+            $variationId = $dbRow->variationId;
+            $etsyListing = $listingInventoryService->getInventory($listingId)['results'];
 
-                $etsyListing['products'][0]['sku'] = $listingId . '-' . $variationId;
-                if ($etsyListing['products'][0]['offerings'][0]['quantity']) {
-                    $quantity = $etsyListing['products'][0]['offerings'][0]['quantity'];
+            $etsyListing['products'][0]['sku'] = $listingId . '-' . $variationId;
+            if ($etsyListing['products'][0]['offerings'][0]['quantity']) {
+                $quantity = $etsyListing['products'][0]['offerings'][0]['quantity'];
 
-                    if (!isset($etsyListing['products'][0]['offerings'][0]['price']['before_conversion'])) {
-                        $price = (float)($etsyListing['products'][0]['offerings'][0]['price']['amount'] /
-                            $etsyListing['products'][0]['offerings'][0]['price']['divisor']);
-                        $price = round($price, UpdateListingService::MONEY_DECIMALS);
-                    } else {
-                        $price = (float)($etsyListing['products'][0]['offerings'][0]['price']['before_conversion']['amount'] /
-                            $etsyListing['products'][0]['offerings'][0]['price']['before_conversion']['divisor']);
-                        $price = round($price, UpdateListingService::MONEY_DECIMALS);
-                    }
-                }
-
-                $etsyListing['products'][0]['offerings'] = [
-                    [
-                        'quantity' => $quantity,
-                        'price' => $price
-                    ]
-                ];
-
-                $etsyListing['products'] = json_encode($etsyListing['products']);
-
-                try {
-                    $listingInventoryService->updateInventory($listingId, $etsyListing);
-                    $dbRow->sku = $listingId . '-' . $variationId;
-                    $dbRow->parentSku = $listingId;
-                    $dbRow->save();
-                    $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
-                        ->addReference('variationId', $variationId)
-                        ->error('Sku updated');
-                } catch (\Throwable $exception) {
-                    $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
-                        ->addReference('variationId', $variationId)
-                        ->error('Failed to update Inventory');
+                if (!isset($etsyListing['products'][0]['offerings'][0]['price']['before_conversion'])) {
+                    $price = (float)($etsyListing['products'][0]['offerings'][0]['price']['amount'] /
+                        $etsyListing['products'][0]['offerings'][0]['price']['divisor']);
+                    $price = round($price, UpdateListingService::MONEY_DECIMALS);
+                } else {
+                    $price = (float)($etsyListing['products'][0]['offerings'][0]['price']['before_conversion']['amount'] /
+                        $etsyListing['products'][0]['offerings'][0]['price']['before_conversion']['divisor']);
+                    $price = round($price, UpdateListingService::MONEY_DECIMALS);
                 }
             }
+
+            $etsyListing['products'][0]['offerings'] = [
+                [
+                    'quantity' => $quantity,
+                    'price' => $price
+                ]
+            ];
+
+            $etsyListing['products'] = json_encode($etsyListing['products']);
+
+            try {
+                $listingInventoryService->updateInventory($listingId, $etsyListing);
+                $dbRow->sku = $listingId . '-' . $variationId;
+                $dbRow->parentSku = $listingId;
+                $dbRow->save();
+                $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
+                    ->addReference('variationId', $variationId)
+                    ->error('Sku updated');
+            } catch (\Throwable $exception) {
+                $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
+                    ->addReference('variationId', $variationId)
+                    ->error('Failed to update Inventory');
+            }
         }
+    }
 }
