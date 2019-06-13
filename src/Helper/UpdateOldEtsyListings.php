@@ -341,4 +341,80 @@ class UpdateOldEtsyListings
         }
 
     }
+
+    public function changeFuckedUpSku()
+    {
+        /** @var VariationSkuRepositoryContract $variationSkuRepository */
+        $variationSkuRepository = pluginApp(VariationSkuRepositoryContract::class);
+        /** @var ListingInventoryService $listingInventoryService */
+        $listingInventoryService = pluginApp(ListingInventoryService::class);
+
+        $fuckedUpListings = [
+            559410525,
+            545841196,
+            559635179,
+            545841228,
+            547281130,
+            561080431,
+            547281276,
+            561264021,
+            547714874,
+            561512807
+        ];
+
+        $skuIds = [
+            19913,
+            20024,
+            20025,
+            20026,
+            20208,
+            20209,
+            20210,
+            20227,
+            20290,
+            20291
+        ];
+
+        foreach ($fuckedUpListings as $fuckedUpListing) {
+            foreach ($skuIds as $skuId)
+            {
+                $dbRow = $variationSkuRepository->show($skuId);
+                $variationId = $dbRow->variationId;
+                $etsyListing = $listingInventoryService->getInventory($fuckedUpListing)['results'];
+
+                $etsyListing['products'][0]['sku'] = $fuckedUpListing . '-' . $variationId;
+                if ($etsyListing['products'][0]['offerings'][0]['quantity']) {
+                    $quantity = $etsyListing['products'][0]['offerings'][0]['quantity'];
+
+                    if (!isset($etsyListing['products'][0]['offerings'][0]['price']['before_conversion'])) {
+                        $price = (float)($etsyListing['products'][0]['offerings'][0]['price']['amount'] /
+                            $etsyListing['products'][0]['offerings'][0]['price']['divisor']);
+                        $price = round($price, UpdateListingService::MONEY_DECIMALS);
+                    } else {
+                        $price = (float)($etsyListing['products'][0]['offerings'][0]['price']['before_conversion']['amount'] /
+                            $etsyListing['products'][0]['offerings'][0]['price']['before_conversion']['divisor']);
+                        $price = round($price, UpdateListingService::MONEY_DECIMALS);
+                    }
+                }
+
+                $etsyListing['products'][0]['offerings'] = [
+                    [
+                        'quantity' => $quantity,
+                        'price' => $price
+                    ]
+                ];
+
+                $etsyListing['products'] = json_encode($etsyListing['products']);
+
+                try {
+                    $response = $listingInventoryService->updateInventory($fuckedUpListing, $etsyListing);
+                } catch (\Throwable $exception) {
+                    $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
+                        ->addReference('variationId', $variationId)
+                        ->error('Failed to update Inventory');
+                }
+            }
+
+        }
+    }
 }
