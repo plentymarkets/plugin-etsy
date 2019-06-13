@@ -300,10 +300,17 @@ class UpdateOldEtsyListings
         $listings = $variationSkuRepository->search($filter);
 
         foreach ($listings as $listing) {
-            $listingId = $listing->sku;
+            $listingId = $listing->parentSku;
             $variationId = $listing->variationId;
 
-            $images = $imageHelper->get($listing->variationId);
+            $images = $imageHelper->get($variationId);
+            if ($images === NULL)
+            {
+                $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
+                    ->addReference('variationId', $variationId)
+                    ->error('Keine Bilder zur Variante abgespeichert.');
+                continue;
+            }
 
             /** @var VariationRepositoryContract $variationRepository */
             $variationRepository = pluginApp(VariationRepositoryContract::class);
