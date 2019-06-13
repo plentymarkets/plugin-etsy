@@ -9,15 +9,39 @@ use Etsy\Services\Item\UpdateListingService;
 use Plenty\Modules\Item\DataLayer\Contracts\ItemDataLayerRepositoryContract;
 use Plenty\Modules\Item\VariationSku\Contracts\VariationSkuRepositoryContract;
 use Plenty\Modules\Item\VariationSku\Models\VariationSku;
+use Plenty\Modules\Plugin\DynamoDb\Contracts\DynamoDbRepositoryContract;
 use Plenty\Modules\Property\Contracts\PropertyNameRepositoryContract;
 use Plenty\Modules\Property\Contracts\PropertyRelationRepositoryContract;
 use Plenty\Modules\Property\Contracts\PropertyRepositoryContract;
+use Plenty\Plugin\ConfigRepository;
 use Plenty\Plugin\Log\Loggable;
 
 
 class UpdateOldEtsyListings
 {
     use Loggable;
+
+    public function deleteImageData()
+    {
+        /** @var DynamoDbRepositoryContract $dynamoRepo */
+        $dynamoRepo = pluginApp(DynamoDbRepositoryContract::class);
+        /** @var ConfigRepository $config */
+        $config = pluginApp(ConfigRepository::class);
+
+        $dynamoRepo->deleteTable(EtsyServiceProvider::PLUGIN_NAME, 'variation_images');
+
+        $dynamoRepo->createTable(SettingsHelper::PLUGIN_NAME, ImageHelper::TABLE_NAME, [
+            [
+                'AttributeName' => 'id',
+                'AttributeType' => DynamoDbRepositoryContract::FIELD_TYPE_STRING
+            ],
+        ], [
+            [
+                'AttributeName' => 'id',
+                'KeyType'       => 'HASH',
+            ],
+        ], (int) $config->get(SettingsHelper::PLUGIN_NAME . '.readCapacityUnits', 3), (int) $config->get(SettingsHelper::PLUGIN_NAME . '.readCapacityUnits', 2));
+    }
 
     /**
      * Creates the do not export property which is used to exclude items from the export
