@@ -339,7 +339,9 @@ class UpdateOldEtsyListings
                 $listingInventoryService->updateInventory($listingId, $etsyListing);
                 $dbRow->sku = $listingId . '-' . $variationId;
                 $dbRow->parentSku = $listingId;
-                $dbRow->save();
+                if ($dbRow instanceof VariationSku ) {
+                    $dbRow->save();
+                }
                 $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
                     ->addReference('variationId', $variationId)
                     ->error('Sku updated');
