@@ -120,7 +120,7 @@ class UpdateListingStockService
 
         foreach ($listing as $variation) {
             if (isset($variation['skus'][0]['parentSku'])) {
-                $listingId = $variation['skus'][0]['parentSku'];
+                $listingId = (int)$variation['skus'][0]['parentSku'];
                 break;
             }
         }
