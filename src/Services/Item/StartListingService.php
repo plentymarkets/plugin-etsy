@@ -174,7 +174,7 @@ class StartListingService
             return;
         }
 
-        $listingId = $listing['main']['listingId'];
+        $listingId = (int) $listing['main']['listingId'];
 
         try {
             $this->addTranslations($listing, $listingId);
