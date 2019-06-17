@@ -84,7 +84,7 @@ class ItemExportService extends AbstractBatchService
 
             if (isset($variation['do_not_export'])){
                 $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
-                    ->addReference('variation', $variation)
+                    ->addReference('itemId', $variation['itemId'])
                     ->error('variation übersprungen, da eigenschaft angelegt ist.');
                 continue;
             }
