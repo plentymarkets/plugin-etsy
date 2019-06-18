@@ -244,7 +244,7 @@ class StartListingService
         $data = [];
         $failedVariations = [];
         $variationExportService = $this->variationExportService;
-        EtsyListingValidator::validateOrFail($listing['main']);
+//        EtsyListingValidator::validateOrFail($listing['main']);
 
         $data['state'] = 'draft';
 
