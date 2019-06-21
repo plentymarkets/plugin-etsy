@@ -137,6 +137,10 @@ class UpdateListingStockService
                 $renew = in_array($listing['main']['renew'], self::BOOL_CONVERTIBLE_STRINGS);
             }
 
+            if ($listing['main']['renew'] === "false" || $listing['main']['renew'] == false) {
+                $renew = false;
+            }
+
             if ($state == self::SOLD_OUT && !$renew){
                 $this->getLogger(__FUNCTION__)
                     ->addReference('listingId', $listingId)
