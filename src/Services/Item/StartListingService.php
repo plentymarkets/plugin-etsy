@@ -286,14 +286,8 @@ class StartListingService
         }
 
         foreach ($listing as $key => $variation) {
-            if (!$variation['isMain'])
-            {
-                if (!$variation['isActive'])
-                {
-                    continue;
-                }
-            }
-
+                if (!$variation['isActive']) continue;
+                
             $listing[$key]['failed'] = false;
 
             $variationExportService->preload($exportPreloadValueList);
