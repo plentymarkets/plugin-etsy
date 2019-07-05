@@ -16,409 +16,433 @@ use Plenty\Plugin\Log\Loggable;
  */
 class PropertyImportService
 {
-    use Loggable;
+	use Loggable;
 
-    /**
-     * @var DataTypeService
-     */
-    private $dataTypeService;
+	/**
+	 * @var DataTypeService
+	 */
+	private $dataTypeService;
 
-    /**
-     * @var StyleService
-     */
-    private $styleService;
+	/**
+	 * @var StyleService
+	 */
+	private $styleService;
 
-    /**
-     * @var SettingsRepositoryContract
-     */
-    private $settingsRepository;
+	/**
+	 * @var SettingsRepositoryContract
+	 */
+	private $settingsRepository;
 
-    /**
-     * @var array
-     */
-    private $currentProperties = [];
+	/**
+	 * @var array
+	 */
+	private $currentProperties = [];
 
-    /**
-     * @param DataTypeService            $dataTypeService
-     * @param StyleService               $styleService
-     * @param SettingsRepositoryContract $settingsRepository
-     */
-    public function __construct(
-        DataTypeService $dataTypeService,
-        StyleService $styleService,
-        SettingsRepositoryContract $settingsRepository
-    ) {
-        $this->dataTypeService    = $dataTypeService;
-        $this->styleService       = $styleService;
-        $this->settingsRepository = $settingsRepository;
-    }
+	/**
+	 * @param DataTypeService            $dataTypeService
+	 * @param StyleService               $styleService
+	 * @param SettingsRepositoryContract $settingsRepository
+	 */
+	public function __construct(
+		DataTypeService $dataTypeService,
+		StyleService $styleService,
+		SettingsRepositoryContract $settingsRepository
+	) {
+		$this->dataTypeService    = $dataTypeService;
+		$this->styleService       = $styleService;
+		$this->settingsRepository = $settingsRepository;
+	}
 
-    /**
-     * Import the properties.
-     *
-     * @param array $properties
-     * @param bool  $force
-     */
-    public function run($properties, $force = false)
-    {
+	/**
+	 * Import the properties.
+	 *
+	 * @param array $properties
+	 * @param bool  $force
+	 */
+	public function run($properties, $force = false)
+	{
+		$newProperties = [];
 		$oldProperties = $this->settingsRepository->find(SettingsHelper::PLUGIN_NAME, SettingsCorrelationFactory::TYPE_PROPERTY);
-		
-        if ($force) {
-            $this->settingsRepository->deleteAll(SettingsHelper::PLUGIN_NAME,
-                SettingsCorrelationFactory::TYPE_PROPERTY);
-        }
 
-        $this->loadAllProperties();
+		if ($force) {
+			$this->settingsRepository->deleteAll(SettingsHelper::PLUGIN_NAME,
+				SettingsCorrelationFactory::TYPE_PROPERTY);
+		}
 
-        if (is_array($properties) && count($properties)) {
-            $languages = [
-                'en',
-                'de',
-                'it',
-                'es',
-                'pt',
-                'fr',
-                'nl'
-            ]; // the order here is very important for calculating the hash key
+		$this->loadAllProperties();
 
-            foreach ($properties as $propertyKey) {
-                try {
-                    $enum = [];
+		if (is_array($properties) && count($properties)) {
+			$languages = [
+				'en',
+				'de',
+				'it',
+				'es',
+				'pt',
+				'fr',
+				'nl'
+			]; // the order here is very important for calculating the hash key
 
-                    foreach ($languages as $language) {
-                        switch ($propertyKey) {
-                            case 'when_made':
-                                $enum[$language] = $this->dataTypeService->describeWhenMadeEnum($language);
-                                break;
+			foreach ($properties as $propertyKey) {
+				try {
+					$enum = [];
 
-                            case 'who_made':
-                                $enum[$language] = $this->dataTypeService->describeWhoMadeEnum($language);
-                                break;
+					foreach ($languages as $language) {
+						switch ($propertyKey) {
+							case 'when_made':
+								$enum[$language] = $this->dataTypeService->describeWhenMadeEnum($language);
+								break;
 
-                            case 'occasion':
-                                $enum[$language] = $this->dataTypeService->describeOccasionEnum($language);
-                                break;
+							case 'who_made':
+								$enum[$language] = $this->dataTypeService->describeWhoMadeEnum($language);
+								break;
 
-                            case 'recipient':
-                                $enum[$language] = $this->dataTypeService->describeRecipientEnum($language);
-                                break;
+							case 'occasion':
+								$enum[$language] = $this->dataTypeService->describeOccasionEnum($language);
+								break;
 
-                            case 'style':
-                                $enum[$language] = $this->convertStyleTypeToEnumType($this->styleService->findSuggestedStyles($language));
-                                break;
+							case 'recipient':
+								$enum[$language] = $this->dataTypeService->describeRecipientEnum($language);
+								break;
 
-                            case 'is_supply':
-                                $enum[$language] = $this->convertIsSupplyTypeToEnumType($this->getIsSupplyTypes($language));
-                                break;
-                        }
-                    }
+							case 'style':
+								$enum[$language] = $this->convertStyleTypeToEnumType($this->styleService->findSuggestedStyles($language));
+								break;
 
-                    if (is_array($enum) && count($enum)) {
-                        $this->createSettings($propertyKey, $enum, $language);
-                    }
-                } catch (\Exception $ex) {
-                    $this->getLogger(__FUNCTION__)->error('Etsy::order.propertyImportError', $ex->getMessage());
-                }
-            }
+							case 'is_supply':
+								$enum[$language] = $this->convertIsSupplyTypeToEnumType($this->getIsSupplyTypes($language));
+								break;
+						}
+					}
 
-			$newProperties = $this->settingsRepository->find(SettingsHelper::PLUGIN_NAME, SettingsCorrelationFactory::TYPE_PROPERTY);
-            
-            $propertyDifference = array_diff($oldProperties, $newProperties);
-            
-            foreach($propertyDifference as $property) {
-            	$i = 1;
+					if (is_array($enum) && count($enum)) {
+						$createResult = $this->createSettings($propertyKey, $enum, $language);
+
+						if($createResult instanceof Settings) {
+							$newProperties[] = $createResult;
+						}
+					}
+				} catch (\Exception $ex) {
+					$this->getLogger(__FUNCTION__)->error('Etsy::order.propertyImportError', $ex->getMessage());
+				}
 			}
-        }
-    }
 
-    /**
-     * Load all properties that are currently imported.
-     */
-    private function loadAllProperties()
-    {
-        $propertySettings = $this->settingsRepository->find(SettingsHelper::PLUGIN_NAME,
-            SettingsCorrelationFactory::TYPE_PROPERTY);
+			$propertyDifference = [];
+			//$newProperties = $this->settingsRepository->find(SettingsHelper::PLUGIN_NAME, SettingsCorrelationFactory::TYPE_PROPERTY);
 
-        if (count($propertySettings)) {
-            foreach ($propertySettings as $propertySetting) {
-                $this->currentProperties[$propertySetting->settings['mainPropertyKey']][$propertySetting->settings['hash']] = $propertySetting;
-            }
-        }
-    }
+			/** @var Settings $oldProperty */
+			foreach($oldProperties as $oldProperty) {
+				$propertyFound = false;
 
-    /**
-     * Convert the returned style type to an enum type.
-     *
-     * @param array $data
-     *
-     * @return array
-     */
-    private function convertStyleTypeToEnumType($data): array
-    {
-        $enumType = [
-            'type'      => 'enum',
-            'values'    => [],
-            'formatted' => [],
-        ];
+				/** @var Settings $newProperty */
+				foreach($newProperties as $newProperty) {
+					if($oldProperty->settings['hash'] == $newProperty->settings['hash']) {
+						$propertyFound = true;
+						break;
+					}
+				}
 
-        if (is_array($data) && count($data)) {
-            foreach ($data as $result) {
-                $enumType['values'][]                       = $result['style_id'];
-                $enumType['formatted'][$result['style_id']] = $result['style'];
+				if(!$propertyFound) {
+					$propertyDifference[] = $oldProperty;
+				}
+			}
 
-            }
-        }
+			$i = 0;
 
-        return $enumType;
-    }
+			/** @var Settings $property */
+			foreach($propertyDifference as $property) {
+				$this->settingsRepository->delete($property->id);
+			}
+		}
+	}
 
-    /**
-     * Convert the returned isSupply types to enum types.
-     *
-     * @param array $data
-     *
-     * @return array
-     */
-    private function convertIsSupplyTypeToEnumType($data): array
-    {
-        $enumType = [
-            'type'      => 'enum',
-            'values'    => [],
-            'formatted' => [],
-        ];
+	/**
+	 * Load all properties that are currently imported.
+	 */
+	private function loadAllProperties()
+	{
+		$propertySettings = $this->settingsRepository->find(SettingsHelper::PLUGIN_NAME,
+			SettingsCorrelationFactory::TYPE_PROPERTY);
 
-        if (is_array($data) && count($data)) {
-            foreach ($data as $result) {
-                $enumType['values'][]                    = $result['value'];
-                $enumType['formatted'][$result['value']] = $result['name'];
+		if (count($propertySettings)) {
+			foreach ($propertySettings as $propertySetting) {
+				$this->currentProperties[$propertySetting->settings['mainPropertyKey']][$propertySetting->settings['hash']] = $propertySetting;
+			}
+		}
+	}
 
-            }
-        }
+	/**
+	 * Convert the returned style type to an enum type.
+	 *
+	 * @param array $data
+	 *
+	 * @return array
+	 */
+	private function convertStyleTypeToEnumType($data): array
+	{
+		$enumType = [
+			'type'      => 'enum',
+			'values'    => [],
+			'formatted' => [],
+		];
 
-        return $enumType;
-    }
+		if (is_array($data) && count($data)) {
+			foreach ($data as $result) {
+				$enumType['values'][]                       = $result['style_id'];
+				$enumType['formatted'][$result['style_id']] = $result['style'];
 
-    /**
-     * Create settings for a given property key and enums.
-     *
-     * @param string $propertyKey
-     * @param array  $propertyEnum
-     * @param string $language
-     */
-    private function createSettings(string $propertyKey, array $propertyEnum, string $language)
-    {
-        $defaultPropertyEnum = reset($propertyEnum);
+			}
+		}
 
-        if (isset($defaultPropertyEnum['values']) && is_array($defaultPropertyEnum['values']) && count($defaultPropertyEnum['values'])) {
-            foreach ($defaultPropertyEnum['values'] as $key => $propertyValueKey) {
-                $data = [
-                    'mainPropertyKey' => $propertyKey,
-                    'hash'            => $this->calculateHash($propertyKey, $propertyValueKey),
-                ];
+		return $enumType;
+	}
 
-                foreach (array_keys($propertyEnum) as $lang) {
-                    $data['propertyKey'][$lang]      = $propertyKey;
-                    $data['propertyValueKey'][$lang] = $propertyEnum[$lang]['values'][$key];
+	/**
+	 * Convert the returned isSupply types to enum types.
+	 *
+	 * @param array $data
+	 *
+	 * @return array
+	 */
+	private function convertIsSupplyTypeToEnumType($data): array
+	{
+		$enumType = [
+			'type'      => 'enum',
+			'values'    => [],
+			'formatted' => [],
+		];
 
-                    $data['propertyName'][$lang] = $this->getPropertyName($propertyKey, $lang);
+		if (is_array($data) && count($data)) {
+			foreach ($data as $result) {
+				$enumType['values'][]                    = $result['value'];
+				$enumType['formatted'][$result['value']] = $result['name'];
 
-                    if (isset($propertyEnum[$lang]['formatted']) && is_array($propertyEnum[$lang]['formatted']) && isset($propertyEnum[$lang]['formatted'][$propertyEnum[$lang]['values'][$key]]) && strlen($propertyEnum[$lang]['formatted'][$propertyEnum[$lang]['values'][$key]])) {
-                        $data['propertyValueName'][$lang] = $propertyEnum[$lang]['formatted'][$propertyEnum[$lang]['values'][$key]];
-                    } else {
-                        $data['propertyValueName'][$lang] = $this->formatName($propertyEnum[$lang]['values'][$key],
-                            $propertyKey, $lang);
-                    }
-                }
+			}
+		}
 
-                $currentProperty = $this->currentProperty($data);
+		return $enumType;
+	}
 
-                if (!$currentProperty) {
-                    $this->settingsRepository->create(SettingsHelper::PLUGIN_NAME,
-                        SettingsCorrelationFactory::TYPE_PROPERTY, $data);
-                } else {
-                    $this->settingsRepository->update($data, $currentProperty->id);
-                }
-            }
-        }
-    }
+	/**
+	 * Create settings for a given property key and enums.
+	 *
+	 * @param string $propertyKey
+	 * @param array  $propertyEnum
+	 * @param string $language
+	 */
+	private function createSettings(string $propertyKey, array $propertyEnum, string $language)
+	{
+		$defaultPropertyEnum = reset($propertyEnum);
 
-    /**
-     * Get isSupply types.
-     *
-     * @param string $lang
-     *
-     * @return array
-     */
-    private function getIsSupplyTypes($lang)
-    {
-        switch ($lang) {
-            case 'de':
-                return [
-                    [
-                        'value' => 'true',
-                        'name'  => 'Zubehör oder ein Werkzeug, um etwas herzustellen'
-                    ],
+		if (isset($defaultPropertyEnum['values']) && is_array($defaultPropertyEnum['values']) && count($defaultPropertyEnum['values'])) {
+			foreach ($defaultPropertyEnum['values'] as $key => $propertyValueKey) {
+				$data = [
+					'mainPropertyKey' => $propertyKey,
+					'hash'            => $this->calculateHash($propertyKey, $propertyValueKey),
+				];
 
-                    [
-                        'value' => 'false',
-                        'name'  => 'Ein fertiges Produkt'
-                    ],
-                ];
+				foreach (array_keys($propertyEnum) as $lang) {
+					$data['propertyKey'][$lang]      = $propertyKey;
+					$data['propertyValueKey'][$lang] = $propertyEnum[$lang]['values'][$key];
 
-            case 'en':
-            default:
-                return [
-                    [
-                        'value' => 'true',
-                        'name'  => 'A supply or tool to make things'
-                    ],
+					$data['propertyName'][$lang] = $this->getPropertyName($propertyKey, $lang);
 
-                    [
-                        'value' => 'false',
-                        'name'  => 'A finished product'
-                    ],
-                ];
-        }
-    }
+					if (isset($propertyEnum[$lang]['formatted']) && is_array($propertyEnum[$lang]['formatted']) && isset($propertyEnum[$lang]['formatted'][$propertyEnum[$lang]['values'][$key]]) && strlen($propertyEnum[$lang]['formatted'][$propertyEnum[$lang]['values'][$key]])) {
+						$data['propertyValueName'][$lang] = $propertyEnum[$lang]['formatted'][$propertyEnum[$lang]['values'][$key]];
+					} else {
+						$data['propertyValueName'][$lang] = $this->formatName($propertyEnum[$lang]['values'][$key],
+							$propertyKey, $lang);
+					}
+				}
 
-    /**
-     * Get the property name.
-     *
-     * @param string $propertyKey
-     * @param string $lang
-     *
-     * @return string
-     */
-    private function getPropertyName($propertyKey, $lang)
-    {
-        $map = [
-            'occasion' => [
-                'en' => 'Occasion',
-                'de' => 'Anlass',
-            ],
+				$currentProperty = $this->currentProperty($data);
 
-            'when_made' => [
-                'en' => 'When made',
-                'de' => 'Hergestellt',
-            ],
+				if (!$currentProperty) {
+					return $this->settingsRepository->create(SettingsHelper::PLUGIN_NAME,
+						SettingsCorrelationFactory::TYPE_PROPERTY, $data);
+				} else {
+					return $this->settingsRepository->update($data, $currentProperty->id);
+				}
+			}
+		}
+	}
 
-            'who_made' => [
-                'en' => 'Who made',
-                'de' => 'Hersteller',
-            ],
+	/**
+	 * Get isSupply types.
+	 *
+	 * @param string $lang
+	 *
+	 * @return array
+	 */
+	private function getIsSupplyTypes($lang)
+	{
+		switch ($lang) {
+			case 'de':
+				return [
+					[
+						'value' => 'true',
+						'name'  => 'Zubehör oder ein Werkzeug, um etwas herzustellen'
+					],
 
-            'recipient' => [
-                'en' => 'Recipient',
-                'de' => 'Empfänger',
-            ],
-            'style'     => [
-                'en' => 'Style',
-                'de' => 'Stil',
-            ],
-            'is_supply' => [
-                'en' => 'What is it',
-                'de' => 'Was ist es'
+					[
+						'value' => 'false',
+						'name'  => 'Ein fertiges Produkt'
+					],
+				];
 
-            ],
-        ];
+			case 'en':
+			default:
+				return [
+					[
+						'value' => 'true',
+						'name'  => 'A supply or tool to make things'
+					],
 
-        if (isset($map[$propertyKey]) && isset($map[$propertyKey][$lang]) && strlen($map[$propertyKey][$lang])) {
-            return $map[$propertyKey][$lang];
-        }
+					[
+						'value' => 'false',
+						'name'  => 'A finished product'
+					],
+				];
+		}
+	}
 
-        return $this->formatName($propertyKey, $propertyKey, $lang);
-    }
+	/**
+	 * Get the property name.
+	 *
+	 * @param string $propertyKey
+	 * @param string $lang
+	 *
+	 * @return string
+	 */
+	private function getPropertyName($propertyKey, $lang)
+	{
+		$map = [
+			'occasion' => [
+				'en' => 'Occasion',
+				'de' => 'Anlass',
+			],
 
-    /**
-     * Format a name.
-     *
-     * @param string $name
-     * @param string $propertyKey
-     * @param string $lang
-     *
-     * @return string
-     */
-    private function formatName($name, string $propertyKey, string $lang)
-    {
-        $name = ucwords(str_replace('_', ' ', $name));
+			'when_made' => [
+				'en' => 'When made',
+				'de' => 'Hergestellt',
+			],
 
-        if ($propertyKey === 'occasion') {
-            switch ($lang) {
-                case 'de':
-                    $name = str_replace([
-                        'Jubilum',
-                    ], [
-                        'Jubiläum',
-                    ], $name);
-                    break;
-            }
-        } elseif ($propertyKey === 'recipient') {
-            switch ($lang) {
-                case 'de':
-                    $name = str_replace([
-                        'Mnner',
-                        'Teenager  Mdchen',
-                        'Mdchen',
-                        'Babys  Mdchen',
-                        'Vgel',
-                    ], [
-                        'Männer',
-                        'Teenager Mädchen',
-                        'Mädchen',
-                        'Babys  Mädchen',
-                        'Vögel'
-                    ], $name);
-                    break;
-            }
-        } elseif ($propertyKey === 'who_made') {
-            switch ($lang) {
-                case 'de':
-                    $name = str_replace([
-                        'I Did',
-                        'Collective',
-                        'Someone Else',
-                    ], [
-                        'Ich war\'s',
-                        'Ein Mitglied meines Shops',
-                        'Eine andere Firma oder Person',
-                    ], $name);
-                    break;
-            }
-        }
+			'who_made' => [
+				'en' => 'Who made',
+				'de' => 'Hersteller',
+			],
+
+			'recipient' => [
+				'en' => 'Recipient',
+				'de' => 'Empfänger',
+			],
+			'style'     => [
+				'en' => 'Style',
+				'de' => 'Stil',
+			],
+			'is_supply' => [
+				'en' => 'What is it',
+				'de' => 'Was ist es'
+
+			],
+		];
+
+		if (isset($map[$propertyKey]) && isset($map[$propertyKey][$lang]) && strlen($map[$propertyKey][$lang])) {
+			return $map[$propertyKey][$lang];
+		}
+
+		return $this->formatName($propertyKey, $propertyKey, $lang);
+	}
+
+	/**
+	 * Format a name.
+	 *
+	 * @param string $name
+	 * @param string $propertyKey
+	 * @param string $lang
+	 *
+	 * @return string
+	 */
+	private function formatName($name, string $propertyKey, string $lang)
+	{
+		$name = ucwords(str_replace('_', ' ', $name));
+
+		if ($propertyKey === 'occasion') {
+			switch ($lang) {
+				case 'de':
+					$name = str_replace([
+						'Jubilum',
+					], [
+						'Jubiläum',
+					], $name);
+					break;
+			}
+		} elseif ($propertyKey === 'recipient') {
+			switch ($lang) {
+				case 'de':
+					$name = str_replace([
+						'Mnner',
+						'Teenager  Mdchen',
+						'Mdchen',
+						'Babys  Mdchen',
+						'Vgel',
+					], [
+						'Männer',
+						'Teenager Mädchen',
+						'Mädchen',
+						'Babys  Mädchen',
+						'Vögel'
+					], $name);
+					break;
+			}
+		} elseif ($propertyKey === 'who_made') {
+			switch ($lang) {
+				case 'de':
+					$name = str_replace([
+						'I Did',
+						'Collective',
+						'Someone Else',
+					], [
+						'Ich war\'s',
+						'Ein Mitglied meines Shops',
+						'Eine andere Firma oder Person',
+					], $name);
+					break;
+			}
+		}
 
 
-        return $name;
-    }
+		return $name;
+	}
 
-    /**
-     * Check if property is already imported.
-     *
-     * @param array $data
-     *
-     * @return Settings|null
-     */
-    private function currentProperty($data)
-    {
-        if (isset($this->currentProperties[$data['mainPropertyKey']]) && isset($this->currentProperties[$data['mainPropertyKey']][$data['hash']])) {
-            return $this->currentProperties[$data['mainPropertyKey']][$data['hash']];
-        }
+	/**
+	 * Check if property is already imported.
+	 *
+	 * @param array $data
+	 *
+	 * @return Settings|null
+	 */
+	private function currentProperty($data)
+	{
+		if (isset($this->currentProperties[$data['mainPropertyKey']]) && isset($this->currentProperties[$data['mainPropertyKey']][$data['hash']])) {
+			return $this->currentProperties[$data['mainPropertyKey']][$data['hash']];
+		}
 
-        return null;
-    }
+		return null;
+	}
 
-    /**
-     * Calculate hash value for array.
-     *
-     * @param string $propertyKey
-     * @param string $propertyValueKey
-     *
-     * @return string
-     */
-    private function calculateHash($propertyKey, $propertyValueKey)
-    {
-        return md5(json_encode([
-            'propertyKey'      => $propertyKey,
-            'propertyValueKey' => $propertyValueKey
-        ]));
-    }
+	/**
+	 * Calculate hash value for array.
+	 *
+	 * @param string $propertyKey
+	 * @param string $propertyValueKey
+	 *
+	 * @return string
+	 */
+	private function calculateHash($propertyKey, $propertyValueKey)
+	{
+		return md5(json_encode([
+			'propertyKey'      => $propertyKey,
+			'propertyValueKey' => $propertyValueKey
+		]));
+	}
 }
