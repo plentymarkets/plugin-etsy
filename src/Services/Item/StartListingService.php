@@ -287,7 +287,7 @@ class StartListingService
 
         foreach ($listing as $key => $variation) {
                 if (!$variation['isActive']) continue;
-                
+
             $listing[$key]['failed'] = false;
 
             $variationExportService->preload($exportPreloadValueList);
@@ -738,7 +738,8 @@ class StartListingService
                 }
             }
 
-            $messageBag = pluginApp(MessageBag::class, ['messages' => $messages]);
+            $messageBag = pluginApp(MessageBag::class, ['messages' => $messages,
+                'data' => $data]);
             throw new ListingException($messageBag,
                 $this->translator->trans(EtsyServiceProvider::PLUGIN_NAME . '::item.startListingError'));
         }
