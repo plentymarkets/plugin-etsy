@@ -1,5 +1,8 @@
 # Release notes for Etsy
 
+## v1.3.13 (2019-07-05)
+- FIX Property import.
+
 ## v1.3.12 (2019-05-28)
 ### Changed 
 - Userguide was adjusted and now contains information about authentication.

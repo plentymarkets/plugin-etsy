@@ -1,5 +1,8 @@
 # Release Notes für Etsy
 
+## v1.3.13 (2019-07-05)
+- FIX Merkmal-Import.
+
 ## v1.3.12 (2019-05-28)
 ### Geändert
 - Userguide entsprechend neuer Authentifizierung angepasst
