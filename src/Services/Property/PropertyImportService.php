@@ -61,6 +61,8 @@ class PropertyImportService
      */
     public function run($properties, $force = false)
     {
+		$oldProperties = $this->settingsRepository->find(SettingsHelper::PLUGIN_NAME, SettingsCorrelationFactory::TYPE_PROPERTY);
+		
         if ($force) {
             $this->settingsRepository->deleteAll(SettingsHelper::PLUGIN_NAME,
                 SettingsCorrelationFactory::TYPE_PROPERTY);
@@ -118,6 +120,14 @@ class PropertyImportService
                     $this->getLogger(__FUNCTION__)->error('Etsy::order.propertyImportError', $ex->getMessage());
                 }
             }
+
+			$newProperties = $this->settingsRepository->find(SettingsHelper::PLUGIN_NAME, SettingsCorrelationFactory::TYPE_PROPERTY);
+            
+            $propertyDifference = array_diff($oldProperties, $newProperties);
+            
+            foreach($propertyDifference as $property) {
+            	$i = 1;
+			}
         }
     }
 
