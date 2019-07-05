@@ -115,11 +115,9 @@ class PropertyImportService
 					}
 
 					if (is_array($enum) && count($enum)) {
-						$createResult = $this->createSettings($propertyKey, $enum, $language);
+						$createResultList = $this->createSettings($propertyKey, $enum, $language);
 
-						if($createResult instanceof Settings) {
-							$newProperties[] = $createResult;
-						}
+						$newProperties = array_merge($newProperties, $createResultList);
 					}
 				} catch (\Exception $ex) {
 					$this->getLogger(__FUNCTION__)->error('Etsy::order.propertyImportError', $ex->getMessage());
@@ -231,6 +229,7 @@ class PropertyImportService
 	 */
 	private function createSettings(string $propertyKey, array $propertyEnum, string $language)
 	{
+		$settingsList = []; 
 		$defaultPropertyEnum = reset($propertyEnum);
 
 		if (isset($defaultPropertyEnum['values']) && is_array($defaultPropertyEnum['values']) && count($defaultPropertyEnum['values'])) {
@@ -257,13 +256,15 @@ class PropertyImportService
 				$currentProperty = $this->currentProperty($data);
 
 				if (!$currentProperty) {
-					return $this->settingsRepository->create(SettingsHelper::PLUGIN_NAME,
+					$settingsList[] = $this->settingsRepository->create(SettingsHelper::PLUGIN_NAME,
 						SettingsCorrelationFactory::TYPE_PROPERTY, $data);
 				} else {
-					return $this->settingsRepository->update($data, $currentProperty->id);
+					$settingsList[] = $this->settingsRepository->update($data, $currentProperty->id);
 				}
 			}
 		}
+		
+		return $settingsList;
 	}
 
 	/**
