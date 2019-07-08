@@ -725,7 +725,7 @@ class StartListingService
 
         $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
             ->addReference('listingId', $listingId)
-            ->error('data response', [
+            ->error('data request', [
                 'data' => $data
             ]);
 
