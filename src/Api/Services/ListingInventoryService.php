@@ -3,7 +3,10 @@
 namespace Etsy\Api\Services;
 
 use Etsy\Api\Client;
+use Etsy\EtsyServiceProvider;
 use Etsy\Helper\SettingsHelper;
+use Plenty\Plugin\Log\Loggable;
+
 //use OAuth;
 
 /**
@@ -11,6 +14,7 @@ use Etsy\Helper\SettingsHelper;
  */
 class ListingInventoryService
 {
+    use Loggable;
 
     const CUSTOM_ATTRIBUTE_1 = 513;
     const CUSTOM_ATTRIBUTE_2 = 514;
@@ -81,6 +85,13 @@ class ListingInventoryService
             $params['sku_on_property'] = implode(',',$data['sku_on_property']);
             unset($data['sku_on_property']);
         }
+
+        $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
+            ->addReference('listingId', $listingId)
+            ->error('params of updateInventory call', [
+                'params' => $params,
+                'data' => $data
+            ]);
 
         return $this->client->call('updateInventory', $params, $data);
 

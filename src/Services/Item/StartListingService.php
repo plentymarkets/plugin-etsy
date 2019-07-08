@@ -731,13 +731,6 @@ class StartListingService
 
         $response = $this->inventoryService->updateInventory($listingId, $data, $language);
 
-        $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
-            ->addReference('listingId', $listingId)
-            ->addReference('response', $response['results'])
-            ->error('data response', [
-                'response' => $response['results']
-            ]);
-
         if (!isset($response['results']) || !is_array($response['results'])) {
             $messages = [];
 
