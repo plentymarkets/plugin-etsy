@@ -28,7 +28,6 @@
     "Etsy\\Migrations\\CreateOrderReferrer",
     "Etsy\\Migrations\\CreateMarketPropertySettings",
     "Etsy\\Migrations\\CreateLegalInformationTable",
-    "Etsy\\Migrations\\CreateEtsyTaxonomiesTable",
-    "Etsy\\Migrations\\UpdateOldEtsyListings"
+    "Etsy\\Migrations\\CreateEtsyTaxonomiesTable"
   ]
 }
