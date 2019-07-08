@@ -723,7 +723,19 @@ class StartListingService
             'sku_on_property' => $dependencies
         ];
 
+        $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
+            ->addReference('listingId', $listingId)
+            ->error('data response', [
+                'data' => $data
+            ]);
+
         $response = $this->inventoryService->updateInventory($listingId, $data, $language);
+
+        $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
+            ->addReference('listingId', $listingId)
+            ->error('data response', [
+                'response' => $response
+            ]);
 
         if (!isset($response['results']) || !is_array($response['results'])) {
             $messages = [];
