@@ -259,15 +259,32 @@ class StartListingService
         //legal information
         $legalInformation = $this->itemHelper->getLegalInformation($language);
 
-        //title and description
-        foreach ($listing['main']['texts'] as $text) {
-            if ($text['lang'] == $language) {
-                $data['title'] = str_replace(':', ' -', $text['name1']);
-                $data['title'] = ltrim($data['title'], ' +-!?');
-
-                $data['description'] = html_entity_decode(strip_tags($text['description'] . $legalInformation));
+        if (isset($listing['main']['title']))
+        {
+            $data['title'] = str_replace(':', ' -', $listing['main']['title']);
+            $data['title'] = ltrim($data['title'], ' +-!?');
+        }
+        else {
+            foreach ($listing['main']['texts'] as $text) {
+                if ($text['lang'] == $language) {
+                    $data['title'] = str_replace(':', ' -', $text['name1']);
+                    $data['title'] = ltrim($data['title'], ' +-!?');
+                }
             }
         }
+
+        if (isset($listing['main']['description']))
+        {
+            $data['description'] = html_entity_decode(strip_tags($listing['main']['description']));
+        }
+        else {
+            foreach ($listing['main']['texts'] as $text) {
+                if ($text['lang'] == $language) {
+                    $data['description'] = html_entity_decode(strip_tags($text['description'].$legalInformation));
+                }
+            }
+        }
+
 
         //quantity & price
         $data['quantity'] = 0;
@@ -562,14 +579,26 @@ class StartListingService
         //loading default currency
         $defaultCurrency = $this->currencyExchangeRepository->getDefaultCurrency();
 
-        if (isset($listing['main']['attributes'][0])) {
-            $attributeOneId = $listing['main']['attributes'][0]['attributeId'];
-            $dependencies[] = $this->inventoryService::CUSTOM_ATTRIBUTE_1;
-        }
+        foreach ($listing as $variation)
+        {
+            if (!count($variation['attributes'])) {
+                continue;
+            }
+            if (count($variation['attributes']) > 2) {
+                $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
+                    ->addReference('variationId', $variation['variationId'])
+                    ->error('Etsy only allows 2 attributes');
+            }
+            if (isset($variation['attributes'][0])) {
+                $attributeOneId = $variation['attributes'][0]['attributeId'];
+                $dependencies[] = $this->inventoryService::CUSTOM_ATTRIBUTE_1;
+            }
 
-        if (isset($listing['main']['attributes'][1])) {
-            $attributeTwoId = $listing['main']['attributes'][1]['attributeId'];
-            $dependencies[] = $this->inventoryService::CUSTOM_ATTRIBUTE_2;
+            if (isset($variation['attributes'][1])) {
+                $attributeTwoId = $variation['attributes'][1]['attributeId'];
+                $dependencies[] = $this->inventoryService::CUSTOM_ATTRIBUTE_2;
+            }
+            break;
         }
 
         $variationExportService->addPreloadTypes([$variationExportService::STOCK]);

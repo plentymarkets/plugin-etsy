@@ -35,6 +35,16 @@ class EtsyPropertyDataProvider extends BaseDataProvider
                 'required' => false,
             ],
             [
+                'key' => 'title',
+                'label' => $this->translator->trans(EtsyServiceProvider::PLUGIN_NAME.'::catalog.title'),
+                'required' => false,
+            ],
+            [
+                'key' => 'description',
+                'label' => $this->translator->trans(EtsyServiceProvider::PLUGIN_NAME.'::catalog.description'),
+                'required' => false,
+            ],
+            [
                 'key' => 'who_made',
                 'label' => $this->translator->trans(EtsyServiceProvider::PLUGIN_NAME.'::catalog.who_made'),
                 'required' => true,
