@@ -86,13 +86,6 @@ class ListingInventoryService
             unset($data['sku_on_property']);
         }
 
-        $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
-            ->addReference('listingId', $listingId)
-            ->error('params of updateInventory call', [
-                'params' => $params,
-                'data' => $data
-            ]);
-
         return $this->client->call('updateInventory', $params, $data);
 
     }
