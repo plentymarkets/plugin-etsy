@@ -191,13 +191,29 @@ class UpdateListingService
 
         $language = $this->settingsHelper->getShopSettings('mainLanguage', 'de');
 
-        //title and description
-        foreach ($listing['main']['texts'] as $text) {
-            if ($text['lang'] == $language) {
-                $data['title'] = str_replace(':', ' -', $text['name1']);
-                $data['title'] = ltrim($data['title'], ' +-!?');
+        if (isset($listing['main']['title']))
+        {
+            $data['title'] = str_replace(':', ' -', $listing['main']['title']);
+            $data['title'] = ltrim($data['title'], ' +-!?');
+        }
+        else {
+            foreach ($listing['main']['texts'] as $text) {
+                if ($text['lang'] == $language) {
+                    $data['title'] = str_replace(':', ' -', $text['name1']);
+                    $data['title'] = ltrim($data['title'], ' +-!?');
+                }
+            }
+        }
 
-                $data['description'] = html_entity_decode(strip_tags($text['description']));
+        if (isset($listing['main']['description']))
+        {
+            $data['description'] = html_entity_decode(strip_tags($listing['main']['description']));
+        }
+        else {
+            foreach ($listing['main']['texts'] as $text) {
+                if ($text['lang'] == $language) {
+                    $data['description'] = html_entity_decode(strip_tags($text['description']));
+                }
             }
         }
 
