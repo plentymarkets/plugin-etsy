@@ -2,16 +2,19 @@
 
 namespace Etsy\Api;
 
+use Etsy\EtsyServiceProvider;
 use Etsy\Helper\AccountHelper;
 use Etsy\Helper\SettingsHelper;
 use Plenty\Modules\Plugin\Libs\Contracts\LibraryCallContract;
 use Plenty\Plugin\ConfigRepository;
+use Plenty\Plugin\Log\Loggable;
 
 /**
  * Class Client
  */
 class Client
 {
+    use Loggable;
 	/**
 	 * @var LibraryCallContract
 	 */
@@ -68,6 +71,12 @@ class Client
 			'fields'       => $fields,
 			'associations' => $associations,
 		]);
+
+		$this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
+            ->addReference('itemId', 1)
+            ->error('request', [
+                'data' => $response['initialRequest']
+            ]);
 
 		if(is_null($response) || (isset($response['exception']) && $response['exception'] == true))
 		{

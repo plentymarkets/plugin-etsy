@@ -97,7 +97,6 @@ class ListingInventoryService
                 'data' => $data
             ]);
 
-
         return $this->client->call('updateInventory', $params, $data);
 
     }
