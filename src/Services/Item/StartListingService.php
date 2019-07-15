@@ -322,6 +322,13 @@ class StartListingService
             $stock = $variationExportService->getAll($variation['variationId']);
             $stock = $stock[$variationExportService::STOCK];
 
+            $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
+                ->addReference('itemId', $listing['main']['itemId'])
+                ->error('stock', [
+                    'data' => $stock
+                ]);
+
+
             if (!isset($variation['sales_price']) || (float) $variation['sales_price'] <= self::MINIMUM_PRICE) {
                 $listing[$key]['failed'] = true;
                 $failedVariations['variation-' . $variation['variationId']][] = $this->translator
