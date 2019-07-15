@@ -96,8 +96,20 @@ class ListingInventoryService
             ->error('data', [
                 'data' => $data
             ]);
+$response = $this->client->call('updateInventory', $params, $data);
 
-        return $this->client->call('updateInventory', $params, $data);
+$this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
+    ->addReference('itemId', $listingId)
+    ->error('complete Response', [
+        'response' => $response
+    ]);
+        $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
+            ->addReference('itemId', $listingId)
+            ->error('initial Response', [
+                'response' => $response['initialResponse']
+            ]);
+
+        return $response;
 
     }
 }
