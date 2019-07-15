@@ -511,6 +511,12 @@ class StartListingService
                 ->trans(EtsyServiceProvider::PLUGIN_NAME.'::log.noStock');
         }
 
+        $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
+            ->addReference('itemId', $listing['main']['itemId'])
+            ->error('checking data', [
+                'data' => $data
+            ]);
+
         //Error handling
         if ($articleFailed || count($failedVariations)) {
             $exceptionMessage = ($articleFailed) ? '::log.articleNotListable' : '::log.variationsNotListed';
