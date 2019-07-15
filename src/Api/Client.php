@@ -75,7 +75,7 @@ class Client
 		$this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
             ->addReference('itemId', 1)
             ->error('request', [
-                'data' => $response['initialRequest']
+                'data' => $response
             ]);
 
 		if(is_null($response) || (isset($response['exception']) && $response['exception'] == true))
