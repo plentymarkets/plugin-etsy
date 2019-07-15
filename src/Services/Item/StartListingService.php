@@ -307,6 +307,12 @@ class StartListingService
             $exportPreloadValueList[] = $exportPreloadValue;
         }
 
+        $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
+            ->addReference('itemId', $listing['main']['itemId'])
+            ->error('exportValueList', [
+                'data' => $exportPreloadValueList
+            ]);
+
         foreach ($listing as $key => $variation) {
             if (!$variation['isActive']) continue;
 
