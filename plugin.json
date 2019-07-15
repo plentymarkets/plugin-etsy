@@ -19,7 +19,7 @@
   "type": "general",
   "serviceProvider": "Etsy\\EtsyServiceProvider",
   "dependencies": {
-    "hmalicha/etsy-php": "0.13.2"
+    "hmalicha/etsy-php": "0.13.3"
   },
   "runOnBuild": [
     "Etsy\\Migrations\\CreatePaymentMethod",
