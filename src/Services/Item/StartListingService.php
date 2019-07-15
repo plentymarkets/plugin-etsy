@@ -244,7 +244,7 @@ class StartListingService
         $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
             ->addReference('itemId', $listing['main']['itemId'])
             ->error('checking Listing', [
-                'listing' => $listing
+                'listing' => $listing['main']
             ]);
         $data = [];
         $failedVariations = [];
@@ -308,7 +308,7 @@ class StartListingService
         }
 
         foreach ($listing as $key => $variation) {
-                if (!$variation['isActive']) continue;
+            if (!$variation['isActive']) continue;
 
             $listing[$key]['failed'] = false;
 
