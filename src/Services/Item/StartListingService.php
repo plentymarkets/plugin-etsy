@@ -323,9 +323,15 @@ class StartListingService
             $stock = $stock[$variationExportService::STOCK];
 
             $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
-                ->addReference('itemId', $listing['main']['itemId'])
+                ->addReference('itemId', $variation['itemId'])
                 ->error('stock', [
                     'data' => $stock
+                ]);
+
+            $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
+                ->addReference('itemId', $variation['itemId'])
+                ->error('salesPrice', [
+                    'data' => $variation['sales_price']
                 ]);
 
 
