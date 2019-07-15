@@ -241,11 +241,6 @@ class StartListingService
      */
     protected function createListing(array $listing)
     {
-        $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
-            ->addReference('itemId', $listing['main']['itemId'])
-            ->error('checking Listing', [
-                'listing' => $listing['main']
-            ]);
         $data = [];
         $failedVariations = [];
         $variationExportService = $this->variationExportService;
