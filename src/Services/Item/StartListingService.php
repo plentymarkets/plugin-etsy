@@ -302,19 +302,8 @@ class StartListingService
             $exportPreloadValueList[] = $exportPreloadValue;
         }
 
-        $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
-            ->addReference('itemId', $listing['main']['itemId'])
-            ->error('exportValueList', [
-                'data' => $exportPreloadValueList
-            ]);
-
         foreach ($listing as $key => $variation) {
 
-            $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
-                ->addReference('itemId', $variation['itemId'])
-                ->error('state', [
-                    'state' => $variation['isActive']
-                ]);
             if (!$variation['isActive']) continue;
 
             $listing[$key]['failed'] = false;
@@ -322,19 +311,6 @@ class StartListingService
             $variationExportService->preload($exportPreloadValueList);
             $stock = $variationExportService->getAll($variation['variationId']);
             $stock = $stock[$variationExportService::STOCK];
-
-            $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
-                ->addReference('itemId', $variation['itemId'])
-                ->error('stock', [
-                    'data' => $stock
-                ]);
-
-            $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
-                ->addReference('itemId', $variation['itemId'])
-                ->error('salesPrice', [
-                    'data' => $variation['sales_price']
-                ]);
-
 
             if (!isset($variation['sales_price']) || (float) $variation['sales_price'] <= self::MINIMUM_PRICE) {
                 $listing[$key]['failed'] = true;
@@ -535,12 +511,6 @@ class StartListingService
             $articleErrors[] = $this->translator
                 ->trans(EtsyServiceProvider::PLUGIN_NAME.'::log.noStock');
         }
-
-        $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
-            ->addReference('itemId', $listing['main']['itemId'])
-            ->error('checking data', [
-                'data' => $data
-            ]);
 
         //Error handling
         if ($articleFailed || count($failedVariations)) {
