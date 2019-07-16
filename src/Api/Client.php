@@ -72,12 +72,6 @@ class Client
 			'associations' => $associations,
 		]);
 
-		$this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
-            ->addReference('itemId', 1)
-            ->error('request', [
-                'data' => $response
-            ]);
-
 		if(is_null($response) || (isset($response['exception']) && $response['exception'] == true))
 		{
 			throw new \Exception($response['message']);

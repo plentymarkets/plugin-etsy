@@ -68,46 +68,22 @@ class ListingInventoryService
             $params['language'] = $language;
         }
 
-        if (isset($data['price_on_property']))
-        {
+        if (isset($data['price_on_property'])) {
             $params['price_on_property'] = implode(',', $data['price_on_property']);
             unset($data['price_on_property']);
         }
 
-        if (isset($data['quantity_on_property']))
-        {
-            $params['quantity_on_property'] = implode(',',$data['quantity_on_property']);
+        if (isset($data['quantity_on_property'])) {
+            $params['quantity_on_property'] = implode(',', $data['quantity_on_property']);
             unset($data['quantity_on_property']);
         }
 
-        if (isset($data['sku_on_property']))
-        {
-            $params['sku_on_property'] = implode(',',$data['sku_on_property']);
+        if (isset($data['sku_on_property'])) {
+            $params['sku_on_property'] = implode(',', $data['sku_on_property']);
             unset($data['sku_on_property']);
         }
 
-        $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
-            ->addReference('itemId', $listingId)
-            ->error('params', [
-                'params' => $params
-            ]);
-        $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
-            ->addReference('itemId', $listingId)
-            ->error('data', [
-                'data' => $data
-            ]);
-$response = $this->client->call('updateInventory', $params, $data);
-
-$this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
-    ->addReference('itemId', $listingId)
-    ->error('complete Response', [
-        'response' => $response
-    ]);
-        $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
-            ->addReference('itemId', $listingId)
-            ->error('initial Response', [
-                'response' => $response['initialResponse']
-            ]);
+        $response = $this->client->call('updateInventory', $params, $data);
 
         return $response;
 
