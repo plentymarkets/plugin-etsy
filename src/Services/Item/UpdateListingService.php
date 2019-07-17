@@ -207,12 +207,12 @@ class UpdateListingService
 
         if (isset($listing['main']['description']))
         {
-            $data['description'] = html_entity_decode(strip_tags($listing['main']['description']));
+            $data['description'] = html_entity_decode(strip_tags(str_replace("<br>", "\n",$listing['main']['description'])));
         }
         else {
             foreach ($listing['main']['texts'] as $text) {
                 if ($text['lang'] == $language) {
-                    $data['description'] = html_entity_decode(strip_tags($text['description']));
+                    $data['description'] = html_entity_decode(strip_tags(str_replace("<br>", "\n",$text['description'])));
                 }
             }
         }
