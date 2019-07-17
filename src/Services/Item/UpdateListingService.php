@@ -500,7 +500,7 @@ class UpdateListingService
 
             $variationExportService->preload($exportPreloadValueList);
             $stock = $variationExportService->getAll($variation['variationId']);
-            $stock = $stock[$variationExportService::STOCK];
+            $stock = round($stock[$variationExportService::STOCK], 0, PHP_ROUND_HALF_DOWN);
 
             //initialising property values array for articles with no attributes (single variation)
             $products[$counter]['property_values'] = [];
