@@ -1,5 +1,9 @@
 # Release Notes für Etsy
 
+## v1.3.14 (2019-07-17)
+### Hinzugefügt
+- Weiche Zeilenumbrüche werden jetzt in der Artikelbeschreibung beachtet.
+
 ## v1.3.13 (2019-07-05)
 - FIX Merkmal-Import.
 

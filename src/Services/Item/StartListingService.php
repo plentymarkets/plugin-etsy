@@ -149,7 +149,7 @@ class StartListingService
 
         $legalInformation = $this->itemHelper->getLegalInformation($language);
         
-		$description = html_entity_decode(strip_tags($record->itemDescription[ $language ]['description'] . $legalInformation));
+		$description = html_entity_decode(strip_tags(str_replace("<br>", "\n", $record->itemDescription[ $language ]['description'] . $legalInformation)));
 
 		$data = [
 			'state'                => 'draft',

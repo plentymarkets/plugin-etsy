@@ -140,7 +140,7 @@ class UpdateListingService
 		$title       = trim(preg_replace('/\s+/', ' ',$this->itemHelper->getVariationWithAttributesName($record, $language)));
 		$title = ltrim($title, ' +-!?');
 
-		$description = html_entity_decode(strip_tags($record->itemDescription[ $language ]['description']));
+        $description = html_entity_decode(strip_tags(str_replace("<br>", "\n", $record->itemDescription[ $language ]['description'])));
 
 		$data = [
 			'listing_id'           => (int) $listingId,

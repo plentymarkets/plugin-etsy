@@ -1,5 +1,9 @@
 # Release notes for Etsy
 
+## v1.3.14 (2019-07-17)
+### Added
+- Description can now contain softbreaks.
+
 ## v1.3.13 (2019-07-05)
 - FIX Property import.
 
