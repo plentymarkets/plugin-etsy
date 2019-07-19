@@ -5,23 +5,23 @@
 
 ## Registering with Etsy
 
-**Etsy** is an American online market focused on handmade or vintage items. In order to set up Etsy in your plentymarkets system, you have to register as a seller first an create and new [App](https://www.etsy.com/developers/documentation/getting_started/register). You will then receive the access data that you need for the configuration in plentymarkets.
+**Etsy** is an American online market focused on handmade or vintage items. In order to set up Etsy in your plentymarkets system, you have to register as a seller first.
 
 ## Installing Etsy in plentymarkets
 
-After buying the Etsy plugin in the plentyMarketplace, install the market in the menu **Plugins » Plugin Overview**. Select the filter **Not installed** or **All** to display plugins that are not installed and to install them. After having installed **Etsy**, open the plugin. Now enter the Keystring and Shared secret in the **Configuration** section. You should have received both after creating the app on Etsy. Save the setting.
+After buying the Etsy plugin in the plentyMarketplace, install the market in the menu **Plugins » Plugin Overview**. Select the filter **Not installed** or **All** to display plugins that are not installed and to install them.
 
-### Granting rights
+### Authentication
 
-First, the interface has to be activated in the menu **System » System settings » Markets » Etsy » Authentication**. Click on **Etsy login** to do so. Afterwards, you are forwarded directly to Etsy where the interface can be activated.
+First, the interface has to be activated in the **System » System settings » Markets » Etsy » Authentication** menu. Click on **Etsy login** to do so. Afterwards, you are forwarded directly to Etsy where the interface can be activated.
 
 ### Setting up Etsy
 
-Go to **System » System settings » Markets » Etsy » Settings** to enter your Store ID and to activate the item export, stock update and order import. Etsy allows 500 calls per day. If you need more than 500 calls, contact Etsy directly.
+Go to **System » System settings » Markets » Etsy » Settings** to activate the item export, stock update and order import.
 
 ## Activating the order referrer
 
-In order to link items, properties etc. with Etsy you will have to activate the order referrer Etsy in the menu **System » System settings » Orders » Order referrer**.
+In order to link items with Etsy, you have to activate the order referrer Etsy in the menu **System » System settings » Orders » Order referrer**.
 
 ##### Activating the order referrer for Etsy:
 
@@ -31,7 +31,7 @@ In order to link items, properties etc. with Etsy you will have to activate the 
 
 ## Setting the item availability
 
-Items have to be available for Etsy. This is done in the **Availability** tab of an item within the **Item » Edit item » Tab: Variation ID** menu. It is not possible to transfer variations to Etsy. Therefore, item variations are transferred as main items to Etsy.
+Items have to be available for Etsy. This is done in the **Availability** tab of an item within the **Item » Edit item » Tab: Variation ID** menu.
 
 ##### Setting the item availability for Etsy:
 
@@ -43,9 +43,9 @@ Items have to be available for Etsy. This is done in the **Availability** tab of
 6. Click on **Add**. → The Market will be added. 
 7. **Save** the settings. → The item is available on etsy.
 
-The availability for variations can be individually edit in the **Item » Edit item » Open item » Tab: Variation ID » Open variation » Tab: Availability** menu.
+The availability for variations can be individually edited in the **Item » Edit item » Open item » Tab: Variation ID » Open variation » Tab: Availability** menu.
 
-If you are already selling on Etsy, save Etsy's listing IDs as SKUs in the menu **Item » Edit item » Open item » Tab: Variation ID » Tab: Settings »Tab: Availability** for the referrer **Etsy**. By doing so, items will be assigned during the item export to the items already listed on Etsy in order to prevent overselling.
+If you are already selling on Etsy, save Etsy's listing IDs as SKUs in the **Item » Edit item » Open item » Tab: Variation ID » Tab: Settings »Tab: Availability** menu for the referrer **Etsy**. By doing so, items will be assigned during the item export to the items already listed on Etsy in order to prevent overselling. The Etsy listing ID must be indicated in the following format: **Etsy listing ID-plentymarkets Variation ID**, for example **708093072-3467**.
 
 ## Defining a sales price
 
@@ -61,7 +61,11 @@ Proceed as described below to define a sales price for the order referrer Etsy. 
 
 Item data is exported to Etsy via catalogue templates. In order to export your items to Etsy, go to **Data » Catalogs** and create a catalogue template. For further information about catalogues, refer to the [Managing catalogues](https://knowledge.plentymarkets.com/en/data/exporting-data/Managing-catalogs) page of the manual.
 
+Use the **Listing - Etsy** catalogue template for Etsy.
+
 → **Note**: Note that the menu **Data » Catalogs** only becomes visible after you have installed a plugin which provides a catalogue template.
+
+In order to export your items to Etsy, you have to create a catalogue. Link the Etsy data fields with item data saved in plentymarkets in the catalogue template afterwards. The catalogue template is automatically exported to Etsy once a day if you have activated the **Item export** in the **System » System settings » Markets » Etsy » Settings** menu.
 
 #### Creating a catalogue:
 
@@ -224,40 +228,6 @@ Set up an event procedure to automatically send shipping confirmations to Etsy w
 	</caption>
 </table>
 
-## Overview of API-Calls
-
-<table>
-<thead>
-		<th>
-			Process
-		</th>
-		<th>
-			Call
-		</th>
-	</thead>
-	<tbody>
-      <tr>
-         <td><b>Listing start</b></td>
-         <td>One call per language. No further call is needed if only one language exists.<br /> One call for the method <b>CreateListing</b>.<br /> One call per item image.<br /> One call for the method <b>Publish</b>.<br /> => at least three API-Calls</td> 
-      </tr>
-      <tr>
-         <td><b>Listing update</b></td>
-         <td>One call per language.<br /> => at least one API-Call</td>
-      </tr>
-<tr>
-         <td><b>Stock update</b></td>
-         <td>One call per listing.</td>
-      </tr>
-      <tr>
-         <td><b>Delete listing</b></td>
-         <td>One call per listing.</td>
-      </tr>
-      <tr>
-         <td><b>Order import</b></td>
-         <td>One call every hour.</td>
-      </tr>
-</tbody>
-</table>
 
 ## Required rights for the Etsy plugin
     
@@ -268,9 +238,7 @@ Use the **System » System settings » Settings » User » Rights » User** menu
 #### Required REST-API rights
     
 The required REST-API rights for users with **Backend** access are listed below.
-    
- - Item » **Category** and all subordinate rights
- - Items » **Properties** and all subordinate rights
+
  - Markets » **Credentials** and all subordinate rights
     
 #### Assigning REST-API rights:
@@ -283,3 +251,8 @@ The required REST-API rights for users with **Backend** access are listed below.
 ## License
 
 This project is licensed under the GNU AFFERO GENERAL PUBLIC LICENSE.- find further information in the [LICENSE.md](https://github.com/plentymarkets/plugin-etsy/blob/master/LICENSE.md).
+
+
+## Information
+
+The term 'Etsy' is a trademark of Etsy, Inc. This application uses the Etsy API but is not endorsed or certified by Etsy, Inc.

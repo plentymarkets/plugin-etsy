@@ -5,11 +5,11 @@
 
 ## Bei Etsy registrieren
 
-**Etsy** ist ein amerikanischer Marktplatz für den Kauf und Verkauf von handgemachten Produkten, Vintage und Künstlerbedarf. Um das Plugin für Etsy einzurichten, registrieren Sie sich zunächst als Händler und erstellen Sie eine neue [App](https://www.etsy.com/developers/documentation/getting_started/register) bei Etsy. Sie erhalten die nötigen Zugangsdaten, die Sie für die Einstellungen in plentymarkets benötigen.
+**Etsy** ist ein amerikanischer Marktplatz für den Kauf und Verkauf von handgemachten Produkten, Vintage und Künstlerbedarf. Um das Plugin für Etsy einzurichten, registrieren Sie sich zunächst als Händler.
 
 ## Etsy in plentymarkets installieren
 
-Nachdem Sie das Etsy-Plugin im plentymarkets Marketplace gekauft haben, installieren Sie den Marktplatz im Menü **Plugins » Plugin-Übersicht**. Wählen Sie den Filter **Nicht installiert** oder **Alle**, um nicht installierte Plugins anzuzeigen und zu installieren. Öffnen Sie nach der Installation **Etsy**. Geben Sie nun unter **Konfiguration » App-Einstellungen** den Keystring und das Shared secret ein. Beides sollten Sie bei der Erstellung der App in Etsy erhalten haben. Speichern Sie die Einstellung.
+Nachdem Sie das Etsy-Plugin im plentymarkets Marketplace gekauft haben, installieren Sie den Marktplatz im Menü **Plugins » Plugin-Übersicht**. Wählen Sie den Filter **Nicht installiert** oder **Alle**, um nicht installierte Plugins anzuzeigen und zu installieren.
 
 ### Berechtigung erteilen
 
@@ -17,12 +17,11 @@ Im Menü **System » Systemeinstellungen » Märkte » Etsy » Authentifizierung
 
 ### Etsy einrichten
 
-Im Menü **System » Systemeinstellungen » Märkte » Etsy » Einstellungen** geben Sie u.a. Ihre Shop-ID ein und aktivieren den Artikelexport, Bestandsabgleich und Auftragsimport.
-Etsy erlaubt 500 Calls am Tag. Sollten mehr Calls benötigt werden, setzen Sie sich direkt mit Etsy in Verbindung.
+Im Menü **System » Systemeinstellungen » Märkte » Etsy » Einstellungen** aktivieren Sie den Artikelexport, Bestandsabgleich und Auftragsimport.
 
 ## Auftragsherkunft aktivieren
 
-Damit Sie Artikel, Merkmale etc. mit Etsy verknüpfen können, muss im Menü Einstellungen » Aufträge » Auftragsherkunft die Auftragsherkunft Etsy aktiviert werden.
+Damit Sie Artikel mit Etsy verknüpfen können, muss im Menü **Einstellungen » Aufträge » Auftragsherkunft** die Auftragsherkunft Etsy aktiviert werden.
 
 ##### Auftragsherkunft für Etsy aktivieren:
 
@@ -32,7 +31,7 @@ Damit Sie Artikel, Merkmale etc. mit Etsy verknüpfen können, muss im Menü Ein
 
 ## Artikelverfügbarkeit einstellen
 
-Artikel, die Sie auf Etsy verkaufen möchten, müssen im Menü **Artikel » Artikel bearbeiten » Artikel öffnen » Tab: Varianten-ID** im Tab **Verfügbarkeit** aktiviert werden. Da keine Varianten zu Etsy übertragen werden können, werden Variantenartikel als Hauptartikel übertragen.
+Artikel, die Sie auf Etsy verkaufen möchten, müssen im Menü **Artikel » Artikel bearbeiten » Artikel öffnen » Tab: Varianten-ID** im Tab **Verfügbarkeit** aktiviert werden.
 
 ##### Artikelverfügbarkeit für Etsy einstellen:
 
@@ -49,7 +48,7 @@ Artikel, die Sie auf Etsy verkaufen möchten, müssen im Menü **Artikel » Arti
 
 Die Verfügbarkeit für Varianten kann im Menü **Artikel » Artikel bearbeiten » Artikel öffnen » Tab: Varianten » Variante öffnen » Tab: Varianten-ID » Tab: Verfügbarkeit** individuell angepasst werden.
 
-Wenn Sie berets auf Etsy listen, hinterlegen Sie die Etsy Listing-ID im Menü **Artikel » Artikel bearbeiten » Artikel öffnen » Tab: Varianten-ID » Tab: Einstellungen » Tab: Verfügbarkeit** als SKU für die Herkunft **Etsy**, damit Artikel beim Artikelexport den bereits auf Etsy gelisteten Artikel zugewiesen werden können und somit keine Überverkäufe entstehen.
+Wenn Sie bereits auf Etsy listen, hinterlegen Sie die Etsy Listing-ID im Menü **Artikel » Artikel bearbeiten » Artikel öffnen » Tab: Varianten-ID » Tab: Einstellungen » Tab: Verfügbarkeit** als SKU für die Herkunft **Etsy**, damit Artikel beim Artikelexport den bereits auf Etsy gelisteten Artikel zugewiesen werden können und somit keine Überverkäufe entstehen. Die Etsy-Listing-ID muss in folgendem Format hinterlegt werden: **Etsy Listing-ID-plentymarkets-Varianten-ID**, zum Beispiel **708093072-3467**.
 
 ## Verkaufspreis festlegen
 
@@ -65,7 +64,11 @@ Gehen Sie wie im Folgenden beschrieben vor, um für die Auftragsherkunft Etsy ei
 
 Artikeldaten werden über Katalog-Templates zu Etsy übertragen. Damit Sie Ihre Artikel zu Etsy übertragen können, müssen Sie im Menü **Daten » Kataloge** ein Katalog-Template erstellen. Weitere Informationen zu Katalogen finden Sie auf der Handbuchseite [Kataloge verwalten](https://knowledge.plentymarkets.com/daten/daten-exportieren/kataloge-verwalten).
 
+Verwenden Sie für Etsy das Katalog-Template **Listing - Etsy**.
+
 → **Hinweis**: Beachten Sie, dass das Menü **Daten » Kataloge** erst sichtbar ist, wenn Sie ein Plugin installieren, das ein Katalog-Template verfügbar macht.
+
+Damit du deine Artikel zu Etsy exportieren kannst, musst du einen Katalog erstellen. Verknüpfe anschließend im Katalog-Template die von Etsy vorgegebenen Felder mit in plentymarkets hinterlegten Artikeldaten. Die Katalog-Vorlagen werden automatisch einmal täglich zu Etsy exportiert, wenn du unter **System » Systemeinstellungen » Märkte » Etsy » Einstellungen** den **Artikelexport** aktiviert hast.
 
 #### Katalog erstellen
 
@@ -225,41 +228,6 @@ Richten Sie eine Ereignisaktion ein, um Versandbestätigungen automatisch an Ets
 </tbody>
 </table>
 
-## Übersicht der benötigten API-Calls
-
-<table>
-<thead>
-		<th>
-			Prozess
-		</th>
-		<th>
-			Call
-		</th>
-	</thead>
-	<tbody>
-      <tr>
-         <td><b>Listing-Start</b></td>
-         <td>Ein Call pro Sprache. Bei nur einer Sprache wird kein zusätzlicher Call benötigt.<br /> Ein Call für die Methode <b>CreateListing</b>.<br /> Ein Call pro Artikelbild.<br /> Ein Call für die Methode <b>Publish</b>.<br /> => mindestens drei API-Calls</td> 
-      </tr>
-      <tr>
-         <td><b>Listing-Update</b></td>
-         <td>Ein Call pro Sprache.<br /> => mindestens ein API-Call</td>
-      </tr>
-<tr>
-         <td><b>Bestandsabgleich</b></td>
-         <td>Ein Call pro Listing.</td>
-      </tr>
-      <tr>
-         <td><b>Delete Listing</b></td>
-         <td>Ein Call pro Listing.</td>
-      </tr>
-      <tr>
-         <td><b>Order-Import</b></td>
-         <td>Ein Call pro Stunde.</td>
-      </tr>
-</tbody>
-</table>
-
 ## Erforderliche Rechte für das Etsy-Plugin
  
 Damit Benutzer mit dem Zugang **Backend** das **Etsy-Plugin** nutzen können, sind REST-API-Rechte erforderlich.
@@ -270,8 +238,6 @@ Rechte werden im Menü **System » Systemeinstellungen » Einstellungen » Benut
  
 Die folgenden REST-API-Rechte sind für Benutzer mit **Backend**-Zugang erforderlich.
  
- - Artikel » **Kategorie** und alle untergeordneten Berechtigungen
- - Artikel » **Merkmal** und alle untergeordneten Berechtigungen
  - Märkte » **Zugangsdaten** und alle untergeordneten Berechtigungen
  
 #### REST-API-Rechte zuweisen:
@@ -284,3 +250,8 @@ Die folgenden REST-API-Rechte sind für Benutzer mit **Backend**-Zugang erforder
 ## Lizenz
 
 Das gesamte Projekt unterliegt der GNU AFFERO GENERAL PUBLIC LICENSE – weitere Informationen finden Sie in der [LICENSE.md](https://github.com/plentymarkets/plugin-etsy/blob/master/LICENSE.md).
+
+
+## Hinweis
+
+Der Begriff 'Etsy' ist ein Markenzeichen von Etsy, Inc. Diese Anwendung verwendet die Etsy-API, sie wurde jedoch von Etsy weder befürwortet noch zertifiziert.
