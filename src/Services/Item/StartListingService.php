@@ -310,7 +310,7 @@ class StartListingService
 
             $variationExportService->preload($exportPreloadValueList);
             $stock = $variationExportService->getAll($variation['variationId']);
-            $stock = round($stock[$variationExportService::STOCK], 0, PHP_ROUND_HALF_DOWN);
+            $stock = $stock[$variationExportService::STOCK];
 
             if (!isset($variation['sales_price']) || (float) $variation['sales_price'] <= self::MINIMUM_PRICE) {
                 $listing[$key]['failed'] = true;
@@ -401,6 +401,10 @@ class StartListingService
             $data['item_dimensions_unit'] = 'mm';
         }
 
+        if (isset($listing['main']['shopSections'][0])) {
+            $data['shop_section_id'] = $listing['main']['shopSections'][0];
+        }
+
         if (isset($listing['main']['materials'])) {
             $materials = explode(',', $listing['main']['materials']);
             $materialCounter = 0;
@@ -465,10 +469,6 @@ class StartListingService
             if ($counter > 0) {
                 $data['style'] = implode(',', $data['style']);
             }
-        }
-
-        if (isset($listing['main']['shop_section_id'])) {
-            $data['shop_section_id'] = $listing['main']['shop_section_id'];
         }
 
         $articleFailed = false;

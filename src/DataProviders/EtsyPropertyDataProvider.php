@@ -75,11 +75,6 @@ class EtsyPropertyDataProvider extends BaseDataProvider
                 'required' => false,
             ],
             [
-                'key' => 'shop_section_id',
-                'label' => $this->translator->trans(EtsyServiceProvider::PLUGIN_NAME.'::catalog.shop'),
-                'required' => false,
-            ],
-            [
                 'key' => 'is_customizable',
                 'label' => $this->translator->trans(EtsyServiceProvider::PLUGIN_NAME.'::catalog.is_customizable'),
                 'required' => false,
