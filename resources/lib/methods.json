@@ -2751,7 +2751,7 @@
     "description": "Retrieves a set of ShopSection objects associated to a Shop.",
     "uri": "/shops/:shop_id/sections",
     "params": {
-      "shop_id": "shop_id_or_name"
+      "shop_id": "int"
     },
     "defaults": null,
     "type": "ShopSection",

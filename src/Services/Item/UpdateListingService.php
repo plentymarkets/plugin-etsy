@@ -293,6 +293,10 @@ class UpdateListingService
             $data['item_dimensions_unit'] = 'mm';
         }
 
+        if (isset($listing['main']['shopSections'][0])) {
+            $data['shop_section_id'] = $listing['main']['shopSections'][0];
+        }
+
         if (isset($listing['main']['materials'])) {
             $materials = explode(',', $listing['main']['materials']);
             $counter = 0;
@@ -500,7 +504,7 @@ class UpdateListingService
 
             $variationExportService->preload($exportPreloadValueList);
             $stock = $variationExportService->getAll($variation['variationId']);
-            $stock = round($stock[$variationExportService::STOCK], 0, PHP_ROUND_HALF_DOWN);
+            $stock = $stock[$variationExportService::STOCK];
 
             //initialising property values array for articles with no attributes (single variation)
             $products[$counter]['property_values'] = [];

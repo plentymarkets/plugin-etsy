@@ -38,4 +38,13 @@ class ShopService
 
 		return $response;
 	}
+
+    public function findAllShopSections($shopId):array
+    {
+        $response = $this->client->call('findAllShopSections', [
+            'shop_id' => $shopId
+        ]);
+
+        return $response;
+	}
 }
