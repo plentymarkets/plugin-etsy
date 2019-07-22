@@ -3,284 +3,205 @@
 
 <div class="container-toc"></div>
 
+
 ## Bei Etsy registrieren
 
-**Etsy** ist ein amerikanischer Marktplatz für den Kauf und Verkauf von handgemachten Produkten, Vintage und Künstlerbedarf. Um das Plugin für Etsy einzurichten, registrieren Sie sich zunächst als Händler und erstellen Sie eine neue [App](https://www.etsy.com/developers/documentation/getting_started/register) bei Etsy. Sie erhalten die nötigen Zugangsdaten, die Sie für die Einstellungen in plentymarkets benötigen.
+**Etsy** ist ein amerikanischer Marktplatz für den Kauf und Verkauf von handgemachten Produkten, Vintage und Künstlerbedarf. Um das Plugin für Etsy einzurichten, registriere dich zunächst als Händler.
+
 
 ## Etsy in plentymarkets installieren
 
-Nachdem Sie das Etsy-Plugin im plentymarkets Marketplace gekauft haben, installieren Sie den Marktplatz im Menü **Plugins » Plugin-Übersicht**. Wählen Sie den Filter **Nicht installiert** oder **Alle**, um nicht installierte Plugins anzuzeigen und zu installieren. Öffnen Sie nach der Installation **Etsy**. Geben Sie nun unter **Konfiguration » App-Einstellungen** den Keystring und das Shared secret ein. Beides sollten Sie bei der Erstellung der App in Etsy erhalten haben. Speichern Sie die Einstellung.
+Nachdem du das Etsy-Plugin im plentymarkets Marketplace gekauft hast, installiere den Marktplatz im Menü **Plugins » Plugin-Übersicht**. Wähle den Filter **Nicht installiert** oder **Alle**, um nicht installierte Plugins anzuzeigen und zu installieren.
 
 ### Berechtigung erteilen
 
-Im Menü **System » Systemeinstellungen » Märkte » Etsy » Authentifizierung** muss zunächst die Schnittstelle freigeschaltet werden. Klicken Sie dazu auf **Etsy-Login**. Sie werden direkt zu Etsy weitergeleitet, wo Sie die Schnittstelle freischalten.
+Im Menü **System » Systemeinstellungen » Märkte » Etsy » Authentifizierung** muss zunächst die Schnittstelle freigeschaltet werden. Klicke dazu auf **Etsy-Login**. Du wirst direkt zu Etsy weitergeleitet, wo du die Schnittstelle freischaltest.
 
 ### Etsy einrichten
 
-Im Menü **System » Systemeinstellungen » Märkte » Etsy » Einstellungen** geben Sie u.a. Ihre Shop-ID ein und aktivieren den Artikelexport, Bestandsabgleich und Auftragsimport.
-Etsy erlaubt 500 Calls am Tag. Sollten mehr Calls benötigt werden, setzen Sie sich direkt mit Etsy in Verbindung.
+Im Menü **System » Systemeinstellungen » Märkte » Etsy » Einstellungen** aktivierst du den Artikelexport, Bestandsabgleich und Auftragsimport.
+
 
 ## Auftragsherkunft aktivieren
 
-Damit Sie Artikel, Merkmale etc. mit Etsy verknüpfen können, muss im Menü Einstellungen » Aufträge » Auftragsherkunft die Auftragsherkunft Etsy aktiviert werden.
+Damit du Artikel mit Etsy verknüpfen kannst, muss im Menü **Einstellungen » Aufträge » Auftragsherkunft** die Auftragsherkunft Etsy aktiviert werden.
 
 ##### Auftragsherkunft für Etsy aktivieren:
 
-1. Öffnen Sie das Menü **System » Systemeinstellungen » Aufträge » Auftrgsherkunft**.
-2. Setzen Sie bei **Etsy** ein Häkchen.
-3. **Speichern** Sie die Einstellungen.
+1. Öffne das Menü **System » Systemeinstellungen » Aufträge » Auftragsherkunft**.
+2. Setze bei **Etsy** ein Häkchen.
+3. **Speichere** die Einstellungen.
+
 
 ## Artikelverfügbarkeit einstellen
 
-Artikel, die Sie auf Etsy verkaufen möchten, müssen im Menü **Artikel » Artikel bearbeiten » Artikel öffnen » Tab: Varianten-ID** im Tab **Verfügbarkeit** aktiviert werden. Da keine Varianten zu Etsy übertragen werden können, werden Variantenartikel als Hauptartikel übertragen.
+Artikel, die du auf Etsy verkaufen möchtest, müssen im Menü **Artikel » Artikel bearbeiten » Artikel öffnen » Tab: Varianten-ID** im Tab **Verfügbarkeit** aktiviert werden.
 
 ##### Artikelverfügbarkeit für Etsy einstellen:
 
-1. Öffnen Sie das Menü **Artikel » Artikel bearbeiten » Artikel öffnen » Tab: Varianten-ID » Tab: Einstellungen**.
-2. Aktivieren Sie die Hauptvariante im Bereich **Verfügbarkeit**.
-3. Wechseln Sie in das Tab **Verfügbarkeit**.
-4. Klicken Sie im Bereich **Märkte** in das Auswahlfeld.
-    → Eine Liste mit allen verfügbaren Märkten wird angezeigt.
-5. Aktivieren Sie die Option **Etsy**.
-6. Klicken Sie auf **Hinzufügen**.
-    → Der Marktplatz wird hinzugefügt.
-7. **Speichern** Sie die Einstellungen.
-    → Der Artikel ist auf Etsy verfügbar.
+1. Öffne das Menü **Artikel » Artikel bearbeiten » Artikel öffnen » Tab: Varianten-ID » Tab: Einstellungen**.
+2. Aktiviere die Hauptvariante im Bereich **Verfügbarkeit**.
+3. Wechsele in das Tab **Verfügbarkeit**.
+4. Klicke im Bereich **Märkte** in das Auswahlfeld.<br/>
+→ Eine Liste mit allen verfügbaren Märkten wird angezeigt.
+5. Aktiviere die Option **Etsy**.
+6. Klicke auf **Hinzufügen**.<br/>
+→ Der Marktplatz wird hinzugefügt.
+7. **Speichere** die Einstellungen.<br/>
+→ Der Artikel ist auf Etsy verfügbar.
 
 Die Verfügbarkeit für Varianten kann im Menü **Artikel » Artikel bearbeiten » Artikel öffnen » Tab: Varianten » Variante öffnen » Tab: Varianten-ID » Tab: Verfügbarkeit** individuell angepasst werden.
 
-Wenn Sie berets auf Etsy listen, hinterlegen Sie die Etsy Listing-ID im Menü **Artikel » Artikel bearbeiten » Artikel öffnen » Tab: Varianten-ID » Tab: Einstellungen » Tab: Verfügbarkeit** als SKU für die Herkunft **Etsy**, damit Artikel beim Artikelexport den bereits auf Etsy gelisteten Artikel zugewiesen werden können und somit keine Überverkäufe entstehen.
+Wenn du bereits auf Etsy listest, hinterlege die Etsy Listing-ID im Menü **Artikel » Artikel bearbeiten » Artikel öffnen » Tab: Varianten-ID » Tab: Einstellungen » Tab: Verfügbarkeit** als SKU für die Herkunft **Etsy**, damit Artikel beim Artikelexport den bereits auf Etsy gelisteten Artikel zugewiesen werden können und somit keine Überverkäufe entstehen. Die Etsy-Listing-ID muss in folgendem Format hinterlegt werden: **Etsy Listing-ID-plentymarkets-Varianten-ID**, zum Beispiel **708093072-3467**.
+
 
 ## Verkaufspreis festlegen
 
-Gehen Sie wie im Folgenden beschrieben vor, um für die Auftragsherkunft Etsy einen Verkaufspreis festzulegen. Dieser Preis wird auf Etsy angezeigt. 
+Gehe wie im Folgenden beschrieben vor, um für die Auftragsherkunft Etsy einen Verkaufspreis festzulegen. Dieser Preis wird auf Etsy angezeigt. 
 
 ##### Verkaufspreise für Etsy festlegen:
 
-1. Öffnen Sie das Menü **System » Systemeinstellungen » Artikel » Verkaufspreise » Verkaufspreis öffnen » Tab: Einstellungen**.
-2. Setzen Sie ein Häkchen bei der Herkunft **Etsy**.
-3. **Speichern** Sie die Einstellungen.
+1. Öffne das Menü **System » Systemeinstellungen » Artikel » Verkaufspreise » Verkaufspreis öffnen » Tab: Einstellungen**.
+2. Setze ein Häkchen bei der Herkunft **Etsy**.
+3. **Speichere** die Einstellungen.
+
 
 ## Katalog erstellen
 
-Artikeldaten werden über Katalog-Templates zu Etsy übertragen. Damit Sie Ihre Artikel zu Etsy übertragen können, müssen Sie im Menü **Daten » Kataloge** ein Katalog-Template erstellen. Weitere Informationen zu Katalogen finden Sie auf der Handbuchseite [Kataloge verwalten](https://knowledge.plentymarkets.com/daten/daten-exportieren/kataloge-verwalten).
+Artikeldaten werden über Katalog-Templates zu Etsy übertragen. Damit du deine Artikel zu Etsy übertragen kannst, musst du im Menü **Daten » Kataloge** ein Katalog-Template erstellen. Weitere Informationen zu Katalogen findest du auf der Handbuchseite [Kataloge verwalten](https://knowledge.plentymarkets.com/daten/daten-exportieren/kataloge-verwalten).
 
-→ **Hinweis**: Beachten Sie, dass das Menü **Daten » Kataloge** erst sichtbar ist, wenn Sie ein Plugin installieren, das ein Katalog-Template verfügbar macht.
+Verwende für Etsy das Katalog-Template **Listing - Etsy**.
+
+→ **Hinweis**: Beachte, dass das Menü **Daten » Kataloge** erst sichtbar ist, wenn du ein Plugin installierst, das ein Katalog-Template verfügbar macht.
+
+Damit du deine Artikel zu Etsy exportieren kannst, musst du einen Katalog erstellen. Verknüpfe anschließend im Katalog-Template die von Etsy vorgegebenen Felder mit in plentymarkets hinterlegten Artikeldaten. Die Katalog-Vorlagen werden automatisch einmal täglich zu Etsy exportiert, wenn du unter **System » Systemeinstellungen » Märkte » Etsy » Einstellungen** den **Artikelexport** aktiviert hast.
 
 #### Katalog erstellen
 
-1. Öffnen Sie das Menü **Daten » Kataloge**.
-2. Klicken Sie auf **Katalog erstellen**.
-3. Geben Sie einen Namen für den Katalog ein.
-4. Wählen Sie das Katalog-Template **Listing - Etsy** aus der Dropdown-Liste.
-5. **Speichern** Sie die Einstellungen.<br/>
+1. Öffne das Menü **Daten » Kataloge**.
+2. Klicke auf **Katalog erstellen**.
+3. Gib einen Namen für den Katalog ein.
+4. Wähle das Katalog-Template **Listing - Etsy** aus der Dropdown-Liste.
+5. **Speichere** die Einstellungen.<br/>
 → Der Katalog wird erstellt.<br/>
 → Der Katalog wird zur weiteren Bearbeitung geöffnet.
 
-Nachdem Sie einen Katalog erstellt haben, verknüpfen Sie die Datenfelder des Marktplatzes mit in plentymarkets gespeicherten Artikeldaten. Weitere Informationen zu den plentymarkets Datenquellen, die Sie zuordnen können, finden Sie im Kapitel [Datenquellen zuordnen](https://knowledge.plentymarkets.com/daten/daten-exportieren/kataloge-verwalten#_datenquellen_zuordnen).
+Nachdem du einen Katalog erstellt hast, verknüpfe die Datenfelder des Marktplatzes mit in plentymarkets gespeicherten Artikeldaten. Weitere Informationen zu den plentymarkets Datenquellen, die du zuordnen kannst, findest du im Kapitel [Datenquellen zuordnen](https://knowledge.plentymarkets.com/daten/daten-exportieren/kataloge-verwalten#_datenquellen_zuordnen).
 
 #### Datenfelder im Katalog verknüpfen:
 
-1. Öffnen Sie das Menü **Daten » Kataloge**.
-2. Klicken Sie auf den erstellten Katalog.<br/>
+1. Öffne das Menü **Daten » Kataloge**.
+2. Klicke auf den erstellten Katalog.<br/>
 → Der Katalog wird geöffnet.<br/>
 → Links werden die Datenfelder des Marktplatzes angezeigt.<br/>
 → **Tipp**: Pflichtfelder sind mit Sternchen gekennzeichnet.
-3. Wählen Sie für die Datenfelder des Marktplatzes eine plentymarkets Datenquelle aus der Dropdown-Liste.
-4. Um einem Datenfeld eine weitere plentmarkets Datenquelle zuzuordnen, klicken Sie auf **Quelle hinzufügen**.<br/>
+3. Wähle für die Datenfelder des Marktplatzes eine plentymarkets Datenquelle aus der Dropdown-Liste.
+4. Um einem Datenfeld eine weitere plentmarkets Datenquelle zuzuordnen, klicke auf **Quelle hinzufügen**.<br/>
 → Eine neue Zeile wird eingeblendet.<br/>
-→ **Hinweis**: Auch wenn Sie einem Datenfeld mehr als eine Datenquelle zuordnen, wird nur ein Wert übertragen. Die Daten werden in der Reihenfolge der Zuordnung geprüft. Wenn also das erste Datenfeld keinen Wert liefert, wird das zweite Datenfeld übertragen usw.
-5. Nehmen Sie alle gewünschten Zuordnungen vor.<br/>
+→ **Hinweis**: Auch wenn du einem Datenfeld mehr als eine Datenquelle zuordnest, wird nur ein Wert übertragen. Die Daten werden in der Reihenfolge der Zuordnung geprüft. Wenn also das erste Datenfeld keinen Wert liefert, wird das zweite Datenfeld übertragen usw.
+5. Nimm alle gewünschten Zuordnungen vor.<br/>
 → Alle Pflichtfelder müssen mit einer plentymarkets Datenquelle verknüpft werden.
-6. **Speichern** Sie die Einstellungen.
+6. **Speichere** die Einstellungen.
+
 
 ## Etsy-Kategorien aktualisieren
 
-Um Etsy-Kategorien in plentymarkets zu aktualisieren, löschen Sie Ihre Credentials im Menü **System » Märkte » Etsy » Authentifizierung** und fügen diese neu hinzu.
+Um Etsy-Kategorien in plentymarkets zu aktualisieren, lösche deine Credentials im Menü **System » Märkte » Etsy » Authentifizierung** und füge diese neu hinzu.
 
 #### Etsy-Kategorien aktualisieren:
 
-1. Öffnen Sie das Menü **System » Systemeinstellungen » Märkte » Etsy » Authentifizierung**.
-2. Klicken Sie auf **Löschen**, um die Credentials zu löschen.
-3. Klicken Sie auf das Weltkugel-Icon, um neue Credentials hinzuzufügen.<br/>
-→ Sie werden zu Etsy weitergeleitet.
-4. Klicken Sie bei Etsy auf **Zugang gewähren**.<br/>
+1. Öffne das Menü **System » Systemeinstellungen » Märkte » Etsy » Authentifizierung**.
+2. Klicke auf **Löschen**, um die Credentials zu löschen.
+3. Klicke auf das Weltkugel-Icon, um neue Credentials hinzuzufügen.<br/>
+→ Du wirst zu Etsy weitergeleitet.
+4. Klicke bei Etsy auf **Zugang gewähren**.<br/>
 → Neue Credentials werden erstellt und in plentymarkets hinterlegt.<br/>
 → Die Etsy-Kategorien werden aktualisiert.
 
+
 ## Rechtliche Hinweise übertragen 
 
-Um rechtliche Hinweise an den Marktplatz Etsy zu übertragen, hinterlegen Sie diese Hinweise für jede Sprache, für die Sie Ihr Sortiment anbieten. Die Hinweise werden der Artikelbeschreibung hinzugefügt. 
+Um rechtliche Hinweise an den Marktplatz Etsy zu übertragen, hinterlege diese Hinweise für jede Sprache, für die du dein Sortiment anbietest. Die Hinweise werden der Artikelbeschreibung hinzugefügt. 
 
 ##### Rechtliche Hinweise hinterlegen: 
 
-1. Öffnen Sie das Menü **System » Systemeinstellungen » Märkte » Etsy » Rechtliche Hinweise**. 
+1. Öffne das Menü **System » Systemeinstellungen » Märkte » Etsy » Rechtliche Hinweise**.<br/> 
 → Das Fenster **Rechtliche Hinweise** wird geöffnet. 
-2. Wählen Sie die Sprache aus, für die rechtliche Hinweise hinterlegt werden sollen. 
-3. Geben Sie Ihren Text ein. 
-4. **Speichern** Sie die Einstellungen.
+2. Wähle die Sprache aus, für die rechtliche Hinweise hinterlegt werden sollen. 
+3. Gib deinen Text ein. 
+4. **Speichere** die Einstellungen.
+
 
 ## Zahlungsbestätigung automatisch senden
 
-Richten Sie eine Ereignisaktion ein, um Zahlungsbestätigungen automatisch an Etsy zu senden, nachdem ein Zahlungseingang gebucht wurde.
+Richte eine Ereignisaktion ein, um Zahlungsbestätigungen automatisch an Etsy zu senden, nachdem ein Zahlungseingang gebucht wurde.
 
 ##### Ereignisaktion einrichten:
 
-1. Öffnen Sie das Menü **System » Systemeinstellungen » Aufträge » Ereignisaktionen**.
-2. Klicken Sie auf **Ereignisaktion hinzufügen**.
+1. Öffne das Menü **System » Systemeinstellungen » Aufträge » Ereignisaktionen**.
+2. Klicke auf **Ereignisaktion hinzufügen**.<br/>
 → Das Fenster **Neue Ereignisaktion erstellen** wird geöffnet.
-3. Geben Sie einen Namen ein.
-4. Wählen Sie das Ereignis gemäß Tabelle 1.
-5. **Speichern** Sie die Einstellungen.
-6. Nehmen Sie die Einstellungen gemäß Tabelle 1 vor.
-7. Setzen Sie ein Häkchen bei **Aktiv**.
-8. **Speichern** Sie die Einstellungen.
+3. Gib einen Namen ein.
+4. Wähle das Ereignis gemäß Tabelle 1.
+5. **Speichere** die Einstellungen.
+6. Nimm die Einstellungen gemäß Tabelle 1 vor.
+7. Setze ein Häkchen bei **Aktiv**.
+8. **Speichere** die Einstellungen.
 
-<table>
-<thead>
-		<th>
-			Einstellung
-		</th>
-		<th>
-			Option
-		</th>
-<th>
-			Auswahl
-		</th>
-	</thead>
-	<tbody>
-      <tr>
-         <td><strong>Ereignis</strong></td>
-         <td><strong>Zahlung: Vollständig</strong></td> 
-<td></td>
-      </tr>
-      <tr>
-         <td><strong>Filter 1</strong></td>
-         <td><strong>Auftrag > Auftragstyp</strong></td>
-<td><strong>Auftrag</strong></td>
-      </tr>
-<tr>
-         <td><strong>Filter 2</strong></td>
-         <td><strong>Auftrag > Herkunft</strong></td>
-<td><strong>Etsy</strong></td>
-      </tr>
-      <tr>
-         <td><strong>Aktion</strong></td>
-         <td><strong>Plugin > Zahlungsbestätigung an Etsy senden</strong></td>
-<td>&nbsp;</td>
-      </tr>
-</tbody>
-</table>
+|Einstellung  |Option                                          |Auswahl |
+|:---         |:---                                            |:--- |
+|**Ereignis** |**Zahlung: Vollständig**                        | |
+|**Filter 1** |**Auftrag > Auftragstyp**                       |**Auftrag** |
+|**Filter 2** |**Auftrag > Herkunft**                          |**Etsy** |
+|**Aktion**   |**Plugin > Zahlungsbestätigung an Etsy senden** | |
+
+_Tab. 1: Zahlungsbestätigungen automatisch an Etsy senden_
+
 
 ## Versandbestätigung automatisch senden
 
-Richten Sie eine Ereignisaktion ein, um Versandbestätigungen automatisch an Etsy zu senden, nachdem ein Warenausgang gebucht wurde.
+Richte eine Ereignisaktion ein, um Versandbestätigungen automatisch an Etsy zu senden, nachdem ein Warenausgang gebucht wurde.
 
 ##### Ereignisaktion einrichten:
 
-1. Öffnen Sie das Menü **System » Systemeinstellungen » Aufträge » Ereignisaktionen**.
-2. Klicken Sie auf **Ereignisaktion hinzufügen**.
+1. Öffne das Menü **System » Systemeinstellungen » Aufträge » Ereignisaktionen**.
+2. Klicke auf **Ereignisaktion hinzufügen**.<br/>
 → Das Fenster **Neue Ereignisaktion erstellen** wird geöffnet.
-3. Geben Sie einen Namen ein.
-4. Wählen Sie das Ereignis gemäß Tabelle 2.
-5. **Speichern** Sie die Einstellungen.
-6. Nehmen Sie die Einstellungen gemäß Tabelle 2 vor.
-7. Setzen Sie ein Häkchen bei **Aktiv**.
-8. **Speichern** Sie die Einstellungen.
+3. Gib einen Namen ein.
+4. Wähle das Ereignis gemäß Tabelle 2.
+5. **Speichere** die Einstellungen.
+6. Nimm die Einstellungen gemäß Tabelle 2 vor.
+7. Setze ein Häkchen bei **Aktiv**.
+8. **Speichere** die Einstellungen.
+
+|Einstellung  |Option                                         |Auswahl |
+|:---         |:---                                           |:--- |
+|**Ereignis** |**Auftragsänderung: Warenausgang gebucht**     | |
+|**Filter 1** |**Auftrag > Auftragstyp**                      |**Auftrag** |
+|**Filter 2** |**Auftrag > Herkunft**                         |**Etsy** |
+|**Aktion**   |**Plugin > Versandbestätigung an Etsy senden** | |
+
+_Tab. 2: Versandbestätigungen automatisch an Etsy senden_
 
 
-<table>
-	<thead>
-		<th>
-			Einstellung
-		</th>
-		<th>
-			Option
-		</th>
-<th>
-			Auswahl
-		</th>
-	</thead>
-	<tbody>
-      <tr>
-         <td><strong>Ereignis</strong></td>
-         <td><strong>Auftragsänderung: Warenausgang gebucht</strong></td> 
-<td></td>
-      </tr>
-      <tr>
-         <td><strong>Filter 1</strong></td>
-         <td><strong>Auftrag > Auftragstyp</strong></td>
-<td><strong>Auftrag</strong></td>
-      </tr>
-<tr>
-         <td><strong>Filter 2</strong></td>
-         <td><strong>Auftrag > Herkunft</strong></td>
-<td><strong>Etsy</strong></td>
-      </tr>
-      <tr>
-         <td><strong>Aktion</strong></td>
-         <td><strong>Plugin > Versandbestätigung an Etsy senden</strong></td>
-<td>&nbsp;</td>
-      </tr>
-</tbody>
-</table>
+## Benutzerrechte vergeben
 
-## Übersicht der benötigten API-Calls
+Damit Benutzer mit dem Zugang **Backend** das **Etsy-Plugin** nutzen können, müssen Benutzerrechte vergeben werden. Benutzerrechte werden im Menü **System » Systemeinstellungen » Einstellungen » Benutzer » Rechte » Benutzer** zugewiesen.
 
-<table>
-<thead>
-		<th>
-			Prozess
-		</th>
-		<th>
-			Call
-		</th>
-	</thead>
-	<tbody>
-      <tr>
-         <td><b>Listing-Start</b></td>
-         <td>Ein Call pro Sprache. Bei nur einer Sprache wird kein zusätzlicher Call benötigt.<br /> Ein Call für die Methode <b>CreateListing</b>.<br /> Ein Call pro Artikelbild.<br /> Ein Call für die Methode <b>Publish</b>.<br /> => mindestens drei API-Calls</td> 
-      </tr>
-      <tr>
-         <td><b>Listing-Update</b></td>
-         <td>Ein Call pro Sprache.<br /> => mindestens ein API-Call</td>
-      </tr>
-<tr>
-         <td><b>Bestandsabgleich</b></td>
-         <td>Ein Call pro Listing.</td>
-      </tr>
-      <tr>
-         <td><b>Delete Listing</b></td>
-         <td>Ein Call pro Listing.</td>
-      </tr>
-      <tr>
-         <td><b>Order-Import</b></td>
-         <td>Ein Call pro Stunde.</td>
-      </tr>
-</tbody>
-</table>
+ #### Benutzerrechte für Backend-Benutzer vergeben:
+ 
+ 1. Öffne das Menü **System » Systemeinstellungen » Einstellungen » Benutzer » Rechte » Benutzer**.
+ 2. Nutze die Suchfunktion und öffne den zu bearbeitenden Benutzer.
+ 3. Klappe das Menü **Berechtigungen: Märkte** auf.
+ 4. Wähle die Einstellung **Zugangsdaten**.
+ 5. **Speichere** die Einstellungen.
 
-## Erforderliche Rechte für das Etsy-Plugin
- 
-Damit Benutzer mit dem Zugang **Backend** das **Etsy-Plugin** nutzen können, sind REST-API-Rechte erforderlich.
- 
-Rechte werden im Menü **System » Systemeinstellungen » Einstellungen » Benutzer » Rechte » Benutzer** zugewiesen.
- 
- #### Erforderliche REST-API-Rechte
- 
-Die folgenden REST-API-Rechte sind für Benutzer mit **Backend**-Zugang erforderlich.
- 
- - Artikel » **Kategorie** und alle untergeordneten Berechtigungen
- - Artikel » **Merkmal** und alle untergeordneten Berechtigungen
- - Märkte » **Zugangsdaten** und alle untergeordneten Berechtigungen
- 
-#### REST-API-Rechte zuweisen:
- 
-1. Öffnen Sie das Menü **System » Systemeinstellungen » Einstellungen » Benutzer » Rechte » Benutzer**.
-2. Klicken Sie auf den **Benutzer**, welcher Rechte erhalten soll.
-3. Setzen Sie im Bereich **Autorisierung** ein Häkchen neben den benötigten Berechtigungen.
-4. **Speichern** Sie die Einstellungen.
 
 ## Lizenz
 
 Das gesamte Projekt unterliegt der GNU AFFERO GENERAL PUBLIC LICENSE – weitere Informationen finden Sie in der [LICENSE.md](https://github.com/plentymarkets/plugin-etsy/blob/master/LICENSE.md).
+
+
+## Hinweis
+
+Der Begriff 'Etsy' ist ein Markenzeichen von Etsy, Inc. Diese Anwendung verwendet die Etsy-API, sie wurde jedoch von Etsy weder befürwortet noch zertifiziert.

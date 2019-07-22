@@ -3,10 +3,10 @@
 namespace Etsy;
 
 use Etsy\DataProviders\EtsyCategoryDataProvider;
-use Etsy\DataProviders\EtsyCurrencyDataProvider;
 use Etsy\DataProviders\EtsyPropertyDataProvider;
 use Etsy\DataProviders\EtsySalesPriceDataProvider;
 use Etsy\DataProviders\EtsyShippingProfileDataProvider;
+use Etsy\DataProviders\EtsyShopSectionDataProvider;
 use Plenty\Modules\Catalog\Contracts\TemplateContainerContract;
 use Plenty\Modules\Catalog\Templates\Template;
 use Plenty\Plugin\ServiceProvider;
@@ -47,6 +47,16 @@ class CatalogBootServiceProvider extends ServiceProvider
             'isArray' => true,
             'isMapping' => true,
             'provider' => EtsyShippingProfileDataProvider::class,
+            'mutators' => [
+            ]
+        ]);
+
+        $template->addMapping([
+            'identifier' => 'shop_sections',
+            'label' => 'Shop_Abteilung',
+            'isArray' => true,
+            'isMapping' => true,
+            'provider' => EtsyShopSectionDataProvider::class,
             'mutators' => [
             ]
         ]);
