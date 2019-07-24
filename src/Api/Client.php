@@ -74,6 +74,11 @@ class Client
 			throw new \Exception($response['message']);
 		}
 
+		if ((isset($response['error']) && $response['error'] == true))
+		{
+			throw new \Exception($response['error_msg']);
+		}
+
 		return $response;
 	}
 }
