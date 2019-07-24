@@ -189,29 +189,32 @@ class UpdateListingService
         $failedVariations = [];
         EtsyListingValidator::validateOrFail($listing['main']);
 
-        $language = $this->settingsHelper->getShopSettings('mainLanguage', 'de');
+        $mainLanguage = $this->settingsHelper->getShopSettings('mainLanguage');
 
-        if (isset($listing['main']['title']))
+        $catalogTitle = 'title'.strtoupper($mainLanguage);
+
+        if (isset($listing['main'][$catalogTitle]))
         {
-            $data['title'] = str_replace(':', ' -', $listing['main']['title']);
+            $data['title'] = str_replace(':', ' -', $listing['main'][$catalogTitle]);
             $data['title'] = ltrim($data['title'], ' +-!?');
         }
         else {
             foreach ($listing['main']['texts'] as $text) {
-                if ($text['lang'] == $language) {
+                if ($text['lang'] == $mainLanguage) {
                     $data['title'] = str_replace(':', ' -', $text['name1']);
                     $data['title'] = ltrim($data['title'], ' +-!?');
                 }
             }
         }
 
-        if (isset($listing['main']['description']))
+        $catalogDescription = 'description'.strtoupper($mainLanguage);
+        if (isset($listing['main'][$catalogDescription]))
         {
-            $data['description'] = html_entity_decode(strip_tags(str_replace("<br>", "\n",$listing['main']['description'])));
-        }
-        else {
+            $data['description'] = html_entity_decode(strip_tags(str_replace
+            ("<br>", "\n",$listing['main'][$catalogDescription])));
+        } else {
             foreach ($listing['main']['texts'] as $text) {
-                if ($text['lang'] == $language) {
+                if ($text['lang'] == $mainLanguage) {
                     $data['description'] = html_entity_decode(strip_tags(str_replace("<br>", "\n",$text['description'])));
                 }
             }
@@ -248,7 +251,10 @@ class UpdateListingService
         $data['taxonomy_id'] = (int) reset($listing['main']['categories']);
 
         //Etsy properties
-        if (isset($listing['main']['tags']) && $listing['main']['tags'] != "") {
+        $catalogTag = 'tags'.strtoupper($mainLanguage);
+
+        //Etsy properties
+        if (isset($listing['main'][$catalogTag]) && $listing['main'][$catalogTag] != "") {
             $tags = explode(',', $listing['main']['tags']);
             $tagCounter = 0;
 
@@ -375,7 +381,7 @@ class UpdateListingService
             $articleFailed = true;
             $articleErrors[] = $this->translator
                 ->trans(EtsyServiceProvider::PLUGIN_NAME.'::log.noVariations');
-            $this->listingService->updateListing($listingId, ['state' => 'inactive'], $language);
+            $this->listingService->updateListing($listingId, ['state' => 'inactive'], $mainLanguage);
         }
 
         if ((!isset($data['title']) || $data['title'] == '')
@@ -422,7 +428,7 @@ class UpdateListingService
                 ->error($exceptionMessage, $failedVariations);
         }
 
-        $response = $this->listingService->updateListing($listingId, $data, $language);
+        $response = $this->listingService->updateListing($listingId, $data, $mainLanguage);
 
         if (!isset($response['results']) || !is_array($response['results'])) {
             $messages = [];
@@ -764,43 +770,62 @@ class UpdateListingService
      */
     protected function addTranslations(array $listing, $listingId)
     {
-        foreach ($this->settingsHelper->getShopSettings('exportLanguages',
-            [$this->settingsHelper->getShopSettings('mainLanguage', 'de')]) as $language) {
+        $mainLanguage = $this->settingsHelper->getShopSettings('mainLanguage');
+        $activatedExportLanguages = $this->settingsHelper->getShopSettings('exportLanguages');
 
-            foreach ($listing['main']['texts'] as $text) {
-                if ($text['lang'] == $this->settingsHelper->getShopSettings('mainLanguage', 'de')
-                    || $text['lang'] != $language
-                    || !$text['name1']
-                    || !strip_tags($text['description'])
-                ) {
-                    continue;
+        $translatableLanguages = [];
+
+        foreach ($activatedExportLanguages as $activatedExportLanguage) {
+            if ($activatedExportLanguage !== $mainLanguage){
+                $translatableLanguages = $activatedExportLanguage;
+            }
+        }
+
+        if (empty($translatableLanguages)) {
+            $this->getLogger(EtsyServiceProvider::LISTING_TRANSLATIONS)
+                ->addReference('listingId', $listingId)
+                ->error('No more export languages activated except the main language');
+            return;
+        }
+
+        foreach ($translatableLanguages as $translatableLanguage) {
+            $data = [];
+
+            $catalogTitle = 'title'.strtoupper($translatableLanguage);
+
+            if (isset($listing['main'][$catalogTitle]))
+            {
+                $data['title'] = str_replace(':', ' -', $listing['main'][$catalogTitle]);
+                $data['title'] = ltrim($data['title'], ' +-!?');
+            }
+
+            $catalogDescription = 'description'.strtoupper($translatableLanguage);
+            if (isset($listing['main'][$catalogDescription]))
+            {
+                $data['description'] = html_entity_decode(strip_tags(str_replace
+                ("<br>", "\n",$listing['main'][$catalogDescription])));
+            }
+
+            $catalogTag = 'tags'.strtoupper($translatableLanguage);
+
+            //Etsy properties
+            if (isset($listing['main'][$catalogTag]) && $listing['main'][$catalogTag] != "") {
+                $tags = explode(',', $listing['main'][$catalogTag]);
+                $tagCounter = 0;
+
+                foreach ($tags as $key => $tag) {
+                    if ($tagCounter > 13) break;
+
+
+                    $data['tags'][] = $tag;
+                    $tagCounter++;
                 }
-                try {
-                    $title = trim(preg_replace('/\s+/', ' ', $text['name1']));
-                    $title = ltrim($title, ' +-!?');
-                    $legalInformation = $this->itemHelper->getLegalInformation($language);
-                    $description = html_entity_decode(strip_tags($text['description'] . $legalInformation));
 
-                    $data = [
-                        'title' => $title,
-                        'description' => $description
-                    ];
-
-                    /*todo: tags need to be transalted as soon as they are implemented
-                    if ($record->itemDescription[$language]['keywords']) {
-                        $data['tags'] = $this->itemHelper->getTags($record, $language);
-                    }
-                    */
-
-                    $this->listingTranslationService->createListingTranslation($listingId, $language, $data);
-                } catch (\Exception $ex) {
-                    $this->getLogger(EtsyServiceProvider::ADD_LISTING_TRANSLATIONS)
-                        ->addReference('etsyListingId', $listingId)
-                        ->addReference('variationId', $listing['main']['variationId'])
-                        ->addReference('etsyLanguage', $language)
-                        ->error('Etsy::item.translationUpdateError', $ex->getMessage());
+                if ($tagCounter > 0){
+                    $data['tags'] = implode(',', $data['tags']);
                 }
             }
+            $this->listingTranslationService->updateListingTranslation($listingId, strtolower($translatableLanguage), $data);
         }
     }
 
