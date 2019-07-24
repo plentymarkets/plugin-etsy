@@ -910,6 +910,24 @@ class StartListingService
             }
             $response = $this->listingTranslationService->createListingTranslation($listingId, strtolower($translatableLanguage), $data);
 
+            if (!isset($response['results']) || !is_array($response['results'])) {
+                $messages = [];
+
+                if (is_array($response) && isset($response['error_msg'])) {
+                    $messages[] = $response['error_msg'];
+                } else {
+                    if (is_string($response)) {
+                        $messages[] = $response;
+                    } else {
+                        $messages[] = $this->translator->trans(EtsyServiceProvider::PLUGIN_NAME . '::log.emptyResponse');
+                    }
+                }
+
+                $messageBag = pluginApp(MessageBag::class, ['messages' => $messages]);
+                throw new ListingException($messageBag,
+                    $this->translator->trans(EtsyServiceProvider::PLUGIN_NAME . '::item.startListingError'));
+            }
+
         }
 
 
