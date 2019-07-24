@@ -63,6 +63,11 @@ class UpdateListingStockService
 					'price'      => number_format($record->variationRetailPrice->price, 2),
 				];
 
+				$this->getLogger(__FUNCTION__)
+					->addReference('etsyListingId', $listingId)
+					->addReference('variationId', $record->variationBase->id)
+					->info('Etsy::item.preparingStockUpdate', $data);
+
 				$this->listingService->updateListing($listingId, $data);
 
 				$this->getLogger(__FUNCTION__)

@@ -361,7 +361,7 @@ class OrderCreateService
                 // add wrapping item position
                 if (isset($data['is_gift']) && $data['is_gift'] === true) {
                     $orderItems[] = [
-                        'typeId'        => OrderItemType::TYPE_UNASSIGEND_VARIATION,
+                        'typeId'        => OrderItemType::TYPE_GIFT_WRAP,
                         'referrerId'    => $this->orderHelper->getReferrerId(),
                         'quantity'      => 1,
                         'orderItemName' => $this->getWrapTitle($data),
