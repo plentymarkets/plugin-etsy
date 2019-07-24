@@ -768,7 +768,7 @@ class UpdateListingService
      * @param $listingId
      * @throws \Exception
      */
-    protected function addTranslations(array $listing, $listingId)
+    public function addTranslations(array $listing, $listingId)
     {
         $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
             ->error('hey im trying to do this.');
@@ -780,7 +780,7 @@ class UpdateListingService
 
         foreach ($activatedExportLanguages as $activatedExportLanguage) {
             if ($activatedExportLanguage !== $mainLanguage){
-                $translatableLanguages = $activatedExportLanguage;
+                $translatableLanguages[] = $activatedExportLanguage;
             }
         }
 
