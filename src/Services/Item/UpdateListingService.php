@@ -772,7 +772,7 @@ class UpdateListingService
     {
         $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
             ->error('hey im trying to do this.');
-        
+
         $mainLanguage = $this->settingsHelper->getShopSettings('mainLanguage');
         $activatedExportLanguages = $this->settingsHelper->getShopSettings('exportLanguages');
 
