@@ -1,5 +1,9 @@
 # Release Notes für Etsy
 
+## v1.3.15 (2019-07-24)
+### Fixed
+- Die Auftragsposition "Als Geschenk" wir nun nicht mehr bei der Versandprofilberechnung berücksichtigt.
+
 ## v1.3.14 (2019-07-17)
 ### Hinzugefügt
 - Weiche Zeilenumbrüche werden jetzt in der Artikelbeschreibung beachtet.
