@@ -936,7 +936,7 @@
       "language": "language",
       "title": "string",
       "description": "text",
-      "tags": "array(string)"
+      "tags": "string"
     },
     "defaults": {
       "title": false,
@@ -956,7 +956,7 @@
       "language": "language",
       "title": "string",
       "description": "text",
-      "tags": "array(string)"
+      "tags": "string"
     },
     "defaults": {
       "title": false,
