@@ -3,10 +3,13 @@
 namespace Etsy;
 
 use Etsy\DataProviders\EtsyCategoryDataProvider;
+use Etsy\DataProviders\EtsyDescriptionDataProvider;
 use Etsy\DataProviders\EtsyPropertyDataProvider;
 use Etsy\DataProviders\EtsySalesPriceDataProvider;
 use Etsy\DataProviders\EtsyShippingProfileDataProvider;
 use Etsy\DataProviders\EtsyShopSectionDataProvider;
+use Etsy\DataProviders\EtsyTagsDataProvider;
+use Etsy\DataProviders\EtsyTitleDataProvider;
 use Plenty\Modules\Catalog\Contracts\TemplateContainerContract;
 use Plenty\Modules\Catalog\Templates\Template;
 use Plenty\Plugin\ServiceProvider;
@@ -31,6 +34,36 @@ class CatalogBootServiceProvider extends ServiceProvider
         $template = $container->register('Etsy::catalog.name', 'Etsy::catalog.type');
 
         $template->addMapping([
+            'identifier' => 'title',
+            'label' => 'Titel',
+            'isArray' => true,
+            'isMapping' => false,
+            'provider' => EtsyTitleDataProvider::class,
+            'mutators' => [
+            ]
+        ]);
+
+        $template->addMapping([
+            'identifier' => 'description',
+            'label' => 'Beschreibung',
+            'isArray' => true,
+            'isMapping' => false,
+            'provider' => EtsyDescriptionDataProvider::class,
+            'mutators' => [
+            ]
+        ]);
+
+        $template->addMapping([
+            'identifier' => 'tags',
+            'label' => 'Tags',
+            'isArray' => true,
+            'isMapping' => false,
+            'provider' => EtsyTagsDataProvider::class,
+            'mutators' => [
+            ]
+        ]);
+
+        $template->addMapping([
             'identifier' => 'categories',
             'label' => 'Kategorien',
             'isArray' => true,
@@ -39,7 +72,6 @@ class CatalogBootServiceProvider extends ServiceProvider
             'mutators' => [
             ]
         ]);
-
 
         $template->addMapping([
             'identifier' => 'shipping_profile',

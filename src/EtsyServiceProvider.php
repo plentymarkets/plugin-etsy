@@ -51,6 +51,8 @@ class EtsyServiceProvider extends ServiceProvider
 
     const ITEM_EXPORT_CRON = 'ItemExportCron';
 
+    const LISTING_TRANSLATIONS = 'ListingTranslations';
+
 
     
 	/**
