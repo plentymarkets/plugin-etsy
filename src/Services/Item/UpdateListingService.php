@@ -211,7 +211,7 @@ class UpdateListingService
         if (isset($listing['main'][$catalogDescription]))
         {
             $data['description'] = html_entity_decode(strip_tags(str_replace
-            ("<br>", "\n",$listing['main'][$catalogDescription])));
+            ("<br />", "\n",$listing['main'][$catalogDescription])));
         } else {
             foreach ($listing['main']['texts'] as $text) {
                 if ($text['lang'] == $mainLanguage) {
