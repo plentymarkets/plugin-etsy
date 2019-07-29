@@ -279,7 +279,7 @@ class StartListingService
         if (isset($listing['main'][$catalogDescription]))
         {
             $data['description'] = html_entity_decode(strip_tags(str_replace
-            ("<br>", "\n",$listing['main'][$catalogDescription].$legalInformation)));
+            ("<br />", "\n",$listing['main'][$catalogDescription].$legalInformation)));
         } else {
             foreach ($listing['main']['texts'] as $text) {
                 if ($text['lang'] == $mainLanguage) {
