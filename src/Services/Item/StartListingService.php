@@ -835,6 +835,16 @@ class StartListingService
                         $message);
             }
 
+            $this->getLogger(EtsyServiceProvider::START_LISTING_SERVICE)
+                ->error('response von Etsy', [
+                    'data' => $response
+                ]);
+
+            $this->getLogger(EtsyServiceProvider::START_LISTING_SERVICE)
+                ->error('Picture', [
+                    'data' => $image
+                ]);
+
             $imageList[] = [
                 'imageId' => $image['id'],
                 'listingImageId' => $response['results'][0]['listing_image_id'],
