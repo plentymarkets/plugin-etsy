@@ -814,6 +814,12 @@ class StartListingService
 
         foreach ($list as $image) {
 
+            $this->getLogger(EtsyServiceProvider::START_LISTING_SERVICE)
+                ->error('Picture', [
+                    'data' => $image
+                ]);
+
+            
             $response = $this->listingImageService->uploadListingImage($listingId, $image['url'], $image['position']);
 
             if (!isset($response['results']) || !is_array($response['results'])
@@ -834,16 +840,6 @@ class StartListingService
                     ->warning($this->translator->trans(EtsyServiceProvider::PLUGIN_NAME . '::log.imageFailed'),
                         $message);
             }
-
-            $this->getLogger(EtsyServiceProvider::START_LISTING_SERVICE)
-                ->error('response von Etsy', [
-                    'data' => $response
-                ]);
-
-            $this->getLogger(EtsyServiceProvider::START_LISTING_SERVICE)
-                ->error('Picture', [
-                    'data' => $image
-                ]);
 
             $imageList[] = [
                 'imageId' => $image['id'],

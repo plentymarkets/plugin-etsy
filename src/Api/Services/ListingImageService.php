@@ -3,12 +3,15 @@
 namespace Etsy\Api\Services;
 
 use Etsy\Api\Client;
+use Etsy\EtsyServiceProvider;
+use Plenty\Plugin\Log\Loggable;
 
 /**
  * Class ListingImageService
  */
 class ListingImageService
 {
+    use Loggable;
 	/**
 	 * @var Client
 	 */
@@ -36,9 +39,16 @@ class ListingImageService
             'rank' => $position
 		];
 
-		return $this->client->call('uploadListingImage', [
+		$response = $this->client->call('uploadListingImage', [
 			'listing_id' => $listingId,
 		], $data);
+
+        $this->getLogger(EtsyServiceProvider::START_LISTING_SERVICE)
+            ->error('response von Etsy', [
+                'data' => $response
+            ]);
+
+		return $response;
 	}
 
     /**
