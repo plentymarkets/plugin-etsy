@@ -894,7 +894,7 @@ class StartListingService
             if (isset($listing['main'][$catalogDescription]))
             {
                 $data['description'] = html_entity_decode(strip_tags(str_replace
-                ("<br>", "\n",$listing['main'][$catalogDescription])));
+                ("<br />", "\n",$listing['main'][$catalogDescription])));
             }
 
             $catalogTag = 'tags'.strtoupper($translatableLanguage);

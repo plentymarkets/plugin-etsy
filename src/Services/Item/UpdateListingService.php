@@ -679,11 +679,11 @@ class UpdateListingService
     public function updateImages($listing, $listingId)
     {
         $orderReferrer = $this->settingsHelper->get($this->settingsHelper::SETTINGS_ORDER_REFERRER);
+
         $etsyImages = json_decode($this->imageHelper->get((string) $listingId), true);
         $imageList = [];
 
         $list = $listing['main']['images']['all'];
-
         $newList = [];
 
         foreach ($list as $key => $image) {
@@ -810,7 +810,7 @@ class UpdateListingService
             if (isset($listing['main'][$catalogDescription]))
             {
                 $data['description'] = html_entity_decode(strip_tags(str_replace
-                ("<br>", "\n",$listing['main'][$catalogDescription])));
+                ("<br />", "\n",$listing['main'][$catalogDescription])));
             }
 
             $catalogTag = 'tags'.strtoupper($translatableLanguage);
