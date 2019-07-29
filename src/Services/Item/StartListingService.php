@@ -780,6 +780,12 @@ class StartListingService
      */
     protected function addPictures($listingId, $listing)
     {
+        $this->getLogger(EtsyServiceProvider::START_LISTING_SERVICE)
+            ->addReference('itemId', 1)
+            ->error('Picture', [
+                'data' => $listing['main']['images']
+            ]);
+
         if (!isset($listing['main']['images']['all'])) {
             $messageBag = pluginApp(MessageBag::class, ['messages' => [$this->translator
                 ->trans(EtsyServiceProvider::PLUGIN_NAME . '::log.noImages')]]);
