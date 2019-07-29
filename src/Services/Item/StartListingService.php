@@ -793,6 +793,9 @@ class StartListingService
                 $this->translator->trans(EtsyServiceProvider::PLUGIN_NAME . '::item.startListingError'));
         }
 
+        $this->getLogger(EtsyServiceProvider::START_LISTING_SERVICE)
+            ->error('Log direkt nach Methodenbeginn');
+
         $list = $listing['main']['images']['all'];
         
         foreach ($list as $key => $image) {
@@ -847,6 +850,9 @@ class StartListingService
             throw new ListingException($messageBag,
                 $this->translator->trans(EtsyServiceProvider::PLUGIN_NAME . '::item.startListingError'));
         }
+
+        $this->getLogger(EtsyServiceProvider::START_LISTING_SERVICE)
+            ->error('Log am Ende der  Methode');
 
         $this->imageHelper->save($listingId, json_encode($imageList));
     }
