@@ -780,6 +780,8 @@ class StartListingService
      */
     protected function addPictures($listingId, $listing)
     {
+        $orderReferrer = $this->settingsHelper->get($this->settingsHelper::SETTINGS_ORDER_REFERRER);
+
         if (!isset($listing['main']['images']['all'])) {
             $messageBag = pluginApp(MessageBag::class, ['messages' => [$this->translator
                 ->trans(EtsyServiceProvider::PLUGIN_NAME . '::log.noImages')]]);
@@ -788,22 +790,28 @@ class StartListingService
         }
 
         $list = $listing['main']['images']['all'];
-        
+
+        $newList = [];
+
         foreach ($list as $key => $image) {
-            if (!isset($image['availabilities']['market'][0]) || ($image['availabilities']['market'][0] !== -1
-                && $image['availabilities']['market'][0] != $this->settingsHelper
-                        ->get($this->settingsHelper::SETTINGS_ORDER_REFERRER))) {
-                unset($list[$key]);
+            foreach ($image['availabilities']['market'] as $availability) {
+                if ($availability === -1) continue;
+
+                if ($availability != $orderReferrer){
+                    unset($list[$key]);
+                } else {
+                    $newList[] = $image;
+                }
             }
         }
 
-        $list = $this->imageHelper->sortImagePosition($list);
+        $sortedList = $this->imageHelper->sortImagePosition($newList);
 
         $imageList = [];
 
-        $list = array_slice($list, 0, 10);
+        $slicedList = array_slice($sortedList, 0, 10);
 
-        foreach ($list as $image) {
+        foreach ($slicedList as $image) {
 
             $response = $this->listingImageService->uploadListingImage($listingId, $image['url'], $image['position']);
 

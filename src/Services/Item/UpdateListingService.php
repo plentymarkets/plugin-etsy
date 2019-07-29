@@ -690,28 +690,35 @@ class UpdateListingService
      */
     public function updateImages($listing, $listingId)
     {
+        $orderReferrer = $this->settingsHelper->get($this->settingsHelper::SETTINGS_ORDER_REFERRER);
+
         $etsyImages = json_decode($this->imageHelper->get((string) $listingId), true);
         $imageList = [];
 
         $list = $listing['main']['images']['all'];
+        $newList = [];
 
         foreach ($list as $key => $image) {
-            if (!isset($image['availabilities']['market'][0]) || ($image['availabilities']['market'][0] !== -1
-                    && $image['availabilities']['market'][0] != $this->settingsHelper
-                        ->get($this->settingsHelper::SETTINGS_ORDER_REFERRER))) {
-                unset($list[$key]);
+            foreach ($image['availabilities']['market'] as $availability) {
+                if ($availability === -1) continue;
+
+                if ($availability != $orderReferrer){
+                    unset($list[$key]);
+                } else {
+                    $newList[] = $image;
+                }
             }
         }
 
-        $list = array_slice($list, 0, 10);
-        $list = $this->imageHelper->sortImagePosition($list);
+        $slicedList = array_slice($newList, 0, 10);
+        $sortedList = $this->imageHelper->sortImagePosition($slicedList);
 
         foreach ($etsyImages as $etsyKey => $etsyImage){
-            foreach ($list as $plentyKey => $plentyImage){
+            foreach ($sortedList as $plentyKey => $plentyImage){
                 if ($etsyImage['imageId'] == $plentyImage['id'] && $etsyImage['position'] == $plentyImage['position'])
                 {
                     $imageList[] = $etsyImage;
-                    unset($list[$plentyKey]);
+                    unset($sortedList[$plentyKey]);
                     unset($etsyImages[$etsyKey]);
                 }
             }
