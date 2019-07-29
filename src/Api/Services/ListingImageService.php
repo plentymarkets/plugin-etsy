@@ -43,11 +43,6 @@ class ListingImageService
 			'listing_id' => $listingId,
 		], $data);
 
-        $this->getLogger(EtsyServiceProvider::START_LISTING_SERVICE)
-            ->error('response von Etsy', [
-                'data' => $response
-            ]);
-
 		return $response;
 	}
 

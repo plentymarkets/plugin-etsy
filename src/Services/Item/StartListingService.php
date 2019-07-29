@@ -780,11 +780,7 @@ class StartListingService
      */
     protected function addPictures($listingId, $listing)
     {
-        $this->getLogger(EtsyServiceProvider::START_LISTING_SERVICE)
-            ->addReference('itemId', 1)
-            ->error('Picture', [
-                'data' => $listing['main']['images']
-            ]);
+        $orderReferrer = $this->settingsHelper->get($this->settingsHelper::SETTINGS_ORDER_REFERRER);
 
         if (!isset($listing['main']['images']['all'])) {
             $messageBag = pluginApp(MessageBag::class, ['messages' => [$this->translator
@@ -793,37 +789,29 @@ class StartListingService
                 $this->translator->trans(EtsyServiceProvider::PLUGIN_NAME . '::item.startListingError'));
         }
 
-        $this->getLogger(EtsyServiceProvider::START_LISTING_SERVICE)
-            ->error('Log direkt nach Methodenbeginn');
-
         $list = $listing['main']['images']['all'];
-        
+
+        $newList = [];
+
         foreach ($list as $key => $image) {
-            if (!isset($image['availabilities']['market'][0]) || ($image['availabilities']['market'][0] !== -1
-                && $image['availabilities']['market'][0] != $this->settingsHelper
-                        ->get($this->settingsHelper::SETTINGS_ORDER_REFERRER))) {
-                unset($list[$key]);
+            foreach ($image['availabilities']['market'] as $availability) {
+                if ($availability === -1) continue;
+
+                if ($availability != $orderReferrer){
+                    unset($list[$key]);
+                } else {
+                    $newList[] = $image;
+                }
             }
         }
 
-        $list = $this->imageHelper->sortImagePosition($list);
+        $sortedList = $this->imageHelper->sortImagePosition($newList);
 
         $imageList = [];
 
-        $list = array_slice($list, 0, 10);
+        $slicedList = array_slice($sortedList, 0, 10);
 
-        $this->getLogger(EtsyServiceProvider::START_LISTING_SERVICE)
-            ->error('list', [
-                'data' => $list
-            ]);
-
-        foreach ($list as $image) {
-
-            $this->getLogger(EtsyServiceProvider::START_LISTING_SERVICE)
-                ->error('Picture', [
-                    'data' => $image
-                ]);
-
+        foreach ($slicedList as $image) {
 
             $response = $this->listingImageService->uploadListingImage($listingId, $image['url'], $image['position']);
 
@@ -861,9 +849,6 @@ class StartListingService
             throw new ListingException($messageBag,
                 $this->translator->trans(EtsyServiceProvider::PLUGIN_NAME . '::item.startListingError'));
         }
-
-        $this->getLogger(EtsyServiceProvider::START_LISTING_SERVICE)
-            ->error('Log am Ende der  Methode');
 
         $this->imageHelper->save($listingId, json_encode($imageList));
     }
