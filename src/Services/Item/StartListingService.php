@@ -812,6 +812,11 @@ class StartListingService
 
         $list = array_slice($list, 0, 10);
 
+        $this->getLogger(EtsyServiceProvider::START_LISTING_SERVICE)
+            ->error('list', [
+                'data' => $list
+            ]);
+
         foreach ($list as $image) {
 
             $this->getLogger(EtsyServiceProvider::START_LISTING_SERVICE)
@@ -819,7 +824,7 @@ class StartListingService
                     'data' => $image
                 ]);
 
-            
+
             $response = $this->listingImageService->uploadListingImage($listingId, $image['url'], $image['position']);
 
             if (!isset($response['results']) || !is_array($response['results'])
