@@ -795,7 +795,9 @@ class StartListingService
 
         foreach ($list as $key => $image) {
             foreach ($image['availabilities']['market'] as $availability) {
-                if ($availability === -1) continue;
+                if ($availability === -1){
+                    $newList[] = $image;
+                }
 
                 if ($availability != $orderReferrer){
                     unset($list[$key]);
@@ -905,6 +907,7 @@ class StartListingService
                 $tagCounter = 0;
 
                 foreach ($tags as $key => $tag) {
+                    if (strlen($tag) > 20) continue;
                     if ($tagCounter > 13) break;
 
 

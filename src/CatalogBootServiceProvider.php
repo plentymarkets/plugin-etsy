@@ -85,7 +85,7 @@ class CatalogBootServiceProvider extends ServiceProvider
 
         $template->addMapping([
             'identifier' => 'shop_sections',
-            'label' => 'Shop_Abteilung',
+            'label' => 'Shop-Abteilung',
             'isArray' => true,
             'isMapping' => true,
             'provider' => EtsyShopSectionDataProvider::class,
