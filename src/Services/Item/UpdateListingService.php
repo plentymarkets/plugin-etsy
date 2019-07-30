@@ -746,7 +746,7 @@ class UpdateListingService
             }
         }
 
-        foreach ($list as $image) {
+        foreach ($sortedList as $image) {
 
             $response = $this->listingImageService->uploadListingImage($listingId, $image['url'], $image['position']);
 
