@@ -428,6 +428,11 @@ class UpdateListingService
                 ->error($exceptionMessage, $failedVariations);
         }
 
+        $this->getLogger(EtsyServiceProvider::UPDATE_LISTING_SERVICE)
+            ->error('data we send to etsy to update', [
+                'data' => $data
+            ]);
+
         $response = $this->listingService->updateListing($listingId, $data, $mainLanguage);
 
         if (!isset($response['results']) || !is_array($response['results'])) {
