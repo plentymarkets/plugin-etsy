@@ -795,7 +795,10 @@ class StartListingService
 
         foreach ($list as $key => $image) {
             foreach ($image['availabilities']['market'] as $availability) {
-                if ($availability === -1) continue;
+                if ($availability === -1){
+                    $newList[] = $image;
+                    break;
+                }
 
                 if ($availability != $orderReferrer){
                     unset($list[$key]);
