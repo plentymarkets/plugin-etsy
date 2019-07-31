@@ -369,7 +369,7 @@ class UpdateListingService
             }
         }
 
-        if (isset($listing['main']['shop_section_id'])) {
+        if (isset($listing['main']['shop_section_id'][0])) {
             $data['shop_section_id'] = $listing['main']['shop_section_id'];
         }
 
