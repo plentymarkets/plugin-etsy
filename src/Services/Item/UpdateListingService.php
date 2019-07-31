@@ -435,6 +435,11 @@ class UpdateListingService
 
         $response = $this->listingService->updateListing($listingId, $data, $mainLanguage);
 
+        $this->getLogger(EtsyServiceProvider::UPDATE_LISTING_SERVICE)
+            ->error('initial Request', [
+                'data' =>$response['initialRequest']
+            ]);
+
         if (!isset($response['results']) || !is_array($response['results'])) {
             $messages = [];
 
