@@ -115,7 +115,8 @@ class UpdateListingStockService
      * @param array $listing
      * @throws \Exception
      */
-    public function updateStock(array $listing) {
+    public function updateStock(array $listing)
+    {
         $listingId = 0;
 
         foreach ($listing as $variation) {
@@ -125,7 +126,9 @@ class UpdateListingStockService
             }
         }
 
-        if ($listingId === 0) /* todo: exception? */return;
+        if ($listingId === 0) /* todo: exception? */ {
+            return;
+        }
 
         try {
             $etsyListing = $this->listingService->getListing($listingId);
@@ -137,19 +140,21 @@ class UpdateListingStockService
                 $renew = in_array($listing['main']['renew'], self::BOOL_CONVERTIBLE_STRINGS);
             }
 
-            if ($state == self::SOLD_OUT && !$renew){
+            if ($state == self::SOLD_OUT && !$renew) {
                 $this->getLogger(__FUNCTION__)
                     ->addReference('listingId', $listingId)
                     ->addReference('itemId', $listing['main']['itemId'])
                     ->report(EtsyServiceProvider::PLUGIN_NAME . '::log.soldOut',
                         EtsyServiceProvider::PLUGIN_NAME . '::log.needManualRenew');
             }
-            
+
             $products = $this->update($listingId, $listing);
 
             //no positive stock
             if (is_null($products)) {
-                if ($state != self::ACTIVE) return;
+                if ($state != self::ACTIVE) {
+                    return;
+                }
 
                 //since etsy can't handle a stock of 0 we declare the listing inactive
                 $this->listingService->updateListing($listingId, ['state' => 'inactive']);
@@ -157,7 +162,9 @@ class UpdateListingStockService
                 foreach ($listing as $variation) {
                     $sku = $this->itemHelper->getVariationSku($variation['variationId']);
 
-                    if ($sku->status != $this->itemHelper::SKU_STATUS_ACTIVE) continue;
+                    if ($sku->status != $this->itemHelper::SKU_STATUS_ACTIVE) {
+                        continue;
+                    }
 
                     $this->itemHelper->updateVariationSkuStatus($variation['variationId'], $this->itemHelper::SKU_STATUS_INACTIVE);
                 }
@@ -167,8 +174,7 @@ class UpdateListingStockService
             //new state of the listing
             $newState = self::INACTIVE;
 
-            foreach ($products as $variation)
-            {
+            foreach ($products as $variation) {
                 $matches = [];
                 if (!preg_match('@^([0-9]+)-([0-9]+)$@', $variation['sku'], $matches)) {
                     //given variation has no usable sku
@@ -192,7 +198,9 @@ class UpdateListingStockService
                 $this->itemHelper->updateVariationSkuStockTimestamp($variationId);
 
                 //variations with errors can be ignored
-                if ($sku->status == $this->itemHelper::SKU_STATUS_ERROR) continue;
+                if ($sku->status == $this->itemHelper::SKU_STATUS_ERROR) {
+                    continue;
+                }
 
                 $status = $this->itemHelper::SKU_STATUS_INACTIVE;
 
@@ -220,7 +228,9 @@ class UpdateListingStockService
             foreach ($listing as $variation) {
                 $sku = $this->itemHelper->getVariationSku($variation['variationId']);
 
-                if ($sku->status != $this->itemHelper::SKU_STATUS_ACTIVE) continue;
+                if ($sku->status != $this->itemHelper::SKU_STATUS_ACTIVE) {
+                    continue;
+                }
 
                 $this->itemHelper->updateVariationSkuStatus($variation['variationId'], $this->itemHelper::SKU_STATUS_INACTIVE);
             }
@@ -274,8 +284,7 @@ class UpdateListingStockService
 
         $exportPreloadValueList = [];
 
-        foreach ($listing as $variation)
-        {
+        foreach ($listing as $variation) {
             $exportPreloadValue = pluginApp(ExportPreloadValue::class, [
                 'itemId' => $variation['itemId'],
                 'variationId' => $variation['variationId']
@@ -291,8 +300,7 @@ class UpdateListingStockService
         $hasPositiveStock = false;
 
         foreach ($products as $key => $product) {
-            if (!isset($product['sku']) || !$product['sku'])
-            {
+            if (!isset($product['sku']) || !$product['sku']) {
                 //todo translate
                 throw new \Exception('variation not in plenty. Product id ' . $product['product_id']);
             }
@@ -303,10 +311,15 @@ class UpdateListingStockService
                 if ($variation['skus'][0]['sku'] != $product['sku']) {
                     continue;
                 }
-                $stock =  $variationExportService->getData($variationExportService::STOCK, $variation['variationId']);
-                $stock = $stock[0]['stockNet'];
-                // etsy only takes int´s as quantity, so we round it down. For example 9,5 will now be 9
-                $stock = round($stock, 0, PHP_ROUND_HALF_DOWN);
+                $test = true;
+                if ($variation['stockLimitation'] === StartListingService::NO_STOCK_LIMITATION_) {
+                    $stock = self::MAXIMUM_ALLOWED_STOCK;
+                } else {
+                    $stock = $variationExportService->getData($variationExportService::STOCK, $variation['variationId']);
+                    $stock = $stock[0]['stockNet'];
+                    // etsy only takes int´s as quantity, so we round it down. For example 9,5 will now be 9
+                    $stock = round($stock, 0, PHP_ROUND_HALF_DOWN);
+                }
 
                 if ($stock > 0 && $variation['skus'][0] != $this->itemHelper::SKU_STATUS_ERROR) {
                     $hasPositiveStock = true;
