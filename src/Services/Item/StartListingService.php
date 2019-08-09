@@ -183,7 +183,7 @@ class StartListingService
         try {
             $this->addTranslations($listing, $listingId);
             $listing = $this->fillInventory($listingId, $listing);
-            $this->addPictures($listingId, $listing);
+//            $this->addPictures($listingId, $listing);
             $this->publish($listingId, $listing);
         } catch (ListingException $listingException) {
             $skus = [];
@@ -646,9 +646,14 @@ class StartListingService
                 continue;
             }
 
-            $variationExportService->preload($exportPreloadValueList);
-            $stock = $variationExportService->getAll($variation['variationId']);
-            $stock = $stock[$variationExportService::STOCK];
+            if ($variation['stockLimitation'] === StartListingService::NO_STOCK_LIMITATION_) {
+                $quantity = UpdateListingStockService::MAXIMUM_ALLOWED_STOCK;
+            } else {
+                $variationExportService->preload($exportPreloadValueList);
+                $stock = $variationExportService->getAll($variation['variationId']);
+                $stock = $stock[$variationExportService::STOCK];
+                $quantity = $stock[0]['stockNet'];
+            }
 
             //initialising property values array for articles with no attributes (single variation)
             $products[$counter]['property_values'] = [];
@@ -724,7 +729,7 @@ class StartListingService
 
             $products[$counter]['offerings'] = [
                 [
-                    'quantity' => (int)$stock[0]['stockNet'],
+                    'quantity' => (int) $quantity,
                     'is_enabled' => $variation['isActive']
                 ]
             ];
