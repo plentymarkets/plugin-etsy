@@ -311,7 +311,6 @@ class UpdateListingStockService
                 if ($variation['skus'][0]['sku'] != $product['sku']) {
                     continue;
                 }
-                $test = true;
                 if ($variation['stockLimitation'] === StartListingService::NO_STOCK_LIMITATION_) {
                     $stock = self::MAXIMUM_ALLOWED_STOCK;
                 } else {
