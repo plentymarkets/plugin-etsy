@@ -183,7 +183,7 @@ class StartListingService
         try {
             $this->addTranslations($listing, $listingId);
             $listing = $this->fillInventory($listingId, $listing);
-//            $this->addPictures($listingId, $listing);
+            $this->addPictures($listingId, $listing);
             $this->publish($listingId, $listing);
         } catch (ListingException $listingException) {
             $skus = [];
