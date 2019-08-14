@@ -32,6 +32,7 @@ abstract class AbstractBatchService
     const ADDITIONAL_FIELDS = [
         'isActive' => 'variation.isActive',
         'isMain' => 'variation.isMain',
+        'stockLimitation' => 'variation.stockLimitation',
         'texts' => 'texts',
         'defaultCategories' => 'defaultCategories',
         'attributes' => 'attributes',
