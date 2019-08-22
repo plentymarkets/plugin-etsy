@@ -801,50 +801,33 @@ class StartListingService
     protected function addPictures($listingId, $listing)
     {
         $orderReferrer = $this->settingsHelper->get($this->settingsHelper::SETTINGS_ORDER_REFERRER);
-
         if (!isset($listing['main']['images']['all'])) {
-            $messageBag = pluginApp(MessageBag::class, [
-                'messages' => [
-                    $this->translator
-                        ->trans(EtsyServiceProvider::PLUGIN_NAME . '::log.noImages')
-                ]
-            ]);
+            $messageBag = pluginApp(MessageBag::class, ['messages' => [$this->translator
+                ->trans(EtsyServiceProvider::PLUGIN_NAME . '::log.noImages')]]);
             throw new ListingException($messageBag,
                 $this->translator->trans(EtsyServiceProvider::PLUGIN_NAME . '::item.startListingError'));
         }
-
         $list = $listing['main']['images']['all'];
-
         $newList = [];
-
         foreach ($list as $key => $image) {
             foreach ($image['availabilities']['market'] as $availability) {
-                if ($availability === -1) {
+                if ($availability === -1){
                     $newList[] = $image;
-                    break;
                 }
-
-                if ($availability != $orderReferrer) {
+                if ($availability != $orderReferrer){
                     unset($list[$key]);
                 } else {
                     $newList[] = $image;
                 }
             }
         }
-
         $sortedList = $this->imageHelper->sortImagePosition($newList);
-
         $imageList = [];
-
         $slicedList = array_slice($sortedList, 0, 10);
-
         foreach ($slicedList as $image) {
-
             $response = $this->listingImageService->uploadListingImage($listingId, $image['url'], $image['position']);
-
             if (!isset($response['results']) || !is_array($response['results'])
                 || !isset($response['results'][0]) || !isset($response['results'][0]['listing_image_id'])) {
-
                 if (is_array($response) && isset($response['error_msg'])) {
                     $message = $response['error_msg'];
                 } else {
@@ -854,13 +837,11 @@ class StartListingService
                         $message = $this->translator->trans(EtsyServiceProvider::PLUGIN_NAME . '::log.emptyResponse');
                     }
                 }
-
                 $this->getLogger(EtsyServiceProvider::UPLOAD_LISTING_IMAGE)
                     ->addReference('imageId', $image['id'])
                     ->warning($this->translator->trans(EtsyServiceProvider::PLUGIN_NAME . '::log.imageFailed'),
                         $message);
             }
-
             $imageList[] = [
                 'imageId' => $image['id'],
                 'listingImageId' => $response['results'][0]['listing_image_id'],
@@ -869,16 +850,12 @@ class StartListingService
                 'imageUrl' => $image['url']
             ];
         }
-
         if (!count($imageList)) {
-            $messageBag = pluginApp(MessageBag::class, [
-                'messages' =>
-                    [$this->translator->trans(EtsyServiceProvider::PLUGIN_NAME . '::log.noImages')]
-            ]);
+            $messageBag = pluginApp(MessageBag::class, ['messages' =>
+                [$this->translator->trans(EtsyServiceProvider::PLUGIN_NAME . '::log.noImages')]]);
             throw new ListingException($messageBag,
                 $this->translator->trans(EtsyServiceProvider::PLUGIN_NAME . '::item.startListingError'));
         }
-
         $this->imageHelper->save($listingId, json_encode($imageList));
     }
 
