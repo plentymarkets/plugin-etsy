@@ -703,7 +703,9 @@ class UpdateListingService
         $newList = [];
         foreach ($list as $key => $image) {
             foreach ($image['availabilities']['market'] as $availability) {
-                if ($availability === -1) continue;
+                if ($availability === -1) {
+                    $newList[] = $image;
+                    continue; }
                 if ($availability != $orderReferrer){
                     unset($list[$key]);
                 } else {
