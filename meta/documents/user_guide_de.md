@@ -76,7 +76,7 @@ Verwende für Etsy das Katalog-Template **Listing - Etsy**.
 
 Damit du deine Artikel zu Etsy exportieren kannst, musst du einen Katalog erstellen. Verknüpfe anschließend im Katalog-Template die von Etsy vorgegebenen Felder mit in plentymarkets hinterlegten Artikeldaten. Die Katalog-Vorlagen werden automatisch einmal täglich zu Etsy exportiert, wenn du unter **System » Systemeinstellungen » Märkte » Etsy » Einstellungen** den **Artikelexport** aktiviert hast.
 
-#### Katalog erstellen
+#### Katalog erstellen:
 
 1. Öffne das Menü **Daten » Kataloge**.
 2. Klicke auf **Katalog erstellen**.
@@ -102,6 +102,10 @@ Nachdem du einen Katalog erstellt hast, verknüpfe die Datenfelder des Marktplat
 5. Nimm alle gewünschten Zuordnungen vor.<br/>
 → Alle Pflichtfelder müssen mit einer plentymarkets Datenquelle verknüpft werden.
 6. **Speichere** die Einstellungen.
+
+#### Besonderheiten des Etsy-Katalog-Templates:
+
+Im Datenfeld **Shop-Abteilung** des **Listing - Etsy**-Templates stehen alle Shop-Abteilungen, die du bei Etsy angelegt hast, in der Dropdown-Liste zur Verfügung und können mit Daten aus plentymarkets verknüpft werden.
 
 
 ## Etsy-Kategorien aktualisieren
