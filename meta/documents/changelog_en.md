@@ -1,5 +1,9 @@
 # Release notes for Etsy
 
+## v1.3.16 (2019-09-05)
+### Changed
+- Reverted the last change.
+
 ## v1.3.15 (2019-07-24)
 ### Fixed
 - The order item position gift wrap isn't take into account anymore while shipping profile calculation.
