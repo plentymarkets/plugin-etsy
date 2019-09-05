@@ -1,5 +1,9 @@
 # Release Notes für Etsy
 
+## v1.3.16 (2019-09-05)
+### Geändert
+- Letzte Änderung rückgängig gemacht.
+
 ## v1.3.15 (2019-07-24)
 ### Fixed
 - Die Auftragsposition "Als Geschenk" wir nun nicht mehr bei der Versandprofilberechnung berücksichtigt.
