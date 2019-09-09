@@ -30,8 +30,11 @@ abstract class AbstractBatchService
      * Fields that should be returned by the catalog, even though they don't get mapped
      */
     const ADDITIONAL_FIELDS = [
+        'itemId' => 'item.id',
+        'variationId' => 'variation.id',
         'isActive' => 'variation.isActive',
         'isMain' => 'variation.isMain',
+        'stockLimitation' => 'variation.stockLimitation',
         'texts' => 'texts',
         'defaultCategories' => 'defaultCategories',
         'attributes' => 'attributes',
