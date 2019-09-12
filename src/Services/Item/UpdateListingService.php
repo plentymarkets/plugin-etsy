@@ -372,7 +372,7 @@ class UpdateListingService
             }
         }
 
-        if (isset($listing['main']['shop_section_id'])) {
+        if (isset($listing['main']['shop_section_id'][0])) {
             $data['shop_section_id'] = $listing['main']['shop_section_id'];
         }
 
@@ -477,14 +477,24 @@ class UpdateListingService
         //loading default currency
         $defaultCurrency = $this->currencyExchangeRepository->getDefaultCurrency();
 
-        if (isset($listing['main']['attributes'][0])) {
-            $attributeOneId = $listing['main']['attributes'][0]['attributeId'];
-            $dependencies[] = $this->listingInventoryService::CUSTOM_ATTRIBUTE_1;
-        }
-
-        if (isset($listing['main']['attributes'][1])) {
-            $attributeTwoId = $listing['main']['attributes'][1]['attributeId'];
-            $dependencies[] = $this->listingInventoryService::CUSTOM_ATTRIBUTE_2;
+        foreach ($listing as $variation) {
+            if (!count($variation['attributes'])) {
+                continue;
+            }
+            if (count($variation['attributes']) > 2) {
+                $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
+                    ->addReference('variationId', $variation['variationId'])
+                    ->error('Etsy only allows 2 attributes');
+            }
+            if (isset($variation['attributes'][0])) {
+                $attributeOneId = $variation['attributes'][0]['attributeId'];
+                $dependencies[] = $this->listingInventoryService::CUSTOM_ATTRIBUTE_1;
+            }
+            if (isset($variation['attributes'][1])) {
+                $attributeTwoId = $variation['attributes'][1]['attributeId'];
+                $dependencies[] = $this->listingInventoryService::CUSTOM_ATTRIBUTE_2;
+            }
+            break;
         }
 
         $variationExportService->addPreloadTypes([$variationExportService::STOCK]);
