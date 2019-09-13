@@ -103,6 +103,10 @@ After you have created a catalogue, link the market's data fields with item data
 → The mandatory fields must be linked to a plentymarkets data source.
 6. **Save** the settings.
 
+#### Specifics of the Etsy catalogue template:
+
+The **Shop sections** data field in the **Listing - Etsy** template provides all shop sections that you created at Etsy. Those shop sections can be selected from the drop-down list and be linked to data saved in plentymarkets.
+
 
 ## Updating Etsy categories
 
