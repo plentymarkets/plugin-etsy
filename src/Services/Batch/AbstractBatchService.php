@@ -34,7 +34,7 @@ abstract class AbstractBatchService
         'variationId' => 'variation.id',
         'isActive' => 'variation.isActive',
         'isMain' => 'variation.isMain',
-        'stockLimitation' => 'variation.stockLimitation',
+//        'stockLimitation' => 'variation.stockLimitation',
         'texts' => 'texts',
         'defaultCategories' => 'defaultCategories',
         'attributes' => 'attributes',

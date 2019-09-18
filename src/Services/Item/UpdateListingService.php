@@ -521,15 +521,20 @@ class UpdateListingService
                 continue;
             }
 
-            if ($variation['stockLimitation'] === StartListingService::NO_STOCK_LIMITATION_) {
-                $quantity = UpdateListingStockService::MAXIMUM_ALLOWED_STOCK;
-            } else {
-                $variationExportService->preload($exportPreloadValueList);
-                $stock = $variationExportService->getAll($variation['variationId']);
-                $stock = $stock[$variationExportService::STOCK];
-                $quantity = $stock[0]['stockNet'];
-            }
+            //todo reactivate this feature when we have a solution for shipping time depending on quantity sold
+//            if ($variation['stockLimitation'] === StartListingService::NO_STOCK_LIMITATION_) {
+//                $quantity = UpdateListingStockService::MAXIMUM_ALLOWED_STOCK;
+//            } else {
+//                $variationExportService->preload($exportPreloadValueList);
+//                $stock = $variationExportService->getAll($variation['variationId']);
+//                $stock = $stock[$variationExportService::STOCK];
+//                $quantity = $stock[0]['stockNet'];
+//            }
 
+            $variationExportService->preload($exportPreloadValueList);
+            $stock = $variationExportService->getAll($variation['variationId']);
+            $stock = $stock[$variationExportService::STOCK];
+            $quantity = $stock[0]['stockNet'];
 
             //initialising property values array for articles with no attributes (single variation)
             $products[$counter]['property_values'] = [];
@@ -696,14 +701,16 @@ class UpdateListingService
     public function updateImages($listing, $listingId)
     {
         $orderReferrer = $this->settingsHelper->get($this->settingsHelper::SETTINGS_ORDER_REFERRER);
-        $etsyImages = json_decode($this->imageHelper->get((string) $listingId), true);
+        $etsyImages = json_decode($this->imageHelper->get((string)$listingId), true);
         $imageList = [];
         $list = $listing['main']['images']['all'];
         $newList = [];
         foreach ($list as $key => $image) {
             foreach ($image['availabilities']['market'] as $availability) {
-                if ($availability === -1) continue;
-                if ($availability != $orderReferrer){
+                if ($availability === -1) {
+                    continue;
+                }
+                if ($availability != $orderReferrer) {
                     unset($list[$key]);
                 } else {
                     $newList[] = $image;
@@ -712,17 +719,16 @@ class UpdateListingService
         }
         $slicedList = array_slice($newList, 0, 10);
         $sortedList = $this->imageHelper->sortImagePosition($slicedList);
-        foreach ($etsyImages as $etsyKey => $etsyImage){
-            foreach ($sortedList as $plentyKey => $plentyImage){
-                if ($etsyImage['imageId'] == $plentyImage['id'] && $etsyImage['position'] == $plentyImage['position'])
-                {
+        foreach ($etsyImages as $etsyKey => $etsyImage) {
+            foreach ($sortedList as $plentyKey => $plentyImage) {
+                if ($etsyImage['imageId'] == $plentyImage['id'] && $etsyImage['position'] == $plentyImage['position']) {
                     $imageList[] = $etsyImage;
                     unset($sortedList[$plentyKey]);
                     unset($etsyImages[$etsyKey]);
                 }
             }
         }
-        foreach ($etsyImages as $etsyImage){
+        foreach ($etsyImages as $etsyImage) {
             $response = $this->listingImageService->deleteListingImage($listingId, $etsyImage['listingImageId']);
             if (!isset($response['results']) || !is_array($response['results'])) {
                 $messages = [];

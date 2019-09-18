@@ -328,22 +328,39 @@ class StartListingService
                 continue;
             }
 
-            if ($variation['stockLimitation'] === self::NO_STOCK_LIMITATION_) {
-                $data['quantity'] = UpdateListingStockService::MAXIMUM_ALLOWED_STOCK;
-            } else {
-                if (!isset($stock) || $stock[0]['stockNet'] < 1) {
-                    $listing[$key]['failed'] = true;
-                    $failedVariations['variation-' . $variation['variationId']][] = $this->translator
-                        ->trans(EtsyServiceProvider::PLUGIN_NAME . '::log.variationNoStock');
-                    continue;
-                }
+            // todo reactivate this feature when we have a solution for shipping time depending on quantity sold
+//            if ($variation['stockLimitation'] === self::NO_STOCK_LIMITATION_) {
+//                $data['quantity'] = UpdateListingStockService::MAXIMUM_ALLOWED_STOCK;
+//            } else {
+//                if (!isset($stock) || $stock[0]['stockNet'] < 1) {
+//                    $listing[$key]['failed'] = true;
+//                    $failedVariations['variation-' . $variation['variationId']][] = $this->translator
+//                        ->trans(EtsyServiceProvider::PLUGIN_NAME . '::log.variationNoStock');
+//                    continue;
+//                }
+//
+//                if ($listing[$key]['failed']) {
+//                    continue;
+//                }
+//
+//
+//
+//                $data['quantity'] += (int)$stock[0]['stockNet'];
+//            }
 
-                if ($listing[$key]['failed']) {
-                    continue;
-                }
-
-                $data['quantity'] += (int)$stock[0]['stockNet'];
+            if (!isset($stock) || $stock[0]['stockNet'] < 1) {
+                $listing[$key]['failed'] = true;
+                $failedVariations['variation-' . $variation['variationId']][] = $this->translator
+                    ->trans(EtsyServiceProvider::PLUGIN_NAME . '::log.variationNoStock');
+                continue;
             }
+
+            if ($listing[$key]['failed']) {
+                continue;
+            }
+
+
+            $data['quantity'] += (int)$stock[0]['stockNet'];
 
             if (!isset($data['price']) || $data['price'] > $variation['sales_price']) {
                 if ($defaultCurrency == $etsyCurrency) {
@@ -646,14 +663,20 @@ class StartListingService
                 continue;
             }
 
-            if ($variation['stockLimitation'] === StartListingService::NO_STOCK_LIMITATION_) {
-                $quantity = UpdateListingStockService::MAXIMUM_ALLOWED_STOCK;
-            } else {
-                $variationExportService->preload($exportPreloadValueList);
-                $stock = $variationExportService->getAll($variation['variationId']);
-                $stock = $stock[$variationExportService::STOCK];
-                $quantity = $stock[0]['stockNet'];
-            }
+            //todo reactivate this feature when we have a solution for shipping time depending on quantity sold
+//            if ($variation['stockLimitation'] === StartListingService::NO_STOCK_LIMITATION_) {
+//                $quantity = UpdateListingStockService::MAXIMUM_ALLOWED_STOCK;
+//            } else {
+//                $variationExportService->preload($exportPreloadValueList);
+//                $stock = $variationExportService->getAll($variation['variationId']);
+//                $stock = $stock[$variationExportService::STOCK];
+//                $quantity = $stock[0]['stockNet'];
+//            }
+
+            $variationExportService->preload($exportPreloadValueList);
+            $stock = $variationExportService->getAll($variation['variationId']);
+            $stock = $stock[$variationExportService::STOCK];
+            $quantity = $stock[0]['stockNet'];
 
             //initialising property values array for articles with no attributes (single variation)
             $products[$counter]['property_values'] = [];
@@ -729,7 +752,7 @@ class StartListingService
 
             $products[$counter]['offerings'] = [
                 [
-                    'quantity' => (int) $quantity,
+                    'quantity' => (int)$quantity,
                     'is_enabled' => $variation['isActive']
                 ]
             ];
@@ -802,8 +825,12 @@ class StartListingService
     {
         $orderReferrer = $this->settingsHelper->get($this->settingsHelper::SETTINGS_ORDER_REFERRER);
         if (!isset($listing['main']['images']['all'])) {
-            $messageBag = pluginApp(MessageBag::class, ['messages' => [$this->translator
-                ->trans(EtsyServiceProvider::PLUGIN_NAME . '::log.noImages')]]);
+            $messageBag = pluginApp(MessageBag::class, [
+                'messages' => [
+                    $this->translator
+                        ->trans(EtsyServiceProvider::PLUGIN_NAME . '::log.noImages')
+                ]
+            ]);
             throw new ListingException($messageBag,
                 $this->translator->trans(EtsyServiceProvider::PLUGIN_NAME . '::item.startListingError'));
         }
@@ -811,10 +838,10 @@ class StartListingService
         $newList = [];
         foreach ($list as $key => $image) {
             foreach ($image['availabilities']['market'] as $availability) {
-                if ($availability === -1){
+                if ($availability === -1) {
                     $newList[] = $image;
                 }
-                if ($availability != $orderReferrer){
+                if ($availability != $orderReferrer) {
                     unset($list[$key]);
                 } else {
                     $newList[] = $image;
@@ -851,8 +878,10 @@ class StartListingService
             ];
         }
         if (!count($imageList)) {
-            $messageBag = pluginApp(MessageBag::class, ['messages' =>
-                [$this->translator->trans(EtsyServiceProvider::PLUGIN_NAME . '::log.noImages')]]);
+            $messageBag = pluginApp(MessageBag::class, [
+                'messages' =>
+                    [$this->translator->trans(EtsyServiceProvider::PLUGIN_NAME . '::log.noImages')]
+            ]);
             throw new ListingException($messageBag,
                 $this->translator->trans(EtsyServiceProvider::PLUGIN_NAME . '::item.startListingError'));
         }

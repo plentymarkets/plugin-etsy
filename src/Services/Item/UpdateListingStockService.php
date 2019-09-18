@@ -311,14 +311,20 @@ class UpdateListingStockService
                 if ($variation['skus'][0]['sku'] != $product['sku']) {
                     continue;
                 }
-                if ($variation['stockLimitation'] === StartListingService::NO_STOCK_LIMITATION_) {
-                    $stock = self::MAXIMUM_ALLOWED_STOCK;
-                } else {
-                    $stock = $variationExportService->getData($variationExportService::STOCK, $variation['variationId']);
-                    $stock = $stock[0]['stockNet'];
-                    // etsy only takes int´s as quantity, so we round it down. For example 9,5 will now be 9
-                    $stock = round($stock, 0, PHP_ROUND_HALF_DOWN);
-                }
+                //todo reactivate this feature when we have a solution for shipping time depending on quantity sold
+//                if ($variation['stockLimitation'] === StartListingService::NO_STOCK_LIMITATION_) {
+//                    $stock = self::MAXIMUM_ALLOWED_STOCK;
+//                } else {
+//                    $stock = $variationExportService->getData($variationExportService::STOCK, $variation['variationId']);
+//                    $stock = $stock[0]['stockNet'];
+//                    // etsy only takes int´s as quantity, so we round it down. For example 9,5 will now be 9
+//                    $stock = round($stock, 0, PHP_ROUND_HALF_DOWN);
+//                }
+
+                $stock = $variationExportService->getData($variationExportService::STOCK, $variation['variationId']);
+                $stock = $stock[0]['stockNet'];
+                // etsy only takes int´s as quantity, so we round it down. For example 9,5 will now be 9
+                $stock = round($stock, 0, PHP_ROUND_HALF_DOWN);
 
                 if ($stock > 0 && $variation['skus'][0] != $this->itemHelper::SKU_STATUS_ERROR) {
                     $hasPositiveStock = true;
