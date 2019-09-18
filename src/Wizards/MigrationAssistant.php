@@ -20,13 +20,6 @@ class MigrationAssistant extends WizardProvider
             'iconPath' => $this->getIcon(),
             'settingsHandlerClass' => MigrationAssistantSettingsHandler::class,
             'steps' => [
-                'step0' => [
-                    'title' => 'wizard.step0Title',
-                    'description' => 'wizard.step0Description',
-                    "sections"=> [
-
-                    ]
-                ],
                 'step1' => [
                     'title' => 'wizard.step1Title',
                     'description' => 'wizard.step1Description',
