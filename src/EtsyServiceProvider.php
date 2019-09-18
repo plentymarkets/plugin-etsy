@@ -23,6 +23,9 @@ use Etsy\DataProviders\ItemExportDataProvider;
 use Etsy\DataProviders\ItemUpdateDataProvider;
 use Etsy\Contracts\TaxonomyRepositoryContract;
 
+use Plenty\Modules\Wizard\Contracts\WizardContainerContract;
+use Etsy\Wizards\MigrationAssistant;
+
 /**
  * Class EtsyServiceProvider
  */
@@ -79,8 +82,10 @@ class EtsyServiceProvider extends ServiceProvider
 	 * @param CronContainer          $container
 	 * @param EventProceduresService $eventProceduresService
 	 */
-	public function boot(CronContainer $container, EventProceduresService $eventProceduresService, ReferenceContainer $referenceContainer)
+	public function boot(CronContainer $container, EventProceduresService $eventProceduresService, ReferenceContainer $referenceContainer, WizardContainerContract $wizardContainerContract)
 	{
+	    $wizardContainerContract->register('etsy-migration-assistant', MigrationAssistant::class);
+
 		$referenceContainer->add([
 			                         	'etsyListingId'  		=> 'etsyListingId',
 			                         	'etsyReceiptId'  		=> 'etsyReceiptId',
