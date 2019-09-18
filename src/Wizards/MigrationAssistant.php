@@ -23,9 +23,9 @@ class MigrationAssistant extends WizardProvider
                 'step0' => [
                     'title' => 'wizard.step0Title',
                     'description' => 'wizard.step0Description',
-                    "sections"=> [[
+                    "sections"=> [
 
-                    ]]
+                    ]
                 ],
                 'step1' => [
                     'title' => 'wizard.step1Title',
@@ -47,9 +47,9 @@ class MigrationAssistant extends WizardProvider
                 'step2' => [
                     'title' => 'wizard.step2Title',
                     'description' => 'wizard.step2Description',
-                    "sections"=> [[
+                    "sections"=> [
 
-                    ]]
+                    ]
                 ]
             ]
         ];
