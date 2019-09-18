@@ -35,8 +35,8 @@ class MigrationAssistantSettingsHandler implements AssistantSettingsHandler
         $checkboxValue = $parameters["data"]["checkbox"];
 
         if (is_bool($checkboxValue)) {
-//            $this->deleteImageData();
-//            $this->replaceOldSkuWithNewSku();
+            $this->deleteImageData();
+            $this->replaceOldSkuWithNewSku();
             if ($checkboxValue) {
                 $this->createAndAddPropertyToAllEtsyItems();
             }
