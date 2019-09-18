@@ -83,9 +83,9 @@ abstract class AbstractBatchService
     {
         $this->deleteDeprecatedListing();
 
-//        if ($lastRun) {
-//            $this->catalogExportService->setUpdatedSince($lastRun);
-//        }
+        if ($lastRun) {
+            $this->catalogExportService->setUpdatedSince($lastRun);
+        }
 
         $result = $this->catalogExportService->getResult();
 
