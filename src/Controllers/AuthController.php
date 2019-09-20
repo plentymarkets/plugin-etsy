@@ -40,6 +40,7 @@ class AuthController extends Controller
      */
     protected $settingsHelper;
 
+
     /**
      * @param AuthService   $service
      * @param AccountHelper $accountHelper
@@ -49,6 +50,7 @@ class AuthController extends Controller
         $this->service       = $service;
         $this->accountHelper = $accountHelper;
         $this->settingsHelper = $settingsHelper;
+
     }
 
     /**

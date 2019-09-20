@@ -1,4 +1,46 @@
 # Release notes for Etsy
+
+## v1.3.16 (2019-09-05)
+### Changed
+- Reverted the last change.
+
+## v1.3.15 (2019-07-24)
+### Fixed
+- The order item position gift wrap isn't take into account anymore while shipping profile calculation.
+
+## v1.3.14 (2019-07-17)
+### Added
+- Description can now contain softbreaks.
+
+## v1.3.13 (2019-07-05)
+- FIX Property import.
+
+## v1.3.12 (2019-05-28)
+### Changed 
+- Userguide was adjusted and now contains information about authentication.
+
+## v1.3.11 (2019-05-27)
+### Changed
+- Authenticationprocess changed.
+- Developer Apps are now obsolete.
+- Consumer Key and Shared Secret do not need to be added in the plugin config.
+
+## v1.3.10 (2019-05-24)
+### Added
+- Added plugin marketplace documentation
+
+## v1.3.9 (2019-05-13)
+### Fixed
+- A faulty log while item export was corrected.
+
+## v1.3.8 (2019-02-21)
+### Changed
+- The user guide was adjusted.
+
+## v1.3.7 (2019-01-29)
+### Added
+- Added a log before the order import.
+
 ## v1.3.6 (2019-01-17)
 ### Fixed
 - The data type for variation stock was adjusted.

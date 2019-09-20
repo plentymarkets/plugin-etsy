@@ -209,3 +209,4 @@ Das gesamte Projekt unterliegt der GNU AFFERO GENERAL PUBLIC LICENSE – weitere
 ## Hinweis
 
 Der Begriff 'Etsy' ist ein Markenzeichen von Etsy, Inc. Diese Anwendung verwendet die Etsy-API, sie wurde jedoch von Etsy weder befürwortet noch zertifiziert.
+

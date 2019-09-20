@@ -21,7 +21,6 @@ First, the interface has to be activated in the **System » System settings » M
 
 Go to **System » System settings » Markets » Etsy » Settings** to activate the item export, stock update and order import.
 
-
 ## Activating the order referrer
 
 In order to link items with Etsy, you have to activate the order referrer Etsy in the **System » System settings » Orders » Order referrer** menu.

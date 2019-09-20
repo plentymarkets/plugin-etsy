@@ -377,4 +377,5 @@ class UpdateListingStockService
 
         return $products;
     }
+
 }

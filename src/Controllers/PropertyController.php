@@ -32,7 +32,7 @@ class PropertyController extends Controller
             'recipient',
             'who_made',
             'style',
-        ]), $request->get('force', false) === 'true');
+        ]), $request->get('force', true) === 'true');
 
         return $response->make('', 204);
     }

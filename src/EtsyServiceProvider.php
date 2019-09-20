@@ -57,10 +57,9 @@ class EtsyServiceProvider extends ServiceProvider
     const LISTING_TRANSLATIONS = 'ListingTranslations';
 
 
-    
-	/**
-	 * @return void
-	 */
+    /**
+     * @return void
+     */
 	public function register()
 	{
 		$this->getApplication()->bind(TaxonomyRepositoryContract::class, TaxonomyRepository::class);

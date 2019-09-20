@@ -1,4 +1,46 @@
 # Release Notes für Etsy
+
+## v1.3.16 (2019-09-05)
+### Geändert
+- Letzte Änderung rückgängig gemacht.
+
+## v1.3.15 (2019-07-24)
+### Fixed
+- Die Auftragsposition "Als Geschenk" wir nun nicht mehr bei der Versandprofilberechnung berücksichtigt.
+
+## v1.3.14 (2019-07-17)
+### Hinzugefügt
+- Weiche Zeilenumbrüche werden jetzt in der Artikelbeschreibung beachtet.
+
+## v1.3.13 (2019-07-05)
+- FIX Merkmal-Import.
+
+## v1.3.12 (2019-05-28)
+### Geändert
+- Userguide entsprechend neuer Authentifizierung angepasst
+
+## v1.3.11 (2019-05-27)
+### Geändert
+- Authentifizierungsprozess umgezogen.
+- Developer Apps werden nicht mehr benötigt.
+- Consumer Key und Shared Secret müssen nicht mehr in der Plugin Config gepflegt werden.
+
+## v1.3.10 (2019-05-24)
+### Hinzugefügt
+- Plugin Marketplace Dokumentation angepasst
+
+## v1.3.9 (2019-05-13)
+### Fixed
+- Ein fehlerhafter Log beim Artikelexport wurde korrigiert.
+
+## v1.3.8 (2019-02-21)
+### Geändert
+- Der User Guide wurde angepasst.
+
+## v1.3.7 (2019-01-29)
+### Hinzugefügt
+- Ein Log vor dem Auftragsimport wurde hinzugefügt.
+
 ## v1.3.6 (2019-01-17)
 ### Fixed
 - Der Datentyp für den Bestand von Varianten wurde angepasst.
