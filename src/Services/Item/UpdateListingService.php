@@ -509,10 +509,13 @@ class UpdateListingService
         }
 
         $failedVariations = [];
-        $hasActiveVariations = false;
+        $isEveryVariationDisabled = false;
         $counter = 0;
+        $isEnabled = false;
+        $disabledCounter = 0;
 
         foreach ($listing as $key => $variation) {
+
             if (!$variation['isActive'] && !isset($variation['skus'][0]['sku'])) {
                 continue;
             }
@@ -535,6 +538,14 @@ class UpdateListingService
             $stock = $variationExportService->getAll($variation['variationId']);
             $stock = $stock[$variationExportService::STOCK];
             $quantity = $stock[0]['stockNet'];
+
+            if ($quantity === 0 && !$variation['isActive']) {
+                $isEnabled = false;
+            } elseif ($quantity === 0 && $variation['isActive']) {
+                $isEnabled = false;
+            } elseif ($quantity > 1 && $variation['isActive']) {
+                $isEnabled = true;
+            }
 
             //initialising property values array for articles with no attributes (single variation)
             $products[$counter]['property_values'] = [];
@@ -617,25 +628,31 @@ class UpdateListingService
             $products[$counter]['offerings'] = [
                 [
                     'quantity' => (int)$quantity,
-                    'is_enabled' => $variation['isActive']
+                    'is_enabled' => $isEnabled
                 ]
             ];
 
             $products[$counter]['offerings'][0]['price'] = $price;
 
-            $hasActiveVariations = true;
+            if (!$variation['isActive']){
+                $disabledCounter++;
+            }
             $counter++;
         }
 
+        if ($counter === $disabledCounter){
+            $isEveryVariationDisabled = true;
+        }
+
         //logging failed article / variations
-        if (!$hasActiveVariations || count($failedVariations)) {
-            $exceptionMessage = (!$hasActiveVariations) ? 'log.articleNotListable' : 'log.variationsNotListed';
+        if ($isEveryVariationDisabled || count($failedVariations)) {
+            $exceptionMessage = ($isEveryVariationDisabled) ? 'log.articleNotListable' : 'log.variationsNotListed';
 
             foreach ($failedVariations as $variationId => $variationErrors) {
                 $failedVariations[$variationId] = implode(",\n", $variationErrors);
             }
 
-            if (!$hasActiveVariations) {
+            if ($isEveryVariationDisabled) {
                 $this->listingService->updateListing($listingId, ['state' => 'inactive'], $language);
                 $errors = array_unshift($failedVariations, $this->translator
                     ->trans(EtsyServiceProvider::PLUGIN_NAME . '::log.noVariations'));
