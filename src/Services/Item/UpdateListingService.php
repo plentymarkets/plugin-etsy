@@ -531,15 +531,20 @@ class UpdateListingService
                 continue;
             }
 
-            if ($variation['stockLimitation'] === StartListingService::NO_STOCK_LIMITATION_) {
-                $quantity = UpdateListingStockService::MAXIMUM_ALLOWED_STOCK;
-            } else {
-                $variationExportService->preload($exportPreloadValueList);
-                $stock = $variationExportService->getAll($variation['variationId']);
-                $stock = $stock[$variationExportService::STOCK];
-                $quantity = $stock[0]['stockNet'];
-            }
+            //todo reactivate this feature when we have a solution for shipping time depending on quantity sold
+//            if ($variation['stockLimitation'] === StartListingService::NO_STOCK_LIMITATION_) {
+//                $quantity = UpdateListingStockService::MAXIMUM_ALLOWED_STOCK;
+//            } else {
+//                $variationExportService->preload($exportPreloadValueList);
+//                $stock = $variationExportService->getAll($variation['variationId']);
+//                $stock = $stock[$variationExportService::STOCK];
+//                $quantity = $stock[0]['stockNet'];
+//            }
 
+            $variationExportService->preload($exportPreloadValueList);
+            $stock = $variationExportService->getAll($variation['variationId']);
+            $stock = $stock[$variationExportService::STOCK];
+            $quantity = $stock[0]['stockNet'];
 
             //initialising property values array for articles with no attributes (single variation)
             $products[$counter]['property_values'] = [];

@@ -328,22 +328,39 @@ class StartListingService
                 continue;
             }
 
-            if ($variation['stockLimitation'] === self::NO_STOCK_LIMITATION_) {
-                $data['quantity'] = UpdateListingStockService::MAXIMUM_ALLOWED_STOCK;
-            } else {
-                if (!isset($stock) || $stock[0]['stockNet'] < 1) {
-                    $listing[$key]['failed'] = true;
-                    $failedVariations['variation-' . $variation['variationId']][] = $this->translator
-                        ->trans(EtsyServiceProvider::PLUGIN_NAME . '::log.variationNoStock');
-                    continue;
-                }
+            // todo reactivate this feature when we have a solution for shipping time depending on quantity sold
+//            if ($variation['stockLimitation'] === self::NO_STOCK_LIMITATION_) {
+//                $data['quantity'] = UpdateListingStockService::MAXIMUM_ALLOWED_STOCK;
+//            } else {
+//                if (!isset($stock) || $stock[0]['stockNet'] < 1) {
+//                    $listing[$key]['failed'] = true;
+//                    $failedVariations['variation-' . $variation['variationId']][] = $this->translator
+//                        ->trans(EtsyServiceProvider::PLUGIN_NAME . '::log.variationNoStock');
+//                    continue;
+//                }
+//
+//                if ($listing[$key]['failed']) {
+//                    continue;
+//                }
+//
+//
+//
+//                $data['quantity'] += (int)$stock[0]['stockNet'];
+//            }
 
-                if ($listing[$key]['failed']) {
-                    continue;
-                }
-
-                $data['quantity'] += (int)$stock[0]['stockNet'];
+            if (!isset($stock) || $stock[0]['stockNet'] < 1) {
+                $listing[$key]['failed'] = true;
+                $failedVariations['variation-' . $variation['variationId']][] = $this->translator
+                    ->trans(EtsyServiceProvider::PLUGIN_NAME . '::log.variationNoStock');
+                continue;
             }
+
+            if ($listing[$key]['failed']) {
+                continue;
+            }
+
+
+            $data['quantity'] += (int)$stock[0]['stockNet'];
 
             if (!isset($data['price']) || $data['price'] > $variation['sales_price']) {
                 if ($defaultCurrency == $etsyCurrency) {
@@ -646,14 +663,21 @@ class StartListingService
                 continue;
             }
 
-            if ($variation['stockLimitation'] === StartListingService::NO_STOCK_LIMITATION_) {
-                $quantity = UpdateListingStockService::MAXIMUM_ALLOWED_STOCK;
-            } else {
-                $variationExportService->preload($exportPreloadValueList);
-                $stock = $variationExportService->getAll($variation['variationId']);
-                $stock = $stock[$variationExportService::STOCK];
-                $quantity = $stock[0]['stockNet'];
-            }
+            //todo reactivate this later
+//
+//            if ($variation['stockLimitation'] === StartListingService::NO_STOCK_LIMITATION_) {
+//                $quantity = UpdateListingStockService::MAXIMUM_ALLOWED_STOCK;
+//            } else {
+//                $variationExportService->preload($exportPreloadValueList);
+//                $stock = $variationExportService->getAll($variation['variationId']);
+//                $stock = $stock[$variationExportService::STOCK];
+//                $quantity = $stock[0]['stockNet'];
+//            }
+
+            $variationExportService->preload($exportPreloadValueList);
+            $stock = $variationExportService->getAll($variation['variationId']);
+            $stock = $stock[$variationExportService::STOCK];
+            $quantity = $stock[0]['stockNet'];
 
             //initialising property values array for articles with no attributes (single variation)
             $products[$counter]['property_values'] = [];
