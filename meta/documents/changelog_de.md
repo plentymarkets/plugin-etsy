@@ -1,5 +1,19 @@
 # Release Notes für Etsy
 
+## v2.0.2 (2019-09-23)
+### Hinzugefügt
+- Changelog angepasst
+
+## v2.0.1 (2019-09-23)
+### Geändert
+- Quellcode nicht mehr einsehbar
+
+## v2.0.0 (2019-09-23)
+### Hinzugefügt
+- Varianten können jetzt exportiert werden
+- Performance Verbesserungen
+- Katalog als neue Produktfeldverknüpfung 
+
 ## v1.3.16 (2019-09-05)
 ### Geändert
 - Letzte Änderung rückgängig gemacht.
