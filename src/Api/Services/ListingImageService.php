@@ -22,20 +22,36 @@ class ListingImageService
 		$this->client = $client;
 	}
 
-	/**
-	 * @param int    $listingId
-	 * @param string $image
-	 *
-	 * @return mixed
-	 */
-	public function uploadListingImage($listingId, $image)
+    /**
+     * @param $listingId
+     * @param $image
+     * @param $position
+     * @return array
+     * @throws \Exception
+     */
+	public function uploadListingImage($listingId, $image, $position)
 	{
 		$data = [
 			'image' => $image,
+            'rank' => $position
 		];
 
 		return $this->client->call('uploadListingImage', [
 			'listing_id' => $listingId,
 		], $data);
+	}
+
+    /**
+     * @param $listingId
+     * @param $imageId
+     * @return array
+     * @throws \Exception
+     */
+    public function deleteListingImage($listingId, $imageId)
+    {
+        return $this->client->call('deleteListingImage', [
+            'listing_id' => $listingId,
+            'listing_image_id' => $imageId
+        ]);
 	}
 }

@@ -36,7 +36,7 @@ class TaxonomyController extends Controller
 
         $lang = 'de'; // TODO EN file must be downloaded and, due to its huge size, stored on S3 // $request->get('lang', 'de');
 
-        $taxonomy = $taxonomyRepo->get($taxonomyId, $lang, $with);
+        $taxonomy = $taxonomyRepo->get($taxonomyId, $with);
 
         return $response->json($taxonomy);
     }
@@ -80,7 +80,7 @@ class TaxonomyController extends Controller
         /** @var TaxonomyRepositoryContract $taxonomyRepo */
         $taxonomyRepo = pluginApp(TaxonomyRepositoryContract::class);
 
-        $correlations = $taxonomyRepo->getCorrelations($request->get('lang', 'de'));
+        $correlations = []; //todo
 
         return $response->json($correlations);
     }
@@ -98,7 +98,7 @@ class TaxonomyController extends Controller
         /** @var TaxonomyRepositoryContract $taxonomyRepo */
         $taxonomyRepo = pluginApp(TaxonomyRepositoryContract::class);
 
-        $taxonomyRepo->saveCorrelations($request->get('correlations', []), $request->get('lang', 'de'));
+        //$taxonomyRepo->saveCorrelations($request->get('correlations', []), $request->get('lang', 'de'));
 
         return $response->make('', 204);
     }

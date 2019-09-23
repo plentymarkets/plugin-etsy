@@ -26,6 +26,14 @@ class ImageHelper
 		$this->dynamoDbRepo = $dynamoDbRepository;
 	}
 
+	public function delete($id) {
+        return $this->dynamoDbRepo->deleteItem(SettingsHelper::PLUGIN_NAME, self::TABLE_NAME, [
+            'id' => [
+                DynamoDbRepositoryContract::FIELD_TYPE_STRING => $id
+            ]
+        ]);
+    }
+
 	/**
 	 * Save image data to database.
 	 *
@@ -68,5 +76,46 @@ class ImageHelper
 		}
 
 		return $default;
+	}
+
+    public function update($id, $value)
+    {
+        return $this->dynamoDbRepo->putItem(SettingsHelper::PLUGIN_NAME, self::TABLE_NAME, [
+            'id' => [
+                DynamoDbRepositoryContract::FIELD_TYPE_STRING => $id
+            ],
+            'value' => [
+                DynamoDbRepositoryContract::FIELD_TYPE_STRING => $value
+            ]
+        ]);
+	}
+
+    /**
+     * Sort the image array to make it look like the plenty image positions and iterate every position
+     * because Etsy image positions start at 1
+     *
+     * @param $imageList
+     * @return mixed
+     */
+    public function sortImagePosition($imageList)
+    {
+        $position = [];
+
+        foreach ($imageList as $key => $row) {
+            $position[$key]  = $row['position'];
+        }
+
+        array_multisort($position, SORT_ASC, $imageList);
+
+        $counter = 1;
+
+        foreach ($imageList as $key => $imagePosition) {
+
+            $imageList[$key]['position'] = $counter;
+
+            $counter++;
+        }
+
+        return $imageList;
 	}
 }

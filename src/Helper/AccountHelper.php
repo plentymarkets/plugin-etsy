@@ -80,9 +80,8 @@ class AccountHelper
 	 */
 	public function getConsumerKey():string
 	{
-        return (string) EtsyServiceProvider::CONSUMER_KEY;
-
-    }
+		return (string) EtsyServiceProvider::CONSUMER_KEY;
+	}
 
 	/**
 	 * Get the consumer shared secret.

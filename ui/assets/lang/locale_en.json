@@ -27,7 +27,8 @@
       "shopId": "Shop ID",
       "mainLanguage": "Main Shop Language",
       "exportLanguages": "Export languages",
-      "processes": "Processes"
+      "processes": "Processes",
+      "shopName": "Shop name"
     },
     "languages": {
       "english": "English",

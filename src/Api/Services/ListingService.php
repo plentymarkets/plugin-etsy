@@ -26,6 +26,22 @@ class ListingService
 		$this->client = $client;
 	}
 
+    /**
+     * Performs a getListing call to Etsy.
+     *
+     * @param $listingId
+     * @param $language
+     * @return array
+     */
+	public function getListing($listingId)
+    {
+        $params = [
+          'listing_id' => $listingId
+        ];
+
+        return $this->client->call('getListing', $params);
+    }
+
 	/**
 	 * Performs an createListing call to Etsy.
 	 *
@@ -39,15 +55,14 @@ class ListingService
 		return $this->client->call('createListing', ['language' => $language], $data);
 	}
 
-	/**
-	 * Performs an updateListing call to Etsy.
-	 *
-	 * @param int    $id
-	 * @param array  $data
-	 * @param string $language
-	 *
-	 * @return bool
-	 */
+    /**
+     * Performs an updateListing call to Etsy.
+     *
+     * @param int $id
+     * @param array $data
+     * @param string $language
+     * @return array
+     */
 	public function updateListing($id, $data, $language = '')
 	{
 		$params['listing_id'] = $id;
@@ -57,9 +72,7 @@ class ListingService
 			$params['language'] = $language;
 		}
 
-		$this->client->call('updateListing', $params, $data);
-
-		return true;
+		return $this->client->call('updateListing', $params, $data);
 	}
 
 	/**

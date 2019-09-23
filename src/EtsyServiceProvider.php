@@ -21,24 +21,45 @@ use Etsy\Crons\OrderImportCron;
 use Etsy\Factories\ItemDataProviderFactory;
 use Etsy\DataProviders\ItemExportDataProvider;
 use Etsy\DataProviders\ItemUpdateDataProvider;
-use Etsy\DataProviders\TaxonomyDeDataProvider;
 use Etsy\Contracts\TaxonomyRepositoryContract;
+
+use Plenty\Modules\Wizard\Contracts\WizardContainerContract;
+use Etsy\Wizards\MigrationAssistant;
 
 /**
  * Class EtsyServiceProvider
  */
 class EtsyServiceProvider extends ServiceProvider
 {
-    const PLUGIN_NAME = 'Etsy';
 
     const CONSUMER_KEY = "6d6s53b0qd09nhw37253ero8";
     const CONSUMER_SECRET = "dzi5pnxwxm";
 
+    const PLUGIN_NAME = 'Etsy';
+
+    const START_LISTING_SERVICE = 'StartListingService';
+    const START_LISTING_INVENTORY = 'AddInventory';
+    const UPDATE_LISTING_SERVICE = 'UpdateListingService';
+    const UPDATE_LISTING_INVENTORY = 'UpdateInventory';
+    const DELETE_LISTING_SERVICE = 'DeleteListingService';
+    const ADD_LISTING_TRANSLATIONS = 'AddListingTranslations';
+
+    const UPLOAD_LISTING_IMAGE = 'UpdateListingImages';
+    const DELETE_LISTING_IMAGE = 'DeleteListingImages';
+
+    const ITEM_EXPORT_SERVICE = 'ItemExportService';
+    const STOCK_UPDATE_SERVICE = 'ItemUpdateStockService';
+
+    const LISTING_UPDATE_STOCK_SERVICE = 'UpdateListingStockService';
+
+    const ITEM_EXPORT_CRON = 'ItemExportCron';
+
+    const LISTING_TRANSLATIONS = 'ListingTranslations';
 
 
     /**
-	 * @return void
-	 */
+     * @return void
+     */
 	public function register()
 	{
 		$this->getApplication()->bind(TaxonomyRepositoryContract::class, TaxonomyRepository::class);
@@ -49,19 +70,21 @@ class EtsyServiceProvider extends ServiceProvider
 		$this->getApplication()->bind('Etsy\item.dataprovider.export', ItemExportDataProvider::class);
 		$this->getApplication()->bind('Etsy\item.dataprovider.update', ItemUpdateDataProvider::class);
 
-		$this->getApplication()->bind('Etsy\taxonomy.dataprovider.de', TaxonomyDeDataProvider::class);
-
 		$this->getApplication()->singleton(ItemDataProviderFactory::class);
 
 		$this->getApplication()->register(EtsyRouteServiceProvider::class);
+
+		$this->getApplication()->register(CatalogBootServiceProvider::class);
 	}
 
 	/**
 	 * @param CronContainer          $container
 	 * @param EventProceduresService $eventProceduresService
 	 */
-	public function boot(CronContainer $container, EventProceduresService $eventProceduresService, ReferenceContainer $referenceContainer)
+	public function boot(CronContainer $container, EventProceduresService $eventProceduresService, ReferenceContainer $referenceContainer, WizardContainerContract $wizardContainerContract)
 	{
+	    $wizardContainerContract->register('etsy-migration-assistant', MigrationAssistant::class);
+
 		$referenceContainer->add([
 			                         	'etsyListingId'  		=> 'etsyListingId',
 			                         	'etsyReceiptId'  		=> 'etsyReceiptId',

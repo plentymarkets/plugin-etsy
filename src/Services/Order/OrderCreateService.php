@@ -293,7 +293,7 @@ class OrderCreateService
 
         if (is_array($transactions)) {
             foreach ($transactions as $transaction) {
-                $itemVariationId = $this->matchVariationId((string)$transaction['listing_id']);
+                $itemVariationId = $this->matchVariationId($transaction['product_data']['sku']);
                 $variation       = $this->getVariationById($itemVariationId);
 
                 if (!$variation) {
@@ -323,11 +323,6 @@ class OrderCreateService
                             'typeId'    => OrderPropertyType::SELLER_ACCOUNT,
                             'subTypeId' => 6,
                             'value'     => (string)$transaction['listing_id'],
-                        ],
-                        [
-                            'typeId'    => 12,
-                            'subTypeId' => 6,
-                            'value'     => (string)$transaction['transaction_id'],
                         ],
                     ],
                 ];

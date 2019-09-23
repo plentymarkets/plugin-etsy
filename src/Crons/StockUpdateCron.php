@@ -2,6 +2,7 @@
 
 namespace Etsy\Crons;
 
+use Carbon\Carbon;
 use Plenty\Modules\Cron\Contracts\CronHandler as Cron;
 
 use Etsy\Services\Batch\Item\ItemUpdateStockService;
@@ -41,11 +42,16 @@ class StockUpdateCron extends Cron
 		{
 			if($accountHelper->isProcessActive(SettingsHelper::SETTINGS_PROCESS_STOCK_UPDATE))
 			{
-				$service->run([
-					              'lastRun' => $this->lastRun(),
-				              ]);
+                $lastRun = $this->lastRun();
 
-				$this->saveLastRun();
+                if ($lastRun) {
+                    /** @var Carbon $lastRun */
+                    $lastRun = pluginApp(Carbon::class, [$lastRun]);
+                }
+
+                $service->run($lastRun);
+
+                $this->saveLastRun();
 			}
 		}
 		catch(\Exception $ex)

@@ -2,6 +2,10 @@
 
 namespace Etsy\Services\Batch\Item;
 
+use Etsy\EtsyServiceProvider;
+use Etsy\Helper\ImageHelper;
+use Etsy\Helper\SettingsHelper;
+use Plenty\Modules\Item\Search\Contracts\VariationElasticSearchScrollRepositoryContract;
 use Plenty\Modules\Item\Variation\Models\Variation;
 use Plenty\Modules\Item\VariationSku\Contracts\VariationSkuRepositoryContract;
 use Plenty\Modules\Item\VariationSku\Models\VariationSku;
@@ -13,7 +17,7 @@ use Etsy\Helper\OrderHelper;
 use Etsy\Services\Item\DeleteListingService;
 use Etsy\Services\Item\UpdateListingStockService;
 use Etsy\Services\Batch\AbstractBatchService;
-use Etsy\Factories\ItemDataProviderFactory;
+use Plenty\Plugin\Application;
 use Plenty\Plugin\Log\Loggable;
 
 /**
@@ -21,114 +25,121 @@ use Plenty\Plugin\Log\Loggable;
  */
 class ItemUpdateStockService extends AbstractBatchService
 {
-	use Loggable;
+    use Loggable;
 
-	/**
-	 * @var UpdateListingStockService
-	 */
-	private $updateListingStockService;
+    /**
+     * @var UpdateListingStockService
+     */
+    protected $updateListingStockService;
 
-	/**
-	 * @var DeleteListingService
-	 */
-	private $deleteListingService;
+    /**
+     * @var DeleteListingService
+     */
+    protected $deleteListingService;
 
-	/**
-	 * @var AccountHelper
-	 */
-	private $accountHelper;
+    /**
+     * @var AccountHelper
+     */
+    protected $accountHelper;
 
-	/**
-	 * @var OrderHelper
-	 */
-	private $orderHelper;
+    /**
+     * @var ImageHelper
+     */
+    protected $imageHelper;
 
-	/**
-	 * @param ItemDataProviderFactory        $itemDataProviderFactory
-	 * @param UpdateListingStockService      $updateListingStockService
-	 * @param DeleteListingService           $deleteListingService
-	 * @param AccountHelper                  $accountHelper
-	 * @param OrderHelper                    $orderHelper
-	 */
-	public function __construct(
-		ItemDataProviderFactory $itemDataProviderFactory,
-		UpdateListingStockService $updateListingStockService,
-		DeleteListingService $deleteListingService,
-		AccountHelper $accountHelper,
-		OrderHelper $orderHelper)
-	{
-		$this->updateListingStockService = $updateListingStockService;
-		$this->deleteListingService      = $deleteListingService;
-		$this->accountHelper             = $accountHelper;
-		$this->orderHelper               = $orderHelper;
+    /**
+     * @var OrderHelper
+     */
+    protected $orderHelper;
 
-		parent::__construct($itemDataProviderFactory->make('update'));
-	}
+    /**
+     * @param UpdateListingStockService      $updateListingStockService
+     * @param DeleteListingService           $deleteListingService
+     * @param AccountHelper                  $accountHelper
+     * @param OrderHelper                    $orderHelper
+     */
+    public function __construct(
+        UpdateListingStockService $updateListingStockService,
+        DeleteListingService $deleteListingService,
+        AccountHelper $accountHelper,
+        OrderHelper $orderHelper,
+        ImageHelper $imageHelper)
+    {
+        $this->updateListingStockService = $updateListingStockService;
+        $this->deleteListingService      = $deleteListingService;
+        $this->accountHelper             = $accountHelper;
+        $this->orderHelper               = $orderHelper;
+        $this->imageHelper               = $imageHelper;
 
-	/**
-	 * Update all article which are not updated yet.
-	 *
-	 * @param RecordList $records
-	 *
-	 * @return void
-	 */
-	protected function export(RecordList $records)
-	{
-		if($this->accountHelper->isValidConfig())
-		{
-			$this->deleteDeprecatedListing();
+        parent::__construct(pluginApp(VariationElasticSearchScrollRepositoryContract::class));
+    }
 
-			$this->updateListingsStock($records);
-		}
-	}
+    /**
+     * Update all article which are not updated yet.
+     *
+     * @param array $catalogResult
+     *
+     * @return void
+     */
+    protected function export(array $catalogResult)
+    {
+        $listings = [];
 
-	/**
-	 * Update listings on Etsy.
-	 *
-	 * @param RecordList $records
-	 */
-	private function updateListingsStock(RecordList $records)
-	{
-		foreach($records as $record)
-		{
-			try
-			{
-				$this->updateListingStockService->updateStock($record);
-			}
-			catch(\Exception $ex)
-			{
-				$this->getLogger(__FUNCTION__)
-					->setReferenceType('variationId')
-					->setReferenceValue($record->variationBase->id)
-					->error('Etsy::item.stockUpdateError', $ex->getMessage());
-			}
-		}
-	}
+        foreach ($catalogResult as $variation) {
 
-	/**
-	 * Delete listings on Etsy and the entry in the market status table if the variation was deleted.
-	 */
-	private function deleteDeprecatedListing()
-	{
-		$filter = [
-			'marketId' => $this->orderHelper->getReferrerId(),
-		];
+            //for convenience we get rid of all skus that are not related to Etsy
+            $skus = [];
 
-		/** @var VariationSkuRepositoryContract $variationSkuRepo */
-		$variationSkuRepo = pluginApp(VariationSkuRepositoryContract::class);
 
-		$variationSkuList = $variationSkuRepo->search($filter);
+            foreach ($variation['skus'] as $sku) {
+                if ($sku['marketId'] == $this->settingshelper->get($this->settingshelper::SETTINGS_ORDER_REFERRER)) {
+                    $skus[] = $sku;
+                    break;
+                }
+            }
 
-		/** @var VariationSku $variationSku */
-		foreach($variationSkuList as $variationSku)
-		{
-			if($variationSku->deletedAt)
-			{
-				if($this->deleteListingService->delete($variationSku->sku))
-				{
-					$variationSkuRepo->delete((int) $variationSku->id);
-				}
-			}
-		}
-	}
+            if (count($skus) < 1) continue;
+
+            $variation['skus'] = $skus;
+
+            if ($variation['isMain'] == true) {
+                $listings[$variation['itemId']]['main'] = $variation;
+                continue;
+            }
+
+            $listings[$variation['itemId']][] = $variation;
+
+        }
+
+        foreach ($listings as $listing) {
+            try {
+                $this->updateListingsStock($listing);
+
+            } catch (\Exception $exception) {
+                $this->getLogger(EtsyServiceProvider::STOCK_UPDATE_SERVICE)
+                    ->addReference('itemId', $listing['main']['itemId'])
+                    ->warning(EtsyServiceProvider::PLUGIN_NAME . 'item.stockUpdateError', [
+                        $exception->getMessage()
+                    ]);
+            }
+        }
+    }
+
+    /**
+     * Update listings stock on Etsy.
+     * @param array $listing
+     */
+    protected function updateListingsStock(array $listing)
+    {
+            try
+            {
+                $this->updateListingStockService->updateStock($listing);
+            }
+            catch(\Exception $ex)
+            {
+                $this->getLogger(__FUNCTION__)
+                    ->addReference('itemId', $listing['main']['itemId'])
+                    ->error(EtsyServiceProvider::PLUGIN_NAME . 'item.stockUpdateError', $ex->getMessage());
+            }
+    }
 }

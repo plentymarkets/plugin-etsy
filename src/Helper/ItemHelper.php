@@ -2,8 +2,11 @@
 
 namespace Etsy\Helper;
 
+use Carbon\Carbon;
 use Etsy\Contracts\LegalInformationRepositoryContract;
 use Etsy\Models\LegalInformation;
+use Illuminate\Database\Eloquent\Collection;
+use Plenty\Modules\Item\ItemShippingProfiles\Models\ItemShippingProfiles;
 use Plenty\Modules\Item\Variation\Models\Variation;
 use Plenty\Modules\Item\VariationSku\Models\VariationSku;
 use Plenty\Modules\Market\Helper\Contracts\MarketAttributeHelperRepositoryContract;
@@ -62,6 +65,26 @@ class ItemHelper
     private $legalInformationRepository;
 
     /**
+     * Possible value for SKU status
+     */
+    const SKU_STATUS_ACTIVE = 'ACTIVE';
+
+    /**
+     * Possible value for SKU status
+     */
+    const SKU_STATUS_INACTIVE = 'INACTIVE';
+
+    /**
+     * Possible value for SKU status
+     */
+    const SKU_STATUS_ERROR = 'ERROR';
+
+    /**
+     * Possible value for SKU status
+     */
+    const SKU_STATUS_SENT = 'SENT';
+
+    /**
      * ItemHelper constructor.
      *
      * @param Application $app
@@ -86,56 +109,6 @@ class ItemHelper
         $this->orderHelper = $orderHelper;
         $this->legalInformationRepository = $legalInformationRepository;
     }
-
-	/**
-	 * Get the stock based on the settings.
-	 *
-	 * @param Record $item
-	 *
-	 * @return int
-	 */
-	public function getStock(Record $item)
-	{
-		if($item->variationBase->limitOrderByStockSelect == 2)
-		{
-			$stock = 999;
-		}
-		elseif($item->variationBase->limitOrderByStockSelect == 1 && $item->variationStock->stockNet > 0)
-		{
-			if($item->variationStock->stockNet > 999)
-			{
-				$stock = 999;
-			}
-			else
-			{
-				$stock = intval($item->variationStock->stockNet);
-			}
-		}
-		elseif($item->variationBase->limitOrderByStockSelect == 0)
-		{
-			if($item->variationStock->stockNet > 999)
-			{
-				$stock = 999;
-			}
-			else
-			{
-				if($item->variationStock->stockNet > 0)
-				{
-					$stock = intval($item->variationStock->stockNet);
-				}
-				else
-				{
-					$stock = 0;
-				}
-			}
-		}
-		else
-		{
-			$stock = 0;
-		}
-
-		return $stock;
-	}
 
     /**
      * Gets the legal information by language.
@@ -162,6 +135,61 @@ class ItemHelper
         return $this->legalInformationCache[$lang];
     }
 
+    /**
+     * Searches the etsy SKU for given variation. Returns null if none exists yet
+     *
+     * @param $variationId
+     * @return null|VariationSku
+     */
+    public function getVariationSku($variationId)
+    {
+        /** @var Collection $skus */
+        $skus = $this->variationSkuRepository->search([
+            'marketId' => $this->orderHelper->getReferrerId(),
+            'variationId' => $variationId
+        ]);
+
+        if (isset($skus[0])) {
+            return $skus[0];
+        }
+
+        return null;
+    }
+
+    /**
+     * Sets the updated timestamp for an sku if it exists. Returns false if the variation has no sku for etsy yet
+     *
+     * @param $variationId
+     * @return bool
+     */
+    public function updateVariationSkuTimestamp($variationId)
+    {
+        $sku = $this->getVariationSku($variationId);
+
+        if ($sku) {
+            $sku->save();
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param $variationId
+     * @return bool
+     */
+    public function updateVariationSkuStockTimestamp($variationId)
+    {
+        $sku = $this->getVariationSku($variationId);
+
+        if (!$sku) return false;
+
+        $sku->stockUpdatedAt = date('Y-m-d H:i:s');
+        $sku->save();
+
+        return true;
+    }
+
 	/**
 	 * @param int $sku
 	 * @param int $variationId
@@ -181,6 +209,32 @@ class ItemHelper
 
 	}
 
+    public function updateVariationSkuStatus($variationId, $status = self::SKU_STATUS_INACTIVE)
+    {
+        $skus = $this->variationSkuRepository->search([
+            'variationId' => $variationId,
+            'marketId' => $this->orderHelper->getReferrerId()
+        ]);
+
+        if (count($skus) < 1) return false;
+
+        foreach ($skus as $sku) {
+            $sku->status = $status;
+            $this->variationSkuRepository->update($sku->toArray(), $sku->id);
+        }
+
+        return true;
+    }
+
+    public function generateParentSku($listingId, $variationData)
+    {
+        $etsySku = $listingId.'-'.$variationData['id'];
+
+        $variationSku = $this->variationSkuRepository->generateSkuWithParent($variationData, $this->orderHelper->getReferrerId(), 0, $etsySku, $listingId, true, true);
+
+        return $variationSku->sku;
+	}
+
 	/**
 	 * Deletes an SKU.
 	 *
@@ -188,18 +242,28 @@ class ItemHelper
 	 */
 	public function deleteSku(int $skuId)
 	{
-		try
-		{
-			$this->variationSkuRepository->delete($skuId);
-		}
-		catch(\Exception $ex)
-		{
-			$this->getLogger(__FUNCTION__)->debug('Etsy::item.skuRemovalError', [
-				'skuId' => $skuId,
-				'error' => $ex->getMessage(),
-			]);
-		}
+        $this->variationSkuRepository->delete($skuId);
 	}
+
+	public function deleteListingsSkus($listingId, $marketId) {
+	    $skus = $this->variationSkuRepository->search([
+	        'marketId' => $marketId,
+            'parentSku' => $listingId
+        ]);
+
+	    foreach ($skus as $sku) {
+	        try {
+                $this->deleteSku($sku->id);
+            } catch(\Exception $ex)
+            {
+                $this->getLogger(__FUNCTION__)->debug('Etsy::item.skuRemovalError', [
+                    'skuId' => $sku->id,
+                    'listingId' => $listingId,
+                    'error' => $ex->getMessage()
+                ]);
+            }
+        }
+    }
 
 	/**
 	 * Get the Etsy property.
@@ -254,11 +318,11 @@ class ItemHelper
 	/**
 	 * Get the Etsy shipping profile id.
 	 *
-	 * @param Record $record
+	 * @param Collection $itemShippingProfiles
 	 *
 	 * @return int|null
 	 */
-	public function getShippingTemplateId(Record $record)
+	public function getShippingTemplateId($itemShippingProfiles)
 	{
 		/** @var ParcelServicePresetRepositoryContract $parcelServicePresetRepo */
 		$parcelServicePresetRepo = pluginApp(ParcelServicePresetRepositoryContract::class);
@@ -268,11 +332,12 @@ class ItemHelper
 
 		$shippingTemplateId = null;
 
-		foreach($record->itemShippingProfilesList as $itemShippingProfile)
+		foreach($itemShippingProfiles as $itemShippingProfile)
 		{
+		    $itemShippingProfile = $itemShippingProfile->toArray();
 			try
 			{
-				$parcelServicePreset = $parcelServicePresetRepo->getPresetById($itemShippingProfile['id']);
+				$parcelServicePreset = $parcelServicePresetRepo->getPresetById($itemShippingProfile['profileId']);
 
 				if($parcelServicePreset->priority < $currentPriority && (in_array($this->orderHelper->getReferrerId(), $parcelServicePreset->supportedReferrer) || in_array(- 1, $parcelServicePreset->supportedReferrer)) && $correlatedShipping = $this->getCorrelatedShippingTemplate($parcelServicePreset->id))
 				{
@@ -313,14 +378,12 @@ class ItemHelper
 	/**
 	 * Get the Etsy taxonomy id.
 	 *
-	 * @param Record $record
+	 * @param int $categoryId
 	 *
 	 * @return int|null
 	 */
-	public function getTaxonomyId(Record $record)
+	public function getTaxonomyId(int $categoryId)
 	{
-		$categoryId = $record->variationStandardCategory['categoryId'];
-
 		$settingsCorrelationFactory = pluginApp(SettingsCorrelationFactory::class);
 
 		$settings = $settingsCorrelationFactory->type(SettingsCorrelationFactory::TYPE_CATEGORY)->getSettingsByCorrelation(SettingsHelper::PLUGIN_NAME, $categoryId);

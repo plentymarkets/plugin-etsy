@@ -2,6 +2,8 @@
 
 namespace Etsy\Crons;
 
+use Carbon\Carbon;
+use Etsy\EtsyServiceProvider;
 use Plenty\Modules\Cron\Contracts\CronHandler as Cron;
 
 use Etsy\Services\Batch\Item\ItemExportService;
@@ -41,16 +43,21 @@ class ItemExportCron extends Cron
 		{
 			if($accountHelper->isProcessActive(SettingsHelper::SETTINGS_PROCESS_ITEM_EXPORT))
 			{
-				$service->run([
-					              'lastRun' => $this->lastRun(),
-				              ]);
+			    $lastRun = $this->lastRun();
+
+			    if ($lastRun) {
+                    /** @var Carbon $lastRun */
+                    $lastRun = pluginApp(Carbon::class, [$lastRun]);
+                }
+
+				$service->run($lastRun);
 
 				$this->saveLastRun();
 			}
 		}
 		catch(\Exception $ex)
 		{
-			$this->getLogger(__FUNCTION__)->error('Etsy::item.itemExportError', $ex->getMessage());
+			$this->getLogger(EtsyServiceProvider::ITEM_EXPORT_CRON)->error('Etsy::item.itemExportError', $ex->getMessage());
 		}
 	}
 

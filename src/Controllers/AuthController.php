@@ -3,8 +3,11 @@
 namespace Etsy\Controllers;
 
 use Etsy\Api\Services\AuthService;
+use Etsy\Api\Services\TaxonomyService;
+use Etsy\Contracts\TaxonomyRepositoryContract;
 use Etsy\Helper\AccountHelper;
 use Etsy\Helper\SettingsHelper;
+use Etsy\Models\Taxonomy;
 use Etsy\Services\Shop\ShopImportService;
 use Plenty\Modules\Helper\Services\WebstoreHelper;
 use Plenty\Modules\Plugin\DynamoDb\Contracts\DynamoDbRepositoryContract;
@@ -59,22 +62,20 @@ class AuthController extends Controller
     {
         $tokenData = $this->accountHelper->getTokenData();
         $shopData = json_decode($this->settingsHelper->get($this->settingsHelper::SETTINGS_ETSY_SHOPS), true);
-        $shopId = key($shopData);
 
+        $shopId = key($shopData);
 
         $status = false;
 
         if (isset($tokenData['accessToken']) && strlen($tokenData['accessToken']) && isset($tokenData['accessTokenSecret']) && strlen($tokenData['accessTokenSecret']) && isset($tokenData['consumerKey']) && strlen($tokenData['consumerKey']) && isset($tokenData['consumerSecret']) && strlen($tokenData['consumerSecret'])) {
-
             $status = true;
         }
 
         if ($status) {
             return [
                 [
-                    'status'            => $status,
-                    'shopId' => $shopData[$shopId]['shopName']
-
+                    'status' => $status,
+                    'shopId' => $shopData[$shopId]['shopName'],
                 ]
             ];
         }
@@ -149,6 +150,7 @@ class AuthController extends Controller
      */
     public function getAccessToken(Request $request)
     {
+
         try {
             $tokenRequestData = $this->accountHelper->getTokenRequest();
 
@@ -158,9 +160,95 @@ class AuthController extends Controller
 
             pluginApp(ShopImportService::class)->run();
 
-            return 'Login was successful. This window will close automatically.<script>window.close();</script>';
+            $this->loadTaxonomies(); //todo: wenn möglich in neue Route auslagern
+
+            return "<script>window.close()</script>";
         } catch (\Exception $e) {
             throw new \Exception($e->getMessage(), $e->getCode());
         }
+    }
+
+    protected function loadTaxonomies() {
+        /** @var TaxonomyService $taxonomyService */
+        $taxonomyService = pluginApp(TaxonomyService::class);
+        /** @var TaxonomyRepositoryContract $taxonomyRepository */
+        $taxonomyRepository = pluginApp(TaxonomyRepositoryContract::class);
+        $taxonomies = $taxonomyService->getSellerTaxonomy('en');
+
+        $savableArrays = [];
+
+        foreach ($taxonomies as $data) {
+            foreach ($this->createSavableArray($data) as $key => $item) {
+                $savableArrays[$key] = $item;
+            }
+        }
+
+        $taxonomies = $taxonomyService->getSellerTaxonomy('de');
+
+        foreach ($taxonomies as $taxonomy) {
+            foreach ($this->getTaxonomyChildren($taxonomy) as $child) {
+                $savableArrays[$child['id']]['nameDe'] = $child['name'];
+            }
+        }
+
+        $taxonomies = $taxonomyService->getSellerTaxonomy('fr');
+
+        foreach ($taxonomies as $taxonomy) {
+            foreach ($this->getTaxonomyChildren($taxonomy) as $child) {
+                $savableArrays[$child['id']]['nameFr'] = $child['name'];
+            }
+        }
+
+        foreach ($savableArrays as $savableArray) {
+            /** @var Taxonomy $taxonomy */
+            $taxonomy = pluginApp(Taxonomy::class);
+            $taxonomy->fillByAttributes($savableArray);
+            $taxonomyRepository->save($taxonomy);
+        }
+    }
+
+    protected function createSavableArray($taxonomy)
+    {
+        $result = [];
+
+        $result[$taxonomy['id']] = [
+            'id' => $taxonomy['id'],
+            'level' => $taxonomy['level'],
+            'nameEn' => $taxonomy['name'],
+            'parentId' => (isset($taxonomy['parent_id']) && !is_null($taxonomy['parent_id'])) ? $taxonomy['parent_id'] : 0,
+            'isLeaf' => true,
+            'path' => $taxonomy['path'],
+            'children' => ''
+        ];
+
+        if (isset($taxonomy['children']) && count($taxonomy['children'])) {
+            $result[$taxonomy['id']]['isLeaf'] = false;
+            $children = [];
+
+            foreach ($taxonomy['children'] as $child) {
+               foreach ($this->createSavableArray($child) as $key => $item) {
+                   $result[$key] = $item;
+               }
+                $children[] = $child['id'];
+            }
+
+            $result[$taxonomy['id']]['children'] = implode(',', $children);
+        }
+
+        return $result;
+    }
+
+    protected function getTaxonomyChildren($taxonomy) {
+        $children = [$taxonomy['id'] => $taxonomy];
+
+        if (isset($taxonomy['children']) && count($taxonomy['children'])) {
+
+            foreach ($taxonomy['children'] as $child) {
+                 foreach ($this->getTaxonomyChildren($child) as $key => $item) {
+                     $children[$key] = $item;
+                 }
+            }
+        }
+        return $children;
     }
 }

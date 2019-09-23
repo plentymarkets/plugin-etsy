@@ -2,14 +2,14 @@
 
 namespace Etsy\Services\Batch\Item;
 
-use Plenty\Modules\Item\DataLayer\Models\Record;
+use Etsy\EtsyServiceProvider;
+use Etsy\Helper\SettingsHelper;
+use Plenty\Modules\Item\Search\Contracts\VariationElasticSearchScrollRepositoryContract;
 use Plenty\Plugin\Application;
 use Plenty\Exceptions\ValidationException;
-use Plenty\Modules\Item\DataLayer\Models\RecordList;
 
 use Etsy\Services\Item\UpdateListingService;
 use Etsy\Services\Batch\AbstractBatchService;
-use Etsy\Factories\ItemDataProviderFactory;
 use Etsy\Services\Item\StartListingService;
 use Plenty\Plugin\Log\Loggable;
 use Plenty\Plugin\Translation\Translator;
@@ -19,130 +19,132 @@ use Plenty\Plugin\Translation\Translator;
  */
 class ItemExportService extends AbstractBatchService
 {
-	use Loggable;
+    use Loggable;
 
-	/**
-	 * @var Application
-	 */
-	private $app;
+    /**
+     * @var Application
+     */
+    protected $app;
 
-	/**
-	 * @var StartListingService
-	 */
-	private $startService;
+    /**
+     * @var StartListingService
+     */
+    protected $startService;
 
-	/**
-	 * @var UpdateListingService
-	 */
-	private $updateService;
+    /**
+     * @var UpdateListingService
+     */
+    protected $updateService;
 
-	/**
-	 * @var Translator
-	 */
-	private $translator;
+    /**
+     * @var Translator
+     */
+    protected $translator;
 
-	/**
-	 * @param Application             $app
-	 * @param ItemDataProviderFactory $itemDataProviderFactory
-	 * @param StartListingService     $startService
-	 * @param UpdateListingService    $updateService
-	 * @param Translator $translator
-	 */
-	public function __construct(
-		Application $app,
-		ItemDataProviderFactory $itemDataProviderFactory,
-		StartListingService $startService,
-		UpdateListingService $updateService,
-		Translator $translator
-	)
-	{
-		$this->app = $app;
-		$this->startService = $startService;
-		$this->updateService = $updateService;
-		$this->translator = $translator;
+    /**
+     * @var SettingsHelper
+     */
+    protected $settingsHelper;
 
-		parent::__construct($itemDataProviderFactory->make('export'));
-	}
+    /**
+     * ItemExportService constructor.
+     * @param Application $app
+     * @param StartListingService $startService
+     * @param UpdateListingService $updateService
+     * @param Translator $translator
+     * @param SettingsHelper $settingsHelper
+     */
+    public function __construct(
+        Application $app,
+        StartListingService $startService,
+        UpdateListingService $updateService,
+        Translator $translator,
+        SettingsHelper $settingsHelper
+    )
+    {
+        $this->app = $app;
+        $this->startService = $startService;
+        $this->updateService = $updateService;
+        $this->translator = $translator;
+        $this->settingshelper = $settingsHelper;
 
-	/**
-	 * Export all items.
-	 * @param RecordList $records
-	 * @return void
-	 */
-	protected function export(RecordList $records)
-	{
-		$this->getLogger(__FUNCTION__)
-			->addReference('etsyExportListCount', count($records))
-			->debug('Etsy::item.exportRecord');
-		
-		foreach($records as $record)
-		{
-			try
-			{
-				if($this->isListingCreated($record))
-				{
-					$this->updateService->update($record);
-				}
-				else
-				{
-					$this->startService->start($record);
-				}
-			}
-			catch(\Exception $ex)
-			{
-				if (strpos($ex->getMessage(), 'Invalid data param type "shipping_template_id"') !== false)
-				{
-					$this->getLogger(__FUNCTION__)
-						->addReference('variationId', $record->variationBase->id)
-						->error('Etsy::item.startListingErrorShippingProfile', [
-							'exception' => $ex->getMessage(),
-							'instruction' => $this->translator->trans('Etsy::instructions.instructionShippingProfile')
-						]);
-				}
-				elseif (strpos($ex->getMessage(), 'Invalid data param type "taxonomy_id"') !== false)
-				{
-					$this->getLogger(__FUNCTION__)
-						->addReference('variationId', $record->variationBase->id)
-						->error('Etsy::item.startListingErrorTaxonomyId', [
-							'exception' => $ex->getMessage(),
-							'instruction' => $this->translator->trans('Etsy::instructions.instructionTaxonomyId')
-						]);
-				}
-				elseif (strpos($ex->getMessage(), 'Oh dear, you cannot sell this item on Etsy') !== false)
-				{
-					$this->getLogger(__FUNCTION__)
-						->addReference('variationId', $record->variationBase->id)
-						->error('Etsy::item.startListingErrorInvalidItem', [
-							'exception' => $ex->getMessage(),
-							'instruction' => $this->translator->trans('Etsy::instructions.instructionInvalidItem')
-						]);
-				}
-				else
-				{
-					$this->getLogger(__FUNCTION__)
-						->addReference('variationId', $record->variationBase->id)
-						->error('Etsy::item.startListingError', $ex->getMessage());
-				}
-			}
-		}
-	}
+        parent::__construct(pluginApp(VariationElasticSearchScrollRepositoryContract::class));
+    }
 
-	/**
-	 * Check if listing is created.
-	 *
-	 * @param Record $record
-	 *
-	 * @return bool
-	 */
-	private function isListingCreated(Record $record):bool
-	{
-		$listingId = (string) $record->variationMarketStatus->sku;
+    /**
+     * Export all items.
+     * @param array $catalogResult
+     * @return void
+     */
+    protected function export(array $catalogResult)
+    {
+        $listings = [];
 
-		if(strlen($listingId))
-		{
-			return true;
-		}
+        foreach ($catalogResult as $variation) {
 
-		return false;
-	}
+            /**
+             * skipping every variation with the do not export property
+             */
+            if (isset($variation['do_not_export'])){
+                continue;
+            }
+
+            //for convenience we get rid of all skus that are not related to Etsy
+            $skus = [];
+
+            foreach ($variation['skus'] as $sku) {
+                if ($sku['marketId'] == $this->settingshelper->get($this->settingshelper::SETTINGS_ORDER_REFERRER)) {
+                    $skus[] = $sku;
+                    break;
+                }
+            }
+
+            $variation['skus'] = $skus;
+
+            if ($variation['isMain'] == true) {
+                $listings[$variation['itemId']]['main'] = $variation;
+                continue;
+            }
+
+            $listings[$variation['itemId']][] = $variation;
+        }
+
+        foreach ($listings as $listing) {
+            try
+            {
+                if($this->isListingCreated($listing))
+                {
+                    $this->updateService->update($listing);
+                }
+                else
+                {
+                    $this->startService->start($listing);
+                }
+            } catch (\Exception $exception) {
+                $this->getLogger(EtsyServiceProvider::ITEM_EXPORT_SERVICE)
+                    ->addReference('itemId', $listing['main']['itemId'])
+                    ->warning(EtsyServiceProvider::PLUGIN_NAME . 'item.itemExportError', [
+                        $exception->getMessage()
+                    ]);
+            }
+        }
+    }
+
+    /**
+     * Check if listing is created.
+     * @param array $listing
+     * @return bool
+     */
+    protected function isListingCreated(array $listing):bool
+    {
+        $isListed = false;
+
+        foreach ($listing as $variation) {
+            if (isset($variation['skus'][0]['parentSku'])) {
+                $isListed = true;
+            }
+        }
+
+        return $isListed;
+    }
 }

@@ -1,12 +1,16 @@
 <?php
 
 namespace Etsy\Models;
+use Etsy\EtsyServiceProvider;
+use Plenty\Modules\Plugin\DataBase\Contracts\Model;
 
 /**
  * Class Taxonomy
  */
-class Taxonomy
+class Taxonomy extends Model
 {
+    const TABLE_NAME = 'taxonomies';
+
     /**
      * @var int
      */
@@ -20,7 +24,17 @@ class Taxonomy
     /**
      * @var string
      */
-    public $name;
+    public $nameDe;
+
+    /**
+     * @var string
+     */
+    public $nameEn;
+
+    /**
+     * @var string
+     */
+    public $nameFr;
 
     /**
      * @var array
@@ -55,7 +69,9 @@ class Taxonomy
         return [
             'id'       => $this->id,
             'parentId' => $this->parentId,
-            'name'     => $this->name,
+            'nameDe'  => $this->nameDe,
+            'nameEn'  => $this->nameEn,
+            'nameFr'  => $this->nameFr,
             'children' => $this->children,
             'isLeaf'   => $this->isLeaf,
             'level'    => $this->level,
@@ -73,6 +89,14 @@ class Taxonomy
         }
     }
 
+    /**
+     * @return string
+     */
+    public function getTableName()
+    {
+        return EtsyServiceProvider::PLUGIN_NAME.'::'.self::TABLE_NAME;
+    }
+
     private function &getVarRef($varName)
     {
         switch ($varName) {
@@ -82,8 +106,14 @@ class Taxonomy
             case 'parentId':
                 return $this->parentId;
 
-            case 'name':
-                return $this->name;
+            case 'nameDe':
+                return $this->nameDe;
+
+            case 'nameEn':
+                return $this->nameEn;
+
+            case 'nameFr':
+                return $this->nameFr;
 
             case 'children':
                 return $this->children;
