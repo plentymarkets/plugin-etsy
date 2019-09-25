@@ -1,5 +1,5 @@
 {
-  "version": "2.0.2",
+  "version": "2.0.3",
   "name": "Etsy",
   "description": "Plugin für Etsy-Marktplatzintegration. Um Etsy in plentymarkets nutzen zu können, ist eine Händlerregistrierung bei Etsy nötig.",
   "namespace": "Etsy",
@@ -29,6 +29,7 @@
     "Etsy\\Migrations\\CreateOrderReferrer",
     "Etsy\\Migrations\\CreateMarketPropertySettings",
     "Etsy\\Migrations\\CreateLegalInformationTable",
-    "Etsy\\Migrations\\CreateEtsyTaxonomiesTable"
+    "Etsy\\Migrations\\CreateEtsyTaxonomiesTable",
+    "Etsy\\Migrations\\CreateEtsyMigrationTable"
   ]
 }

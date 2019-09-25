@@ -10,6 +10,8 @@ use Etsy\Helper\ItemHelper;
 use Etsy\Helper\OrderHelper;
 use Etsy\Helper\SettingsHelper;
 use Etsy\Services\Item\UpdateListingService;
+use Etsy\Wizards\MigrationAssistant;
+use Plenty\Modules\Cloud\DynamoDb\Repositories\DynamoDbRepository;
 use Plenty\Modules\Item\DataLayer\Contracts\ItemDataLayerRepositoryContract;
 use Plenty\Modules\Item\VariationSku\Contracts\VariationSkuRepositoryContract;
 use Plenty\Modules\Plugin\DynamoDb\Contracts\DynamoDbRepositoryContract;
@@ -32,20 +34,39 @@ class MigrationAssistantSettingsHandler implements AssistantSettingsHandler
      */
     public function handle(array $parameters): bool
     {
-        $checkboxValue = $parameters["data"]["checkbox"];
+        /** @var DynamoDbRepositoryContract $dynamoDBRepository */
+        $dynamoDBRepository = pluginApp(DynamoDbRepositoryContract::class);
 
-        if (is_bool($checkboxValue)) {
-            $this->deleteImageData();
-            $this->replaceOldSkuWithNewSku();
-            if ($checkboxValue) {
-                $this->createAndAddPropertyToAllEtsyItems();
+        $data = $dynamoDBRepository->getItem(SettingsHelper::PLUGIN_NAME, MigrationAssistant::TABLE_NAME, true, [
+            'name' => [DynamoDbRepositoryContract::FIELD_TYPE_BOOL => "isRun"]
+        ]);
+        $isRun = $data["value"]["BOOL"];
+        if (!$isRun) {
+            $checkboxValue = $parameters["data"]["checkbox"];
+
+            if (is_bool($checkboxValue)) {
+                $this->deleteImageData();
+                $this->replaceOldSkuWithNewSku();
+                if ($checkboxValue) {
+                    $this->createAndAddPropertyToAllEtsyItems();
+
+                }
+                $dynamoDBRepository->putItem(SettingsHelper::PLUGIN_NAME, MigrationAssistant::TABLE_NAME, [
+                    'name' => [
+                        DynamoDbRepositoryContract::FIELD_TYPE_STRING => (string)"isRun",
+                    ],
+                    'value' => [
+                        DynamoDbRepositoryContract::FIELD_TYPE_BOOL => (bool)true,
+                    ],
+                ]);
+
+                return true;
+            } else {
+                return false;
             }
-
-            return true;
-
-        } else {
-            return false;
         }
+
+        return true;
 
     }
 

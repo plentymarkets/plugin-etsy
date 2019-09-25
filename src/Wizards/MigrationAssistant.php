@@ -8,6 +8,7 @@ use Plenty\Plugin\Application;
 
 class MigrationAssistant extends WizardProvider
 {
+    const TABLE_NAME = 'migration';
 
     protected function structure(): array
     {

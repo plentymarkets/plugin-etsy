@@ -1,5 +1,9 @@
 # Release Notes für Etsy
 
+## v2.0.3 (2019-09-25)
+### Geändert
+- Assistent kann jetzt nur einmal ausgeführt werden
+
 ## v2.0.2 (2019-09-23)
 ### Hinzugefügt
 - Changelog angepasst
