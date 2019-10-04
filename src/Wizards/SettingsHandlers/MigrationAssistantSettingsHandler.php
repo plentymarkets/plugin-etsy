@@ -11,7 +11,6 @@ use Etsy\Helper\OrderHelper;
 use Etsy\Helper\SettingsHelper;
 use Etsy\Services\Item\UpdateListingService;
 use Etsy\Wizards\MigrationAssistant;
-use Plenty\Modules\Cloud\DynamoDb\Repositories\DynamoDbRepository;
 use Plenty\Modules\Item\DataLayer\Contracts\ItemDataLayerRepositoryContract;
 use Plenty\Modules\Item\VariationSku\Contracts\VariationSkuRepositoryContract;
 use Plenty\Modules\Plugin\DynamoDb\Contracts\DynamoDbRepositoryContract;

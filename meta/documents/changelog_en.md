@@ -1,5 +1,9 @@
 # Release notes for Etsy
 
+## v2.0.4 (2019-10-04)
+### Changed
+- Nightly cron failed to run because validator threw a critical 
+
 ## v2.0.3 (2019-09-25)
 ### Changed
 - Assistant can only run once

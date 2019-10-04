@@ -1,5 +1,9 @@
 # Release Notes für Etsy
 
+## v2.0.4 (2019-10-04)
+### Angepasst
+- Nächtlicher Cron konnte durch critical Fehler eines Validators nicht durchlaufen
+
 ## v2.0.3 (2019-09-25)
 ### Geändert
 - Assistent kann jetzt nur einmal ausgeführt werden

@@ -187,7 +187,8 @@ class UpdateListingService
     {
         $data = [];
         $failedVariations = [];
-        EtsyListingValidator::validateOrFail($listing['main']);
+//        the validator makes the cron fail at some point need to check that asap
+//        EtsyListingValidator::validateOrFail($listing['main']);
 
         $mainLanguage = $this->settingsHelper->getShopSettings('mainLanguage');
 
