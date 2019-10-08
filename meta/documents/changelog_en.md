@@ -1,5 +1,9 @@
 # Release notes for Etsy
 
+## v2.0.5 (2019-10-08)
+### Changed
+- Stockupdate was adjusted
+
 ## v2.0.4 (2019-10-04)
 ### Changed
 - Nightly cron failed to run because validator threw a critical 

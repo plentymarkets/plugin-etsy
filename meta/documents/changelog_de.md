@@ -1,5 +1,9 @@
 # Release Notes für Etsy
 
+## v2.0.5 (2019-10-08)
+### Angepasst
+- Bestandsabgleich wurde angepasst
+
 ## v2.0.4 (2019-10-04)
 ### Angepasst
 - Nächtlicher Cron konnte durch critical Fehler eines Validators nicht durchlaufen

@@ -326,7 +326,7 @@ class UpdateListingStockService
                 // etsy only takes int´s as quantity, so we round it down. For example 9,5 will now be 9
                 $stock = round($stock, 0, PHP_ROUND_HALF_DOWN);
 
-                if ($stock > 0 && $variation['skus'][0] != $this->itemHelper::SKU_STATUS_ERROR) {
+                if ($stock > 0 && $variation['skus'][0]['status'] != $this->itemHelper::SKU_STATUS_ERROR) {
                     $hasPositiveStock = true;
                     $products[$key]['offerings'][0]['is_enabled'] = true;
                 }
