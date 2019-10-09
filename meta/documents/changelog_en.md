@@ -1,5 +1,9 @@
 # Release notes for Etsy
 
+## v2.0.6 (2019-10-09)
+### Changed
+- Changed UpdateService to not longer delete tags when updating a created listing
+
 ## v2.0.5 (2019-10-08)
 ### Changed
 - Stockupdate was adjusted

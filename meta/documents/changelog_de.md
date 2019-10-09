@@ -1,5 +1,9 @@
 # Release Notes für Etsy
 
+## v2.0.6 (2019-10-09)
+### Angepasst
+- UpdateService angepasst, Tags werden beim Update jetzt nicht mehr entfernt
+
 ## v2.0.5 (2019-10-08)
 ### Angepasst
 - Bestandsabgleich wurde angepasst

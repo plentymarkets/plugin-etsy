@@ -253,7 +253,7 @@ class UpdateListingService
 
         //Etsy properties
         if (isset($listing['main'][$catalogTag]) && $listing['main'][$catalogTag] != "") {
-            $tags = explode(',', $listing['main']['tags']);
+            $tags = explode(',', $listing['main'][$catalogTag]);
             $tagCounter = 0;
 
             foreach ($tags as $key => $tag) {
