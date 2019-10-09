@@ -377,6 +377,10 @@ class StartListingService
             $hasActiveVariations = true;
         }
 
+        if ($data['quantity'] > UpdateListingStockService::MAXIMUM_ALLOWED_STOCK){
+            $data['quantity'] = UpdateListingStockService::MAXIMUM_ALLOWED_STOCK;
+        }
+
         //shipping profiles
         $data['shipping_template_id'] = (int)reset($listing['main']['shipping_profiles']);
 

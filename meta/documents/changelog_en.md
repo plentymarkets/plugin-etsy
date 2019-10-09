@@ -1,5 +1,9 @@
 # Release notes for Etsy
 
+## v2.0.7 (2019-10-09)
+### Changed
+- If total quantity is above 999, we will send quantity with 999 to Etsy
+
 ## v2.0.6 (2019-10-09)
 ### Changed
 - Changed UpdateService to not longer delete tags when updating a created listing

@@ -1,5 +1,9 @@
 # Release Notes für Etsy
 
+## v2.0.7 (2019-10-09)
+### Angepasst
+- Wenn gesamter Bestand über 999 ist, wird 999 an Etsy geschickt
+
 ## v2.0.6 (2019-10-09)
 ### Angepasst
 - UpdateService angepasst, Tags werden beim Update jetzt nicht mehr entfernt
