@@ -544,7 +544,7 @@ class UpdateListingService
                 $isEnabled = false;
             } elseif ($quantity === 0 && $variation['isActive']) {
                 $isEnabled = false;
-            } elseif ($quantity > 1 && $variation['isActive']) {
+            } elseif ($quantity >= 1 && $variation['isActive']) {
                 $isEnabled = true;
             }
 
