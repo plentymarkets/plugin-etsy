@@ -377,7 +377,7 @@ class StartListingService
             $hasActiveVariations = true;
         }
 
-        if ($data['quantity'] > UpdateListingStockService::MAXIMUM_ALLOWED_STOCK){
+        if ($data['quantity'] > UpdateListingStockService::MAXIMUM_ALLOWED_STOCK) {
             $data['quantity'] = UpdateListingStockService::MAXIMUM_ALLOWED_STOCK;
         }
 
@@ -856,6 +856,7 @@ class StartListingService
         $sortedList = $this->imageHelper->sortImagePosition($newList);
         $imageList = [];
         $slicedList = array_slice($sortedList, 0, 10);
+
         foreach ($slicedList as $image) {
             $response = $this->listingImageService->uploadListingImage($listingId, $image['url'], $image['position']);
             if (!isset($response['results']) || !is_array($response['results'])
@@ -882,6 +883,41 @@ class StartListingService
                 'imageUrl' => $image['url']
             ];
         }
+
+        $productInformation = $this->inventoryService->getInventory($listingId);
+
+        foreach ($productInformation['results']['products'] as $product) {
+            $variantId = explode("-", $product['sku']);
+            $variantId = intval($variantId[1]);
+            foreach ($product['property_values'] as $propertyValue) {
+                foreach ($listing as $variant) {
+                    if ($variant["variationId"] === $variantId) {
+                        if (!empty($variant['images']['variation'])) {
+                            foreach ($variant['images']['variation'] as $variationImage) {
+                                foreach ($imageList as $etsyImage) {
+                                    if ($variationImage['id'] == $etsyImage['imageId']) {
+                                        $variationImageData = [
+                                            'image_id' => $etsyImage['listingImageId'],
+                                            'value_id' => $propertyValue["value_ids"][0],
+                                            'property_id' => $propertyValue['property_id']
+
+                                        ];
+
+                                        $data = [
+                                            'variation_images' => $variationImageData
+                                        ];
+
+                                        $this->listingImageService->uploadVariationImages($listingId, json_encode($data));
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+
         if (!count($imageList)) {
             $messageBag = pluginApp(MessageBag::class, [
                 'messages' =>

@@ -794,6 +794,39 @@ class UpdateListingService
         }
         $this->imageHelper->update($listingId, json_encode($imageList));
 
+        $productInformation = $this->listingInventoryService->getInventory($listingId);
+
+        foreach ($productInformation['results']['products'] as $product) {
+            $variantId = explode("-", $product['sku']);
+            $variantId = intval($variantId[1]);
+            foreach ($product['property_values'] as $propertyValue) {
+                foreach ($listing as $variant) {
+                    if ($variant["variationId"] === $variantId) {
+                        if (!empty($variant['images']['variation'])) {
+                            foreach ($variant['images']['variation'] as $variationImage) {
+                                foreach ($imageList as $etsyImage) {
+                                    if ($variationImage['id'] == $etsyImage['imageId']) {
+                                        $variationImageData = [
+                                            'image_id' => $etsyImage['listingImageId'],
+                                            'value_id' => $propertyValue["value_ids"][0],
+                                            'property_id' => $propertyValue['property_id']
+
+                                        ];
+
+                                        $data = [
+                                            'variation_images' => $variationImageData
+                                        ];
+
+                                        $this->listingImageService->uploadVariationImages($listingId, json_encode($data));
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
 
     }
 

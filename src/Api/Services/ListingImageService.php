@@ -9,18 +9,18 @@ use Etsy\Api\Client;
  */
 class ListingImageService
 {
-	/**
-	 * @var Client
-	 */
-	private $client;
+    /**
+     * @var Client
+     */
+    private $client;
 
-	/**
-	 * @param Client $client
-	 */
-	public function __construct(Client $client)
-	{
-		$this->client = $client;
-	}
+    /**
+     * @param Client $client
+     */
+    public function __construct(Client $client)
+    {
+        $this->client = $client;
+    }
 
     /**
      * @param $listingId
@@ -29,17 +29,36 @@ class ListingImageService
      * @return array
      * @throws \Exception
      */
-	public function uploadListingImage($listingId, $image, $position)
-	{
-		$data = [
-			'image' => $image,
+    public function uploadListingImage($listingId, $image, $position)
+    {
+        $data = [
+            'image' => $image,
             'rank' => $position
-		];
+        ];
 
-		return $this->client->call('uploadListingImage', [
-			'listing_id' => $listingId,
-		], $data);
-	}
+        return $this->client->call('uploadListingImage', [
+            'listing_id' => $listingId,
+        ], $data);
+    }
+
+    public function uploadVariationImages($listingId, $variationImageData)
+    {
+
+        $response = $this->client->call('updateVariationImages', [
+            'listing_id' => $listingId,
+        ], ['variation_images' => $variationImageData]);
+
+        return $response;
+    }
+
+    public function getVariationImages($listingId)
+    {
+        $response = $this->client->call('getVariationImages', [
+            'listing_id' => $listingId,
+        ]);
+
+        return $response;
+    }
 
     /**
      * @param $listingId
@@ -53,5 +72,5 @@ class ListingImageService
             'listing_id' => $listingId,
             'listing_image_id' => $imageId
         ]);
-	}
+    }
 }

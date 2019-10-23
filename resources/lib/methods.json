@@ -9,6 +9,33 @@
     "visibility": "public",
     "http_method": "GET"
   },
+  "getVariationImages":{
+    "name": "getVariationImages",
+    "description": "Creates variation images on a listing",
+    "uri": "/listings/:listing_id/variation-images",
+    "params": {
+      "listing_id": "int"
+    },
+    "defaults": null,
+    "type": null,
+    "visibility": "public",
+    "http_method": "GET"
+  },
+  "updateVariationImages":{
+    "name": "updateVariationImages",
+    "description": "Creates variation images on a listing",
+    "uri": "/listings/:listing_id/variation-images",
+    "params": {
+      "listing_id": "int",
+      "property_id" : "int",
+      "value_id": "int",
+      "image_id": "int"
+    },
+    "defaults": null,
+    "type": null,
+    "visibility": "public",
+    "http_method": "POST"
+  },
   "getPublicBaseline": {
     "name": "getPublicBaseline",
     "description": "Pings a public v2 uri to get a performance baseline",
