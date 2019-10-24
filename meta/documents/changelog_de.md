@@ -1,5 +1,9 @@
 # Release Notes für Etsy
 
+## v2.0.8 (2019-10-21)
+### Angepasst
+- Rechenoperator angepasst um Bestand = 1 identifizieren zu können
+
 ## v2.0.7 (2019-10-09)
 ### Angepasst
 - Wenn gesamter Bestand über 999 ist, wird 999 an Etsy geschickt

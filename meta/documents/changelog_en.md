@@ -1,5 +1,9 @@
 # Release notes for Etsy
 
+## v2.0.8 (2019-10-21)
+### Changed
+- Adjusted operator to make stock = 1 readable
+
 ## v2.0.7 (2019-10-09)
 ### Changed
 - If total quantity is above 999, we will send quantity with 999 to Etsy
