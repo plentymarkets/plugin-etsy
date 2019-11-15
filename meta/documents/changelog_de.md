@@ -2,7 +2,7 @@
 
 ## v2.0.9 (2019-11-15)
 ### Fixed
-- Auftragssumme für US-Aufträge wird wieder korrekt berechnet.
+- Die Auftragssumme für US-Aufträge wird wieder korrekt berechnet.
 
 ## v2.0.8 (2019-10-21)
 ### Angepasst
