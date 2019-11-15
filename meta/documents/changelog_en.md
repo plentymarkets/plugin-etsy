@@ -2,7 +2,7 @@
 
 ## v2.0.9 (2019-11-15)
 ### Fixed
-- Order total for US orders is calculated correctly again.
+- The order total for US orders is calculated correctly again.
 
 ## v2.0.8 (2019-10-21)
 ### Changed
