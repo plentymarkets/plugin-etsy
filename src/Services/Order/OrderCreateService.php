@@ -636,7 +636,7 @@ class OrderCreateService
 			return $taxPerTransaction;
 		}
 		else {
-			return 0.00;
+			return 0.0;
 		}
 	}
 }
