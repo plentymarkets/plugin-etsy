@@ -291,6 +291,8 @@ class OrderCreateService
 
         $transactions = $data['Transactions'];
 
+		$taxPerTransaction = $this->getTaxInformation($transactions, $data);
+
         if (is_array($transactions)) {
             foreach ($transactions as $transaction) {
                 $itemVariationId = $this->matchVariationId($transaction['product_data']['sku']);
@@ -304,6 +306,9 @@ class OrderCreateService
                     $vatId = $variation->parent->vatId;
                 }
 
+				$tax = $taxPerTransaction / $transaction['quantity'];
+				$price = $transaction['price'] + $tax;
+
                 $orderItems[] = [
                     'typeId'          => $itemVariationId > 0 ? 1 : 9,
                     'referrerId'      => $this->orderHelper->getReferrerId(),
@@ -314,7 +319,7 @@ class OrderCreateService
                     'vatField'        => $vatId,
                     'amounts'         => [
                         [
-                            'priceOriginalGross' => $transaction['price'],
+                            'priceOriginalGross' => $price,
                             'currency'           => $transaction['currency_code'],
                         ],
                     ],
@@ -612,4 +617,26 @@ class OrderCreateService
 
         return $title;
     }
+
+	/**
+	 * Get tax amount for one transaction based on the total tax amount and total transactions
+	 *
+	 * @param array $transactions
+	 * @param       $data
+	 * @return float|int
+	 */
+	private function getTaxInformation(array $transactions, $data)
+	{
+		$transactionAmount = count($transactions);
+
+		if (isset($data['total_tax_cost']) && $data['total_tax_cost'] != null) {
+			$totalTax = $data['total_tax_cost'];
+			$taxPerTransaction = $totalTax / $transactionAmount;
+
+			return $taxPerTransaction;
+		}
+		else {
+			return 0.00;
+		}
+	}
 }

@@ -1,5 +1,9 @@
 # Release notes for Etsy
 
+## v2.0.9 (2019-11-15)
+### Fixed
+- Order total for US orders is calculated correctly again.
+
 ## v2.0.8 (2019-10-21)
 ### Changed
 - Adjusted operator to make stock = 1 readable
