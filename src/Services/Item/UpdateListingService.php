@@ -514,6 +514,11 @@ class UpdateListingService
         $counter = 0;
         $isEnabled = false;
         $disabledCounter = 0;
+        $isSingleListing = false;
+
+        if (count($listing) == 1) {
+            $isSingleListing = true;
+        }
 
         foreach ($listing as $key => $variation) {
 
@@ -635,14 +640,19 @@ class UpdateListingService
 
             $products[$counter]['offerings'][0]['price'] = $price;
 
-            if (!$variation['isActive']){
+            if (!$variation['isActive']) {
                 $disabledCounter++;
             }
             $counter++;
         }
 
-        if ($counter === $disabledCounter){
+        if ($counter === $disabledCounter) {
             $isEveryVariationDisabled = true;
+        }
+
+        if (!$isEnabled && $isSingleListing) {
+            $this->listingService->updateListing($listingId, ['state' => 'inactive'], $language);
+            throw new \Exception("Update Process interrupted");
         }
 
         //logging failed article / variations
