@@ -652,7 +652,7 @@ class UpdateListingService
 
         if (!$isEnabled && $isSingleListing) {
             $this->listingService->updateListing($listingId, ['state' => 'inactive'], $language);
-            Throw new \Exception("Update Process interrupted");
+            throw new \Exception("Update Process interrupted");
         }
 
         //logging failed article / variations
