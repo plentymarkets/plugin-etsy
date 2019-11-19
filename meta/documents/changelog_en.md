@@ -1,5 +1,9 @@
 # Release notes for Etsy
 
+## v2.0.10 (2019-11-19)
+### Fixed
+- Listings with no variations will now be deactivated correct if they have no quantity.
+
 ## v2.0.9 (2019-11-15)
 ### Fixed
 - The order total for US orders is calculated correctly again.

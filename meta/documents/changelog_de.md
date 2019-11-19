@@ -1,5 +1,9 @@
 # Release Notes für Etsy
 
+## v2.0.10 (2019-11-19)
+### Fixed
+- Listings ohne Varianten werden nun korrekt deaktiviert wenn sie keinen Bestand haben.
+
 ## v2.0.9 (2019-11-15)
 ### Fixed
 - Die Auftragssumme für US-Aufträge wird wieder korrekt berechnet.
