@@ -886,6 +886,8 @@ class StartListingService
 
         $productInformation = $this->inventoryService->getInventory($listingId);
 
+        $variationImageData = [];
+
         foreach ($productInformation['results']['products'] as $product) {
             $variantId = explode("-", $product['sku']);
             $variantId = intval($variantId[1]);
@@ -896,18 +898,12 @@ class StartListingService
                             foreach ($variant['images']['variation'] as $variationImage) {
                                 foreach ($imageList as $etsyImage) {
                                     if ($variationImage['id'] == $etsyImage['imageId']) {
-                                        $variationImageData = [
-                                            'image_id' => $etsyImage['listingImageId'],
+
+                                        $variationImageData[] = [
+                                            'property_id' => $propertyValue['property_id'],
                                             'value_id' => $propertyValue["value_ids"][0],
-                                            'property_id' => $propertyValue['property_id']
-
+                                            'image_id' => $etsyImage['listingImageId']
                                         ];
-
-                                        $data = [
-                                            'variation_images' => $variationImageData
-                                        ];
-
-                                        $this->listingImageService->uploadVariationImages($listingId, json_encode($data));
                                     }
                                 }
                             }
@@ -916,6 +912,8 @@ class StartListingService
                 }
             }
         }
+
+        $this->listingImageService->uploadVariationImages($listingId, json_encode($variationImageData));
 
 
         if (!count($imageList)) {

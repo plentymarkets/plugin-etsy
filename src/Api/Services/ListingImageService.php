@@ -46,7 +46,9 @@ class ListingImageService
 
         $response = $this->client->call('updateVariationImages', [
             'listing_id' => $listingId,
-        ], ['variation_images' => $variationImageData]);
+        ], [
+            'variation_images' => $variationImageData
+        ]);
 
         return $response;
     }
