@@ -76,7 +76,7 @@ class OrderCreateService
 	 * @param array $data
 	 * @param string $lang
 	 */
-	public function create(array $data, $lang)
+	public function create(array $data, $lang = null)
 	{
 		// create contact
 		$contactId = $this->createContact($data);
@@ -218,7 +218,7 @@ class OrderCreateService
 	 * @return Order
 	 * @throws \Plenty\Exceptions\ValidationException
 	 */
-	private function createOrder(array $data, $addressId, $contactId, $lang): Order
+	private function createOrder(array $data, $addressId, $contactId, $lang = null): Order
 	{
 		// TODO add also the message_from_buyer(string) to the order
 
@@ -240,12 +240,16 @@ class OrderCreateService
 				'typeId' => OrderPropertyType::EXTERNAL_ORDER_ID,
 				'value'  => $this->settingsHelper->getShopSettings('shopId') . '_'. $data['receipt_id'],
 			],
-
-			[
-				'typeId' => OrderPropertyType::DOCUMENT_LANGUAGE,
-				'value' => $lang,
-			],
 		];
+
+		if (!$lang = null){
+			$orderData['properties'][] = [
+				[
+					'typeId' => OrderPropertyType::DOCUMENT_LANGUAGE,
+					'value' => $lang,
+				],
+			];
+		}
 
 		$orderData['addressRelations'] = [
 			[

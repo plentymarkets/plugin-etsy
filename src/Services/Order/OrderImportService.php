@@ -112,15 +112,15 @@ class OrderImportService
 							->addReference('etsyReceiptId', $receiptData['receipt_id'])
 							->report('Etsy::order.startOrderImport', $receiptData);
 
-						$lang = '';
-
 						if (array_key_exists($receiptData['country_id'], $countries)){
 							$countryId = $countries[$receiptData['country_id']];
 							$country = $this->countryRepositoryContract->getCountryById($countryId);
-							$lang = $country->lang;
-						}
+							$countryLang = $country->lang;
 
-						$this->orderCreateService->create($receiptData, $lang);
+							$this->orderCreateService->create($receiptData, $countryLang);
+						} else {
+							$this->orderCreateService->create($receiptData);
+						}
 					}
 					else
 					{
