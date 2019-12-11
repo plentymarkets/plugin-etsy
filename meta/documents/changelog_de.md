@@ -1,5 +1,9 @@
 # Release Notes für Etsy
 
+## v2.0.11 (2019-12-10)
+### Fixed
+- Dokumente werden nun in der Sprache des Lieferlandes erstellt.
+
 ## v2.0.10 (2019-11-19)
 ### Fixed
 - Listings ohne Varianten werden nun korrekt deaktiviert wenn sie keinen Bestand haben.
