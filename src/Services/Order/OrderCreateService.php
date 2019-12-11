@@ -242,7 +242,7 @@ class OrderCreateService
 			],
 		];
 
-		if (!$lang = null){
+		if (is_string($lang) && strlen($lang)){
 			$orderData['properties'][] = [
 				[
 					'typeId' => OrderPropertyType::DOCUMENT_LANGUAGE,
