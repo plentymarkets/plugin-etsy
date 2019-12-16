@@ -243,12 +243,10 @@ class OrderCreateService
 		];
 
 		if (is_string($lang) && strlen($lang)){
-			$orderData['properties'][] = [
-				[
-					'typeId' => OrderPropertyType::DOCUMENT_LANGUAGE,
-					'value' => $lang,
-				],
-			];
+			array_push($orderData['properties'], [
+				'typeId' => OrderPropertyType::DOCUMENT_LANGUAGE,
+				'value' => $lang,
+			]);
 		}
 
 		$orderData['addressRelations'] = [
