@@ -4,6 +4,14 @@
 ### Fixed
 - Documents are now created in the language of the shipping country.
 
+## v2.0.12 (2019-12-16)
+### Fixed
+- Fixed an issue while the import of orders.
+
+## v2.0.11 (2019-12-10)
+### Fixed
+- Documents are now created in the language of the delivery address.
+
 ## v2.0.10 (2019-11-19)
 ### Fixed
 - Listings with no variations will now be deactivated correct if they have no quantity.

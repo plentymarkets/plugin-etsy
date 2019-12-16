@@ -1,5 +1,9 @@
 # Release Notes für Etsy
 
+## v2.0.12 (2019-12-16)
+### Fixed
+- Fehler beim Auftragsimport behoben.
+
 ## v2.0.11 (2019-12-10)
 ### Fixed
 - Dokumente werden nun in der Sprache des Lieferlandes erstellt.
