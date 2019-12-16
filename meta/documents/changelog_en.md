@@ -1,5 +1,9 @@
 # Release notes for Etsy
 
+## v2.0.12 (2019-12-16)
+### Fixed
+- Fixed an issue while the import of orders.
+
 ## v2.0.11 (2019-12-10)
 ### Fixed
 - Documents are now created in the language of the shipping country.
