@@ -956,6 +956,12 @@ class StartListingService
                     $data['tags'] = implode(',', $data['tags']);
                 }
             }
+
+            if (!count($data)) {
+                //There are no translations for the given listing todo: log
+                return;
+            }
+
             $response = $this->listingTranslationService->createListingTranslation($listingId, strtolower($translatableLanguage), $data);
 
             if (!isset($response['results']) || !is_array($response['results'])) {
@@ -977,8 +983,6 @@ class StartListingService
             }
 
         }
-
-
     }
 
     /**
@@ -988,7 +992,7 @@ class StartListingService
     protected function publish($listingId, $listing)
     {
         $data = [
-            'state' => 'active',
+            'state' => 'edit',
         ];
 
         $this->listingService->updateListing($listingId, $data);
