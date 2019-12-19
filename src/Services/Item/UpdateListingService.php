@@ -192,6 +192,9 @@ class UpdateListingService
 
         $mainLanguage = $this->settingsHelper->getShopSettings('mainLanguage');
 
+        //legal information
+        $legalInformation = $this->itemHelper->getLegalInformation($mainLanguage);
+
         $catalogTitle = 'title' . strtoupper($mainLanguage);
 
         if (isset($listing['main'][$catalogTitle])) {
@@ -209,7 +212,7 @@ class UpdateListingService
         $catalogDescription = 'description' . strtoupper($mainLanguage);
         if (isset($listing['main'][$catalogDescription])) {
             $data['description'] = html_entity_decode(strip_tags(str_replace
-            ("<br />", "\n", $listing['main'][$catalogDescription])));
+            ("<br />", "\n", $listing['main'][$catalogDescription] . $legalInformation)));
         } else {
             foreach ($listing['main']['texts'] as $text) {
                 if ($text['lang'] == $mainLanguage) {
