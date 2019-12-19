@@ -828,7 +828,7 @@ class UpdateListingService
         if (empty($translatableLanguages)) {
             $this->getLogger(EtsyServiceProvider::LISTING_TRANSLATIONS)
                 ->addReference('listingId', $listingId)
-                ->error('No more export languages activated except the main language');
+                ->info('No more export languages activated except the main language');
             return;
         }
 
