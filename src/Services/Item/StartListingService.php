@@ -349,7 +349,9 @@ class StartListingService
 //                $data['quantity'] += (int)$stock[0]['stockNet'];
 //            }
 
-            if (!isset($stock) || $stock[0]['stockNet'] < 1) {
+            //Only throw an error if the stock did not get loaded. If there just is no stock thats fine since it won't
+            //be purchasable
+            if (!isset($stock)) {
                 $listing[$key]['failed'] = true;
                 $failedVariations['variation-' . $variation['variationId']][] = $this->translator
                     ->trans(EtsyServiceProvider::PLUGIN_NAME . '::log.variationNoStock');
@@ -520,7 +522,7 @@ class StartListingService
         $articleErrors = [];
 
         //logging article errors
-        if (!$hasActiveVariations) {
+        if (!$hasActiveVariations || $data['quantity'] <= 0) {
             $articleFailed = true;
             $articleErrors[] = $this->translator
                 ->trans(EtsyServiceProvider::PLUGIN_NAME . '::log.noVariations');
@@ -642,6 +644,12 @@ class StartListingService
                 $dependencies[] = $this->inventoryService::CUSTOM_ATTRIBUTE_2;
             }
             break;
+        }
+
+        //Some customers use the main variation just as a container so it has no attributes. If it is still active
+        //it has to be filtered out at this point
+        if (count($listing['main']['attributes']) < count($dependencies)) {
+            $listing['main']['failed'] = true;
         }
 
         $variationExportService->addPreloadTypes([$variationExportService::STOCK]);
