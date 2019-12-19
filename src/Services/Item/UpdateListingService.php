@@ -501,6 +501,12 @@ class UpdateListingService
             break;
         }
 
+        //Some customers use the main variation just as a container so it has no attributes. If it is still active
+        //it has to be filtered out at this point
+        if (count($listing['main']['attributes']) < count($dependencies)) {
+            $listing['main']['failed'] = true;
+        }
+
         $variationExportService->addPreloadTypes([$variationExportService::STOCK]);
         $exportPreloadValueList = [];
         foreach ($listing as $variation) {
@@ -872,6 +878,12 @@ class UpdateListingService
                     $data['tags'] = implode(',', $data['tags']);
                 }
             }
+
+            if (!count($data)) {
+                //There are no translations for the given listing todo: log
+                return;
+            }
+
             $response = $this->listingTranslationService->updateListingTranslation($listingId, strtolower($translatableLanguage), $data);
 
             if (!isset($response['results']) || !is_array($response['results'])) {
