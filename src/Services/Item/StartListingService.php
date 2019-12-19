@@ -1000,7 +1000,7 @@ class StartListingService
     protected function publish($listingId, $listing)
     {
         $data = [
-            'state' => 'edit',
+            'state' => 'active',
         ];
 
         $this->listingService->updateListing($listingId, $data);
