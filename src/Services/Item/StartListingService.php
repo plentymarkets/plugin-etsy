@@ -575,7 +575,7 @@ class StartListingService
 
             $this->getLogger(EtsyServiceProvider::START_LISTING_SERVICE)
                 ->addReference('itemId', $listing['main']['itemId'])
-                ->error($exceptionMessage, $failedVariations);
+                ->error(EtsyServiceProvider::PLUGIN_NAME . $exceptionMessage, $failedVariations);
         }
 
         //Gotta put the language into the data array, otherwise etsy enums can cause the export to fail

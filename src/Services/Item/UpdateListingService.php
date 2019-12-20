@@ -432,7 +432,7 @@ class UpdateListingService
 
             $this->getLogger(EtsyServiceProvider::UPDATE_LISTING_SERVICE)
                 ->addReference('itemId', $listing['main']['itemId'])
-                ->error($exceptionMessage, $failedVariations);
+                ->error(EtsyServiceProvider::PLUGIN_NAME . $exceptionMessage, $failedVariations);
         }
 
         $response = $this->listingService->updateListing($listingId, $data, $mainLanguage);
