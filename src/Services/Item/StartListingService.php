@@ -578,6 +578,8 @@ class StartListingService
                 ->error($exceptionMessage, $failedVariations);
         }
 
+        //Gotta put the language into the data array, otherwise etsy enums can cause the export to fail
+        $data['language'] = $mainLanguage;
         $response = $this->listingService->createListing($mainLanguage, $data);
 
         if (!isset($response['results']) || !is_array($response['results'])) {
