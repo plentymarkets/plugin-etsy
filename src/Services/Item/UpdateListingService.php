@@ -601,21 +601,19 @@ class UpdateListingService
                 }
 
                 if (isset($attributeOneId) && $attribute['attributeId'] == $attributeOneId) {
-                    $products[$counter]['property_values'][] = [
+                    //First attribute needs to be at the start of the array
+                    array_unshift($products[$counter]['property_values'], [
                         'property_id' => $this->listingInventoryService::CUSTOM_ATTRIBUTE_1,
                         'property_name' => $attributeName,
                         'values' => [$attributeValueName],
-                    ];
-                } elseif (
-                    isset($attributeTwoId)
-                    && $attribute['attributeId'] == $attributeTwoId
-                    && count($products[$counter]['property_values'])
-                ) {
-                    $products[$counter]['property_values'][] = [
+                    ]);
+                } elseif (isset($attributeTwoId) && $attribute['attributeId'] == $attributeTwoId) {
+                    //Second attribute needs to be at the end of the array
+                    array_push($products[$counter]['property_values'], [
                         'property_id' => $this->listingInventoryService::CUSTOM_ATTRIBUTE_2,
                         'property_name' => $attributeName,
                         'values' => [$attributeValueName],
-                    ];
+                    ]);
                 }
             }
 
