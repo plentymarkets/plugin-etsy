@@ -606,7 +606,11 @@ class UpdateListingService
                         'property_name' => $attributeName,
                         'values' => [$attributeValueName],
                     ];
-                } elseif (isset($attributeTwoId) && $attribute['attributeId'] == $attributeTwoId) {
+                } elseif (
+                    isset($attributeTwoId)
+                    && $attribute['attributeId'] == $attributeTwoId
+                    && count($products[$counter]['property_values'])
+                ) {
                     $products[$counter]['property_values'][] = [
                         'property_id' => $this->listingInventoryService::CUSTOM_ATTRIBUTE_2,
                         'property_name' => $attributeName,
