@@ -192,6 +192,9 @@ class UpdateListingService
 
         $mainLanguage = $this->settingsHelper->getShopSettings('mainLanguage');
 
+        //legal information
+        $legalInformation = $this->itemHelper->getLegalInformation($mainLanguage);
+
         $catalogTitle = 'title' . strtoupper($mainLanguage);
 
         if (isset($listing['main'][$catalogTitle])) {
@@ -209,7 +212,7 @@ class UpdateListingService
         $catalogDescription = 'description' . strtoupper($mainLanguage);
         if (isset($listing['main'][$catalogDescription])) {
             $data['description'] = html_entity_decode(strip_tags(str_replace
-            ("<br />", "\n", $listing['main'][$catalogDescription])));
+            ("<br />", "\n", $listing['main'][$catalogDescription] . $legalInformation)));
         } else {
             foreach ($listing['main']['texts'] as $text) {
                 if ($text['lang'] == $mainLanguage) {
@@ -429,7 +432,7 @@ class UpdateListingService
 
             $this->getLogger(EtsyServiceProvider::UPDATE_LISTING_SERVICE)
                 ->addReference('itemId', $listing['main']['itemId'])
-                ->error($exceptionMessage, $failedVariations);
+                ->error(EtsyServiceProvider::PLUGIN_NAME . $exceptionMessage, $failedVariations);
         }
 
         $response = $this->listingService->updateListing($listingId, $data, $mainLanguage);
@@ -496,6 +499,12 @@ class UpdateListingService
                 $dependencies[] = $this->listingInventoryService::CUSTOM_ATTRIBUTE_2;
             }
             break;
+        }
+
+        //Some customers use the main variation just as a container so it has no attributes. If it is still active
+        //it has to be filtered out at this point
+        if (count($listing['main']['attributes']) < count($dependencies)) {
+            $listing['main']['failed'] = true;
         }
 
         $variationExportService->addPreloadTypes([$variationExportService::STOCK]);
@@ -592,17 +601,19 @@ class UpdateListingService
                 }
 
                 if (isset($attributeOneId) && $attribute['attributeId'] == $attributeOneId) {
-                    $products[$counter]['property_values'][] = [
+                    //First attribute needs to be at the start of the array
+                    array_unshift($products[$counter]['property_values'], [
                         'property_id' => $this->listingInventoryService::CUSTOM_ATTRIBUTE_1,
                         'property_name' => $attributeName,
                         'values' => [$attributeValueName],
-                    ];
+                    ]);
                 } elseif (isset($attributeTwoId) && $attribute['attributeId'] == $attributeTwoId) {
-                    $products[$counter]['property_values'][] = [
+                    //Second attribute needs to be at the end of the array
+                    array_push($products[$counter]['property_values'], [
                         'property_id' => $this->listingInventoryService::CUSTOM_ATTRIBUTE_2,
                         'property_name' => $attributeName,
                         'values' => [$attributeValueName],
-                    ];
+                    ]);
                 }
             }
 
@@ -828,7 +839,7 @@ class UpdateListingService
         if (empty($translatableLanguages)) {
             $this->getLogger(EtsyServiceProvider::LISTING_TRANSLATIONS)
                 ->addReference('listingId', $listingId)
-                ->error('No more export languages activated except the main language');
+                ->info('No more export languages activated except the main language');
             return;
         }
 
@@ -869,6 +880,12 @@ class UpdateListingService
                     $data['tags'] = implode(',', $data['tags']);
                 }
             }
+
+            if (!count($data)) {
+                //There are no translations for the given listing todo: log
+                return;
+            }
+
             $response = $this->listingTranslationService->updateListingTranslation($listingId, strtolower($translatableLanguage), $data);
 
             if (!isset($response['results']) || !is_array($response['results'])) {

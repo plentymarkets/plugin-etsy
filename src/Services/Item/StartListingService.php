@@ -349,7 +349,9 @@ class StartListingService
 //                $data['quantity'] += (int)$stock[0]['stockNet'];
 //            }
 
-            if (!isset($stock) || $stock[0]['stockNet'] < 1) {
+            //Only throw an error if the stock did not get loaded. If there just is no stock thats fine since it won't
+            //be purchasable
+            if (!isset($stock)) {
                 $listing[$key]['failed'] = true;
                 $failedVariations['variation-' . $variation['variationId']][] = $this->translator
                     ->trans(EtsyServiceProvider::PLUGIN_NAME . '::log.variationNoStock');
@@ -520,7 +522,7 @@ class StartListingService
         $articleErrors = [];
 
         //logging article errors
-        if (!$hasActiveVariations) {
+        if (!$hasActiveVariations || $data['quantity'] <= 0) {
             $articleFailed = true;
             $articleErrors[] = $this->translator
                 ->trans(EtsyServiceProvider::PLUGIN_NAME . '::log.noVariations');
@@ -573,9 +575,11 @@ class StartListingService
 
             $this->getLogger(EtsyServiceProvider::START_LISTING_SERVICE)
                 ->addReference('itemId', $listing['main']['itemId'])
-                ->error($exceptionMessage, $failedVariations);
+                ->error(EtsyServiceProvider::PLUGIN_NAME . $exceptionMessage, $failedVariations);
         }
 
+        //Gotta put the language into the data array, otherwise etsy enums can cause the export to fail
+        $data['language'] = $mainLanguage;
         $response = $this->listingService->createListing($mainLanguage, $data);
 
         if (!isset($response['results']) || !is_array($response['results'])) {
@@ -642,6 +646,12 @@ class StartListingService
                 $dependencies[] = $this->inventoryService::CUSTOM_ATTRIBUTE_2;
             }
             break;
+        }
+
+        //Some customers use the main variation just as a container so it has no attributes. If it is still active
+        //it has to be filtered out at this point
+        if (count($listing['main']['attributes']) < count($dependencies)) {
+            $listing['main']['failed'] = true;
         }
 
         $variationExportService->addPreloadTypes([$variationExportService::STOCK]);
@@ -722,17 +732,19 @@ class StartListingService
                 }
 
                 if (isset($attributeOneId) && $attribute['attributeId'] == $attributeOneId) {
-                    $products[$counter]['property_values'][] = [
+                    //First attribute needs to be at the start of the array
+                    array_unshift($products[$counter]['property_values'], [
                         'property_id' => $this->inventoryService::CUSTOM_ATTRIBUTE_1,
                         'property_name' => $attributeName,
-                        'values' => [$attributeValueName],
-                    ];
+                        'values' => [$attributeValueName]
+                    ]);
                 } elseif (isset($attributeTwoId) && $attribute['attributeId'] == $attributeTwoId) {
-                    $products[$counter]['property_values'][] = [
+                    //Second attribute needs to be at the end of the array
+                    array_push($products[$counter]['property_values'], [
                         'property_id' => $this->inventoryService::CUSTOM_ATTRIBUTE_2,
                         'property_name' => $attributeName,
-                        'values' => [$attributeValueName],
-                    ];
+                        'values' => [$attributeValueName]
+                    ]);
                 }
             }
 
@@ -915,7 +927,7 @@ class StartListingService
         if (empty($translatableLanguages)) {
             $this->getLogger(EtsyServiceProvider::LISTING_TRANSLATIONS)
                 ->addReference('listingId', $listingId)
-                ->error('No more export languages activated except the main language');
+                ->info('No more export languages activated except the main language');
             return;
         }
 
@@ -956,6 +968,12 @@ class StartListingService
                     $data['tags'] = implode(',', $data['tags']);
                 }
             }
+
+            if (!count($data)) {
+                //There are no translations for the given listing todo: log
+                return;
+            }
+
             $response = $this->listingTranslationService->createListingTranslation($listingId, strtolower($translatableLanguage), $data);
 
             if (!isset($response['results']) || !is_array($response['results'])) {
@@ -977,8 +995,6 @@ class StartListingService
             }
 
         }
-
-
     }
 
     /**
