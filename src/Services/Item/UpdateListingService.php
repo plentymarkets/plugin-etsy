@@ -552,7 +552,8 @@ class UpdateListingService
             $variationExportService->preload($exportPreloadValueList);
             $stock = $variationExportService->getAll($variation['variationId']);
             $stock = $stock[$variationExportService::STOCK];
-            $quantity = $stock[0]['stockNet'];
+            $quantity = $stock[0]['stockNet'] > UpdateListingStockService::MAXIMUM_ALLOWED_STOCK
+                ? UpdateListingStockService::MAXIMUM_ALLOWED_STOCK : $stock[0]['stockNet'];
 
             if ($quantity === 0 && !$variation['isActive']) {
                 $isEnabled = false;

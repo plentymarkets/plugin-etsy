@@ -691,7 +691,8 @@ class StartListingService
             $variationExportService->preload($exportPreloadValueList);
             $stock = $variationExportService->getAll($variation['variationId']);
             $stock = $stock[$variationExportService::STOCK];
-            $quantity = $stock[0]['stockNet'];
+            $quantity = $stock[0]['stockNet'] > UpdateListingStockService::MAXIMUM_ALLOWED_STOCK
+                ? UpdateListingStockService::MAXIMUM_ALLOWED_STOCK : $stock[0]['stockNet'];
 
             //initialising property values array for articles with no attributes (single variation)
             $products[$counter]['property_values'] = [];
