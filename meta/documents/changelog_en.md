@@ -1,5 +1,10 @@
 # Release notes for Etsy
 
+## v2.0.14 (2019-12-27)
+### Fixed
+- Added new log messages to make the behavior of the plugin more understandable
+- Edited some log messages to clarify their meaning
+
 ## v2.0.13 (2019-12-23)
 ### Fixed
 - Articles that contain variations with no stock will now get listed correctly

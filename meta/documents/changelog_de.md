@@ -1,5 +1,10 @@
 # Release Notes für Etsy
 
+## v2.0.14 (2019-12-27)
+### Fixed
+- Neue Log-Nachrichten hinzugefügt um das Verhalten des Plugins besser verständlich zu machen
+- Einige Log-Nachrichten angepasst um ihre Bedeutung klarer auszudrücken
+
 ## v2.0.13 (2019-12-23)
 ### Fixed
 - Artikel werden nun auch korrekt gelistet, wenn einzelne Varianten keinen Bestand haben
