@@ -140,7 +140,7 @@ class UpdateListingStockService
                 $renew = in_array($listing['main']['renew'], self::BOOL_CONVERTIBLE_STRINGS);
             }
 
-            if ($state == self::SOLD_OUT && !$renew) {
+            if (($state == self::SOLD_OUT || $state == self::EXPIRED) && !$renew) {
                 $this->getLogger(__FUNCTION__)
                     ->addReference('listingId', $listingId)
                     ->addReference('itemId', $listing['main']['itemId'])
@@ -180,7 +180,7 @@ class UpdateListingStockService
                     //given variation has no usable sku
                     $this->getLogger(EtsyServiceProvider::LISTING_UPDATE_STOCK_SERVICE)
                         ->addReference('listingId', $listingId)
-                        ->report('log.unknownEtsyVariation', $variation);
+                        ->report(EtsyServiceProvider::PLUGIN_NAME . '::log.unknownEtsyVariation', $variation);
 
                     continue;
                 }
@@ -219,9 +219,17 @@ class UpdateListingStockService
             //we have positiv stock and the listing was sold out or expired
             if (($state == self::SOLD_OUT || $state == self::EXPIRED) && $renew) {
                 $data['renew'] = true;
+                $this->getLogger(__FUNCTION__)
+                    ->addReference('listingId', $listingId)
+                    ->addReference('itemId', $listing['main']['itemId'])
+                    ->debug(EtsyServiceProvider::PLUGIN_NAME . '::log.soldOut');
             }
 
             $this->listingService->updateListing($listingId, $data);
+            $this->getLogger(__FUNCTION__)
+                ->addReference('listingId', $listingId)
+                ->addReference('itemId', $listing['main']['itemId'])
+                ->debug(EtsyServiceProvider::PLUGIN_NAME . '::log.successfullyUpdatedStock');
         } catch (\Exception $e) {
             $this->listingService->updateListing($listingId, ['state' => 'inactive']);
 
@@ -308,7 +316,7 @@ class UpdateListingStockService
             $variationStillAvailable = false;
 
             foreach ($listing as $variation) {
-                if ($variation['skus'][0]['sku'] != $product['sku']) {
+                if (!isset($variation['skus'][0]['sku']) || $variation['skus'][0]['sku'] != $product['sku']) {
                     continue;
                 }
                 //todo reactivate this feature when we have a solution for shipping time depending on quantity sold
