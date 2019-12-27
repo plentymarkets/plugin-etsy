@@ -98,7 +98,7 @@ class ItemUpdateStockService extends AbstractBatchService
                 }
             }
 
-            if (count($skus) < 1) continue;
+            if (count($skus) < 1 && !$variation['isMain']) continue;
 
             $variation['skus'] = $skus;
 
@@ -113,33 +113,15 @@ class ItemUpdateStockService extends AbstractBatchService
 
         foreach ($listings as $listing) {
             try {
-                $this->updateListingsStock($listing);
+                $this->updateListingStockService->updateStock($listing);
 
             } catch (\Exception $exception) {
                 $this->getLogger(EtsyServiceProvider::STOCK_UPDATE_SERVICE)
                     ->addReference('itemId', $listing['main']['itemId'])
-                    ->warning(EtsyServiceProvider::PLUGIN_NAME . 'item.stockUpdateError', [
+                    ->error(EtsyServiceProvider::PLUGIN_NAME . '::item.stockUpdateError', [
                         $exception->getMessage()
                     ]);
             }
         }
-    }
-
-    /**
-     * Update listings stock on Etsy.
-     * @param array $listing
-     */
-    protected function updateListingsStock(array $listing)
-    {
-            try
-            {
-                $this->updateListingStockService->updateStock($listing);
-            }
-            catch(\Exception $ex)
-            {
-                $this->getLogger(__FUNCTION__)
-                    ->addReference('itemId', $listing['main']['itemId'])
-                    ->error(EtsyServiceProvider::PLUGIN_NAME . 'item.stockUpdateError', $ex->getMessage());
-            }
     }
 }

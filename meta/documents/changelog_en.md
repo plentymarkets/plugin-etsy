@@ -1,13 +1,18 @@
 # Release notes for Etsy
 
+## v2.0.14 (2019-12-27)
+### Fixed
+- Added new log messages to make the behavior of the plugin more understandable.
+- Edited some log messages to clarify their meaning.
+
 ## v2.0.13 (2019-12-23)
 ### Fixed
-- Articles that contain variations with no stock will now get listed correctly
-- Variations with a different order of their attributes won't cause errors anymore
-- The legal information will not be deleted on updates anymore
-- The fields recipient and occasion won't cause errors anymore if they are maintained in the shop language
-- Variations with a stock of more than 999 will now be exported correctly
-- All log messages will now be translated correctly
+- Articles that contain variations with no stock will now get listed correctly.
+- Variations with a different order of their attributes won't cause errors anymore.
+- The legal information will not be deleted on updates anymore.
+- The fields recipient and occasion won't cause errors anymore if they are maintained in the shop language.
+- Variations with a stock of more than 999 will now be exported correctly.
+- All log messages will now be translated correctly.
 
 ## v2.0.12 (2019-12-16)
 ### Fixed

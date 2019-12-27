@@ -1,13 +1,18 @@
 # Release Notes für Etsy
 
+## v2.0.14 (2019-12-27)
+### Fixed
+- Neue Log-Nachrichten hinzugefügt, um das Verhalten des Plugins besser verständlich zu machen
+- Einige Log-Nachrichten angepasst, um ihre Bedeutung klarer auszudrücken
+
 ## v2.0.13 (2019-12-23)
 ### Fixed
-- Artikel werden nun auch korrekt gelistet, wenn einzelne Varianten keinen Bestand haben
-- Falls Varianten ihre Attribute in unterschiedlicher Reihenfolge verknüpft haben führt das nicht länger zu einem Fehler
-- Die Rechtlichen Hinweise bleiben nun auch nachdem Update erhalten
-- Die Felder Empfänger und Anlass führen nun nicht mehr zu Fehlern, wenn sie in der Shopsprache gepflegt wurden
-- Varianten mit einem Bestand von über 999 werden jetzt korrekt exportiert
-- Alle Log-Nachrichten werden jetzt korrekt übersetzt
+- Artikel werden nun auch korrekt gelistet, wenn einzelne Varianten keinen Bestand haben.
+- Falls Varianten ihre Attribute in unterschiedlicher Reihenfolge verknüpft haben führt das nicht länger zu einem Fehler.
+- Die Rechtlichen Hinweise bleiben nun auch nachdem Update erhalten.
+- Die Felder Empfänger und Anlass führen nun nicht mehr zu Fehlern, wenn sie in der Shopsprache gepflegt wurden.
+- Varianten mit einem Bestand von über 999 werden jetzt korrekt exportiert.
+- Alle Log-Nachrichten werden jetzt korrekt übersetzt.
 
 ## v2.0.12 (2019-12-16)
 ### Fixed
