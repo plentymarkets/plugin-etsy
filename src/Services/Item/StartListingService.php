@@ -457,7 +457,7 @@ class StartListingService
                     break;
                 }
 
-                if (preg_match('@[^\p{L}\p{Nd}\p{Zs}l]@u', $material) > 0 || $material == "") {
+                if (preg_match('@[^\p{L}\p{Nd}\p{Zs}]@u', $material) > 0 || $material == "") {
                     $this->getLogger(EtsyServiceProvider::START_LISTING_SERVICE)
                         ->addReference('itemId', $listing['main']['itemId'])
                         ->warning(EtsyServiceProvider::PLUGIN_NAME . '::log.wrongMaterialFormat',
@@ -501,7 +501,7 @@ class StartListingService
                     break;
                 }
 
-                if (preg_match('@[^\p{L}\p{Nd}\p{Zs}l]@u', $style) > 0 || $style == "") {
+                if (preg_match('@[^\p{L}\p{Nd}\p{Zs}]@u', $style) > 0 || $style == "") {
                     $this->getLogger(EtsyServiceProvider::START_LISTING_SERVICE)
                         ->addReference('itemId', $listing['main']['itemId'])
                         ->warning(EtsyServiceProvider::PLUGIN_NAME . '::log.wrongStyleFormat',
