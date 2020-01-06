@@ -1,5 +1,9 @@
 # Release notes for Etsy
 
+## v2.0.15 (2019-01-06)
+### Fixed
+- Fixed a problem of the update process of the sdk
+
 ## v2.0.14 (2019-12-27)
 ### Fixed
 - Added new log messages to make the behavior of the plugin more understandable.
