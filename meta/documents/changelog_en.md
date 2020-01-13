@@ -2,7 +2,6 @@
 
 ## v2.0.16 (2019-01-13)
 ### Fixed
-- Validierungsproblem der Felder Anlass und Empfänger beim Starten von Listings behoben
 - Fixed a validation problem that occured for the fields occasion and recipient when starting a listing
 
 ## v2.0.15 (2019-01-06)
