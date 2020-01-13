@@ -1,5 +1,9 @@
 # Release notes for Etsy
 
+## v2.0.16 (2019-01-13)
+### Fixed
+- Fixed a validation problem that occured for the fields occasion and recipient when starting a listing
+
 ## v2.0.15 (2019-01-06)
 ### Fixed
 - Fixed a problem of the update process of the sdk
