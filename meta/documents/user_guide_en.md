@@ -15,19 +15,19 @@ After buying the Etsy plugin in the plentyMarketplace, install the market in the
 
 ### Authentication
 
-First, the interface has to be activated in the **System » System settings » Markets » Etsy » Authentication** menu. Click on **Etsy login** to do so. Afterwards, you are forwarded directly to Etsy where the interface can be activated.
+First, the interface has to be activated in the **Setup » Markets » Etsy » Authentication** menu. Click on **Etsy login** to do so. Afterwards, you are forwarded directly to Etsy where the interface can be activated.
 
 ### Setting up Etsy
 
-Go to **System » System settings » Markets » Etsy » Settings** to activate the item export, stock update and order import.
+Go to **Setup » Markets » Etsy » Settings** to activate the item export, stock update and order import.
 
 ## Activating the order referrer
 
-In order to link items with Etsy, you have to activate the order referrer Etsy in the **System » System settings » Orders » Order referrer** menu.
+In order to link items with Etsy, you have to activate the order referrer Etsy in the **Setup » Orders » Order referrer** menu.
 
 ##### Activating the order referrer for Etsy:
 
-1. Go to **System » System settings » Orders » Order referrer**. 
+1. Go to **Setup » Orders » Order referrer**. 
 2. Place a check mark for **Etsy**.  
 3. **Save** the settings.
 
@@ -60,7 +60,7 @@ Proceed as described below to define a sales price for the order referrer Etsy. 
 
 ##### Defining a sales price for Etsy:
 
-1. Go to **System » System settings » Item » Sales price » Open sales price » Tab: Settings**. 
+1. Go to **Setup » Item » Sales price » Open sales price » Tab: Settings**. 
 2. Place a check mark next to the referrer **Etsy**. 
 3. **Save** the settings.
 
@@ -73,7 +73,7 @@ Use the **Listing - Etsy** catalogue template for Etsy.
 
 → **Note**: Note that the menu **Data » Catalogs** only becomes visible after you have installed a plugin which provides a catalogue template.
 
-In order to export your items to Etsy, you have to create a catalogue. Link the Etsy data fields with item data saved in plentymarkets in the catalogue template afterwards. The catalogue template is automatically exported to Etsy once a day if you have activated the **Item export** in the **System » System settings » Markets » Etsy » Settings** menu.
+In order to export your items to Etsy, you have to create a catalogue. Link the Etsy data fields with item data saved in plentymarkets in the catalogue template afterwards. The catalogue template is automatically exported to Etsy once a day if you have activated the **Item export** in the **Setup » Markets » Etsy » Settings** menu.
 
 #### Creating a catalogue:
 
@@ -109,11 +109,11 @@ The **Shop sections** data field in the **Listing - Etsy** template provides all
 
 ## Updating Etsy categories
 
-In order to update Etsy categories in plentymarkets, delete your credentials in the **System » System settings » Markets » Etsy » Authentication** menu and add them again.
+In order to update Etsy categories in plentymarkets, delete your credentials in the **Setup » Markets » Etsy » Authentication** menu and add them again.
 
 #### Updating Etsy categories:
 
-1. Go to **System » System settings » Markets » Etsy » Authentication**.
+1. Go to **Setup » Markets » Etsy » Authentication**.
 2. Click on **Delete** to delete the credentials.
 3. Click on the globe icon to add new credentials.<br/>
 → You are forwarded to Etsy.
@@ -128,7 +128,7 @@ In order to transfer legal information to Etsy, you have to save the information
 
 ##### Transferring legal information:
 
-1. Go to **System » System settings » Markets » Etsy » Legal information**.<br/>
+1. Go to **Setup » Markets » Etsy » Legal information**.<br/>
 → The window **Legal information** opens.
 2. Select the language for which you want to save legal information.
 3. Enter the text.
@@ -141,7 +141,7 @@ Set up an event procedure to automatically send payment confirmations to Etsy wh
 
 ##### Setting up an event procedure:
 
-1. Go to **System » System settings » Orders » Event procedures**. 
+1. Go to **Setup » Orders » Event procedures**. 
 2. Click on **Add event procedure**.<br/>
 → The **Create new event procedure** window opens. 
 3. Enter a name. 
@@ -167,7 +167,7 @@ Set up an event procedure to automatically send shipping confirmations to Etsy w
 
 ##### Setting up an event procedure:
 
-1. Go to **System » System settings » Orders » Event procedures**. 
+1. Go to **Setup » Orders » Event procedures**. 
 2. Click on **Add event procedure**.<br/>
 → The **Create new event procedure** window opens. 
 3. Enter a name. 
@@ -186,13 +186,13 @@ Set up an event procedure to automatically send shipping confirmations to Etsy w
 _Table 2: Automatically sending shipping confirmations to Etsy_
 
 
-## Assiging rights
+## Assigning rights
 
-Users with **Back end** access need rights in order to use the **Etsy plugin**. Open the **System » System settings » Settings » User » Rights » User** menu to assign rights.
+Users with **Back end** access need rights in order to use the **Etsy plugin**. Open the **Setup » Settings » User » Rights » User** menu to assign rights.
 
  #### Assigning rights for back end users:
  
- 1. Go to **System » System settings » Settings » User » Rights » User**.
+ 1. Go to **Setup » Settings » User » Rights » User**.
  2. Use the search function and open the user that you would like to edit.
  3. Expand the **Authorisations: Markets** menu.
  4. Select the setting **Credentials**.
