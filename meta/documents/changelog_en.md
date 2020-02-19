@@ -1,11 +1,11 @@
 # Release notes for Etsy
 
-## v2.0.17 (2019-02-19)
+## v2.0.17 (2020-02-19)
 ### Fixed
 - Improved performance of the export
 - Fixed a problem with rounding of stock. Now it will always be rounded down.
 
-## v2.0.16 (2019-01-13)
+## v2.0.16 (2020-01-13)
 ### Fixed
 - Fixed a validation problem that occured for the fields occasion and recipient when starting a listing
 
