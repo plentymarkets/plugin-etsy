@@ -1,5 +1,10 @@
 # Release Notes für Etsy
 
+## v2.0.17 (2019-02-19)
+### Fixed
+- Export Performance verbessert.
+- Rundungsproblem bei Beständen behoben. Es wird jetzt immer korrekt abgerundet.
+
 ## v2.0.16 (2019-01-13)
 ### Fixed
 - Validierungsproblem der Felder Anlass und Empfänger beim Starten von Listings behoben
