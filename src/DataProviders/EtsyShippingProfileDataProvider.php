@@ -18,10 +18,18 @@ class EtsyShippingProfileDataProvider extends KeyDataProvider
      */
     protected $shippingTemplateService;
 
+    /** @var array|null $shippingProfiles */
+    static $shippingProfiles = null;
+
     public function __construct(SettingsHelper $settingsHelper, ShippingTemplateService $shippingTemplateService)
     {
         $this->settingsHelper = $settingsHelper;
         $this->shippingTemplateService = $shippingTemplateService;
+
+        if (!isset(self::$shippingProfiles)) {
+            $language = $this->settingsHelper->getShopSettings('mainLanguage', 'de');
+            self::$shippingProfiles = $this->shippingTemplateService->findAllUserShippingProfiles('__SELF__', $language);
+        }
     }
 
     public function getKey(): string
@@ -31,12 +39,9 @@ class EtsyShippingProfileDataProvider extends KeyDataProvider
 
     public function getRows(): array
     {
-        $language = $this->settingsHelper->getShopSettings('mainLanguage', 'de');
-
-        $shippingProfiles = $this->shippingTemplateService->findAllUserShippingProfiles('__SELF__', $language);
         $data = [];
 
-        foreach ($shippingProfiles as $key => $shippingProfile) {
+        foreach (self::$shippingProfiles as $key => $shippingProfile) {
             $data[] = [
                 'value' => $shippingProfile['shipping_template_id'],
                 'label' => $shippingProfile['title'],

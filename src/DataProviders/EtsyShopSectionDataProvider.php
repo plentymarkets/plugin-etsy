@@ -17,10 +17,17 @@ class EtsyShopSectionDataProvider extends KeyDataProvider
     /** @var SettingsHelper  */
     protected $settingsHelper;
 
+    /** @var array|null $shopsections */
+    static $shopsections = null;
+
     public function __construct(ShopService $shopService, SettingsHelper $settingsHelper)
     {
         $this->shopService = $shopService;
         $this->settingsHelper = $settingsHelper;
+        if (!isset(self::$shopsections)) {
+            $shopId = $this->settingsHelper->getShopSettings('shopId');
+            self::$shopsections = $this->shopService->findAllShopSections($shopId);
+        }
     }
 
     /**
@@ -36,12 +43,8 @@ class EtsyShopSectionDataProvider extends KeyDataProvider
      */
     public function getRows(): array
     {
-        $shopId = $this->settingsHelper->getShopSettings('shopId');
-
-        $shopSections = $this->shopService->findAllShopSections($shopId);
-
         $data = [];
-        foreach ($shopSections['results'] as $shopSection) {
+        foreach (self::$shopsections['results'] as $shopSection) {
             $data[] = [
                 'value' => $shopSection['shop_section_id'],
                 'label' => $shopSection['title'],
