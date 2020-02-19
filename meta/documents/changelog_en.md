@@ -2,8 +2,8 @@
 
 ## v2.0.17 (2020-02-19)
 ### Fixed
-- Improved performance of the export
-- Fixed a problem with rounding of stock. Now it will always be rounded down.
+- The performance of the export was improved.
+- A problem with rounding of stock was fixed. Now it will always be rounded down.
 
 ## v2.0.16 (2020-01-13)
 ### Fixed
