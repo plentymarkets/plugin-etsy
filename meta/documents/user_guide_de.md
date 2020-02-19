@@ -15,20 +15,20 @@ Nachdem du das Etsy-Plugin im plentymarkets Marketplace gekauft hast, installier
 
 ### Berechtigung erteilen
 
-Im Menü **System » Systemeinstellungen » Märkte » Etsy » Authentifizierung** muss zunächst die Schnittstelle freigeschaltet werden. Klicke dazu auf **Etsy-Login**. Du wirst direkt zu Etsy weitergeleitet, wo du die Schnittstelle freischaltest.
+Im Menü **Einrichtung » Märkte » Etsy » Authentifizierung** muss zunächst die Schnittstelle freigeschaltet werden. Klicke dazu auf **Etsy-Login**. Du wirst direkt zu Etsy weitergeleitet, wo du die Schnittstelle freischaltest.
 
 ### Etsy einrichten
 
-Im Menü **System » Systemeinstellungen » Märkte » Etsy » Einstellungen** aktivierst du den Artikelexport, Bestandsabgleich und Auftragsimport.
+Im Menü **Einrichtung » Märkte » Etsy » Einstellungen** aktivierst du den Artikelexport, Bestandsabgleich und Auftragsimport.
 
 
 ## Auftragsherkunft aktivieren
 
-Damit du Artikel mit Etsy verknüpfen kannst, muss im Menü **Einstellungen » Aufträge » Auftragsherkunft** die Auftragsherkunft Etsy aktiviert werden.
+Damit du Artikel mit Etsy verknüpfen kannst, muss im Menü **Einrichtung » Aufträge » Auftragsherkunft** die Auftragsherkunft Etsy aktiviert werden.
 
 ##### Auftragsherkunft für Etsy aktivieren:
 
-1. Öffne das Menü **System » Systemeinstellungen » Aufträge » Auftragsherkunft**.
+1. Öffne das Menü **Einrichtung » Aufträge » Auftragsherkunft**.
 2. Setze bei **Etsy** ein Häkchen.
 3. **Speichere** die Einstellungen.
 
@@ -61,7 +61,7 @@ Gehe wie im Folgenden beschrieben vor, um für die Auftragsherkunft Etsy einen V
 
 ##### Verkaufspreise für Etsy festlegen:
 
-1. Öffne das Menü **System » Systemeinstellungen » Artikel » Verkaufspreise » Verkaufspreis öffnen » Tab: Einstellungen**.
+1. Öffne das Menü **Einrichtung » Artikel » Verkaufspreise » Verkaufspreis öffnen » Tab: Einstellungen**.
 2. Setze ein Häkchen bei der Herkunft **Etsy**.
 3. **Speichere** die Einstellungen.
 
@@ -74,7 +74,7 @@ Verwende für Etsy das Katalog-Template **Listing - Etsy**.
 
 → **Hinweis**: Beachte, dass das Menü **Daten » Kataloge** erst sichtbar ist, wenn du ein Plugin installierst, das ein Katalog-Template verfügbar macht.
 
-Damit du deine Artikel zu Etsy exportieren kannst, musst du einen Katalog erstellen. Verknüpfe anschließend im Katalog-Template die von Etsy vorgegebenen Felder mit in plentymarkets hinterlegten Artikeldaten. Die Katalog-Vorlagen werden automatisch einmal täglich zu Etsy exportiert, wenn du unter **System » Systemeinstellungen » Märkte » Etsy » Einstellungen** den **Artikelexport** aktiviert hast.
+Damit du deine Artikel zu Etsy exportieren kannst, musst du einen Katalog erstellen. Verknüpfe anschließend im Katalog-Template die von Etsy vorgegebenen Felder mit in plentymarkets hinterlegten Artikeldaten. Die Katalog-Vorlagen werden automatisch einmal täglich zu Etsy exportiert, wenn du unter **Einrichtung » Märkte » Etsy » Einstellungen** den **Artikelexport** aktiviert hast.
 
 #### Katalog erstellen:
 
@@ -110,11 +110,11 @@ Im Datenfeld **Shop-Abteilung** des **Listing - Etsy**-Templates stehen alle Sho
 
 ## Etsy-Kategorien aktualisieren
 
-Um Etsy-Kategorien in plentymarkets zu aktualisieren, lösche deine Credentials im Menü **System » Märkte » Etsy » Authentifizierung** und füge diese neu hinzu.
+Um Etsy-Kategorien in plentymarkets zu aktualisieren, lösche deine Credentials im Menü **Einrichtung » Märkte » Etsy » Authentifizierung** und füge diese neu hinzu.
 
 #### Etsy-Kategorien aktualisieren:
 
-1. Öffne das Menü **System » Systemeinstellungen » Märkte » Etsy » Authentifizierung**.
+1. Öffne das Menü **Einrichtung » Märkte » Etsy » Authentifizierung**.
 2. Klicke auf **Löschen**, um die Credentials zu löschen.
 3. Klicke auf das Weltkugel-Icon, um neue Credentials hinzuzufügen.<br/>
 → Du wirst zu Etsy weitergeleitet.
@@ -129,7 +129,7 @@ Um rechtliche Hinweise an den Marktplatz Etsy zu übertragen, hinterlege diese H
 
 ##### Rechtliche Hinweise hinterlegen: 
 
-1. Öffne das Menü **System » Systemeinstellungen » Märkte » Etsy » Rechtliche Hinweise**.<br/> 
+1. Öffne das Menü **Einrichtung » Märkte » Etsy » Rechtliche Hinweise**.<br/> 
 → Das Fenster **Rechtliche Hinweise** wird geöffnet. 
 2. Wähle die Sprache aus, für die rechtliche Hinweise hinterlegt werden sollen. 
 3. Gib deinen Text ein. 
@@ -142,7 +142,7 @@ Richte eine Ereignisaktion ein, um Zahlungsbestätigungen automatisch an Etsy zu
 
 ##### Ereignisaktion einrichten:
 
-1. Öffne das Menü **System » Systemeinstellungen » Aufträge » Ereignisaktionen**.
+1. Öffne das Menü **Einrichtung » Aufträge » Ereignisaktionen**.
 2. Klicke auf **Ereignisaktion hinzufügen**.<br/>
 → Das Fenster **Neue Ereignisaktion erstellen** wird geöffnet.
 3. Gib einen Namen ein.
@@ -168,7 +168,7 @@ Richte eine Ereignisaktion ein, um Versandbestätigungen automatisch an Etsy zu 
 
 ##### Ereignisaktion einrichten:
 
-1. Öffne das Menü **System » Systemeinstellungen » Aufträge » Ereignisaktionen**.
+1. Öffne das Menü **Einrichtung » Aufträge » Ereignisaktionen**.
 2. Klicke auf **Ereignisaktion hinzufügen**.<br/>
 → Das Fenster **Neue Ereignisaktion erstellen** wird geöffnet.
 3. Gib einen Namen ein.
@@ -190,11 +190,11 @@ _Tab. 2: Versandbestätigungen automatisch an Etsy senden_
 
 ## Benutzerrechte vergeben
 
-Damit Benutzer mit dem Zugang **Backend** das **Etsy-Plugin** nutzen können, müssen Benutzerrechte vergeben werden. Benutzerrechte werden im Menü **System » Systemeinstellungen » Einstellungen » Benutzer » Rechte » Benutzer** zugewiesen.
+Damit Benutzer mit dem Zugang **Backend** das **Etsy-Plugin** nutzen können, müssen Benutzerrechte vergeben werden. Benutzerrechte werden im Menü **Einrichtung » Einstellungen » Benutzer » Rechte » Benutzer** zugewiesen.
 
  #### Benutzerrechte für Backend-Benutzer vergeben:
  
- 1. Öffne das Menü **System » Systemeinstellungen » Einstellungen » Benutzer » Rechte » Benutzer**.
+ 1. Öffne das Menü **Einrichtung » Einstellungen » Benutzer » Rechte » Benutzer**.
  2. Nutze die Suchfunktion und öffne den zu bearbeitenden Benutzer.
  3. Klappe das Menü **Berechtigungen: Märkte** auf.
  4. Wähle die Einstellung **Zugangsdaten**.
