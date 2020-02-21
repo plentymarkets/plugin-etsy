@@ -363,7 +363,7 @@ class StartListingService
             }
 
 
-            $data['quantity'] += (int)$stock[0]['stockNet'];
+            $data['quantity'] += (int)$stock[0]['stockNet'] >= 0 ? (int)$stock[0]['stockNet'] : 0;
 
             if (!isset($data['price']) || $data['price'] > $variation['sales_price']) {
                 if ($defaultCurrency == $etsyCurrency) {
@@ -770,7 +770,7 @@ class StartListingService
 
             $products[$counter]['offerings'] = [
                 [
-                    'quantity' => (int)$quantity,
+                    'quantity' => (int)$quantity >= 0 ? (int)$quantity : 0,
                     'is_enabled' => $variation['isActive']
                 ]
             ];

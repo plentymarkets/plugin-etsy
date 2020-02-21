@@ -645,7 +645,7 @@ class UpdateListingService
 
             $products[$counter]['offerings'] = [
                 [
-                    'quantity' => (int)$quantity,
+                    'quantity' => (int) $quantity >= 0 ? (int) $quantity : 0,
                     'is_enabled' => $isEnabled
                 ]
             ];
