@@ -4,7 +4,7 @@
 ### Fixed
 - The performance of the export was improved.
 - A problem with rounding of stock was fixed. Now it will always be rounded down.
-- Variations with negative stock will no longer cause the export to fail
+- Variations with negative stock will no longer cause the export to fail.
 
 ## v2.0.16 (2020-01-13)
 ### Fixed
