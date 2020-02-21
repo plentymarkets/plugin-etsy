@@ -4,6 +4,7 @@
 ### Fixed
 - Die Export-Performance wurde verbessert.
 - Ein Rundungsproblem bei Beständen behoben. Es wird jetzt immer korrekt abgerundet.
+- Varianten mit negativem Bestand führen nicht mehr zum Abbruch des Exports
 
 ## v2.0.16 (2020-01-13)
 ### Fixed
