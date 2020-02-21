@@ -204,7 +204,7 @@ class UpdateListingStockService
 
                 $status = $this->itemHelper::SKU_STATUS_INACTIVE;
 
-                if ($variation['offerings'][0]['quantity'] > 0) {
+                if ((int) $variation['offerings'][0]['quantity'] > 0) {
                     $status = $this->itemHelper::SKU_STATUS_ACTIVE;
                     $newState = self::ACTIVE;
                 }
@@ -343,7 +343,7 @@ class UpdateListingStockService
                     $stock = self::MAXIMUM_ALLOWED_STOCK;
                 }
 
-                $products[$key]['offerings'][0]['quantity'] = $stock;
+                $products[$key]['offerings'][0]['quantity'] = $stock >= 0 ? $stock : 0;
                 $variationStillAvailable = true;
             }
 
