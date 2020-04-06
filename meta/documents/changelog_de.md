@@ -2,7 +2,7 @@
 
 ## v2.0.18 (2020-04-06)
 ### Fixed
-- Alle Listings werden jetzt korrekt erneuert.
+- Alle Listings werden jetzt nach Ablauf korrekt erneuert.
 
 ## v2.0.17 (2020-02-19)
 ### Fixed
