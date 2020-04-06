@@ -21,6 +21,8 @@ Im Menü **Einrichtung » Märkte » Etsy » Authentifizierung** muss zunächst 
 
 Im Menü **Einrichtung » Märkte » Etsy » Einstellungen** aktivierst du den Artikelexport, Bestandsabgleich und Auftragsimport.
 
+**Hinweis:** Bevor du das Etsy-Plugin in plentymarkets einrichtest, muss bei Etsy im Menü **Shop-Manager » Artikel »** _Artikel öffnen_ die Option **Erneuerungsoptionen** auf **Manuell** gestellt werden, da das Etsy-Plugin sonst nicht korrekt funktioniert.
+
 
 ## Auftragsherkunft aktivieren
 

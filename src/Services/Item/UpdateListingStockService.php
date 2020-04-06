@@ -140,7 +140,13 @@ class UpdateListingStockService
                 $renew = in_array($listing['main']['renew'], self::BOOL_CONVERTIBLE_STRINGS);
             }
 
-            if (($state == self::SOLD_OUT || $state == self::EXPIRED) && !$renew) {
+            $didListingEnd = $etsyListing['ending_tsz'] < time();
+
+            if ((
+                $state == self::SOLD_OUT
+                    || $state == self::EXPIRED
+                    || $didListingEnd
+                ) && !$renew) {
                 $this->getLogger(__FUNCTION__)
                     ->addReference('listingId', $listingId)
                     ->addReference('itemId', $listing['main']['itemId'])
@@ -217,7 +223,11 @@ class UpdateListingStockService
             ];
 
             //we have positiv stock and the listing was sold out or expired
-            if (($state == self::SOLD_OUT || $state == self::EXPIRED) && $renew) {
+            if ((
+                    $state == self::SOLD_OUT
+                    || $state == self::EXPIRED
+                    || $didListingEnd
+                ) && $renew) {
                 $data['renew'] = true;
                 $this->getLogger(__FUNCTION__)
                     ->addReference('listingId', $listingId)
