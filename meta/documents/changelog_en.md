@@ -1,5 +1,9 @@
 # Release notes for Etsy
 
+## v2.0.18 (2020-04-06)
+### Fixed
+- A problem that caused the renew option to fail for some listings was fixed
+
 ## v2.0.17 (2020-02-19)
 ### Fixed
 - The performance of the export was improved.

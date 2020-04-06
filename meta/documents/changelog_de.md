@@ -1,5 +1,9 @@
 # Release Notes für Etsy
 
+## v2.0.18 (2020-04-06)
+### Fixed
+- Alle Listings werden jetzt korrekt erneuert.
+
 ## v2.0.17 (2020-02-19)
 ### Fixed
 - Die Export-Performance wurde verbessert.
