@@ -21,6 +21,8 @@ First, the interface has to be activated in the **Setup » Markets » Etsy » Au
 
 Go to **Setup » Markets » Etsy » Settings** to activate the item export, stock update and order import.
 
+**Note:** Prior to setting up Etsy in plentymarkets, you have to set the option **Renewal options** to **Manual** in the **Shop-Manager » Listings »** _Open listing_ menu at Etsy. Otherwise, the Etsy plugin will not work correctly.
+
 ## Activating the order referrer
 
 In order to link items with Etsy, you have to activate the order referrer Etsy in the **Setup » Orders » Order referrer** menu.
