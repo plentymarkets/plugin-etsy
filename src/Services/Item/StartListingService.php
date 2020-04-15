@@ -5,7 +5,6 @@ namespace Etsy\Services\Item;
 use Etsy\Api\Services\ListingInventoryService;
 use Etsy\EtsyServiceProvider;
 use Etsy\Exceptions\ListingException;
-use Etsy\Validators\EtsyListingValidator;
 use Etsy\Helper\ImageHelper;
 use Etsy\Helper\SettingsHelper;
 use Etsy\Api\Services\ListingService;
@@ -247,9 +246,10 @@ class StartListingService
      */
     protected function createListing(array $listing)
     {
+        //We have to reset the service because otherwise we risk to let the memory overflow
+        $this->variationExportService->resetPreLoadedData();
         $data = [];
         $failedVariations = [];
-        $variationExportService = $this->variationExportService;
 //        the validator makes the cron fail at some point need to check that asap
 //        EtsyListingValidator::validateOrFail($listing['main']);
 
@@ -299,7 +299,7 @@ class StartListingService
         $data['quantity'] = 0;
         $hasActiveVariations = false;
 
-        $variationExportService->addPreloadTypes([$variationExportService::STOCK]);
+        $this->variationExportService->addPreloadTypes([$this->variationExportService::STOCK]);
         $exportPreloadValueList = [];
 
         foreach ($listing as $variation) {
@@ -318,9 +318,9 @@ class StartListingService
 
             $listing[$key]['failed'] = false;
 
-            $variationExportService->preload($exportPreloadValueList);
-            $stock = $variationExportService->getAll($variation['variationId']);
-            $stock = $stock[$variationExportService::STOCK];
+            $this->variationExportService->preload($exportPreloadValueList);
+            $stock = $this->variationExportService->getAll($variation['variationId']);
+            $stock = $stock[$this->variationExportService::STOCK];
 
             if (!isset($variation['sales_price']) || (float)$variation['sales_price'] <= self::MINIMUM_PRICE) {
                 $listing[$key]['failed'] = true;
@@ -616,7 +616,6 @@ class StartListingService
     protected function fillInventory($listingId, $listing)
     {
         $mainLanguage = $this->settingsHelper->getShopSettings('mainLanguage');
-        $variationExportService = $this->variationExportService;
         $products = [];
         $dependencies = [];
 
@@ -653,18 +652,6 @@ class StartListingService
         if (count($listing['main']['attributes']) < count($dependencies)) {
             $listing['main']['failed'] = true;
         }
-
-        $variationExportService->addPreloadTypes([$variationExportService::STOCK]);
-        $exportPreloadValueList = [];
-        foreach ($listing as $variation) {
-            $exportPreloadValue = pluginApp(ExportPreloadValue::class, [
-                'itemId' => $variation['itemId'],
-                'variationId' => $variation['variationId']
-            ]);
-
-            $exportPreloadValueList[] = $exportPreloadValue;
-        }
-
         $failedVariations = [];
         $hasActiveVariations = false;
         $counter = 0;
@@ -688,9 +675,9 @@ class StartListingService
 //                $quantity = $stock[0]['stockNet'];
 //            }
 
-            $variationExportService->preload($exportPreloadValueList);
-            $stock = $variationExportService->getAll($variation['variationId']);
-            $stock = $stock[$variationExportService::STOCK];
+            //Since this step is only reached after creating a listing, the variations will already be preloaded
+            $stock = $this->variationExportService->getAll($variation['variationId']);
+            $stock = $stock[$this->variationExportService::STOCK];
             $quantity = $stock[0]['stockNet'] > UpdateListingStockService::MAXIMUM_ALLOWED_STOCK
                 ? UpdateListingStockService::MAXIMUM_ALLOWED_STOCK : $stock[0]['stockNet'];
 

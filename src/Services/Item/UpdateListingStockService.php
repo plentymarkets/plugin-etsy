@@ -265,6 +265,8 @@ class UpdateListingStockService
      */
     protected function update($listingId, array $listing)
     {
+        //We have to reset the service because otherwise we risk to let the memory overflow
+        $this->variationExportService->resetPreLoadedData();
         $retrys = 3;
         $etsyInventory = null;
 
@@ -298,8 +300,6 @@ class UpdateListingStockService
 
         $products = $etsyInventory['results']['products'];
 
-        $variationExportService = $this->variationExportService;
-
         $exportPreloadValueList = [];
 
         foreach ($listing as $variation) {
@@ -312,8 +312,8 @@ class UpdateListingStockService
         }
 
 
-        $variationExportService->addPreloadTypes([$variationExportService::STOCK]);
-        $variationExportService->preload($exportPreloadValueList);
+        $this->variationExportService->addPreloadTypes([$this->variationExportService::STOCK]);
+        $this->variationExportService->preload($exportPreloadValueList);
 
         $hasPositiveStock = false;
 
@@ -339,7 +339,7 @@ class UpdateListingStockService
 //                    $stock = round($stock, 0, PHP_ROUND_HALF_DOWN);
 //                }
 
-                $stock = $variationExportService->getData($variationExportService::STOCK, $variation['variationId']);
+                $stock = $this->variationExportService->getData($this->variationExportService::STOCK, $variation['variationId']);
                 $stock = $stock[0]['stockNet'];
                 // etsy only takes int´s as quantity, so we round it down. For example 9,5 will now be 9
                 $stock = (int) $stock;

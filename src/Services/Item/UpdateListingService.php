@@ -466,8 +466,9 @@ class UpdateListingService
      */
     public function updateInventory(array $listing, int $listingId)
     {
+        //We have to reset the service because otherwise we risk to let the memory overflow
+        $this->variationExportService->resetPreLoadedData();
         $language = $this->settingsHelper->getShopSettings('mainLanguage', 'de');
-        $variationExportService = $this->variationExportService;
         $products = [];
         $dependencies = [];
 
@@ -507,7 +508,7 @@ class UpdateListingService
             $listing['main']['failed'] = true;
         }
 
-        $variationExportService->addPreloadTypes([$variationExportService::STOCK]);
+        $this->variationExportService->addPreloadTypes([$this->variationExportService::STOCK]);
         $exportPreloadValueList = [];
         foreach ($listing as $variation) {
             $exportPreloadValue = pluginApp(ExportPreloadValue::class, [
@@ -517,6 +518,7 @@ class UpdateListingService
 
             $exportPreloadValueList[] = $exportPreloadValue;
         }
+        $this->variationExportService->preload($exportPreloadValueList);
 
         $failedVariations = [];
         $isEveryVariationDisabled = false;
@@ -549,9 +551,8 @@ class UpdateListingService
 //                $quantity = $stock[0]['stockNet'];
 //            }
 
-            $variationExportService->preload($exportPreloadValueList);
-            $stock = $variationExportService->getAll($variation['variationId']);
-            $stock = $stock[$variationExportService::STOCK];
+            $stock = $this->variationExportService->getAll($variation['variationId']);
+            $stock = $stock[$this->variationExportService::STOCK];
             $quantity = $stock[0]['stockNet'] > UpdateListingStockService::MAXIMUM_ALLOWED_STOCK
                 ? UpdateListingStockService::MAXIMUM_ALLOWED_STOCK : $stock[0]['stockNet'];
 
