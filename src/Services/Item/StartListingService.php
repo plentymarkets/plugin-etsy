@@ -298,7 +298,6 @@ class StartListingService
         $data['description'] = str_replace("<br />", "\n", $data['description']);
         $data['description'] = html_entity_decode(strip_tags($data['description']));
 
-
         //quantity & price
         $data['quantity'] = 0;
         $hasActiveVariations = false;
