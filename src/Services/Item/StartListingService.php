@@ -283,16 +283,20 @@ class StartListingService
 
         $catalogDescription = 'description' . strtoupper($mainLanguage);
         if (isset($listing['main'][$catalogDescription])) {
-            $data['description'] = html_entity_decode(strip_tags(str_replace
-            ("<br />", "\n", $listing['main'][$catalogDescription] . $legalInformation)));
+            $data['description'] = $listing['main'][$catalogDescription] . $legalInformation;
         } else {
             foreach ($listing['main']['texts'] as $text) {
                 if ($text['lang'] == $mainLanguage) {
-                    $data['description'] = html_entity_decode(strip_tags(str_replace
-                    ("<br>", "\n", $text['description'] . $legalInformation)));
+                    $data['description'] = $text['description'] . $legalInformation;
+                    break;
                 }
             }
         }
+
+        //converting html line breaks into \n and removing all persisting html tags
+        $data['description'] = str_replace("<br>", "\n", $data['description']);
+        $data['description'] = str_replace("<br />", "\n", $data['description']);
+        $data['description'] = html_entity_decode(strip_tags($data['description']));
 
 
         //quantity & price
