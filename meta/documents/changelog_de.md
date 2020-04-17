@@ -2,7 +2,7 @@
 
 ## v2.0.19 (2020-04-17)
 ### Fixed
-- Zeilenumbrüche in der Beschreibung werden jetzt korrekt exportiert.
+- Alle Zeilenumbrüche in der Beschreibung werden jetzt korrekt exportiert.
 
 ## v2.0.18 (2020-04-06)
 ### Fixed
