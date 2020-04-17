@@ -140,7 +140,7 @@ class UpdateListingStockService
                 $renew = in_array($listing['main']['renew'], self::BOOL_CONVERTIBLE_STRINGS);
             }
 
-            $didListingEnd = $etsyListing['ending_tsz'] < time();
+            $didListingEnd = $etsyListing['results'][0]['ending_tsz'] < time();
 
             if ((
                 $state == self::SOLD_OUT
