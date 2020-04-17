@@ -1,5 +1,9 @@
 # Release Notes für Etsy
 
+## v2.0.19 (2020-04-17)
+### Fixed
+- Es werden jetzt alle Zeilenumbrüche in der Beschreibung korrekt exportiert.
+
 ## v2.0.18 (2020-04-06)
 ### Fixed
 - Alle Listings werden jetzt nach Ablauf korrekt erneuert.
