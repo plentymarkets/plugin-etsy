@@ -2,7 +2,7 @@
 
 ## v2.0.19 (2020-04-17)
 ### Fixed
-- All line breaks in the description will now be exported correctly
+- All line breaks in the description will now be exported correctly.
 
 ## v2.0.18 (2020-04-06)
 ### Fixed
