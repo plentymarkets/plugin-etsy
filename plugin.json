@@ -10,7 +10,7 @@
   "authorIcon": "icon_author_xs.png",
   "shortDescription": {
     "de": "Über die Anbindung des Online-Marktplatzes Etsy wird der automatische Austausch von Artikel- und Auftragsdaten mit plentymarkets ermöglicht, um Artikel auf Etsy zu listen.",
-    "en": "The integration of the online marketplace Etsy enables an automatic exchange of item- and order data with plentymarkets, allowing to list items on Etsy."
+    "en": "The integration of the online marketplace Etsy enables an automatic exchange of item and order data with plentymarkets, allowing to list items on Etsy."
   },
   "license": "AGPL-3.0",
   "categories": [
