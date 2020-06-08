@@ -1,5 +1,9 @@
 # Release notes for Etsy
 
+## v2.0.20 (2020-06-08)
+### Changed
+- The plugin description was moved to the plentymarkets manual.
+
 ## v2.0.19 (2020-04-17)
 ### Fixed
 - All line breaks in the description will now be exported correctly.
@@ -70,7 +74,7 @@
 
 ## v2.0.4 (2019-10-04)
 ### Changed
-- Nightly cron failed to run because validator threw a critical 
+- Nightly cron failed to run because validator threw a critical
 
 ## v2.0.3 (2019-09-25)
 ### Changed
@@ -106,7 +110,7 @@
 - FIX Property import.
 
 ## v1.3.12 (2019-05-28)
-### Changed 
+### Changed
 - Userguide was adjusted and now contains information about authentication.
 
 ## v1.3.11 (2019-05-27)
@@ -221,7 +225,7 @@
 
 ## v1.2.9 (2018-01-23)
 #### Fixed
-- An issue was fixed which caused event procedures (shipping and payment confirmation) not to be carried out correctly. 
+- An issue was fixed which caused event procedures (shipping and payment confirmation) not to be carried out correctly.
 
 ## v1.2.8 (2018-01-16)
 #### Changed
@@ -320,7 +324,7 @@
 
 ## v1.1.0 (2017-05-31)
 ### Changed
-- Updated Etsy platform categories 
+- Updated Etsy platform categories
 
 ## v1.0.17 (2017-05-08)
 ### Fixed
@@ -366,15 +370,15 @@
 
 ## v1.0.7 (2017-03-21)
 ### Fixed
-- Use the write capacity unit settings for DynamoDB throughput 
+- Use the write capacity unit settings for DynamoDB throughput
 ### Changed
 - Only the first 13 item tags are exported, the rest is ignored
 ### Added
-- Added some better logging functionality for article export and order import 
+- Added some better logging functionality for article export and order import
 
 ## v1.0.6 (2017-03-16)
 ### Fixed
-- All 244 Etsy countries can now be matched with the plentymarkets list of countries 
+- All 244 Etsy countries can now be matched with the plentymarkets list of countries
 - Etsy orders are imported since the last successful run if communication problems with Etsy occur
 
 ## v1.0.5 (2017-03-06)
@@ -394,7 +398,7 @@
 
 ## v1.0.2 (2017-02-24)
 ### Fixed
-- An UI issue that caused that sometimes settings were not completely saved 
+- An UI issue that caused that sometimes settings were not completely saved
 
 ## v1.0.1 (2017-02-22)
 ### Changed
