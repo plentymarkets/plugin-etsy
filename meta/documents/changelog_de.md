@@ -1,5 +1,9 @@
 # Release Notes für Etsy
 
+## v2.0.21 (2020-06-08)
+### Geändert
+- Der Umzug der englischsprachigen Plugin-Beschreibung ins Handbuch wurde vorübergehend rückgängig gemacht, da eine Weiterleitung aus dem Handbuch auf den User Guide im Plugin noch aktiv ist.
+
 ## v2.0.20 (2020-06-08)
 ### Geändert
 - Die Plugin-Beschreibung wurde in das plentymarkets Handbuch umgezogen.
