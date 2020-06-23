@@ -5,6 +5,7 @@ namespace Etsy;
 use Etsy\Contracts\CategoryRepositoryContract;
 use Etsy\Contracts\LegalInformationRepositoryContract;
 use Etsy\Contracts\PropertyRepositoryContract;
+use Etsy\Crons\ImageFileCleanupCron;
 use Etsy\Repositories\CategoryRepository;
 use Etsy\Repositories\LegalInformationRepository;
 use Etsy\Repositories\PropertyRepository;
@@ -96,6 +97,7 @@ class EtsyServiceProvider extends ServiceProvider
 		$container->add(CronContainer::DAILY, ItemExportCron::class);
 		$container->add(CronContainer::DAILY, StockUpdateCron::class);
 		$container->add(CronContainer::HOURLY, OrderImportCron::class);
+		$container->add(CronContainer::HOURLY, ImageFileCleanupCron::class);
 
 		// register event actions
 		$eventProceduresService->registerProcedure('etsy', ProcedureEntry::PROCEDURE_GROUP_ORDER, [
