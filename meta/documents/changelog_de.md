@@ -1,5 +1,9 @@
 # Release Notes für Etsy
 
+## v2.0.23 (2020-06-24)
+### Geändert
+- Auch die englischsprachige Plugin-Beschreibung wurde nun in das plentymarkets Handbuch umgezogen.
+
 ## v2.0.22 (2020-06-22)
 ### Behoben
 - Probleme mit der internen Speicherkapazität wurden behoben.
