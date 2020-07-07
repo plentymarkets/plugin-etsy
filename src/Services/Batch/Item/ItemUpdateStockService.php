@@ -88,7 +88,7 @@ class ItemUpdateStockService extends AbstractBatchService
             'memoryPeakUsage' =>  memory_get_peak_usage(true)
         ];
 
-        $this->getLogger(EtsyServiceProvider::ITEM_EXPORT_SERVICE)
+        $this->getLogger(EtsyServiceProvider::STOCK_UPDATE_SERVICE)
             ->debug(EtsyServiceProvider::PLUGIN_NAME . '::log.memoryUsage', $memoryUsage);
 
         // Todo this is to analyse a cron problem that may be caused by a memory overflow
