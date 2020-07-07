@@ -747,6 +747,7 @@ class UpdateListingService
     {
         $orderReferrer = $this->settingsHelper->get($this->settingsHelper::SETTINGS_ORDER_REFERRER);
         $etsyImages = json_decode($this->imageHelper->get((string)$listingId), true);
+        $debugEtsyImages = $etsyImages;
         $imageList = [];
         $list = $listing['main']['images']['all'];
         $newList = [];
@@ -765,6 +766,7 @@ class UpdateListingService
         }
         $slicedList = array_slice($newList, 0, 10);
         $sortedList = $this->imageHelper->sortImagePosition($slicedList);
+        $plentyImages = $sortedList;
         foreach ($etsyImages as $etsyKey => $etsyImage) {
             foreach ($sortedList as $plentyKey => $plentyImage) {
                 if ($etsyImage['imageId'] == $plentyImage['id'] && $etsyImage['position'] == $plentyImage['position']) {
@@ -774,6 +776,20 @@ class UpdateListingService
                 }
             }
         }
+
+        if (count($etsyImages)) {
+            $logArray = [
+                'listedImages' => $debugEtsyImages,
+                'plentyImages' => $plentyImages,
+                'listingVariationData' => $listing['main']
+            ];
+
+            $this->getLogger(EtsyServiceProvider::UPDATE_LISTING_SERVICE)
+                ->addReference('itemId', $listing['main']['itemId'])
+                ->addReference('etsyListingId', $listingId)
+                ->debug('Deleting images', $logArray);
+        }
+
         foreach ($etsyImages as $etsyImage) {
             $response = $this->listingImageService->deleteListingImage($listingId, $etsyImage['listingImageId']);
             if (!isset($response['results']) || !is_array($response['results'])) {
