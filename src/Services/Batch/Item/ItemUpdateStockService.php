@@ -95,7 +95,7 @@ class ItemUpdateStockService extends AbstractBatchService
         // Todo here we check if the used memory is at or over 1.5 gb since this is close to the available
         // Todo 2 gb and therefor we should log this
         if ($memoryUsage['memoryUsage'] >= 1610612736 || $memoryUsage['memoryPeakUsage'] >= 1610612736) {
-            $this->getLogger(EtsyServiceProvider::ITEM_EXPORT_SERVICE)
+            $this->getLogger(EtsyServiceProvider::STOCK_UPDATE_SERVICE)
                 ->warning(EtsyServiceProvider::PLUGIN_NAME . '::log.highMemoryUsage', $memoryUsage);
         }
 
