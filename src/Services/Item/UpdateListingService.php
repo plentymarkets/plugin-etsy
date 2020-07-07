@@ -787,7 +787,7 @@ class UpdateListingService
             $this->getLogger(EtsyServiceProvider::UPDATE_LISTING_SERVICE)
                 ->addReference('itemId', $listing['main']['itemId'])
                 ->addReference('etsyListingId', $listingId)
-                ->debug('Deleting images', $logArray);
+                ->debug(EtsyServiceProvider::PLUGIN_NAME . '::log.deleteImage', $logArray);
         }
 
         foreach ($etsyImages as $etsyImage) {
