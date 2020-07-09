@@ -78,22 +78,6 @@ class ItemExportService extends AbstractBatchService
      */
     protected function export(array $catalogResult)
     {
-        $memoryUsage = [
-            'memoryUsage' => memory_get_usage(true),
-            'memoryPeakUsage' =>  memory_get_peak_usage(true)
-        ];
-
-        $this->getLogger(EtsyServiceProvider::ITEM_EXPORT_SERVICE)
-            ->debug(EtsyServiceProvider::PLUGIN_NAME . '::log.memoryUsage', $memoryUsage);
-
-        // Todo this is to analyse a cron problem that may be caused by a memory overflow
-        // Todo here we check if the used memory is at or over 1.5 gb since this is close to the available
-        // Todo 2 gb and therefor we should log this
-        if ($memoryUsage['memoryUsage'] >= 1610612736 || $memoryUsage['memoryPeakUsage'] >= 1610612736) {
-            $this->getLogger(EtsyServiceProvider::ITEM_EXPORT_SERVICE)
-                ->warning(EtsyServiceProvider::PLUGIN_NAME . '::log.highMemoryUsage', $memoryUsage);
-        }
-
         $listings = [];
 
         foreach ($catalogResult as $variation) {
