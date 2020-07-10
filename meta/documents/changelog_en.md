@@ -1,5 +1,9 @@
 # Release notes for Etsy
 
+## v2.0.24 (2020-07-10)
+### Changed
+- Added new logs to the image update functionality to make the process of finding errors easier.
+
 ## v2.0.23 (2020-06-24)
 ### Changed
 - The English plugin description was now also moved to the plentymarkets manual.
