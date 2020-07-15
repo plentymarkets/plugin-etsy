@@ -348,11 +348,11 @@ class UpdateListingService
         }
 
         if (isset($listing['main']['processing_min'])) {
-            $data['processing_min'] = (int) $listing['main']['processing_min'];
+            $data['processing_min'] = $listing['main']['processing_min'];
         }
 
         if (isset($listing['main']['processing_max'])) {
-            $data['processing_max'] = (int) $listing['main']['processing_max'];
+            $data['processing_max'] = $listing['main']['processing_max'];
         }
 
         if (isset($listing['main']['style']) && is_string($listing['main']['style'])) {
@@ -742,7 +742,6 @@ class UpdateListingService
      * @param $listing
      * @param $listingId
      * @throws ListingException
-     * @throws \Exception
      */
     public function updateImages($listing, $listingId)
     {
@@ -782,10 +781,7 @@ class UpdateListingService
             $logArray = [
                 'listedImages' => $debugEtsyImages,
                 'plentyImages' => $plentyImages,
-                'listingVariationData' => $listing['main'],
-                'sortedList' => $sortedList,
-                'slicedList' => $slicedList,
-                'newList' => $newList
+                'listingVariationData' => $listing['main']
             ];
 
             $this->getLogger(EtsyServiceProvider::UPDATE_LISTING_SERVICE)
@@ -795,15 +791,7 @@ class UpdateListingService
         }
 
         foreach ($etsyImages as $etsyImage) {
-            try {
-                $response = $this->listingImageService->deleteListingImage($listingId, $etsyImage['listingImageId']);
-            } catch (\Exception $exception) {
-                //This exception will be thrown if the image does not exist anymore. We were about to delete it so it doesnt matter
-                if ($exception->getMessage() != 'The listing_id provided does not belong to the same shop that is associated with the listing_image_id.') {
-                    throw $exception;
-                }
-            }
-
+            $response = $this->listingImageService->deleteListingImage($listingId, $etsyImage['listingImageId']);
             if (!isset($response['results']) || !is_array($response['results'])) {
                 $messages = [];
                 if (is_array($response) && isset($response['error_msg'])) {
