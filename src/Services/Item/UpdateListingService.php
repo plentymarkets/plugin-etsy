@@ -782,7 +782,10 @@ class UpdateListingService
             $logArray = [
                 'listedImages' => $debugEtsyImages,
                 'plentyImages' => $plentyImages,
-                'listingVariationData' => $listing['main']
+                'listingVariationData' => $listing['main'],
+                'sortedList' => $sortedList,
+                'slicedList' => $slicedList,
+                'newList' => $newList
             ];
 
             $this->getLogger(EtsyServiceProvider::UPDATE_LISTING_SERVICE)
