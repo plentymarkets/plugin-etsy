@@ -42,7 +42,9 @@ class EtsyRouteServiceProvider extends RouteServiceProvider
 
             /** Actions */
             $router->get('markets/etsy/actions/item-export', ['uses' => 'Etsy\Controllers\ActionController@itemExport']);
+            $router->get('markets/etsy/actions/item-export/{ids}', ['uses' => 'Etsy\Controllers\ActionController@exportSpecificItems']);
             $router->get('markets/etsy/actions/stock-update', ['uses' => 'Etsy\Controllers\ActionController@stockUpdate']);
+            $router->get('markets/etsy/actions/stock-update/{ids}', ['uses' => 'Etsy\Controllers\ActionController@updateItemStock']);
             $router->get('markets/etsy/actions/order-import', ['uses' => 'Etsy\Controllers\ActionController@orderImport']);
 
             /** Properties */
