@@ -742,6 +742,7 @@ class UpdateListingService
      * @param $listing
      * @param $listingId
      * @throws ListingException
+     * @throws \Throwable
      */
     public function updateImages($listing, $listingId)
     {
@@ -791,7 +792,15 @@ class UpdateListingService
         }
 
         foreach ($etsyImages as $etsyImage) {
-            $response = $this->listingImageService->deleteListingImage($listingId, $etsyImage['listingImageId']);
+            try {
+                $response = $this->listingImageService->deleteListingImage($listingId, $etsyImage['listingImageId']);
+            } catch (\Throwable $exception) {
+                //This exception will be thrown if the image does not exist anymore. We were about to delete it so it doesnt matter
+                if ($exception->getMessage() != 'The listing_id provided does not belong to the same shop that is associated with the listing_image_id.') {
+                    throw $exception;
+                }
+            }
+
             if (!isset($response['results']) || !is_array($response['results'])) {
                 $messages = [];
                 if (is_array($response) && isset($response['error_msg'])) {
