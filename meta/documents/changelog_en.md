@@ -1,5 +1,11 @@
 # Release notes for Etsy
 
+## v2.0.25 (2020-07-15)
+### Fixed
+- Logs in the image update functionality are now more specific
+- The fields  "Minimum processing time" and "Maximum processing time" were not exported correctly if the source was either a property or an own value. This is fixed now
+- If the deletion of an image fails due to the image not existing on the listing it will not cause an error anymore.
+
 ## v2.0.24 (2020-07-10)
 ### Changed
 - Added new logs to the image update functionality to make the process of finding errors easier.

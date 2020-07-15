@@ -1,5 +1,11 @@
 # Release Notes für Etsy
 
+## v2.0.25 (2020-07-15)
+### Behoben
+- Log-Einträge in der Bilder-Update-Funktionalität wurden spezifiziert
+- Die Felder "Minimale Herstellungsdauer" und "Maximale Herstellungsdauer" werden nun auch mit Eigenschaften und eigenen Werten als Quelle korrekt übertragen
+- Falls das Löschen eines Bildes fehlschlägt, weil dieses am Listing nicht mehr existiert führt das nicht länger zu einem Fehler
+
 ## v2.0.24 (2020-07-10)
 ### Geändert
 - Neue Log-Einträge in der Bilder-Update-Funktionalität hinterlegt, um die Fehlersuche zu vereinfachen.
