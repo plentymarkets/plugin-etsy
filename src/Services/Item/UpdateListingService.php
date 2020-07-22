@@ -754,14 +754,9 @@ class UpdateListingService
         $newList = [];
         foreach ($list as $key => $image) {
             foreach ($image['availabilities']['market'] as $availability) {
-                if ($availability === -1) {
+                if ($availability == -1 || $availability == $orderReferrer ) {
                     $newList[] = $image;
-                    continue;
-                }
-                if ($availability != $orderReferrer) {
-                    unset($list[$key]);
-                } else {
-                    $newList[] = $image;
+                    break;
                 }
             }
         }
@@ -782,7 +777,15 @@ class UpdateListingService
             $logArray = [
                 'listedImages' => $debugEtsyImages,
                 'plentyImages' => $plentyImages,
-                'listingVariationData' => $listing['main'],
+                'listingVariationData' => $listing['main']
+            ];
+
+            $this->getLogger(EtsyServiceProvider::UPDATE_LISTING_SERVICE)
+                ->addReference('itemId', $listing['main']['itemId'])
+                ->addReference('etsyListingId', $listingId)
+                ->debug(EtsyServiceProvider::PLUGIN_NAME . '::log.deleteImage', $logArray);
+
+            $logArray = [
                 'sortedList' => $sortedList,
                 'slicedList' => $slicedList,
                 'newList' => $newList
