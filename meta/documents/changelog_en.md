@@ -1,5 +1,9 @@
 # Release notes for Etsy
 
+## v2.0.26 (2020-07-23)
+### Fixed
+- In some special cases, images were seemingly deleted and re-added to the listing at random. This behavior has been fixed.
+
 ## v2.0.25 (2020-07-15)
 ### Fixed
 - Logs in the image update functionality are now more specific
