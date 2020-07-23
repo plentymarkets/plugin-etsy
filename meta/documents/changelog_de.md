@@ -1,5 +1,9 @@
 # Release Notes für Etsy
 
+## v2.0.26 (2020-07-23)
+### Behoben
+- Es konnte in Einzelfällen vorkommen, dass Bilder am Listing scheinbar willkürlich entfernt und wieder hinzugefügt wurden. Dieses Verhalten tritt nun nicht mehr auf.
+
 ## v2.0.25 (2020-07-15)
 ### Behoben
 - Log-Einträge in der Bilder-Update-Funktionalität wurden spezifiziert
