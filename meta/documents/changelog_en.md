@@ -2,7 +2,6 @@
 
 ## v2.0.26 (2020-07-23)
 ### Fixed
-- Es konnte in Einzelfällen vorkommen, dass Bilder am Listing scheinbar willkürlich entfernt und wieder hinzugefügt wurden. Dieses Verhalten tritt nun nicht mehr auf.
 - In some special cases images could seemingly arbitrarily get deleted and re added to the listing. This behavior will not occur anymore.
 
 ## v2.0.25 (2020-07-15)
