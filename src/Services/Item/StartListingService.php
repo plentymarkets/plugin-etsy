@@ -488,11 +488,11 @@ class StartListingService
         }
 
         if (isset($listing['main']['processing_min'])) {
-            $data['processing_min'] = $listing['main']['processing_min'];
+            $data['processing_min'] = (int) $listing['main']['processing_min'];
         }
 
         if (isset($listing['main']['processing_max'])) {
-            $data['processing_max'] = $listing['main']['processing_max'];
+            $data['processing_max'] = (int) $listing['main']['processing_max'];
         }
 
         if (isset($listing['main']['style']) && is_string($listing['main']['style'])) {
