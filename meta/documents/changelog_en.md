@@ -1,5 +1,10 @@
 # Release notes for Etsy
 
+## v2.0.27 (2020-07-29)
+### Behoben
+- The fix from version 2.0.25 for the fields "Minimum processing time" and "Maximum processing time" only worked when updating existing listings. It now also works when a new listing is started.
+- In some cases, the export did not include all necessary variations when updating. This behaviour has been fixed.
+
 ## v2.0.26 (2020-07-23)
 ### Fixed
 - In some special cases, images were seemingly deleted and re-added to the listing at random. This behavior has been fixed.

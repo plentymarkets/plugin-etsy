@@ -1,5 +1,10 @@
 # Release Notes für Etsy
 
+## v2.0.27 (2020-07-29)
+### Behoben
+- Der Fix aus Version 2.0.25 für die Felder "Minimale Herstellungsdauer" und "Maximale Herstellungsdauer" griff nur beim Aktualisieren bestehender Listings. Nun funktionieren die Felder auch beim Starten eines Listings korrekt.
+- Es konnte in Einzelfällen vorkommen, dass nicht alle für den Export relevanten Varianten berücksichtigt wurden. Dieses Verhalten wurde behoben.
+
 ## v2.0.26 (2020-07-23)
 ### Behoben
 - Es konnte in Einzelfällen vorkommen, dass Bilder am Listing scheinbar willkürlich entfernt und wieder hinzugefügt wurden. Dieses Verhalten wurde behoben.
