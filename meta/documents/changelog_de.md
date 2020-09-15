@@ -1,6 +1,6 @@
 # Release Notes für Etsy
 
-## v2.0.28 (2020-09-15)
+## v2.0.28 (2020-09-16)
 ### Geändert
 - Plugin-Informationen aktualisiert.
 
