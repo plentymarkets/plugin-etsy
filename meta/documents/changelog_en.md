@@ -2,7 +2,7 @@
 
 ## v2.0.28 (2020-09-15)
 ### Changed
-- Plugin informationen updated.
+- Plugin information updated.
 
 ## v2.0.27 (2020-07-29)
 ### Fixed
