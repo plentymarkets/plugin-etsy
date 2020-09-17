@@ -1,5 +1,9 @@
 # Release Notes für Etsy
 
+## v2.0.28 (2020-09-17)
+### Geändert
+- Plugin-Informationen aktualisiert.
+
 ## v2.0.27 (2020-07-29)
 ### Behoben
 - Der Fix aus Version 2.0.25 für die Felder "Minimale Herstellungsdauer" und "Maximale Herstellungsdauer" griff nur beim Aktualisieren bestehender Listings. Nun funktionieren die Felder auch beim Starten eines Listings korrekt.
