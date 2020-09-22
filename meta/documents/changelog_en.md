@@ -2,7 +2,7 @@
 
 ## v2.0.28 (2020-09-22)
 ### Fixed
-- In some special cases, the export stopped when handling errors. This behavior has been fixed.
+- In some special cases, the export stopped when handling errors. This behaviour has been fixed.
 
 ## v2.0.28 (2020-09-17)
 ### Changed
