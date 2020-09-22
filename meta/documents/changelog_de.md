@@ -1,5 +1,9 @@
 # Release Notes für Etsy
 
+## v2.0.28 (2020-09-22)
+### Behoben
+- In Einzelfällen wurde der Export bei der Fehlerbehandlung abgebrochen. Dieses Verhalten wurde behoben.
+
 ## v2.0.28 (2020-09-17)
 ### Geändert
 - Plugin-Informationen aktualisiert.
