@@ -2,7 +2,7 @@
 
 ## v2.0.28 (2020-09-22)
 ### Behoben
-- Es konnte in Einzelfällen vorkommen, dass der Export bei der Fehlerbehandlung abgebrochen wurde. Dieses Verhalten wurde behoben.
+- In Einzelfällen wurde der Export bei der Fehlerbehandlung abgebrochen. Dieses Verhalten wurde behoben.
 
 ## v2.0.28 (2020-09-17)
 ### Geändert
