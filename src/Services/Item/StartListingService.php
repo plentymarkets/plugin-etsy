@@ -793,9 +793,9 @@ class StartListingService
             }
 
             if (!$hasActiveVariations) {
-                $errors = array_unshift($failedVariations, $this->translator
+                array_unshift($failedVariations, $this->translator
                     ->trans(EtsyServiceProvider::PLUGIN_NAME . '::log.noVariations'));
-                $messageBag = pluginApp(MessageBag::class, ['messages' => $errors]);
+                $messageBag = pluginApp(MessageBag::class, ['messages' => $failedVariations]);
                 throw new ListingException($messageBag, $exceptionMessage);
             }
 
