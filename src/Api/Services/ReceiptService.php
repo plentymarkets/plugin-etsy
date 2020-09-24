@@ -120,8 +120,6 @@ class ReceiptService
                 'receipt_id' => end(explode('_', $receiptId)),
             ], $data);
 
-			OrderStatusHistory::addHistory($orderId, '', 'Submitted tracking information successfully for ' . $receiptId . '.', $this->userId);
-
             $this->getLogger('etsyShippingEventManager')
                 ->addReference('etsyReceiptId',$receiptId)
                 ->report('Etsy::service.submitTrackingCallSuccessful',[
@@ -138,8 +136,6 @@ class ReceiptService
                 	'message' => $ex->getMessage(),
 					'data' => $data
 				]);
-
-			OrderStatusHistory::addHistory($orderId, '', 'Error on submitting tracking information for ' . $receiptId . '.', $this->userId);
         }
 	}
 }
