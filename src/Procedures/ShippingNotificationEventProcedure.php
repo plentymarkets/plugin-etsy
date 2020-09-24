@@ -63,7 +63,7 @@ class ShippingNotificationEventProcedure
 
 		if(strlen($carrierName) && strlen($trackingCode))
 		{
-			$this->receiptService->submitTracking($this->settingsHelper->getShopSettings('shopId'), $this->getReceiptId($order), $trackingCode, $carrierName, true);
+			$this->receiptService->submitTracking($this->settingsHelper->getShopSettings('shopId'), $this->getReceiptId($order), $trackingCode, $carrierName, $order->id, true);
 		}
 		else
 		{

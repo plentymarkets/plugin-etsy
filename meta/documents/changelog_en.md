@@ -1,6 +1,10 @@
 # Release notes for Etsy
 
-## v2.0.28 (2020-09-22)
+## v2.0.30 (2020-09-24)
+### Geändert
+- Added logs for the submission of tracking information.
+
+## v2.0.29 (2020-09-22)
 ### Fixed
 - In some special cases, the export stopped when handling errors. This behaviour has been fixed.
 
