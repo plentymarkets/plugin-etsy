@@ -3,6 +3,7 @@
 namespace Etsy\Api\Services;
 
 use Etsy\Api\Client;
+use OrderStatusHistory;
 use Plenty\Plugin\Log\Loggable;
 
 
@@ -77,7 +78,7 @@ class ReceiptService
 
             $this->getLogger('etsyPaymentEventManager')
                 ->addReference('etsyReceiptId',$receiptId)
-                ->info('Etsy::service.updateReceiptCallSuccessful', $data);
+                ->report('Etsy::service.updateReceiptCallSuccessful', $data);
 
             return $response;
         }
@@ -104,7 +105,7 @@ class ReceiptService
 	 * @return array
 	 * @throws \Exception
 	 */
-	public function submitTracking($shopId, $receiptId, $trackingCode, $carrierName, $sendBcc = false)
+	public function submitTracking($shopId, $receiptId, $trackingCode, $carrierName, $orderId, $sendBcc = false)
 	{
 	    try {
 	        $data = [
@@ -118,9 +119,14 @@ class ReceiptService
                 'receipt_id' => end(explode('_', $receiptId)),
             ], $data);
 
+			OrderStatusHistory::addHistory($orderId, '', 'Submitted tracking information successfully for ' . $receiptId . '.', $this->userId);
+
             $this->getLogger('etsyShippingEventManager')
                 ->addReference('etsyReceiptId',$receiptId)
-                ->info('Etsy::service.submitTrackingCallSuccessful', $data);
+                ->report('Etsy::service.submitTrackingCallSuccessful',[
+					'data'     => $data,
+					'response' => $response
+				]);
 
 			return $response;
         }
@@ -131,6 +137,8 @@ class ReceiptService
                 	'message' => $ex->getMessage(),
 					'data' => $data
 				]);
+
+			OrderStatusHistory::addHistory($orderId, '', 'Error on submitting tracking information for ' . $receiptId . '.', $this->userId);
         }
 	}
 }
