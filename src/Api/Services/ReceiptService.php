@@ -100,6 +100,7 @@ class ReceiptService
 	 * @param int    $receiptId
 	 * @param string $trackingCode
 	 * @param string $carrierName
+	 * @param int    $orderId
 	 * @param bool   $sendBcc
 	 *
 	 * @return array
