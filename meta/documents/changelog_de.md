@@ -1,5 +1,9 @@
 # Release Notes für Etsy
 
+## v2.0.31 (2020-09-29)
+### Geändert
+- Weitere Log-Einträge für die Übermittlung der Versandbestätigung hinzugefügt.
+
 ## v2.0.30 (2020-09-24)
 ### Geändert
 - Log-Einträge für die Übermittlung der Versandbestätigung hinzugefügt.
