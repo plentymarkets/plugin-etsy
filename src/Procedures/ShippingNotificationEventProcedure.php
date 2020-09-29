@@ -59,6 +59,11 @@ class ShippingNotificationEventProcedure
 		$order = $eventTriggered->getOrder();
 
 		$trackingCode = $this->getTrackingCode($order);
+        $this->getLogger(__METHOD__)
+            ->addReference("orderId", $order->id)
+            ->debug("Sending shipping confirmation for order", [
+                "shippingProfileId" => $order->shippingProfileId
+            ]);
 		$carrierName  = $this->getCarrierName($order);
 
 		if(strlen($carrierName) && strlen($trackingCode))
@@ -135,6 +140,13 @@ class ShippingNotificationEventProcedure
 			$parcelServicePresetRepo = pluginApp(ParcelServicePresetRepositoryContract::class);
 
 			$parcelServicePreset = $parcelServicePresetRepo->getPresetById($order->shippingProfileId);
+            $this->getLogger(__METHOD__)
+                ->addReference("orderId", $order->id)
+                ->debug("Found parcel service", [
+                    "parcelService" => $parcelServicePreset->parcelService,
+                    "parcelServiceType" => $parcelServicePreset->parcelService->parcel_service_type,
+                    "shippingServiceProviderId" => $parcelServicePreset->parcelService->shippingServiceProviderId
+                ]);
 
 			if($parcelServicePreset instanceof ParcelServicePreset)
 			{
