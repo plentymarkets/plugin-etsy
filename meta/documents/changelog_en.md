@@ -1,6 +1,6 @@
 # Release notes for Etsy
 
-## v2.0.30 (2020-09-29)
+## v2.0.31 (2020-09-29)
 ### Changed
 - Added additional logs for the submission of tracking information.
 
