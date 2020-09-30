@@ -54,6 +54,7 @@ abstract class AbstractBatchService
 
     /**
      * @param VariationElasticSearchScrollRepositoryContract $variationElasticSearchScrollRepository
+     * @throws \Exception
      */
     public function __construct(VariationElasticSearchScrollRepositoryContract $variationElasticSearchScrollRepository)
     {
@@ -61,11 +62,23 @@ abstract class AbstractBatchService
 
         /** @var CatalogExportRepositoryContract $catalogExportRepository */
         $catalogExportRepository = pluginApp(CatalogExportRepositoryContract::class);
+        /** @var CatalogRepositoryContract $catalogRepository */
         $catalogRepository = pluginApp(CatalogRepositoryContract::class);
-        $catalogRepository->setFilters(['template' => self::TEMPLATE]);
+        $catalogRepository->setFilters([
+            'template' => self::TEMPLATE,
+            'active' => true
+        ]);
         $id = null;
         /** @var Collection $mappings */
         $mappings = $catalogRepository->all()->getResult();
+
+        if (count($mappings) > 1) {
+            // Currently due to lack of filtering and the low API limit we can not export multiple catalogs.
+            // Since we can't know which catalog the customer wants to export we abort at this point
+            // if multiple active catalogs with the etsy template exist
+            throw new \Exception('Multiple active catalogs set.');
+        }
+
         foreach ($mappings as $mapping) {
             $id = $mapping['id'];
             break;
@@ -118,8 +131,7 @@ abstract class AbstractBatchService
         $listings = [];
 
         /** @var VariationSku $variationSku */
-        foreach ($variationSkuList as $key => $variationSku)
-        {
+        foreach ($variationSkuList as $key => $variationSku) {
             if (!isset($listings[$variationSku->parentSku])) {
                 $listings[$variationSku->parentSku] = false;
             }
@@ -129,7 +141,7 @@ abstract class AbstractBatchService
                 continue;
             }
 
-            $variationSkuRepository->delete((int) $variationSku->id);
+            $variationSkuRepository->delete((int)$variationSku->id);
             unset($variationSkuList[$key]);
         }
 
