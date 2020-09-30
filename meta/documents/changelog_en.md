@@ -1,5 +1,9 @@
 # Release notes for Etsy
 
+## v2.0.32 (2020-09-30)
+### Fixed
+- Some times when sending the shipping notification "dhl-germany" was wrongly sent as the shipping carrier, even though another one was configured. This behaviour has been fixed.
+
 ## v2.0.31 (2020-09-29)
 ### Changed
 - Added additional logs for the submission of tracking information.
