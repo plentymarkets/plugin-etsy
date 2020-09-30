@@ -1,5 +1,10 @@
 # Release Notes für Etsy
 
+
+## v2.0.32 (2020-09-30)
+### Behoben
+- In Einzelfällen wurde beim Versenden der Versandbestätigung statt des gespeicherten Versanddienstleisters der Versanddienstleister "dhl-germany" übertragen. Dieses Verhalten wurde behoben.
+
 ## v2.0.31 (2020-09-29)
 ### Geändert
 - Weitere Log-Einträge für die Übermittlung der Versandbestätigung hinzugefügt.

@@ -1137,58 +1137,70 @@ class ShippingHelper
 
 		switch($parcelServiceType)
 		{
-			case 2 && ($locationId == 1): // DHL + Germany
-				return 'dhl-germany';
+			case 2: // DHL + Germany
+                switch ($locationId) {
+                    case 1: // Germany
+                        return 'dhl-germany';
 
-			case 2 && ($locationId == 21): // DHL + Netherlands
-				return 'dhl-nl';
+                    case 21: // Netherlands
+                        return 'dhl-nl';
 
-			case 2 && ($locationId == 3 || $locationId == 17): // DHL + Belgium/Luxembourg
-				return 'dhl-benelux';
+                    case 3:
+                    case 17: // Belgium/Luxembourg
+                        return 'dhl-benelux';
 
-			case 2 && ($locationId == 23): // DHL + Poland
-				return 'dhl-poland';
+                    case 23: // Poland
+                        return 'dhl-poland';
 
-			case 2:
-				return 'dhl';
-
-			case 3 && ($locationId == 1): // DPD + Germany
-				return 'dpd-de';
-
-			case 3 && ($locationId == 23): // DPD + Poland
-				return 'dpd-poland';
-
-			case 3 && ($locationId == 12): // DPD + United Kingdom
-				return 'dpd-uk';
+                    default:
+                        return 'dhl';
+                }
 
 			case 3: // DPD
-				return 'dpd';
+                switch ($locationId) {
+                    case 1: // Germany
+                        return 'dpd-de';
+
+                    case 23: // Poland
+                        return 'dpd-poland';
+
+                    case 12: // United Kingdom
+                        return 'dpd-uk';
+
+                    default:
+                        return 'dpd';
+                }
 
 			case 4: // POST_DE
 				return 'deutsch-post';
 
-			case 5 && ($locationId == 1): // HERMES + Germany
-				return 'hermes-de';
-
 			case 5: // HERMES
+                if ($locationId == 1) { // Germany
+                    return 'hermes-de';
+                }
+
 				return 'hermes';
 
-			case 6 && ($locationId == 29): // TNT + Australia
-				return 'tnt-au';
-
-			case 6 && ($locationId == 15): // TNT + Italy
-				return 'tnt-it';
-
-			case 6 && ($locationId == 12): // TNT + United Kingdom
-				return 'tnt-uk';
-
 			case 6: // TNT
-				return 'tnt';
+                switch ($locationId) {
+                    case 29: // Australia
+                        return 'tnt-au';
 
-			case 7 && ($locationId == 12): // FEDEX + United Kingdom
-				return 'fedex-uk';
+                    case 15: // Italy
+                        return 'tnt-it';
+
+                    case 12: // United Kingdom
+                        return 'tnt-uk';
+
+                    default:
+                        return 'tnt';
+                }
 
 			case 7: // FEDEX
+                if ($locationId == 12) { // United Kingdom
+                    return 'fedex-uk';
+                }
+
 				return 'fedex';
 
 			case 8: // UPS

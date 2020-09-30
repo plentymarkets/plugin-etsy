@@ -61,7 +61,7 @@ class ShippingNotificationEventProcedure
 		$trackingCode = $this->getTrackingCode($order);
         $this->getLogger(__METHOD__)
             ->addReference("orderId", $order->id)
-            ->debug("Sending shipping confirmation for order", [
+            ->debug("log/markets/global.debugInformation", [
                 "shippingProfileId" => $order->shippingProfileId
             ]);
 		$carrierName  = $this->getCarrierName($order);
@@ -142,7 +142,7 @@ class ShippingNotificationEventProcedure
 			$parcelServicePreset = $parcelServicePresetRepo->getPresetById($order->shippingProfileId);
             $this->getLogger(__METHOD__)
                 ->addReference("orderId", $order->id)
-                ->debug("Found parcel service", [
+                ->debug("log/markets/global.debugInformation", [
                     "parcelService" => $parcelServicePreset->parcelService,
                     "parcelServiceType" => $parcelServicePreset->parcelService->parcel_service_type,
                     "shippingServiceProviderId" => $parcelServicePreset->parcelService->shippingServiceProviderId
