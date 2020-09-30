@@ -1145,7 +1145,8 @@ class ShippingHelper
                     case 21: // Netherlands
                         return 'dhl-nl';
 
-                    case 3: // Belgium/Luxembourg
+                    case 3:
+                    case 17: // Belgium/Luxembourg
                         return 'dhl-benelux';
 
                     case 23: // Poland
