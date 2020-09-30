@@ -3,7 +3,7 @@
 
 ## v2.0.32 (2020-09-30)
 ### Behoben
-- Beim Versenden der Versandbestätigung wurde teilweise fälschlicherweise der Versanddienstleister  "dhl-germany" statt dem hinterlegten übertragen. Dieses Verhalten wurde behoben.
+- In Einzelfällen wurde beim Versenden der Versandbestätigung statt des gespeicherten Versanddienstleisters der Versanddienstleister "dhl-germany" übertragen. Dieses Verhalten wurde behoben.
 
 ## v2.0.31 (2020-09-29)
 ### Geändert
