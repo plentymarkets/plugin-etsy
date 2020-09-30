@@ -265,7 +265,7 @@ class UpdateListingService
             $tagCounter = 0;
 
             foreach ($tags as $key => $tag) {
-                if ($tagCounter > 13) {
+                if ($tagCounter >= 13) {
                     break;
                 }
 
