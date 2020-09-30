@@ -2,7 +2,7 @@
 
 ## v2.0.32 (2020-09-30)
 ### Fixed
-- Some times when sending the shipping notification "dhl-germany" was wrongly sent as the shipping carrier, even though another one was configured. This behaviour has been fixed.
+- In some cases, when sending the shipping notification "dhl-germany" was wrongly sent as the shipping carrier, even though another shipping carrier was configured. This behaviour has been fixed.
 
 ## v2.0.31 (2020-09-29)
 ### Changed
