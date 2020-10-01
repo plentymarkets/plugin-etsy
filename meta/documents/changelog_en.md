@@ -2,7 +2,7 @@
 
 ## v2.0.33 (2020-10-01)
 ### Fixed
-- There were problems with the image upload if images were either not uploaded by plenty or the system did not know that anymore due to an error. This behavior has been fixed.
+- There were problems with the image upload if images were either not uploaded by plentymarkets or the system did not have that information due to an error. This behavior has been fixed.
 
 ## v2.0.32 (2020-09-30)
 ### Fixed
