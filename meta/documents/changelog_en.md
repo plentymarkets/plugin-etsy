@@ -1,5 +1,9 @@
 # Release notes for Etsy
 
+## v2.0.33 (2020-10-01)
+### Fixed
+- There were problems with the image upload if images were either not uploaded by plenty or the system did not know that anymore due to an error. This behavior has been fixed.
+
 ## v2.0.32 (2020-09-30)
 ### Fixed
 - In some cases, when sending the shipping notification "dhl-germany" was wrongly sent as the shipping carrier, even though another shipping carrier was configured. This behaviour has been fixed.

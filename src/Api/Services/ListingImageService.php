@@ -54,4 +54,16 @@ class ListingImageService
             'listing_image_id' => $imageId
         ]);
 	}
+
+    /**
+     * @param $listingId
+     * @return array
+     * @throws \Exception
+     */
+	public function getListingImages($listingId)
+    {
+        return $this->client->call('findAllListingImages',[
+            'listing_id' => $listingId
+        ]);
+    }
 }
