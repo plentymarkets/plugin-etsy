@@ -747,14 +747,18 @@ class UpdateListingService
     public function updateImages($listing, $listingId)
     {
         $orderReferrer = $this->settingsHelper->get($this->settingsHelper::SETTINGS_ORDER_REFERRER);
-        $etsyImages = json_decode($this->imageHelper->get((string)$listingId), true);
-        $debugEtsyImages = $etsyImages;
+        $alreadyListedImages = json_decode($this->imageHelper->get((string)$listingId), true);
+        $etsyImages = $this->listingImageService->getListingImages($listingId);
+        $deletableListings = [];
+
+        $etsyImages = $etsyImages['results'] ?? []; // no result means no available images, so we use an empty array
+
         $imageList = [];
         $list = $listing['main']['images']['all'];
         $newList = [];
         foreach ($list as $key => $image) {
             foreach ($image['availabilities']['market'] as $availability) {
-                if ($availability == -1 || $availability == $orderReferrer ) {
+                if ($availability == -1 || $availability == $orderReferrer) {
                     $newList[] = $image;
                     break;
                 }
@@ -762,44 +766,67 @@ class UpdateListingService
         }
         $slicedList = array_slice($newList, 0, 10);
         $sortedList = $this->imageHelper->sortImagePosition($slicedList);
-        $plentyImages = $sortedList;
-        foreach ($etsyImages as $etsyKey => $etsyImage) {
-            foreach ($sortedList as $plentyKey => $plentyImage) {
-                if ($etsyImage['imageId'] == $plentyImage['id'] && $etsyImage['position'] == $plentyImage['position']) {
-                    $imageList[] = $etsyImage;
-                    unset($sortedList[$plentyKey]);
-                    unset($etsyImages[$etsyKey]);
+
+        $imageCounter = 0;
+
+        foreach ($etsyImages as $etsyImageKey => $etsyImage) {
+            foreach ($alreadyListedImages as $alreadyListedImageKey => $alreadyListedImage) {
+                $isImageStillAvailable = false;
+                $isImageFromPlenty = $alreadyListedImage['listingImageId'] == $etsyImage['listing_image_id'];
+
+                foreach ($sortedList as $plentyKey => $plentyImage) {
+                    if ( // Image is already correctly listed, so we don't need to work with it anymore
+                        $plentyImage['id'] == $alreadyListedImage['imageId']
+                        && $isImageFromPlenty
+                        && $plentyImage['position'] == $alreadyListedImage['position']
+                    ) {
+                        $isImageStillAvailable = true;
+                        $imageList[] = $alreadyListedImage;
+                        unset($sortedList[$plentyKey]);
+                        unset($alreadyListedImages[$alreadyListedImageKey]);
+                        unset($etsyImages[$etsyImageKey]);
+                        $imageCounter++;
+                    }
+                }
+
+                if (!$isImageStillAvailable && $isImageFromPlenty) { // Image originated in plenty but is not linked anymore
+                    $deletableListings[] = $etsyImage['listing_image_id'];
+                    unset($alreadyListedImages[$alreadyListedImageKey]);
+                    unset($etsyImages[$etsyImageKey]);
                 }
             }
         }
 
-        if (count($etsyImages)) {
-            $logArray = [
-                'listedImages' => $debugEtsyImages,
-                'plentyImages' => $plentyImages,
-                'listingVariationData' => $listing['main']
-            ];
+        $totalCounter = count($sortedList) + $imageCounter + count($etsyImages);
 
-            $this->getLogger(EtsyServiceProvider::UPDATE_LISTING_SERVICE)
-                ->addReference('itemId', $listing['main']['itemId'])
-                ->addReference('etsyListingId', $listingId)
-                ->debug(EtsyServiceProvider::PLUGIN_NAME . '::log.deleteImage', $logArray);
-
-            $logArray = [
-                'sortedList' => $sortedList,
-                'slicedList' => $slicedList,
-                'newList' => $newList
-            ];
-
-            $this->getLogger(EtsyServiceProvider::UPDATE_LISTING_SERVICE)
-                ->addReference('itemId', $listing['main']['itemId'])
-                ->addReference('etsyListingId', $listingId)
-                ->debug(EtsyServiceProvider::PLUGIN_NAME . '::log.deleteImage', $logArray);
+        if ($totalCounter == 0) {
+            throw new \Exception($this->translator->trans(EtsyServiceProvider::PLUGIN_NAME . '::item.noImages'));
         }
 
-        foreach ($etsyImages as $etsyImage) {
+        if ($totalCounter > 10) { // With the plenty images we will overflow the allowed images so we need to delete non-plenty images
+            foreach ($etsyImages as $etsyImageKey => $etsyImage) {
+                $deletableListings[] = $etsyImage['listing_image_id'];
+                unset($etsyImages[$etsyImageKey]);
+                $totalCounter--;
+
+                if ($totalCounter == 10) {
+                    break;
+                }
+            }
+        }
+
+        $this->getLogger(EtsyServiceProvider::DELETE_LISTING_IMAGE)
+            ->addReference('etsyListingId', $listingId)
+            ->addReference('itemId', $listing['main']['itemId'])
+            ->debug(EtsyServiceProvider::PLUGIN_NAME . '::log.deleteImage', [
+                'deletingImages' => $deletableListings,
+                'newImages' => $sortedList
+            ]);
+
+        foreach ($deletableListings as $deletableListingId) {
             try {
-                $response = $this->listingImageService->deleteListingImage($listingId, $etsyImage['listingImageId']);
+                $response = $this->listingImageService->deleteListingImage($listingId,
+                    $deletableListingId);
             } catch (\Exception $exception) {
                 //This exception will be thrown if the image does not exist anymore. We were about to delete it so it doesnt matter
                 if ($exception->getMessage() != 'The listing_id provided does not belong to the same shop that is associated with the listing_image_id.') {
@@ -823,6 +850,7 @@ class UpdateListingService
                     $this->translator->trans(EtsyServiceProvider::PLUGIN_NAME . '::item.deleteListingImageError'));
             }
         }
+
         foreach ($sortedList as $image) {
             $response = $this->listingImageService->uploadListingImage($listingId, $image['url'], $image['position']);
             if (!isset($response['results']) || !is_array($response['results'])
@@ -851,8 +879,6 @@ class UpdateListingService
             ];
         }
         $this->imageHelper->update($listingId, json_encode($imageList));
-
-
     }
 
     /**
@@ -923,7 +949,8 @@ class UpdateListingService
                 return;
             }
 
-            $response = $this->listingTranslationService->updateListingTranslation($listingId, strtolower($translatableLanguage), $data);
+            $response = $this->listingTranslationService->updateListingTranslation($listingId,
+                strtolower($translatableLanguage), $data);
 
             if (!isset($response['results']) || !is_array($response['results'])) {
                 $messages = [];

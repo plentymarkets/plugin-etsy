@@ -1,5 +1,8 @@
 # Release Notes für Etsy
 
+## v2.0.33 (2020-10-01)
+### Behoben
+- Beim Upload von Bildern kam es zu Problemen, wenn diese Bilder nicht von plentymarkets hochgeladen wurden oder diese Information dem System durch einen Fehler fehlte. Dieses Verhalten wurde behoben.
 
 ## v2.0.32 (2020-09-30)
 ### Behoben
