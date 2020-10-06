@@ -2,7 +2,7 @@
 
 ## v2.0.34 (2020-10-05)
 ### Behoben
-- Beim Upload von Bildern bei bestehenden Listings konnte es passieren, dass Bilder trotz einer niedrigen Position nicht hochgeladen wurden, wenn es mehr als 10 Bilder gab, die für Etsy freigeschaltet waren. Das Verhalten wurde behoben.
+- Beim Upload von Bildern bei bestehenden Listings konnte es vorkommen, dass Bilder trotz einer niedrigen Position nicht hochgeladen wurden, wenn mehr als 10 Bilder für Etsy freigeschaltet waren. Dieses Verhalten wurde behoben.
 
 ## v2.0.33 (2020-10-01)
 ### Behoben
