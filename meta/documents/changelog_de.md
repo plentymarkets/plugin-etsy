@@ -1,5 +1,9 @@
 # Release Notes für Etsy
 
+## v2.0.34 (2020-10-05)
+### Behoben
+- Beim Upload von Bildern bei bestehenden Listings konnte es vorkommen, dass Bilder trotz einer niedrigen Position nicht hochgeladen wurden, wenn mehr als 10 Bilder für Etsy freigeschaltet waren. Dieses Verhalten wurde behoben.
+
 ## v2.0.33 (2020-10-01)
 ### Behoben
 - Beim Upload von Bildern kam es zu Problemen, wenn diese Bilder nicht von plentymarkets hochgeladen wurden oder diese Information dem System durch einen Fehler fehlte. Dieses Verhalten wurde behoben.

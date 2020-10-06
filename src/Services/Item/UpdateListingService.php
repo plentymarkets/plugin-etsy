@@ -764,8 +764,8 @@ class UpdateListingService
                 }
             }
         }
-        $slicedList = array_slice($newList, 0, 10);
-        $sortedList = $this->imageHelper->sortImagePosition($slicedList);
+		$sortedList = $this->imageHelper->sortImagePosition($newList);
+        $slicedList = array_slice($sortedList, 0, 10);
 
         $imageCounter = 0;
 
@@ -774,7 +774,7 @@ class UpdateListingService
                 $isImageStillAvailable = false;
                 $isImageFromPlenty = $alreadyListedImage['listingImageId'] == $etsyImage['listing_image_id'];
 
-                foreach ($sortedList as $plentyKey => $plentyImage) {
+                foreach ($slicedList as $plentyKey => $plentyImage) {
                     if ( // Image is already correctly listed, so we don't need to work with it anymore
                         $plentyImage['id'] == $alreadyListedImage['imageId']
                         && $isImageFromPlenty
@@ -782,7 +782,7 @@ class UpdateListingService
                     ) {
                         $isImageStillAvailable = true;
                         $imageList[] = $alreadyListedImage;
-                        unset($sortedList[$plentyKey]);
+                        unset($slicedList[$plentyKey]);
                         unset($alreadyListedImages[$alreadyListedImageKey]);
                         unset($etsyImages[$etsyImageKey]);
                         $imageCounter++;
@@ -797,7 +797,7 @@ class UpdateListingService
             }
         }
 
-        $totalCounter = count($sortedList) + $imageCounter + count($etsyImages);
+        $totalCounter = count($slicedList) + $imageCounter + count($etsyImages);
 
         if ($totalCounter == 0) {
             throw new \Exception($this->translator->trans(EtsyServiceProvider::PLUGIN_NAME . '::item.noImages'));
@@ -820,7 +820,7 @@ class UpdateListingService
             ->addReference('itemId', $listing['main']['itemId'])
             ->debug(EtsyServiceProvider::PLUGIN_NAME . '::log.deleteImage', [
                 'deletingImages' => $deletableListings,
-                'newImages' => $sortedList
+                'newImages' => $slicedList
             ]);
 
         foreach ($deletableListings as $deletableListingId) {
@@ -851,7 +851,7 @@ class UpdateListingService
             }
         }
 
-        foreach ($sortedList as $image) {
+        foreach ($slicedList as $image) {
             $response = $this->listingImageService->uploadListingImage($listingId, $image['url'], $image['position']);
             if (!isset($response['results']) || !is_array($response['results'])
                 || !isset($response['results'][0]) || !isset($response['results'][0]['listing_image_id'])) {
