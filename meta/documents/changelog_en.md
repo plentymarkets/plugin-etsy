@@ -2,7 +2,7 @@
 
 ## v2.0.34 (2020-10-05)
 ### Fixed
-- When uploading images for existing listings it could happen that images were not uploaded despite a low position if there were more than 10 images enabled for Etsy. This behavior has been fixed.
+- When uploading images for existing listings, in some cases these images were not uploaded despite a low position if more than 10 images were enabled for Etsy. This behavior has been fixed.
 
 ## v2.0.33 (2020-10-01)
 ### Fixed
