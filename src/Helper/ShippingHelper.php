@@ -1144,10 +1144,8 @@ class ShippingHelper
 
 		$shippingServiceProvider = $shippingServiceProviderRepository->find($parcelServiceType);
 
-		if($shippingServiceProvider instanceof ShippingServiceProvider)
-		{
-			if(isset($shippingServiceProvider->id) && $shippingServiceProvider->id > 0)
-			{
+		if($shippingServiceProvider instanceof ShippingServiceProvider) {
+			if(isset($shippingServiceProvider->id) && $shippingServiceProvider->id > 0) {
 				$shippingServiceProviderName = $shippingServiceProvider->name;
 
 				switch ($shippingServiceProviderName) {
