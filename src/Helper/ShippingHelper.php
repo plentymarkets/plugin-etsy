@@ -3,6 +3,8 @@
 namespace Etsy\Helper;
 
 use Plenty\Modules\Accounting\Contracts\AccountingServiceContract;
+use Plenty\Modules\Order\Shipping\ServiceProvider\Contracts\ShippingServiceProviderRepositoryContract;
+use Plenty\Modules\Order\Shipping\ServiceProvider\Models\ShippingServiceProvider;
 use Plenty\Plugin\Application;
 
 class ShippingHelper
@@ -1134,6 +1136,73 @@ class ShippingHelper
 		}
 
 		$locationId = $accountingService->detectLocationId($plentyId);
+
+		/**
+		 * @var ShippingServiceProviderRepositoryContract $shippingServiceProviderRepository
+		 */
+		$shippingServiceProviderRepository = pluginApp(ShippingServiceProviderRepositoryContract::class);
+
+		$shippingServiceProvider = $shippingServiceProviderRepository->find($parcelServiceType);
+
+		if($shippingServiceProvider instanceof ShippingServiceProvider)
+		{
+			if(isset($shippingServiceProvider->id) && $shippingServiceProvider->id > 0)
+			{
+				$shippingServiceProviderName = $shippingServiceProvider->name;
+
+				switch ($shippingServiceProviderName) {
+					case 'DHL Shipping (Versenden)':
+						switch ($locationId) {
+							case 1: // Germany
+								return 'dhl-germany';
+
+							case 21: // Netherlands
+								return 'dhl-nl';
+
+							case 3:
+							case 17: // Belgium/Luxembourg
+								return 'dhl-benelux';
+
+							case 23: // Poland
+								return 'dhl-poland';
+
+							default:
+								return 'dhl';
+						}
+
+					case 'DPD UK':
+						return 'dpd-uk';
+
+					case 'DPD Versand Services':
+						switch ($locationId) {
+							case 1: // Germany
+								return 'dpd-de';
+
+							case 23: // Poland
+								return 'dpd-poland';
+
+							case 12: // United Kingdom
+								return 'dpd-uk';
+
+							default:
+								return 'dpd';
+						}
+
+					case 'Deutsche Post - Internetmarke':
+						return 'deutsch-post';
+
+					case 'HermesShippingInterface':
+						if ($locationId == 1) { // Germany
+							return 'hermes-de';
+						}
+
+						return 'hermes';
+
+					case 'GLS Shipping':
+						return 'gls';
+				}
+			}
+		}
 
 		switch($parcelServiceType)
 		{
