@@ -2,7 +2,7 @@
 
 ## v2.0.35 (2020-10-13)
 ### Behoben
-- Bei der Übermittlung der Versandbestätigung konnte es zu Problemen kommen, wenn das Versandprofil am Auftrag auf ein Plugin zurückzuführen war. 
+- Bei der Übermittlung der Versandbestätigung konnte es zu Problemen kommen, wenn das Versandprofil am Auftrag auf ein Plugin zurückzuführen war. Dieses Verhalten wurde behoben.
 
 ## v2.0.34 (2020-10-05)
 ### Behoben
