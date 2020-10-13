@@ -1,5 +1,9 @@
 # Release notes for Etsy
 
+## v2.0.35 (2020-10-13)
+### Fixed
+- During the transmission of the shipping confirmation, problems could occur when the shipping profile at the order was due to a plugin.
+
 ## v2.0.34 (2020-10-05)
 ### Fixed
 - When uploading images for existing listings, in some cases these images were not uploaded despite a low position if more than 10 images were enabled for Etsy. This behavior has been fixed.
