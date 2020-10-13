@@ -2,7 +2,7 @@
 
 ## v2.0.35 (2020-10-13)
 ### Fixed
-- During the transmission of the shipping confirmation, problems could occur when the shipping profile at the order was due to a plugin.
+- During transmission of the shipping confirmation, problems could occur if the shipping profile at the order was associated with a plugin. This behavior has been fixed.
 
 ## v2.0.34 (2020-10-05)
 ### Fixed
