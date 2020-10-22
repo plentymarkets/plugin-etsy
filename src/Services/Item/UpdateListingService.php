@@ -403,7 +403,7 @@ class UpdateListingService
                 ->trans(EtsyServiceProvider::PLUGIN_NAME . '::log.wrongTitleOrDescription');
         }
 
-        if (strlen($data['title']) > 140) {
+        if (mb_strlen($data['title']) > 140) {
             $articleFailed = true;
             $articleErrors[] = $this->translator
                 ->trans(EtsyServiceProvider::PLUGIN_NAME . '::log.longTitle');
