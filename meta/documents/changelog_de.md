@@ -1,5 +1,9 @@
 # Release Notes für Etsy
 
+## v2.0.36 (2020-10-22)
+### Behoben
+- Bei Export oder Aktualisierung eines Artikels konnte die Länge des Titels bemängelt werden, obwohl die maximale Länge nicht überschritten wurde. Dieses Verhalten wurde behoben.
+
 ## v2.0.35 (2020-10-13)
 ### Behoben
 - Bei der Übermittlung der Versandbestätigung konnte es zu Problemen kommen, wenn das Versandprofil am Auftrag auf ein Plugin zurückzuführen war. Dieses Verhalten wurde behoben.

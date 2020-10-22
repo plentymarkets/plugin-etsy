@@ -1,5 +1,9 @@
 # Release notes for Etsy
 
+## v2.0.36 (2020-10-22)
+### Fixed
+- When exporting or updating an item, the length of the title could be criticized, although the maximum length was not exceeded. This behavior has been fixed.
+
 ## v2.0.35 (2020-10-13)
 ### Fixed
 - During transmission of the shipping confirmation, problems could occur if the shipping profile at the order was associated with a plugin. This behavior has been fixed.
