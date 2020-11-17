@@ -115,6 +115,10 @@ abstract class AbstractBatchService
             //$this->catalogExportService->setUpdatedSince($lastRun);
         }
 
+        //Todo: move request formatting into post mutator
+        //Todo: inventory handling in mutator and after that
+        //Todo: Listing building in post mutator
+
         /** @var VariationDataInterfaceContract $vdi */
         $vdi = app(VariationDataInterfaceContract::class);
 
