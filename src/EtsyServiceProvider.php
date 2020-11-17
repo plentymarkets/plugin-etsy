@@ -2,6 +2,7 @@
 
 namespace Etsy;
 
+use Etsy\Catalog\EtsyCatalogTemplateProvider;
 use Etsy\Contracts\CategoryRepositoryContract;
 use Etsy\Contracts\LegalInformationRepositoryContract;
 use Etsy\Contracts\PropertyRepositoryContract;
@@ -11,6 +12,8 @@ use Etsy\Repositories\LegalInformationRepository;
 use Etsy\Repositories\PropertyRepository;
 use Etsy\Repositories\TaxonomyRepository;
 use Plenty\Log\Services\ReferenceContainer;
+use Plenty\Modules\Catalog\Contracts\TemplateContainerContract;
+use Plenty\Modules\Catalog\Templates\Template;
 use Plenty\Modules\Cron\Services\CronContainer;
 use Plenty\Modules\EventProcedures\Services\Entries\ProcedureEntry;
 use Plenty\Modules\EventProcedures\Services\EventProceduresService;
@@ -74,15 +77,22 @@ class EtsyServiceProvider extends ServiceProvider
 		$this->getApplication()->singleton(ItemDataProviderFactory::class);
 
 		$this->getApplication()->register(EtsyRouteServiceProvider::class);
-
-		$this->getApplication()->register(CatalogBootServiceProvider::class);
 	}
 
-	/**
-	 * @param CronContainer          $container
-	 * @param EventProceduresService $eventProceduresService
-	 */
-	public function boot(CronContainer $container, EventProceduresService $eventProceduresService, ReferenceContainer $referenceContainer, WizardContainerContract $wizardContainerContract)
+    /**
+     * @param CronContainer $container
+     * @param EventProceduresService $eventProceduresService
+     * @param ReferenceContainer $referenceContainer
+     * @param WizardContainerContract $wizardContainerContract
+     * @param TemplateContainerContract $templateContainer
+     * @throws \Plenty\Log\Exceptions\ReferenceTypeException
+     */
+	public function boot(CronContainer $container,
+        EventProceduresService $eventProceduresService,
+        ReferenceContainer $referenceContainer,
+        WizardContainerContract $wizardContainerContract,
+    TemplateContainerContract $templateContainer
+    )
 	{
 	    $wizardContainerContract->register('etsy-migration-assistant', MigrationAssistant::class);
 
@@ -109,5 +119,7 @@ class EtsyServiceProvider extends ServiceProvider
 			'de' => 'Zahlungsbestätigung an Etsy senden',
 			'en' => 'Send payment notification to Etsy'
 		], 'Etsy\\Procedures\\PaymentNotificationEventProcedure@run');
+
+        $templateContainer->register('Etsy::catalog.name', 'Etsy::catalog.type', EtsyCatalogTemplateProvider::class);
 	}
 }
