@@ -1,5 +1,9 @@
 # Release notes for Etsy
 
+## v2.0.37 (2020-11-20)
+### Behoben
+- In the case of taxable orders, the tax is no longer imported, since the tax is paid directly by Etsy. The order and the payment therefore only contain the item prices and the shipping costs.
+
 ## v2.0.36 (2020-10-22)
 ### Fixed
 - When exporting or updating an item, the length of the title could be criticized, although the maximum length was not exceeded. This behavior has been fixed.

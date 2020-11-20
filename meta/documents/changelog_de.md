@@ -1,5 +1,9 @@
 # Release Notes für Etsy
 
+## v2.0.37 (2020-11-20)
+### Behoben
+- Bei steuerpflichtigen Aufträgen wird die Steuer nicht weiter importiert, da die Steuer direkt durch Etsy abgeführt wird. Der Auftrag und die Zahlung beinhalten also nur noch die Artikelpreise und die Versandkosten.
+
 ## v2.0.36 (2020-10-22)
 ### Behoben
 - Bei Export oder Aktualisierung eines Artikels konnte die Länge des Titels bemängelt werden, obwohl die maximale Länge nicht überschritten wurde. Dieses Verhalten wurde behoben.
