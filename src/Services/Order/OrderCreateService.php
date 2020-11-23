@@ -315,8 +315,12 @@ class OrderCreateService
 					$vatId = $variation->parent->vatId;
 				}
 
-				$tax = $taxPerTransaction / $transaction['quantity'];
-				$price = $transaction['price'] + $tax;
+				if ($this->orderHelper->isDirectCheckout((string)$data['payment_method'])) {
+					$price = $transaction['price'];
+				} else {
+					$tax = $taxPerTransaction / $transaction['quantity'];
+					$price = $transaction['price'] + $tax;
+				}
 
 				$orderItems[] = [
 					'typeId'          => $itemVariationId > 0 ? 1 : 9,
@@ -524,7 +528,7 @@ class OrderCreateService
 				foreach ($payments as $paymentData) {
 					/** @var Payment $payment */
 					$payment                  = $this->app->make(Payment::class);
-					$payment->amount          = $paymentData['amount_gross'] / 100;
+					$payment->amount          = ($paymentData['amount_gross'] / 100) - $data['total_tax_cost'];
 					$payment->mopId           = $paymentHelper->getPaymentMethodId();
 					$payment->currency        = $paymentData['currency'];
 					$payment->status          = 2;
