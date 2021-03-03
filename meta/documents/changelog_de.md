@@ -1,5 +1,9 @@
 # Release Notes für Etsy
 
+## v2.0.38 (2021-03-03)
+### Behoben
+- Inaktive Etsy-Kataloge konnten zu Problemen beim Export führen. Dieses Verhalten wurde behoben.
+
 ## v2.0.37 (2020-11-20)
 ### Behoben
 - Bei steuerpflichtigen Aufträgen wird die Steuer nicht mehr importiert, da die Steuer direkt durch Etsy abgeführt wird. Der Auftrag und die Zahlung beinhalten also nur noch die Artikelpreise und die Versandkosten.
