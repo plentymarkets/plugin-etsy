@@ -160,7 +160,9 @@ class StartListingService
         }
 
         try {
-            $listing = $this->createListing($listing);
+            $listingData = $this->createListing($listing);
+            $listing = $listingData['listing'];
+            unset($listingData['listing']);
         } catch (ListingException $listingException) {
             $this->getLogger(EtsyServiceProvider::START_LISTING_SERVICE)
                 ->addReference('itemId', $listing['main']['itemId'])
@@ -184,7 +186,7 @@ class StartListingService
             $this->addTranslations($listing, $listingId);
             $listing = $this->fillInventory($listingId, $listing);
             $this->addPictures($listingId, $listing);
-            $this->publish($listingId, $listing);
+            $this->publish($listingId, $listing, $listingData['etsyListing']);
         } catch (ListingException $listingException) {
             $skus = [];
             foreach ($listing as $variation) {
@@ -585,6 +587,12 @@ class StartListingService
         $data['language'] = $mainLanguage;
         $response = $this->listingService->createListing($mainLanguage, $data);
 
+        //Due to the api issue we need to reuse the listings data in the final update request
+        //But in there some attributes are not allowed so we unset them
+        unset($data['language']);
+        unset($data['price']);
+        unset($data['quantity']);
+
         if (!isset($response['results']) || !is_array($response['results'])) {
             $messages = [];
 
@@ -606,7 +614,7 @@ class StartListingService
         $results = (array)$response['results'];
         $listing['main']['listingId'] = (int)reset($results)['listing_id'];
 
-        return $listing;
+        return ['listing' => $listing, 'etsyListing' => $data];
     }
 
     /**
@@ -1004,14 +1012,15 @@ class StartListingService
     /**
      * @param int $listingId
      * @param $listing
+     * @param $etsyListingData
+     * For some reason we need to send the entire listing currently in an update or the request fails, therefore we need
+     * the listing data at this point
      */
-    protected function publish($listingId, $listing)
+    protected function publish($listingId, $listing, $etsyListingData)
     {
-        $data = [
-            'state' => 'active',
-        ];
+        $etsyListingData['state'] = 'active';
 
-        $this->listingService->updateListing($listingId, $data);
+        $this->listingService->updateListing($listingId, $etsyListingData);
 
         foreach ($listing as $variation) {
             if (!$variation['isActive'] || $variation['failed']) {
