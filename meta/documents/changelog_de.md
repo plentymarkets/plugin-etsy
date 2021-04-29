@@ -1,5 +1,10 @@
 # Release Notes für Etsy
 
+## v2.0.39 (2021-04-29)
+### Behoben
+- Aufgrund einer Änderung im Verhalten der API konnten Listings nach dem Starten nicht mehr aktiv geschaltet werden. Das Aktiv-Schalten wurde an die neuen Gegebenheiten angepasst.
+
+
 ## v2.0.38 (2021-03-03)
 ### Behoben
 - Inaktive Etsy-Kataloge konnten zu Problemen beim Export führen. Dieses Verhalten wurde behoben.

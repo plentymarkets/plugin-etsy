@@ -1,5 +1,9 @@
 # Release notes for Etsy
 
+## v2.0.39 (2021-04-29)
+### Fixed
+- Due to a change in the behavior of the API listings could not be activated after creation. The state change was adapted to the new behavior.
+
 ## v2.0.38 (2021-03-03)
 ### Fixed
 - Having inactive etsy catalogs will no longer cause problems in the export.
