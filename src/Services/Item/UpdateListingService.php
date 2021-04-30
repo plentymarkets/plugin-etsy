@@ -669,7 +669,7 @@ class UpdateListingService
 
         if (!$isEnabled && $isSingleListing) {
             $this->listingService->updateListing($listingId, ['state' => 'inactive'], $language);
-            throw new \Exception("Update Process interrupted");
+            throw new \Exception("Single variation listing disabled. Variation not active or no stock.");
         }
 
         //logging failed article / variations
