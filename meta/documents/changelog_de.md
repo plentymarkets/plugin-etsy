@@ -1,5 +1,10 @@
 # Release Notes für Etsy
 
+## v2.0.40 (2021-04-30)
+### Behoben
+- In manchen Fällen kann es vorkommen, dass die ID der Shop-Abteilung von Etsy als String übertragen wird und es somit Probleme beim Export gab. Dieses Verhalten wurde nun berücksichtigt.
+- Log Anpassungen
+
 ## v2.0.39 (2021-04-29)
 ### Behoben
 - Aufgrund einer Änderung im Verhalten der API konnten Listings nach dem Starten nicht mehr aktiv geschaltet werden. Das Aktiv-Schalten wurde an die neuen Gegebenheiten angepasst.

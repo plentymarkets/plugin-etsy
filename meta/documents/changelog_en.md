@@ -1,5 +1,10 @@
 # Release notes for Etsy
 
+## v2.0.40 (2021-04-30)
+### Fixed
+- In some cases, it can happen that the ID of the store section of Etsy is transferred as a string. As a result problems while the export occurred. This behavior has now been taken into account.
+- Log adjustments
+
 ## v2.0.39 (2021-04-29)
 ### Fixed
 - Due to a change in the behavior of the API listings could not be activated after creation. The state change was adapted to the new behavior.
