@@ -308,7 +308,7 @@ class UpdateListingService
         }
 
         if (isset($listing['main']['shopSections'][0])) {
-            $data['shop_section_id'] = $listing['main']['shopSections'][0];
+            $data['shop_section_id'] = (int)$listing['main']['shopSections'][0];
         }
 
         if (isset($listing['main']['materials'])) {
@@ -382,7 +382,7 @@ class UpdateListingService
         }
 
         if (isset($listing['main']['shop_section_id'][0])) {
-            $data['shop_section_id'] = $listing['main']['shop_section_id'];
+            $data['shop_section_id'] = (int)$listing['main']['shop_section_id'];
         }
 
         $articleFailed = false;
