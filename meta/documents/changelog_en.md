@@ -2,7 +2,7 @@
 
 ## v2.0.40 (2021-04-30)
 ### Fixed
-- In some cases, it can happen that the ID of the store section of Etsy is transferred as a string. As a result problems while the export occurred. This behavior has now been taken into account.
+- In some cases, the ID of the Etsy store section is imported as a string. This resulted in problems during exports. This behavior is now taken into account.
 - Log adjustments
 
 ## v2.0.39 (2021-04-29)
