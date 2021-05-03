@@ -1,5 +1,9 @@
 # Release notes for Etsy
 
+## v2.0.41 (2021-05-03)
+### Fixed
+- In some cases the following error occurred in the StartListingService: "Shop is not enrolled in this language. (en) Cannot edit field "1"". This problem was solved.
+
 ## v2.0.40 (2021-04-30)
 ### Fixed
 - In some cases, the ID of the Etsy store section is imported as a string. This resulted in problems during exports. This behavior is now taken into account.
