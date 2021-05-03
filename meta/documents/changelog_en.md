@@ -1,5 +1,9 @@
 # Release notes for Etsy
 
+## v2.0.41 (2021-05-03)
+### Fixed
+- Update listing adjustments.
+
 ## v2.0.40 (2021-04-30)
 ### Fixed
 - In some cases, the ID of the Etsy store section is imported as a string. This resulted in problems during exports. This behavior is now taken into account.
