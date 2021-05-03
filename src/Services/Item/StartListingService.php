@@ -589,7 +589,6 @@ class StartListingService
 
         //Due to the api issue we need to reuse the listings data in the final update request
         //But in there some attributes are not allowed so we unset them
-        unset($data['language']);
         unset($data['price']);
         unset($data['quantity']);
 
@@ -1019,8 +1018,14 @@ class StartListingService
     protected function publish($listingId, $listing, $etsyListingData)
     {
         $etsyListingData['state'] = 'active';
+        $language = "";
 
-        $this->listingService->updateListing($listingId, $etsyListingData);
+        if (isset($etsyListingData['language'])) {
+            $language = $etsyListingData['language'];
+            unset($etsyListingData['language']);
+        }
+
+        $this->listingService->updateListing($listingId, $etsyListingData, $language);
 
         foreach ($listing as $variation) {
             if (!$variation['isActive'] || $variation['failed']) {
