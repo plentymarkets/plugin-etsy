@@ -2,7 +2,7 @@
 
 ## v2.0.41 (2021-05-03)
 ### Behoben
-- Anpassungen für das Update von Listings.
+- Anpassungen für das Aktualisieren von Listings.
 
 ## v2.0.40 (2021-04-30)
 ### Behoben
