@@ -2,7 +2,7 @@
 
 ## v2.0.41 (2021-05-03)
 ### Fixed
-- Update listing adjustments.
+- Adjustments for updating listings.
 
 ## v2.0.40 (2021-04-30)
 ### Fixed
