@@ -517,7 +517,11 @@ class OrderHelper
                 $paymentHelper = $this->app->make(PaymentHelper::class);
 
                 foreach ($payments as $paymentData) {
-                    $paidTimeBerlin = Carbon::createFromTimestamp($paymentData['create_date'])
+                    $createPaymentTimeBerlin = Carbon::createFromTimestamp($paymentData['create_date'])
+                        ->timezone('Europe/Berlin')
+                        ->format('Y-m-d H:i:s');
+
+                    $updatePaymentTimeBerlin = Carbon::createFromTimestamp($paymentData['update_date'])
                         ->timezone('Europe/Berlin')
                         ->format('Y-m-d H:i:s');
 
@@ -529,7 +533,8 @@ class OrderHelper
                     $payment->status           = Payment::STATUS_APPROVED;
                     $payment->transactionType  = Payment::TRANSACTION_TYPE_BOOKED_POSTING;
                     $payment->isSystemCurrency = $order->amount->isSystemCurrency;
-                    $payment->receivedAt       = $paidTimeBerlin;
+                    $payment->receivedAt       = $createPaymentTimeBerlin;
+                    $payment->importedAt       = $updatePaymentTimeBerlin;
 
                     $paymentProperties = [];
                     $paymentProperties[] = $this->createPaymentProperty(PaymentProperty::TYPE_TRANSACTION_ID, $paymentData['payment_id']);
@@ -549,15 +554,17 @@ class OrderHelper
 
                     $this->getLogger(__FUNCTION__)
                         ->addReference('orderId', $order->id)
+                        ->addReference('etsyReceiptId', $data['receipt_id'])
                         ->addReference('paymentId', $payment->id)
-                        ->info('Etsy::order.paymentAssigned', [
-                            'amount'            => $payment->amount,
-                            'methodOfPaymentId' => $payment->mopId,
+                        ->report('Etsy::order.paymentAssigned', [
+                            'etsyPaymentData'             => $paymentData,
+                            'plentyCreatePaymentResponse' => $payment,
                         ]);
                 }
             } else {
                 $this->getLogger(__FUNCTION__)
                     ->addReference('orderId', $order->id)
+                    ->addReference('etsyReceiptId', $data['receipt_id'])
                     ->info('Etsy::order.paymentNotFound', [
                         'receiptId' => $data['receipt_id'],
                     ]);
@@ -565,6 +572,7 @@ class OrderHelper
         } catch (\Exception $ex) {
             $this->getLogger(__FUNCTION__)
                 ->addReference('orderId', $order->id)
+                ->addReference('etsyReceiptId', $data['receipt_id'])
                 ->error('Etsy::order.paymentError', $ex->getMessage());
         }
     }

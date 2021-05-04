@@ -119,7 +119,6 @@ class OrderImportService
                             $receiptData['was_paid'] == true
                         ) {
                             $this->orderHelper->createPayment($receiptData, $order);
-                            //TODO: Log for added payment
                         } elseif ($order->paymentStatus == 'unpaid' &&
                             $receiptData['was_paid'] == false
                         ) {
