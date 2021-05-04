@@ -36,18 +36,24 @@ class ReceiptService
 	 */
 	public function findAllShopReceipts($shopId,$lang, $from, $to)
 	{
-		return $this->client->call('findAllShopReceipts', [
-			'shop_id' => $shopId,
-            'language'    => $lang
-		], [
-											'limit'       => 200,
-											'min_created' => strtotime($from),
-											'max_created' => strtotime($to),
-		                                ], [], [
-			                                'Transactions' => 'Transactions',
-			                                'Buyer'        => 'Buyer',
-		                                ]);
-	}
+        return $this->client->call(
+            'findAllShopReceipts',
+            [
+                'shop_id'  => $shopId,
+                'language' => $lang
+            ],
+            [
+                'limit'             => 200,
+                'min_last_modified' => strtotime($from),
+                'max_last_modified' => strtotime($to),
+            ],
+            [],
+            [
+                'Transactions' => 'Transactions',
+                'Buyer'        => 'Buyer',
+            ]
+        );
+    }
 
 	/**
 	 * Updates a Shop_Receipt2

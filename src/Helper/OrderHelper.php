@@ -2,18 +2,25 @@
 
 namespace Etsy\Helper;
 
-use Plenty\Modules\Order\Contracts\OrderRepositoryContract;
-use Plenty\Modules\Order\Models\OrderType;
+use Carbon\Carbon;
+use Etsy\Api\Services\PaymentService;
+use Plenty\Modules\Order\Models\Order;
 use Plenty\Modules\Order\Shipping\Countries\Contracts\CountryRepositoryContract;
 use Plenty\Modules\Order\Shipping\Countries\Models\Country;
 use Plenty\Modules\Order\Shipping\Countries\Models\CountryState;
-use Plenty\Repositories\Models\PaginatedResult;
+use Plenty\Modules\Payment\Contracts\PaymentRepositoryContract;
+use Plenty\Modules\Payment\Models\Payment;
+use Plenty\Modules\Payment\Models\PaymentProperty;
+use Plenty\Plugin\Application;
+use Plenty\Plugin\Log\Loggable;
 
 /**
  * Class OrderHelper
  */
 class OrderHelper
 {
+    use Loggable;
+
 	/**
 	 * @var PaymentHelper
 	 */
@@ -24,14 +31,20 @@ class OrderHelper
 	 */
 	private $settingsHelper;
 
+    /**
+     * @var Application
+     */
+	private $app;
+
 	/**
 	 * @param PaymentHelper  $paymentHelper
 	 * @param SettingsHelper $settingsHelper
 	 */
-	public function __construct(PaymentHelper $paymentHelper, SettingsHelper $settingsHelper)
+	public function __construct(PaymentHelper $paymentHelper, SettingsHelper $settingsHelper, Application $app)
 	{
 		$this->paymentHelper  = $paymentHelper;
 		$this->settingsHelper = $settingsHelper;
+		$this->app            = $app;
 	}
 
 	/**
@@ -482,38 +495,95 @@ class OrderHelper
 		);
 	}
 
-	/**
-	 * Check if order was already imported.
-	 *
-	 * @param mixed $externalOrderId
-	 *
-	 * @return bool
-	 */
-	public function orderWasImported($externalOrderId)
-	{
-		/** @var OrderRepositoryContract $orderRepo */
-		$orderRepo = pluginApp(OrderRepositoryContract::class);
+    /**
+     * Create payment.
+     *
+     * @param array $data
+     * @param Order $order
+     */
+    public function createPayment(array $data, Order $order)
+    {
+        try {
+            /** @var PaymentService $paymentService */
+            $paymentService = pluginApp(PaymentService::class);
 
-		if($orderRepo instanceof OrderRepositoryContract)
-		{
-			$orderRepo->setFilters([
-				                       'externalOrderId' => $externalOrderId,
-				                       'referrerId'      => $this->getReferrerId(),
-				                       'orderType'       => OrderType::TYPE_SALES_ORDER,
-			                       ]);
+            /** @var PaymentRepositoryContract $paymentRepo */
+            $paymentRepo = pluginApp(PaymentRepositoryContract::class);
 
-			/** @var PaginatedResult $paginatedResult */
-			$paginatedResult = $orderRepo->searchOrders();
+            $payments = $paymentService->findShopPaymentByReceipt($this->settingsHelper->getShopSettings('shopId'), $data['receipt_id']);
 
-			if($paginatedResult instanceof PaginatedResult)
-			{
-				if($paginatedResult->getTotalCount() > 0)
-				{
-					return true;
-				}
-			}
-		}
+            if (is_array($payments) && count($payments)) {
+                /** @var PaymentHelper $paymentHelper */
+                $paymentHelper = $this->app->make(PaymentHelper::class);
 
-		return false;
-	}
+                foreach ($payments as $paymentData) {
+                    $paidTimeBerlin = Carbon::createFromTimestamp($paymentData['create_date'])
+                        ->timezone('Europe/Berlin')
+                        ->format('Y-m-d H:i:s');
+
+                    /** @var Payment $payment */
+                    $payment                   = $this->app->make(Payment::class);
+                    $payment->amount           = ($paymentData['amount_gross'] / 100) - $data['total_tax_cost'];
+                    $payment->mopId            = $paymentHelper->getPaymentMethodId();
+                    $payment->currency         = $paymentData['currency'];
+                    $payment->status           = Payment::STATUS_APPROVED;
+                    $payment->transactionType  = Payment::TRANSACTION_TYPE_BOOKED_POSTING;
+                    $payment->isSystemCurrency = $order->amount->isSystemCurrency;
+                    $payment->receivedAt       = $paidTimeBerlin;
+
+                    $paymentProperties = [];
+                    $paymentProperties[] = $this->createPaymentProperty(PaymentProperty::TYPE_TRANSACTION_ID, $paymentData['payment_id']);
+                    $paymentProperties[] = $this->createPaymentProperty(PaymentProperty::TYPE_ORIGIN, Payment::ORIGIN_PLUGIN);
+
+                    $payment->properties = $paymentProperties;
+                    $payment->updateOrderPaymentStatus = true;
+                    $payment->order = [
+                        'orderId' => $order->id
+                    ];
+
+                    if (isset($order->contactReceiverId)) {
+                        $payment->contact()->contactId = $order->contactReceiverId;
+                    }
+
+                    $payment = $paymentRepo->createPayment($payment);
+
+                    $this->getLogger(__FUNCTION__)
+                        ->addReference('orderId', $order->id)
+                        ->addReference('paymentId', $payment->id)
+                        ->info('Etsy::order.paymentAssigned', [
+                            'amount'            => $payment->amount,
+                            'methodOfPaymentId' => $payment->mopId,
+                        ]);
+                }
+            } else {
+                $this->getLogger(__FUNCTION__)
+                    ->addReference('orderId', $order->id)
+                    ->info('Etsy::order.paymentNotFound', [
+                        'receiptId' => $data['receipt_id'],
+                    ]);
+            }
+        } catch (\Exception $ex) {
+            $this->getLogger(__FUNCTION__)
+                ->addReference('orderId', $order->id)
+                ->error('Etsy::order.paymentError', $ex->getMessage());
+        }
+    }
+
+    /**
+     * Create a payment property based on a given type ID and value.
+     *
+     * @param int   $typeId
+     * @param mixed $value
+     *
+     * @return PaymentProperty
+     */
+    private function createPaymentProperty(int $typeId, $value): PaymentProperty
+    {
+        /** @var PaymentProperty $paymentProperty */
+        $paymentProperty         = pluginApp(PaymentProperty::class);
+        $paymentProperty->typeId = $typeId;
+        $paymentProperty->value  = $value;
+
+        return $paymentProperty;
+    }
 }
