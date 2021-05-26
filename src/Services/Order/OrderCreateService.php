@@ -2,9 +2,7 @@
 
 namespace Etsy\Services\Order;
 
-use Etsy\Api\Services\PaymentService;
 use Etsy\Helper\OrderHelper;
-use Etsy\Helper\PaymentHelper;
 use Etsy\Helper\SettingsHelper;
 use Plenty\Modules\Account\Address\Contracts\AddressContactRelationRepositoryContract;
 use Plenty\Modules\Account\Address\Models\AddressRelationType;
@@ -20,10 +18,6 @@ use Plenty\Modules\Order\Contracts\OrderRepositoryContract;
 use Plenty\Modules\Order\Models\Order;
 use Plenty\Modules\Order\Models\OrderItemType;
 use Plenty\Modules\Order\Property\Models\OrderPropertyType;
-use Plenty\Modules\Payment\Contracts\PaymentOrderRelationRepositoryContract;
-use Plenty\Modules\Payment\Contracts\PaymentRepositoryContract;
-use Plenty\Modules\Payment\Models\Payment;
-use Plenty\Modules\Payment\Models\PaymentProperty;
 use Plenty\Plugin\Application;
 use Plenty\Plugin\Log\Loggable;
 use Plenty\Plugin\Translation\Translator;
@@ -92,13 +86,14 @@ class OrderCreateService
 			$this->createOrderComments($order->id, $data);
 
 			// create payment
-			if ($this->orderHelper->isDirectCheckout((string)$data['payment_method'])) {
-				$this->createPayment($data, $order);
-			} else {
-				$this->getLogger(__FUNCTION__)
-					->addReference('orderId', $order->id)
-					->info('Etsy::order.paymentNotCreated');
-			}
+            if ($this->orderHelper->isDirectCheckout((string)$data['payment_method']) &&
+                $data['was_paid'] == true) {
+                $this->orderHelper->createPayment($data, $order);
+            } else {
+                $this->getLogger(__FUNCTION__)
+                    ->addReference('orderId', $order->id)
+                    ->info('Etsy::order.paymentNotCreated');
+            }
 		}
 	}
 
@@ -505,73 +500,6 @@ class OrderCreateService
 	}
 
 	/**
-	 * Create payment.
-	 *
-	 * @param array $data
-	 * @param Order $order
-	 */
-	private function createPayment(array $data, Order $order)
-	{
-		try {
-			/** @var PaymentService $paymentService */
-			$paymentService = pluginApp(PaymentService::class);
-
-			/** @var PaymentRepositoryContract $paymentRepo */
-			$paymentRepo = pluginApp(PaymentRepositoryContract::class);
-
-			$payments = $paymentService->findShopPaymentByReceipt($this->settingsHelper->getShopSettings('shopId'), $data['receipt_id']);
-
-			if (is_array($payments) && count($payments)) {
-				/** @var PaymentHelper $paymentHelper */
-				$paymentHelper = $this->app->make(PaymentHelper::class);
-
-				foreach ($payments as $paymentData) {
-					/** @var Payment $payment */
-					$payment                  = $this->app->make(Payment::class);
-					$payment->amount          = ($paymentData['amount_gross'] / 100) - $data['total_tax_cost'];
-					$payment->mopId           = $paymentHelper->getPaymentMethodId();
-					$payment->currency        = $paymentData['currency'];
-					$payment->status          = 2;
-					$payment->transactionType = 2;
-
-					$paymentProperties = [];
-
-					$paymentProperties[] = $this->createPaymentProperty(PaymentProperty::TYPE_TRANSACTION_ID, $paymentData['payment_id']);
-
-					$paymentProperties[] = $this->createPaymentProperty(PaymentProperty::TYPE_ORIGIN, Payment::ORIGIN_PLUGIN);
-
-					$payment->properties = $paymentProperties;
-
-					$payment = $paymentRepo->createPayment($payment);
-
-					/** @var PaymentOrderRelationRepositoryContract $paymentOrderRelation */
-					$paymentOrderRelation = $this->app->make(PaymentOrderRelationRepositoryContract::class);
-
-					$paymentOrderRelation->createOrderRelation($payment, $order);
-
-					$this->getLogger(__FUNCTION__)
-						->addReference('orderId', $order->id)
-						->addReference('paymentId', $payment->id)
-						->info('Etsy::order.paymentAssigned', [
-							'amount'            => $payment->amount,
-							'methodOfPaymentId' => $payment->mopId,
-						]);
-				}
-			} else {
-				$this->getLogger(__FUNCTION__)
-					->addReference('orderId', $order->id)
-					->info('Etsy::order.paymentNotFound', [
-						'receiptId' => $data['receipt_id'],
-					]);
-			}
-		} catch (\Exception $ex) {
-			$this->getLogger(__FUNCTION__)
-				->addReference('orderId', $order->id)
-				->error('Etsy::order.paymentError', $ex->getMessage());
-		}
-	}
-
-	/**
 	 * Get the VAT configuration.
 	 *
 	 * @param array $data
@@ -589,24 +517,6 @@ class OrderCreateService
 		$vatInit->init($this->orderHelper->getCountryIdByEtsyCountryId((int)$data['country_id']), '', $accountingService->detectLocationId($this->app->getPlentyId()), $this->orderHelper->getCountryIdByEtsyCountryId((int)$data['country_id']));
 
 		return $vatInit;
-	}
-
-	/**
-	 * Create a payment property based on a given type ID and value.
-	 *
-	 * @param int   $typeId
-	 * @param mixed $value
-	 *
-	 * @return PaymentProperty
-	 */
-	private function createPaymentProperty(int $typeId, $value): PaymentProperty
-	{
-		/** @var PaymentProperty $paymentProperty */
-		$paymentProperty         = pluginApp(PaymentProperty::class);
-		$paymentProperty->typeId = $typeId;
-		$paymentProperty->value  = $value;
-
-		return $paymentProperty;
 	}
 
 	/**

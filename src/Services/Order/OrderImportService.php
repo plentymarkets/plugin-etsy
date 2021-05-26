@@ -6,11 +6,10 @@ use Etsy\Helper\OrderHelper;
 use Etsy\Helper\SettingsHelper;
 use Etsy\Services\Country\CountryImportService;
 use Plenty\Exceptions\ValidationException;
+use Plenty\Modules\Order\Contracts\OrderRepositoryContract;
 use Plenty\Modules\Order\Shipping\Countries\Contracts\CountryRepositoryContract;
 use Plenty\Plugin\ConfigRepository;
-
 use Etsy\Api\Services\ReceiptService;
-use Etsy\Services\Order\OrderCreateService;
 use Etsy\Validators\EtsyReceiptValidator;
 use Plenty\Plugin\Log\Loggable;
 
@@ -89,7 +88,9 @@ class OrderImportService
 	{
 		$lang = $this->settingsHelper->getShopSettings('mainLanguage', 'de');
 
-		$receipts = $this->receiptService->findAllShopReceipts($this->settingsHelper->getShopSettings('shopId'),$lang, $from, $to);
+		$shopId = $this->settingsHelper->getShopSettings('shopId');
+
+		$receipts = $this->receiptService->findAllShopReceipts($shopId,$lang, $from, $to);
 
 		$countries = $this->countryImportService->run();
 
@@ -97,17 +98,37 @@ class OrderImportService
 		{
 			throw new \Exception($receipts['error_msg']);
 		}
-		elseif(isset($receipts['results']))
-		{
-			foreach($receipts['results'] as $receiptData)
-			{
-				try
-				{
+		elseif(isset($receipts['results'])) {
+			foreach($receipts['results'] as $receiptData) {
+				try {
 					EtsyReceiptValidator::validateOrFail($receiptData);
 
-					if(!$this->orderHelper->orderWasImported($receiptData['receipt_id']) && // TODO remove this in a next version.
-                       !$this->orderHelper->orderWasImported($this->settingsHelper->getShopSettings('shopId') . '_' . $receiptData['receipt_id']))
-					{
+                    /** @var OrderRepositoryContract $orderRepo */
+                    $orderRepo = pluginApp(OrderRepositoryContract::class);
+
+                    try {
+                        $order = $orderRepo->findOrderByExternalOrderId($shopId . '_' . $receiptData['receipt_id']);
+                    } catch (\Exception $exception) {
+
+                    }
+
+
+                    if (isset($order) &&
+                        $this->orderHelper->isDirectCheckout((string)$receiptData['payment_method'])) {
+                        if ($order->paymentStatus == 'unpaid' &&
+                            $receiptData['was_paid'] == true
+                        ) {
+                            $this->orderHelper->createPayment($receiptData, $order);
+                        } elseif ($order->paymentStatus == 'unpaid' &&
+                            $receiptData['was_paid'] == false
+                        ) {
+                            continue;
+                        } else {
+                            $this->getLogger(__FUNCTION__)
+                                ->addReference('etsyReceiptId', $receiptData['receipt_id'])
+                                ->info('Etsy::order.orderAlreadyImported');
+                        }
+                    } else {
 						$this->getLogger(__FUNCTION__)
 							->addReference('etsyReceiptId', $receiptData['receipt_id'])
 							->report('Etsy::order.startOrderImport', $receiptData);
@@ -121,12 +142,6 @@ class OrderImportService
 						} else {
 							$this->orderCreateService->create($receiptData);
 						}
-					}
-					else
-					{
-						$this->getLogger(__FUNCTION__)
-						     ->addReference('etsyReceiptId', $receiptData['receipt_id'])
-						     ->info('Etsy::order.orderAlreadyImported');
 					}
 				}
 				catch(ValidationException $ex)
