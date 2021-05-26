@@ -2,7 +2,7 @@
 
 ## v2.0.42 (2021-05-10)
 ### Changed
-- For some orders it can take up to 72 hours or longer on Etsy side until the payment is confirmed.<br>From now on these orders are imported without payment. The payment will be automatically booked when the payment is confirmed at Etsy.
+- For some orders, it can take up to 72 hours or longer on Etsy's side until the payment is confirmed.<br>From now on, these orders are imported without payment. The payment will be automatically booked when the payment is confirmed by Etsy.
 
 ## v2.0.41 (2021-05-03)
 ### Fixed
