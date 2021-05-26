@@ -2,7 +2,7 @@
 
 ## v2.0.42 (2021-05-10)
 ### Geändert
-- Bei manchen Aufträgen kann es seitens Etsy bis zu 72 Stunden oder länger dauern bis die Zahlung bestätigt ist.<br>Diese Aufträge werden ab jetzt ohne Zahlung importiert. Die Zahlung wird automatisch nachgebucht, wenn die Zahlung bei Etsy bestätigt wurde.
+- Bei manchen Aufträgen kann es seitens Etsy bis zu 72 Stunden oder länger dauern, bis die Zahlung bestätigt ist.<br>Diese Aufträge werden ab jetzt ohne Zahlung importiert. Die Zahlung wird automatisch nachgebucht, wenn die Zahlung bei Etsy bestätigt wurde.
 
 ## v2.0.41 (2021-05-03)
 ### Behoben
