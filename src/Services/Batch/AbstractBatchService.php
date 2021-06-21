@@ -9,10 +9,17 @@ use Illuminate\Support\Collection;
 use Plenty\Modules\Catalog\Contracts\CatalogExportRepositoryContract;
 use Plenty\Modules\Catalog\Contracts\CatalogExportServiceContract;
 use Plenty\Modules\Catalog\Contracts\CatalogRepositoryContract;
+use Plenty\Modules\Catalog\Contracts\TemplateContainerContract;
+use Plenty\Modules\Catalog\Templates\Template;
 use Plenty\Modules\Item\Search\Contracts\VariationElasticSearchScrollRepositoryContract;
 use Plenty\Modules\Item\Variation\Contracts\VariationRepositoryContract;
 use Plenty\Modules\Item\VariationSku\Contracts\VariationSkuRepositoryContract;
 use Plenty\Modules\Item\VariationSku\Models\VariationSku;
+use Plenty\Modules\Pim\SearchService\Filter\VariationFunctionbeatTimestampFilter;
+use Plenty\Modules\Pim\VariationDataInterface\Contracts\VariationDataInterfaceContract;
+use Plenty\Modules\Pim\VariationDataInterface\Model\Attributes\VariationBaseAttribute;
+use Plenty\Modules\Pim\VariationDataInterface\Model\Context\GroupBy;
+use Plenty\Modules\Pim\VariationDataInterface\Model\VariationDataInterfaceContext;
 use Plenty\Repositories\Models\PaginatedResult;
 
 /**
@@ -53,14 +60,22 @@ abstract class AbstractBatchService
     protected $settingshelper;
 
     /**
-     * @param VariationElasticSearchScrollRepositoryContract $variationElasticSearchScrollRepository
+     * @var Template
      */
-    public function __construct(VariationElasticSearchScrollRepositoryContract $variationElasticSearchScrollRepository)
+    protected $template;
+
+    /**
+     * AbstractBatchService constructor.
+     * @param TemplateContainerContract $templateContainer
+     * @throws \Exception
+     */
+    public function __construct(TemplateContainerContract $templateContainer)
     {
         $this->settingshelper = pluginApp(SettingsHelper::class);
 
         /** @var CatalogExportRepositoryContract $catalogExportRepository */
         $catalogExportRepository = pluginApp(CatalogExportRepositoryContract::class);
+        /** @var CatalogRepositoryContract $catalogRepository */
         $catalogRepository = pluginApp(CatalogRepositoryContract::class);
         $catalogRepository->setFilters([
             'template' => self::TEMPLATE,
@@ -68,9 +83,19 @@ abstract class AbstractBatchService
         ]);
         $id = null;
         /** @var Collection $mappings */
-        $mappings = $catalogRepository->all()->getResult();
-        foreach ($mappings as $mapping) {
-            $id = $mapping['id'];
+        $catalogs = $catalogRepository->all()->getResult();
+
+        if (count($catalogs) > 1) {
+            // Currently due to lack of filtering and the low API limit we can not export multiple catalogs.
+            // Since we can't know which catalog the customer wants to export we abort at this point
+            // if multiple active catalogs with the etsy template exist
+            throw new \Exception('Multiple active catalogs set.');
+        }
+
+        foreach ($catalogs as $catalog) {
+            $id = $catalog->id;
+            $templateId = $catalog->template;
+            $this->template = $templateContainer->getTemplate($templateId);
             break;
         }
 
@@ -88,6 +113,47 @@ abstract class AbstractBatchService
 
         if ($lastRun) {
             //$this->catalogExportService->setUpdatedSince($lastRun);
+        }
+
+        //Todo: move request formatting into post mutator
+        //Todo: inventory handling in mutator and after that
+        //Todo: Listing building in post mutator
+
+        /** @var VariationDataInterfaceContract $vdi */
+        $vdi = app(VariationDataInterfaceContract::class);
+
+        $context = new VariationDataInterfaceContext();
+        $context->addPart(pluginApp(VariationBaseAttribute::class));
+        $context->setGetAllFound(true);
+
+        /** @var  $result */
+        $result = $vdi->getResult($context);
+
+        $itemIds = [];
+
+        try {
+            foreach($result->get() as $variation) {
+                if($variation->timestamps->related->greaterThanOrEqualTo($lastRun)
+                    || $variation->timestamps->base->greaterThanOrEqualTo($lastRun)) {
+                    $itemIds[] = $variation->base->itemId;
+                }
+            }
+        } catch (\Exception $exception) {
+            //Todo log
+        }
+
+        try {
+            $this->template->addFilter([
+                'name' => 'item.hasIds',
+                'params' => [
+                    [
+                        'name' => 'itemIds',
+                        'value' => $itemIds
+                    ]
+                ]
+            ]);
+        } catch (\Exception $exception) {
+            //todo log
         }
 
         $result = $this->catalogExportService->getResult();
@@ -121,8 +187,7 @@ abstract class AbstractBatchService
         $listings = [];
 
         /** @var VariationSku $variationSku */
-        foreach ($variationSkuList as $key => $variationSku)
-        {
+        foreach ($variationSkuList as $key => $variationSku) {
             if (!isset($listings[$variationSku->parentSku])) {
                 $listings[$variationSku->parentSku] = false;
             }
@@ -132,7 +197,7 @@ abstract class AbstractBatchService
                 continue;
             }
 
-            $variationSkuRepository->delete((int) $variationSku->id);
+            $variationSkuRepository->delete((int)$variationSku->id);
             unset($variationSkuList[$key]);
         }
 
