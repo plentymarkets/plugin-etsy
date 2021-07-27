@@ -55,29 +55,35 @@ class Client
 	{
 		$tokenData = $this->accountHelper->getTokenData();
 
-		$response = $this->library->call(SettingsHelper::PLUGIN_NAME . '::etsy_sdk', [
-			'consumerKey'       => $this->accountHelper->getConsumerKey(),
-			'consumerSecret'    => $this->accountHelper->getConsumerSecret(),
-			'accessToken'       => $tokenData['accessToken'],
-			'accessTokenSecret' => $tokenData['accessTokenSecret'],
-			'sandbox'           => $sandbox,
+        $response = $this->library->call(SettingsHelper::PLUGIN_NAME . '::etsy_sdk', [
+            'consumerKey'       => $this->accountHelper->getConsumerKey(),
+            'consumerSecret'    => $this->accountHelper->getConsumerSecret(),
+            'accessToken'       => $tokenData['accessToken'],
+            'accessTokenSecret' => $tokenData['accessTokenSecret'],
+            'sandbox'           => $sandbox,
 
-			'method'       => $method,
-			'params'       => $params,
-			'data'         => $data,
-			'fields'       => $fields,
-			'associations' => $associations,
-		]);
+            'method'       => $method,
+            'params'       => $params,
+            'data'         => $data,
+            'fields'       => $fields,
+            'associations' => $associations,
+        ]);
 
-		if(is_null($response) || (isset($response['exception']) && $response['exception'] == true))
-		{
-			throw new \Exception($response['message']);
-		}
+        if (is_null($response) || (isset($response['exception']) && $response['exception'] == true)) {
+            if (strpos($response['message'], "503 Service Unavailable") !== false){
+                throw new \Exception("Exception: " . json_encode($response));
+            } else {
+                throw new \Exception("Exception: " . $response['message']);
+            }
+        }
 
-		if ((isset($response['error']) && $response['error'] == true))
-		{
-			throw new \Exception($response['error_msg']);
-		}
+        if ((isset($response['error']) && $response['error'] == true)) {
+            if (strpos($response['error_msg'], "503 Service Unavailable") !== false){
+                throw new \Exception("Error: " . json_encode($response));
+            } else {
+                throw new \Exception("Error: " . $response['error_msg']);
+            }
+        }
 
 		return $response;
 	}

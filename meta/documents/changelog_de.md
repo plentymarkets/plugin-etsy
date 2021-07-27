@@ -1,5 +1,9 @@
 # Release Notes für Etsy
 
+## v2.0.43 (2021-07-27)
+### Geändert
+- Log-Erweiterung für den Fehler `503 Service Unavailable`
+
 ## v2.0.42 (2021-05-10)
 ### Geändert
 - Bei manchen Aufträgen kann es seitens Etsy bis zu 72 Stunden oder länger dauern, bis die Zahlung bestätigt ist.<br>Diese Aufträge werden ab jetzt ohne Zahlung importiert. Die Zahlung wird automatisch nachgebucht, wenn die Zahlung bei Etsy bestätigt wurde.
