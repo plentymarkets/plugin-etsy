@@ -1,5 +1,9 @@
 # Release notes for Etsy
 
+## v2.0.43 (2021-07-27)
+### Changed
+- Extending log for error `503 Service Unavailable`
+
 ## v2.0.42 (2021-05-10)
 ### Changed
 - For some orders, it can take up to 72 hours or longer on Etsy's side until the payment is confirmed.<br>From now on, these orders are imported without payment. The payment will be automatically booked when the payment is confirmed by Etsy.
