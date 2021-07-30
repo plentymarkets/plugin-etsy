@@ -17,6 +17,7 @@ use Plenty\Modules\Item\VariationSku\Contracts\VariationSkuRepositoryContract;
 use Plenty\Modules\Order\Contracts\OrderRepositoryContract;
 use Plenty\Modules\Order\Models\Order;
 use Plenty\Modules\Order\Models\OrderItemType;
+use Plenty\Modules\Order\Property\Contracts\OrderItemPropertyRepositoryContract;
 use Plenty\Modules\Order\Property\Models\OrderPropertyType;
 use Plenty\Plugin\Application;
 use Plenty\Plugin\Log\Loggable;
@@ -28,6 +29,10 @@ use Plenty\Plugin\Translation\Translator;
 class OrderCreateService
 {
 	use Loggable;
+
+    private const PERSONALIZATION_NAMING = [
+        'Personalisierung'
+    ];
 
 	/**
 	 * @var Application
@@ -83,7 +88,7 @@ class OrderCreateService
 			$order = $this->createOrder($data, $addressId, $contactId, $lang);
 
 			// create order comments
-			$this->createOrderComments($order->id, $data);
+			$this->createOrderComments($order, $data);
 
 			// create payment
             if ($this->orderHelper->isDirectCheckout((string)$data['payment_method']) &&
@@ -333,7 +338,7 @@ class OrderCreateService
 					],
 					'properties'      => [
 						[
-							'typeId'    => OrderPropertyType::SELLER_ACCOUNT,
+							'typeId'    => OrderPropertyType::EXTERNAL_ITEM_ID,
 							'subTypeId' => 6,
 							'value'     => (string)$transaction['listing_id'],
 						],
@@ -454,14 +459,50 @@ class OrderCreateService
 	/**
 	 * Create order comments.
 	 *
-	 * @param int   $orderId
+	 * @param Order $order
 	 * @param array $data
 	 */
-	private function createOrderComments(int $orderId, array $data)
+	private function createOrderComments(Order $order, array $data)
 	{
+	    $orderId = $order->id;
+
 		try {
 			/** @var CommentRepositoryContract $commentRepo */
 			$commentRepo = pluginApp(CommentRepositoryContract::class);
+
+			/** @var OrderItemPropertyRepositoryContract $orderItemPropertyRepo */
+			$orderItemPropertyRepo = pluginApp(OrderItemPropertyRepositoryContract::class);
+
+            //save personalization information
+            foreach ($data['Transactions'] as $transaction) {
+                if (isset($transaction['variations'])) {
+                    foreach ($transaction['variations'] as $attribute) {
+                        if (in_array($attribute['formatted_name'], self::PERSONALIZATION_NAMING)) {
+                            foreach ($order->orderItems as $orderItem) {
+                                try {
+                                    $orderItemExternalItemIdProperty = $orderItemPropertyRepo->findByOrderItemIdAndTypeId(
+                                        $orderItem->id,
+                                        OrderPropertyType::EXTERNAL_ITEM_ID
+                                    );
+                                    $orderItemExternalItemId = $orderItemExternalItemIdProperty->value;
+                                } catch (\Exception $e) {
+                                    continue;
+                                }
+
+                                if ($orderItemExternalItemId == (string)$transaction['listing_id']) {
+                                    $commentRepo->createComment([
+                                            'referenceType'       => Comment::REFERENCE_TYPE_ORDER,
+                                            'referenceValue'      => $orderId,
+                                            'isVisibleForContact' => true,
+                                            'text'                => '<b>' . $this->translator->trans('Etsy::order.personalizationMessage') . $orderItem->itemVariationId . ':</b><br><br>' . nl2br(html_entity_decode($attribute['formatted_value']))
+                                        ]);
+                                    break 3;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
 
 			// save buyer message
 			if (isset($data['message_from_buyer']) && strlen($data['message_from_buyer'])) {
