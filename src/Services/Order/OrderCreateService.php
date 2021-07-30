@@ -479,23 +479,20 @@ class OrderCreateService
                     foreach ($transaction['variations'] as $attribute) {
                         if (in_array($attribute['formatted_name'], self::PERSONALIZATION_NAMING)) {
                             foreach ($order->orderItems as $orderItem) {
-                                try {
-                                    $orderItemExternalItemIdProperty = $orderItemPropertyRepo->findByOrderItemIdAndTypeId(
-                                        $orderItem->id,
-                                        OrderPropertyType::EXTERNAL_ITEM_ID
-                                    );
-                                    $orderItemExternalItemId = $orderItemExternalItemIdProperty->value;
-                                } catch (\Exception $e) {
+                                $orderItemExternalItemId = $orderItem->property(OrderPropertyType::EXTERNAL_ITEM_ID);
+
+                                if (is_null($orderItemExternalItemId)) {
                                     continue;
                                 }
 
                                 if ($orderItemExternalItemId == (string)$transaction['listing_id']) {
-                                    $commentRepo->createComment([
-                                            'referenceType'       => Comment::REFERENCE_TYPE_ORDER,
-                                            'referenceValue'      => $orderId,
-                                            'isVisibleForContact' => true,
-                                            'text'                => '<b>' . $this->translator->trans('Etsy::order.personalizationMessage') . $orderItem->itemVariationId . ':</b><br><br>' . nl2br(html_entity_decode($attribute['formatted_value']))
-                                        ]);
+                                    $comment = [
+                                        'referenceType'       => Comment::REFERENCE_TYPE_ORDER,
+                                        'referenceValue'      => $orderId,
+                                        'isVisibleForContact' => true,
+                                        'text'                => '<b>' . $this->translator->trans('Etsy::order.personalizationMessage') . $orderItem->itemVariationId . ':</b><br><br>' . nl2br(html_entity_decode($attribute['formatted_value']))
+                                    ];
+                                    $commentRepo->createComment($comment);
                                     break 3;
                                 }
                             }
