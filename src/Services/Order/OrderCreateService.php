@@ -470,9 +470,6 @@ class OrderCreateService
 			/** @var CommentRepositoryContract $commentRepo */
 			$commentRepo = pluginApp(CommentRepositoryContract::class);
 
-			/** @var OrderItemPropertyRepositoryContract $orderItemPropertyRepo */
-			$orderItemPropertyRepo = pluginApp(OrderItemPropertyRepositoryContract::class);
-
             //save personalization information
             foreach ($data['Transactions'] as $transaction) {
                 if (isset($transaction['variations'])) {
