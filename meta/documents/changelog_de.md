@@ -1,5 +1,9 @@
 # Release Notes für Etsy
 
+## v2.1.0 (2021-07-30)
+### Hinzugefügt
+- Beim Auftragsimport werden die Personalisierungsinformationen nun als Auftragsnotiz hinzugefügt.
+
 ## v2.0.43 (2021-07-27)
 ### Geändert
 - Log-Erweiterung für den Fehler `503 Service Unavailable`

@@ -1,5 +1,9 @@
 # Release notes for Etsy
 
+## v2.1.0 (2021-07-30)
+### Added
+- When importing orders, the personalization information is now added as an order note.
+
 ## v2.0.43 (2021-07-27)
 ### Changed
 - Extending log for error `503 Service Unavailable`

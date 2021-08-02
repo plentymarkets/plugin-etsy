@@ -161,6 +161,7 @@ class OrderImportService
 							->addReference('etsyReceiptId', $receiptData['receipt_id'])
 					        ->error('Etsy::order.orderImportError', $ex->getMessage());
 				}
+				unset($order);
 			}
 		}
 	}
