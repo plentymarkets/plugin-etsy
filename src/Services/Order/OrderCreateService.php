@@ -17,7 +17,6 @@ use Plenty\Modules\Item\VariationSku\Contracts\VariationSkuRepositoryContract;
 use Plenty\Modules\Order\Contracts\OrderRepositoryContract;
 use Plenty\Modules\Order\Models\Order;
 use Plenty\Modules\Order\Models\OrderItemType;
-use Plenty\Modules\Order\Property\Contracts\OrderItemPropertyRepositoryContract;
 use Plenty\Modules\Order\Property\Models\OrderPropertyType;
 use Plenty\Plugin\Application;
 use Plenty\Plugin\Log\Loggable;
