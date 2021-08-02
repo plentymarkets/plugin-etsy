@@ -29,7 +29,7 @@ class OrderCreateService
 {
 	use Loggable;
 
-    private const PERSONALIZATION_NAMING = [
+    const PERSONALIZATION_NAMING = [
         'Personalisierung'
     ];
 
