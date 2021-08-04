@@ -1,5 +1,9 @@
 # Release Notes für Etsy
 
+## v2.1.1 (2021-08-04)
+### Hinzugefügt
+- Logs für Anfragen an Etsy erweitert.
+
 ## v2.1.0 (2021-07-30)
 ### Hinzugefügt
 - Beim Auftragsimport werden die Personalisierungsinformationen nun als Auftragsnotiz hinzugefügt.

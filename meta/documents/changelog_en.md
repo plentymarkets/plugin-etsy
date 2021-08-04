@@ -1,5 +1,9 @@
 # Release notes for Etsy
 
+## v2.1.1 (2021-08-04)
+### Added
+- Extended logs for requests to etsy.
+
 ## v2.1.0 (2021-07-30)
 ### Added
 - When importing orders, the personalization information is now added as an order note.
