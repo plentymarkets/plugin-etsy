@@ -69,12 +69,23 @@ class Client
             'associations' => $associations,
         ]);
 
-        if (is_null($response) || (isset($response['exception']) && $response['exception'] == true)) {
-            if (strpos($response['message'], "503 Service Unavailable") !== false){
-                throw new \Exception("Exception: " . json_encode($response));
-            } else {
-                throw new \Exception("Exception: " . $response['message']);
-            }
+        if (is_null($response)) {
+            throw new \Exception('Received empty response from etsy');
+        }
+
+        if ((isset($response['exception']) && $response['exception'] == true)) {
+            $exceptionContent = [
+                'response' => $response,
+                'payload' => [
+                    'method'       => $method,
+                    'params'       => $params,
+                    'data'         => $data,
+                    'fields'       => $fields,
+                    'associations' => $associations,
+                ]
+            ];
+
+            throw new \Exception(json_encode($exceptionContent));
         }
 
         if ((isset($response['error']) && $response['error'] == true)) {
