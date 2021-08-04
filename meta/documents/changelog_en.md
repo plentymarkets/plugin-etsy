@@ -2,7 +2,7 @@
 
 ## v2.1.1 (2021-08-04)
 ### Added
-- Extended logs for requests to etsy.
+- Extended logs for requests to Etsy.
 
 ## v2.1.0 (2021-07-30)
 ### Added
