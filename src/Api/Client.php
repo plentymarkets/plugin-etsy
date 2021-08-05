@@ -39,19 +39,20 @@ class Client
 		$this->accountHelper = $accountHelper;
 	}
 
-	/**
-	 * Call the etsy API.
-	 *
-	 * @param  string $method       The method that should be called.
-	 * @param  array  $params       The params that should pe used for the call. Eg. /shops/:shop_id/sections/:shop_section_id -> shop_id and shop_section_id are params.
-	 * @param  array  $data         The data that should pe used for the post call.
-	 * @param  array  $fields       The fields that should be returned.
-	 * @param  array  $associations The associations that should be returned.
-	 * @param  bool   $sandbox      Default is false.
-	 * @throws \Exception
-	 * @return array
-	 */
-	public function call($method, array $params = [], array $data = [], array $fields = [], array $associations = [], $sandbox = false)
+    /**
+     * Call the etsy API.
+     *
+     * @param string $method The method that should be called.
+     * @param array $params The params that should pe used for the call. Eg. /shops/:shop_id/sections/:shop_section_id -> shop_id and shop_section_id are params.
+     * @param array $data The data that should pe used for the post call.
+     * @param array $fields The fields that should be returned.
+     * @param array $associations The associations that should be returned.
+     * @param bool $sandbox Default is false.
+     * @param int $retries
+     * @return array
+     * @throws \Exception
+     */
+	public function call($method, array $params = [], array $data = [], array $fields = [], array $associations = [], $sandbox = false, int $retries = 3)
 	{
 		$tokenData = $this->accountHelper->getTokenData();
 
@@ -69,25 +70,21 @@ class Client
             'associations' => $associations,
         ]);
 
-        if (is_null($response)) {
-            throw new \Exception('Received empty response from etsy');
-        }
-
+        // exception in the response means that something inside the sdk that tried to communicate with etsy failed
         if ((isset($response['exception']) && $response['exception'] == true)) {
-            $exceptionContent = [
-                'response' => $response,
-                'payload' => [
-                    'method'       => $method,
-                    'params'       => $params,
-                    'data'         => $data,
-                    'fields'       => $fields,
-                    'associations' => $associations,
-                ]
-            ];
+            if (!isset($response['message'])) {
+                if ($retries > 0) {
+                    sleep(1);
+                    return $this->call($method, $params, $data, $fields, $associations, $sandbox, $retries - 1);
+                }
 
-            throw new \Exception(json_encode($exceptionContent));
+                throw new \Exception("Could not establish connection to Etsy.");
+            }
+
+            throw new \Exception($response['message']);
         }
 
+        // error in response means, that something regarding the communication with the sdk server failed
         if ((isset($response['error']) && $response['error'] == true)) {
             if (strpos($response['error_msg'], "503 Service Unavailable") !== false){
                 throw new \Exception("Error: " . json_encode($response));
