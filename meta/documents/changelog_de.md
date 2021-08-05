@@ -2,7 +2,7 @@
 
 ## v2.1.3 (2021-08-05)
 ### Hinzugefügt
-- Anfragen an Etsy, die aufgrund von Verbindungsproblemen fehlschlagen, werden nun bis zu drei mal wiederholt.
+- Anfragen an Etsy, die aufgrund von Verbindungsproblemen fehlschlagen, werden nun bis zu dreimal wiederholt.
 
 ## v2.1.2 (2021-08-05)
 ### Behoben
