@@ -1,5 +1,9 @@
 # Release Notes für Etsy
 
+## v2.1.2 (2021-08-05)
+### Behoben
+- Sonderzeichen in der Rechnungs- und Lieferadresse werden nun korrekt dargestellt.
+
 ## v2.1.1 (2021-08-04)
 ### Hinzugefügt
 - Logs für Anfragen an Etsy erweitert.
