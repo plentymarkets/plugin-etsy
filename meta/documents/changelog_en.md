@@ -1,5 +1,9 @@
 # Release notes for Etsy
 
+## v2.1.2 (2021-08-05)
+### Fixed
+- Special characters are now displayed correctly in billing and shipping addresses.
+
 ## v2.1.1 (2021-08-04)
 ### Added
 - Extended logs for requests to Etsy.

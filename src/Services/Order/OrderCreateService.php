@@ -158,10 +158,11 @@ class OrderCreateService
 	 */
 	private function createAddress(int $contactId, array $data): int
 	{
+	    $decodedEtsyFirstLine = html_entity_decode((string)$data['first_line'],ENT_QUOTES);
 		$addressData = [
 			'name2'                    => $data['name'],
-			'address1'                 => $this->orderHelper->getStreetName((string)$data['first_line']),
-			'address2'                 => $this->orderHelper->getHouseNumber((string)$data['first_line']),
+			'address1'                 => $this->orderHelper->getStreetName($decodedEtsyFirstLine),
+			'address2'                 => $this->orderHelper->getHouseNumber($decodedEtsyFirstLine),
 			'postalCode'               => $data['zip'],
 			'town'                     => $data['city'],
 			'countryId'                => $this->orderHelper->getCountryIdByEtsyCountryId((int)$data['country_id']),
@@ -173,7 +174,7 @@ class OrderCreateService
 		}
 
 		if (isset($data['second_line']) && strlen($data['second_line'])) {
-			$addressData['address3'] = $data['second_line'];
+			$addressData['address3'] = html_entity_decode($data['second_line'], ENT_QUOTES);
 		}
 
 		$addressData['options'] = [
