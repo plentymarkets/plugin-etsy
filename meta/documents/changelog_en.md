@@ -2,7 +2,7 @@
 
 ## v2.1.3 (2021-08-05)
 ### Added
-- Requests to etsy which fail due to connection issues will be retried up to three times.
+- Requests to Etsy that fail due to connection issues will now be retried up to three times.
 
 ## v2.1.2 (2021-08-05)
 ### Fixed
