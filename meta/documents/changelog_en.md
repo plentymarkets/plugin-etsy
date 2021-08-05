@@ -2,7 +2,7 @@
 
 ## v2.1.2 (2021-08-05)
 ### Fixed
-- Special characters in the billing and shipping address are now displayed correctly.
+- Special characters are now displayed correctly in billing and shipping addresses.
 
 ## v2.1.1 (2021-08-04)
 ### Added
