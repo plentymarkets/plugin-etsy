@@ -1,5 +1,10 @@
 # Release Notes für Etsy
 
+## v2.1.4 (2021-08-18)
+### Geändert
+- Beim Auftragsimport werden jetzt Plugin-Zahlungsarten zugeordnet, falls vorhanden.
+  Hierbei handelt es sich um eine notwendige Anpassung im Rahmen des [EOL der nicht-Plugin Zahlungsarten](https://forum.plentymarkets.com/t/640916).
+
 ## v2.1.3 (2021-08-05)
 ### Hinzugefügt
 - Anfragen an Etsy, die aufgrund von Verbindungsproblemen fehlschlagen, werden nun bis zu dreimal wiederholt.

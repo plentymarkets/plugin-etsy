@@ -1,5 +1,10 @@
 # Release notes for Etsy
 
+## v2.1.4 (2021-08-18)
+### Changed
+- During order import, plugin payment types are now assigned if available.
+  This is a necessary adjustment in the context of the [EOL of non-plugin payment methods](https://forum.plentymarkets.com/t/640916).
+
 ## v2.1.3 (2021-08-05)
 ### Added
 - Requests to Etsy that fail due to connection issues will now be retried up to three times.
