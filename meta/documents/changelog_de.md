@@ -1,5 +1,9 @@
 # Release Notes für Etsy
 
+## v2.1.5 (2021-08-18)
+### Hinzugefügt
+- Anfragen an Etsy, die aufgrund von Verbindungsproblemen mit dem SDK-Server fehlschlagen, werden nun bis zu dreimal wiederholt.
+
 ## v2.1.4 (2021-08-18)
 ### Geändert
 - Beim Auftragsimport werden jetzt Plugin-Zahlungsarten zugeordnet, falls vorhanden.

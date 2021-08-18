@@ -1,5 +1,9 @@
 # Release notes for Etsy
 
+## v2.1.5 (2021-08-18)
+### Added
+- Requests to Etsy that fail due to connection issues with the SDK server will now be retried up to three times.
+
 ## v2.1.4 (2021-08-18)
 ### Changed
 - During order import, plugin payment types are now assigned if available.
