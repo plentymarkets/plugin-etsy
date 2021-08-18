@@ -3,6 +3,7 @@
 namespace Etsy\Services\Order;
 
 use Etsy\Helper\OrderHelper;
+use Etsy\Helper\PaymentHelper;
 use Etsy\Helper\SettingsHelper;
 use Plenty\Modules\Account\Address\Contracts\AddressContactRelationRepositoryContract;
 use Plenty\Modules\Account\Address\Models\AddressRelationType;
@@ -43,6 +44,11 @@ class OrderCreateService
 	 */
 	private $orderHelper;
 
+    /**
+     * @var PaymentHelper
+     */
+    private $paymentHelper;
+
 	/**
 	 * @var SettingsHelper
 	 */
@@ -56,16 +62,19 @@ class OrderCreateService
 	/**
 	 * @param Application    $app
 	 * @param OrderHelper    $orderHelper
+     * @param PaymentHelper $paymentHelper
 	 * @param SettingsHelper $settingsHelper
 	 * @param Translator     $translator
 	 */
 	public function __construct(Application $app,
 								OrderHelper $orderHelper,
+								PaymentHelper $paymentHelper,
 								SettingsHelper $settingsHelper,
 								Translator $translator)
 	{
 		$this->app            = $app;
 		$this->orderHelper    = $orderHelper;
+		$this->paymentHelper  = $paymentHelper;
 		$this->settingsHelper = $settingsHelper;
 		$this->translator     = $translator;
 	}
@@ -233,7 +242,7 @@ class OrderCreateService
 		$orderData['properties'] = [
 			[
 				'typeId' => OrderPropertyType::PAYMENT_METHOD,
-				'value'  => (string)$this->orderHelper->getPaymentMethodId((string)$data['payment_method']),
+				'value'  => (string)$this->paymentHelper->getPaymentMethodId((string)$data['payment_method']),
 			],
 
 			[

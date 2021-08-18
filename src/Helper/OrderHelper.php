@@ -372,24 +372,6 @@ class OrderHelper
 	}
 
 	/**
-	 * @param string $paymentMethod
-	 *
-	 * @return int
-	 */
-	public function getPaymentMethodId($paymentMethod)
-	{
-		$map = [
-			'other' => 0,
-			'pp'    => 14,
-			'cc'    => $this->paymentHelper->getPaymentMethodId(), // etsy direct checkout,
-			'ck'    => 1, // TODO not sure
-			'mo'    => 1, // TODO not sure
-		];
-
-		return $map[ $paymentMethod ];
-	}
-
-	/**
 	 * Check if payment method is Etsy direct checkout.
 	 *
 	 * @param string $paymentMethod
@@ -398,7 +380,7 @@ class OrderHelper
 	 */
 	public function isDirectCheckout($paymentMethod): bool
 	{
-		return $this->getPaymentMethodId($paymentMethod) == $this->paymentHelper->getPaymentMethodId();
+		return $paymentMethod == 'cc';
 	}
 
 	/**
