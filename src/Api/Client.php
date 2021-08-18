@@ -86,11 +86,12 @@ class Client
 
         // error in response means, that something regarding the communication with the sdk server failed
         if ((isset($response['error']) && $response['error'] == true)) {
-            if (strpos($response['error_msg'], "503 Service Unavailable") !== false){
-                throw new \Exception("Error: " . json_encode($response));
-            } else {
-                throw new \Exception("Error: " . $response['error_msg']);
+            if ($retries > 0) {
+                sleep(1);
+                return $this->call($method, $params, $data, $fields, $associations, $sandbox, $retries - 1);
             }
+            
+            throw new \Exception("Error: " . json_encode($response));
         }
 
 		return $response;
