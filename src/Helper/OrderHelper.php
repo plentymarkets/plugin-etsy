@@ -510,7 +510,7 @@ class OrderHelper
                     /** @var Payment $payment */
                     $payment                   = $this->app->make(Payment::class);
                     $payment->amount           = ($paymentData['amount_gross'] / 100) - $data['total_tax_cost'];
-                    $payment->mopId            = $paymentHelper->getPaymentMethodId();
+                    $payment->mopId            = $paymentHelper->getPaymentMethodId('cc');
                     $payment->currency         = $paymentData['currency'];
                     $payment->status           = Payment::STATUS_APPROVED;
                     $payment->transactionType  = Payment::TRANSACTION_TYPE_BOOKED_POSTING;

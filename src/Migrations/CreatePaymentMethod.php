@@ -36,7 +36,7 @@ class CreatePaymentMethod
 	 */
 	public function run()
 	{
-		if(is_null($this->paymentHelper->getPaymentMethodId()))
+		if(is_null($this->paymentHelper->getPaymentMethodId('cc')))
 		{
 			$paymentMethodData = [
 				'pluginKey'  => SettingsHelper::PLUGIN_NAME,

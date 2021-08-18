@@ -30,13 +30,13 @@ class PaymentHelper
      * @param string $paymentMethod
      * @return int|null
      */
-	public function getPaymentMethodId(string $paymentMethod = 'cc')
+	public function getPaymentMethodId(string $paymentMethod)
 	{
 	    switch ($paymentMethod) {
             case 'other':
                 $paymentMethod = $this->paymentMethodRepository->findByPluginAndPaymentKey('plenty', 'PREPAYMENT');
                 if (is_null($paymentMethod)) {
-                    return PLENTY_MOP_PREPAYMENT;
+                    return 0;
                 }
 
                 return $paymentMethod->id;
@@ -44,7 +44,7 @@ class PaymentHelper
             case 'pp':
                 $paymentMethod = $this->paymentMethodRepository->findByPluginAndPaymentKey('plentyPayPal', 'PAYPAL');
                 if (is_null($paymentMethod)) {
-                    return PLENTY_MOP_PAYPALEXPRESS;
+                    return 14;
                 }
 
                 return $paymentMethod->id;
@@ -61,7 +61,7 @@ class PaymentHelper
             case 'mo':
                 $paymentMethod = $this->paymentMethodRepository->findByPluginAndPaymentKey('plenty', 'COD');
                 if (is_null($paymentMethod)) {
-                    return PLENTY_MOP_COD;
+                    return 1;
                 }
 
                 return $paymentMethod->id;
