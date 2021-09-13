@@ -6,6 +6,9 @@ use Etsy\Contracts\CategoryRepositoryContract;
 use Etsy\Contracts\LegalInformationRepositoryContract;
 use Etsy\Contracts\PropertyRepositoryContract;
 use Etsy\Crons\ImageFileCleanupCron;
+use Etsy\Helper\PaymentHelper;
+use Etsy\Helper\SettingsHelper;
+use Etsy\PaymentMethods\EtsyDirectCheckoutPaymentMethod;
 use Etsy\Repositories\CategoryRepository;
 use Etsy\Repositories\LegalInformationRepository;
 use Etsy\Repositories\PropertyRepository;
@@ -14,6 +17,7 @@ use Plenty\Log\Services\ReferenceContainer;
 use Plenty\Modules\Cron\Services\CronContainer;
 use Plenty\Modules\EventProcedures\Services\Entries\ProcedureEntry;
 use Plenty\Modules\EventProcedures\Services\EventProceduresService;
+use Plenty\Modules\Payment\Method\Contracts\PaymentMethodContainer;
 use Plenty\Plugin\ServiceProvider;
 
 use Etsy\Crons\ItemExportCron;
@@ -61,53 +65,77 @@ class EtsyServiceProvider extends ServiceProvider
     /**
      * @return void
      */
-	public function register()
-	{
-		$this->getApplication()->bind(TaxonomyRepositoryContract::class, TaxonomyRepository::class);
+    public function register()
+    {
+        $this->getApplication()->bind(TaxonomyRepositoryContract::class, TaxonomyRepository::class);
         $this->getApplication()->bind(CategoryRepositoryContract::class, CategoryRepository::class);
         $this->getApplication()->bind(PropertyRepositoryContract::class, PropertyRepository::class);
         $this->getApplication()->bind(LegalInformationRepositoryContract::class, LegalInformationRepository::class);
 
-		$this->getApplication()->bind('Etsy\item.dataprovider.export', ItemExportDataProvider::class);
-		$this->getApplication()->bind('Etsy\item.dataprovider.update', ItemUpdateDataProvider::class);
+        $this->getApplication()->bind('Etsy\item.dataprovider.export', ItemExportDataProvider::class);
+        $this->getApplication()->bind('Etsy\item.dataprovider.update', ItemUpdateDataProvider::class);
 
-		$this->getApplication()->singleton(ItemDataProviderFactory::class);
+        $this->getApplication()->singleton(ItemDataProviderFactory::class);
 
-		$this->getApplication()->register(EtsyRouteServiceProvider::class);
+        $this->getApplication()->register(EtsyRouteServiceProvider::class);
 
-		$this->getApplication()->register(CatalogBootServiceProvider::class);
-	}
+        $this->getApplication()->register(CatalogBootServiceProvider::class);
+    }
 
-	/**
-	 * @param CronContainer          $container
-	 * @param EventProceduresService $eventProceduresService
-	 */
-	public function boot(CronContainer $container, EventProceduresService $eventProceduresService, ReferenceContainer $referenceContainer, WizardContainerContract $wizardContainerContract)
-	{
-	    $wizardContainerContract->register('etsy-migration-assistant', MigrationAssistant::class);
+    /**
+     * @param CronContainer $container
+     * @param EventProceduresService $eventProceduresService
+     */
+    public function boot(
+        CronContainer $container,
+        EventProceduresService $eventProceduresService,
+        ReferenceContainer $referenceContainer,
+        WizardContainerContract $wizardContainerContract
+    ) {
+        $wizardContainerContract->register('etsy-migration-assistant', MigrationAssistant::class);
 
-		$referenceContainer->add([
-			                         	'etsyListingId'  		=> 'etsyListingId',
-			                         	'etsyReceiptId'  		=> 'etsyReceiptId',
-			                         	'etsyLanguage'   		=> 'etsyLanguage',
-										'etsyExportListCount' 	=> 'etsyExportListCount'
-		                         ]);
+        $referenceContainer->add([
+                                     'etsyListingId' => 'etsyListingId',
+                                     'etsyReceiptId' => 'etsyReceiptId',
+                                     'etsyLanguage' => 'etsyLanguage',
+                                     'etsyExportListCount' => 'etsyExportListCount'
+                                 ]);
 
-		// register crons
-		$container->add(CronContainer::DAILY, ItemExportCron::class);
-		$container->add(CronContainer::DAILY, StockUpdateCron::class);
-		$container->add(CronContainer::HOURLY, OrderImportCron::class);
-		$container->add(CronContainer::HOURLY, ImageFileCleanupCron::class);
+        // register crons
+        $container->add(CronContainer::DAILY, ItemExportCron::class);
+        $container->add(CronContainer::DAILY, StockUpdateCron::class);
+        $container->add(CronContainer::HOURLY, OrderImportCron::class);
+        $container->add(CronContainer::HOURLY, ImageFileCleanupCron::class);
 
-		// register event actions
-		$eventProceduresService->registerProcedure('etsy', ProcedureEntry::PROCEDURE_GROUP_ORDER, [
-			'de' => 'Versandbestätigung an Etsy senden',
-			'en' => 'Send shipping notification to Etsy'
-		], 'Etsy\\Procedures\\ShippingNotificationEventProcedure@run');
+        // register event actions
+        $this->registerEventProcedures($eventProceduresService);
 
-		$eventProceduresService->registerProcedure('etsy', ProcedureEntry::PROCEDURE_GROUP_ORDER, [
-			'de' => 'Zahlungsbestätigung an Etsy senden',
-			'en' => 'Send payment notification to Etsy'
-		], 'Etsy\\Procedures\\PaymentNotificationEventProcedure@run');
-	}
+        //Register used payment methods
+        $this->registerPaymentMethods();
+    }
+
+    private function registerEventProcedures($eventProceduresService)
+    {
+        $eventProceduresService->registerProcedure('etsy', ProcedureEntry::PROCEDURE_GROUP_ORDER, [
+            'de' => 'Versandbestätigung an Etsy senden',
+            'en' => 'Send shipping notification to Etsy'
+        ],                                         'Etsy\\Procedures\\ShippingNotificationEventProcedure@run');
+
+        $eventProceduresService->registerProcedure('etsy', ProcedureEntry::PROCEDURE_GROUP_ORDER, [
+            'de' => 'Zahlungsbestätigung an Etsy senden',
+            'en' => 'Send payment notification to Etsy'
+        ],                                         'Etsy\\Procedures\\PaymentNotificationEventProcedure@run');
+    }
+
+    protected function registerPaymentMethods()
+    {
+        /** @var PaymentMethodContainer $paymentMethodContainer */
+        $paymentMethodContainer = pluginApp(PaymentMethodContainer::class);
+
+        $paymentMethodContainer->register(
+            SettingsHelper::PLUGIN_NAME . '::' . PaymentHelper::PAYMENT_KEY,
+            EtsyDirectCheckoutPaymentMethod::class,
+            []
+        );
+    }
 }
