@@ -2,7 +2,7 @@
 
 ## v2.1.6 (2021-09-13)
 ### Fixed
-- The Etsy payment method is now searchable by default in the backend if access data for Etsy are stored.
+- The Etsy payment method is now searchable by default in the back end if access data for Etsy are stored.
 
 ## v2.1.5 (2021-08-18)
 ### Added
