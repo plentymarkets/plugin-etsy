@@ -1,5 +1,9 @@
 # Release notes for Etsy
 
+## v2.1.6 (2021-09-13)
+### Fixed
+- The Etsy payment method is now searchable by default in the backend if access data for Etsy are stored.
+
 ## v2.1.5 (2021-08-18)
 ### Added
 - Requests to Etsy that fail due to connection issues with the SDK server will now be retried up to three times.

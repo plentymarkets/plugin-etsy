@@ -1,5 +1,9 @@
 # Release Notes für Etsy
 
+## v2.1.6 (2021-09-13)
+### Behoben
+- Die Etsy-Zahlungsart ist nun standardmäßig suchbar im Backend, wenn Zugangsdaten für Etsy hinterlegt sind.
+
 ## v2.1.5 (2021-08-18)
 ### Hinzugefügt
 - Anfragen an Etsy, die aufgrund von Verbindungsproblemen mit dem SDK-Server fehlschlagen, werden nun bis zu dreimal wiederholt.
