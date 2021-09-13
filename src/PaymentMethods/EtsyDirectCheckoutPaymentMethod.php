@@ -4,6 +4,7 @@ namespace Etsy\PaymentMethods;
 
 use Etsy\Helper\AccountHelper;
 use Plenty\Modules\Payment\Method\Services\PaymentMethodBaseService;
+use Plenty\Plugin\Application;
 
 class EtsyDirectCheckoutPaymentMethod extends PaymentMethodBaseService
 {
@@ -38,7 +39,10 @@ class EtsyDirectCheckoutPaymentMethod extends PaymentMethodBaseService
      */
     public function getBackendIcon(): string
     {
-        return parent::getBackendIcon();
+        /** @var Application $app */
+        $app = pluginApp(Application::class);
+        $icon = $app->getUrlPath('etsy').'/images/payment_method_icon.svg';
+        return $icon;
     }
 
     /**
