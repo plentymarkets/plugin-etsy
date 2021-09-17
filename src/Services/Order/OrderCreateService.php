@@ -499,7 +499,6 @@ class OrderCreateService
                                         'text'                => '<b>' . $this->translator->trans('Etsy::order.personalizationMessage') . $orderItem->itemVariationId . ':</b><br><br>' . nl2br(html_entity_decode($attribute['formatted_value']))
                                     ];
                                     $commentRepo->createComment($comment);
-                                    break 3;
                                 }
                             }
                         }

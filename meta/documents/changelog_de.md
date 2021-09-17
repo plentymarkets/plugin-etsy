@@ -1,5 +1,9 @@
 # Release Notes für Etsy
 
+## v2.1.7 (2021-09-17)
+### Behoben
+- Es werden nun die Personalisierungsinformationen aller Artikelpositionen importiert.
+
 ## v2.1.6 (2021-09-13)
 ### Behoben
 - Die Etsy-Zahlungsart ist nun standardmäßig suchbar im Backend, wenn Zugangsdaten für Etsy hinterlegt sind.

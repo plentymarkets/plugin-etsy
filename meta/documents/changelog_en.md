@@ -1,5 +1,9 @@
 # Release notes for Etsy
 
+## v2.1.7 (2021-09-17)
+### Fixed
+- The personalisation information of all order item positions are now imported.
+
 ## v2.1.6 (2021-09-13)
 ### Fixed
 - The Etsy payment method is now searchable by default in the back end if access data for Etsy are stored.
