@@ -2,7 +2,7 @@
 
 ## v2.1.7 (2021-09-17)
 ### Fixed
-- The personalisation information of all order item positions is now imported.
+- The personalisation information of all order item positions are now imported.
 
 ## v2.1.6 (2021-09-13)
 ### Fixed
