@@ -3,7 +3,6 @@
 namespace Etsy\Procedures;
 
 use Plenty\Modules\EventProcedures\Events\EventProceduresTriggered;
-use Plenty\Modules\Order\Contracts\InternalOrderRepositoryContract;
 use Plenty\Modules\Order\Contracts\OrderRepositoryContract;
 use Plenty\Modules\Order\Models\Legacy\Order;
 use Plenty\Modules\Order\Property\Models\OrderPropertyType;
