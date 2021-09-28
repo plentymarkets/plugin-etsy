@@ -1,5 +1,9 @@
 # Release notes for Etsy
 
+## v2.1.8 (2021-09-28)
+### Fixed
+- When sending the dispatch confirmation, in some cases no tracking code was transmitted. This behaviour has been corrected.
+
 ## v2.1.7 (2021-09-17)
 ### Fixed
 - The personalisation information of all order item positions are now imported.

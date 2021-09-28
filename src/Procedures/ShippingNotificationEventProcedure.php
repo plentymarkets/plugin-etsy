@@ -117,8 +117,7 @@ class ShippingNotificationEventProcedure
 		catch(\Exception $ex)
 		{
 			$this->getLogger(__FUNCTION__)
-				->setReferenceType('orderId')
-				->setReferenceValue($order->id)
+                ->addReference('orderId', $order->id)
 				->error('Etsy::order.trackingCodeError', $ex->getMessage());
 		}
 
@@ -140,17 +139,22 @@ class ShippingNotificationEventProcedure
 			$parcelServicePresetRepo = pluginApp(ParcelServicePresetRepositoryContract::class);
 
 			$parcelServicePreset = $parcelServicePresetRepo->getPresetById($order->shippingProfileId);
+            $parcelServiceTypeId = $parcelServicePreset->parcelService->parcel_service_type;
+            $parcelServiceNameItem = $parcelServicePreset->parcelServiceNames->first();
+            $parcelServiceName = $parcelServiceNameItem->name;
+
             $this->getLogger(__METHOD__)
-                ->addReference("orderId", $order->id)
-                ->debug("log/markets/global.debugInformation", [
-                    "parcelService" => $parcelServicePreset->parcelService,
-                    "parcelServiceType" => $parcelServicePreset->parcelService->parcel_service_type,
-                    "shippingServiceProviderId" => $parcelServicePreset->parcelService->shippingServiceProviderId
+                ->addReference('orderId', $order->id)
+                ->debug('log/markets/global.debugInformation', [
+                    'parcelService'             => $parcelServicePreset->parcelService,
+                    'parcelServiceType'         => $parcelServiceTypeId,
+                    'parcelServiceName'         => $parcelServiceName,
+                    'shippingServiceProviderId' => $parcelServicePreset->parcelService->shippingServiceProviderId
                 ]);
 
 			if($parcelServicePreset instanceof ParcelServicePreset)
 			{
-				return $this->shippingHelper->getCarrierCode($parcelServicePreset->parcelService->parcel_service_type);
+				return $this->shippingHelper->getCarrierCode($parcelServiceTypeId, $parcelServiceName);
 			}
 		}
 		catch(\Exception $ex)

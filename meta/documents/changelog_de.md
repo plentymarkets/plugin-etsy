@@ -1,5 +1,9 @@
 # Release Notes für Etsy
 
+## v2.1.8 (2021-09-28)
+### Behoben
+- Bei der Übermittlung der Versandbestätigung wurden in einigen Fällen keine Sendungsnummer übertragen. Dieses Verhalten wurde behoben.
+
 ## v2.1.7 (2021-09-17)
 ### Behoben
 - Es werden nun die Personalisierungsinformationen aller Artikelpositionen importiert.
