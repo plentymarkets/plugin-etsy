@@ -1124,7 +1124,7 @@ class ShippingHelper
 	 *
 	 * @return mixed|null
 	 */
-	public function getCarrierCode($parcelServiceType)
+	public function getCarrierCode($parcelServiceType, $name)
 	{
 		$plentyId = pluginApp(Application::class)->getPlentyId();
 
@@ -1167,6 +1167,9 @@ class ShippingHelper
 							default:
 								return 'dhl';
 						}
+
+                    case 'DHL Express':
+                        return 'dhl';
 
 					case 'DPD UK':
 						return 'dpd-uk';
@@ -1286,19 +1289,12 @@ class ShippingHelper
 			case 18: // ROYAL_MAIL
 				return 'royal-mail';
 
-			case 0: // NONE
-			case 1: // SELF
-			case 11: // SPEDITION
-			case 12: // GEL_EXPRS
-			case 13: // T_O_FLEX
-			case 14: // DACHSER
-			case 15: // SCHENKER
-			case 16: // EMS
-			case 19: // AMAZONPRIME
-			case 20: // CBC_LOGISTIC
-			case 21: // NETDESPATCH
-			case 99: // ELSE
-				return null;
+            case 99: // OTHER
+                if ($name == 'Japan Post') {
+                    return 'japan-post';
+                }
 		}
+
+        return $shippingServiceProviderName ?? null;
 	}
 }
