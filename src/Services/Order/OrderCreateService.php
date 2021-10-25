@@ -351,6 +351,11 @@ class OrderCreateService
 							'subTypeId' => 6,
 							'value'     => (string)$transaction['listing_id'],
 						],
+                        [
+                            'typeId'    => OrderPropertyType::EXTERNAL_TOKEN_ID,
+                            'subTypeId' => 6,
+                            'value'     => (string)$transaction['transaction_id'],
+                        ],
 					],
 				];
 
@@ -485,13 +490,13 @@ class OrderCreateService
                     foreach ($transaction['variations'] as $attribute) {
                         if (in_array($attribute['formatted_name'], self::PERSONALIZATION_NAMING)) {
                             foreach ($order->orderItems as $orderItem) {
-                                $orderItemExternalItemId = $orderItem->property(OrderPropertyType::EXTERNAL_ITEM_ID);
+                                $orderItemExternalTransactionId = $orderItem->property(OrderPropertyType::EXTERNAL_TOKEN_ID);
 
-                                if (is_null($orderItemExternalItemId)) {
+                                if (is_null($orderItemExternalTransactionId)) {
                                     continue;
                                 }
 
-                                if ($orderItemExternalItemId == (string)$transaction['listing_id']) {
+                                if ($orderItemExternalTransactionId == (string)$transaction['transaction_id']) {
                                     $comment = [
                                         'referenceType'       => Comment::REFERENCE_TYPE_ORDER,
                                         'referenceValue'      => $orderId,
