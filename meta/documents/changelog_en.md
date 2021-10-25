@@ -2,7 +2,7 @@
 
 ## v2.1.9 (2021-10-25)
 ### Fixed
-- When importing the personalisation information, it was imported several times if the same item existed several times as an order item. This behaviour has been corrected.
+- Personalised information was imported repeatedly if the same item existed multiple times as an order item. This behaviour has been corrected.
 
 ## v2.1.8 (2021-09-28)
 ### Fixed
