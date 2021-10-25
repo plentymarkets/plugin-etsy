@@ -1,5 +1,9 @@
 # Release notes for Etsy
 
+## v2.1.9 (2021-10-25)
+### Fixed
+- When importing the personalisation information, it was imported several times if the same item existed several times as an order item. This behaviour has been corrected.
+
 ## v2.1.8 (2021-09-28)
 ### Fixed
 - When sending the dispatch confirmation, in some cases no tracking code was transmitted. This behaviour has been corrected.
