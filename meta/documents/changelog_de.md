@@ -2,7 +2,7 @@
 
 ## v2.1.9 (2021-10-25)
 ### Behoben
-- Beim Import der Personalisierungsinformationen wurden diese mehrfach importiert, wenn der gleiche Artikel mehrfach als Artikelposition existierte. Dieses Verhalten wurde behoben.
+- Personalisierungsinformationen wurden mehrfach importiert, wenn derselbe Artikel mehrfach als Artikelposition existierte. Dieses Verhalten wurde behoben.
 
 ## v2.1.8 (2021-09-28)
 ### Behoben
