@@ -43,9 +43,12 @@ class OrderImportCron extends Cron
 		{
 			if($accountHelper->isProcessActive(SettingsHelper::SETTINGS_PROCESS_ORDER_IMPORT))
 			{
-				$service->run($this->lastRun(), date('Y-m-d H:i:s'));
+                $from = $this->lastRun();
+                $to = date('Y-m-d H:i:s');
 
-				$this->saveLastRun();
+				$service->run($from, $to);
+
+				$this->saveLastRun($to);
 			}
 		}
 		catch(\Exception $ex)
@@ -71,11 +74,12 @@ class OrderImportCron extends Cron
 		return $lastRun;
 	}
 
-	/**
-	 * Save the last run.
-	 */
-	private function saveLastRun()
+    /**
+     * Save the last run.
+     * @param $to
+     */
+	private function saveLastRun($to)
 	{
-		$this->settingsHelper->save(SettingsHelper::SETTINGS_LAST_ORDER_IMPORT, date('Y-m-d H:i:s'));
+		$this->settingsHelper->save(SettingsHelper::SETTINGS_LAST_ORDER_IMPORT, $to);
 	}
 }
