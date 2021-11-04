@@ -2,8 +2,8 @@
 
 ## v2.1.10 (2021-11-04)
 ### Fixed
-- Personalised information are now added to the item reference for each order item so that it is also displayed on the order documents.
-- When importing orders, it could happen that payments were not created. This behaviour has been corrected.
+- Personalised information is now added to the item name for each order item so that it is also displayed in the order documents.
+- When importing orders, payments sometimes were not created. This behaviour has been corrected.
 
 ## v2.1.9 (2021-10-25)
 ### Fixed
