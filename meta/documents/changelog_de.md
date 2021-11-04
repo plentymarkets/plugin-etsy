@@ -2,8 +2,8 @@
 
 ## v2.1.10 (2021-11-04)
 ### Behoben
-- Personalisierungsinformationen werden nun pro Auftragsposition an der Artikelbezichnung ergänzt, damit diese auch auf den Auftragsdokumenten angezeigt werden.
-- Beim Auftragsimport konnte es dazu kommen, dass Zahlungen nicht angelegt wurden. Das Verhalten wurde behoben.
+- Personalisierungsinformationen werden nun pro Auftragsposition an der Artikelbezeichnung ergänzt, damit diese auch auf den Auftragsdokumenten angezeigt werden.
+- Beim Auftragsimport wurden Zahlungen teilweise nicht angelegt. Dieses Verhalten wurde behoben.
 
 ## v2.1.9 (2021-10-25)
 ### Behoben
