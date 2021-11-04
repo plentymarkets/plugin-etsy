@@ -1,5 +1,10 @@
 # Release notes for Etsy
 
+## v2.1.10 (2021-11-04)
+### Fixed
+- Personalised information are now added to the item reference for each order item so that it is also displayed on the order documents.
+- When importing orders, it could happen that payments were not created. This behaviour has been corrected.
+
 ## v2.1.9 (2021-10-25)
 ### Fixed
 - Personalised information was imported repeatedly if the same item existed multiple times as an order item. This behaviour has been corrected.
