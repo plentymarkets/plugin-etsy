@@ -331,12 +331,14 @@ class OrderCreateService
 					$price = $transaction['price'] + $tax;
 				}
 
+                $orderItemName = $this->addPersonalizationInformation($transaction);
+
 				$orderItems[] = [
 					'typeId'          => $itemVariationId > 0 ? 1 : 9,
 					'referrerId'      => $this->orderHelper->getReferrerId(),
 					'itemVariationId' => $itemVariationId,
 					'quantity'        => $transaction['quantity'],
-					'orderItemName'   => html_entity_decode($transaction['title']),
+					'orderItemName'   => $orderItemName,
 					'countryVatId'    => $countryVat->id,
 					'vatField'        => $vatId,
 					'amounts'         => [
@@ -484,33 +486,6 @@ class OrderCreateService
 			/** @var CommentRepositoryContract $commentRepo */
 			$commentRepo = pluginApp(CommentRepositoryContract::class);
 
-            //save personalization information
-            foreach ($data['Transactions'] as $transaction) {
-                if (isset($transaction['variations'])) {
-                    foreach ($transaction['variations'] as $attribute) {
-                        if (in_array($attribute['formatted_name'], self::PERSONALIZATION_NAMING)) {
-                            foreach ($order->orderItems as $orderItem) {
-                                $orderItemExternalTransactionId = $orderItem->property(OrderPropertyType::EXTERNAL_TOKEN_ID);
-
-                                if (is_null($orderItemExternalTransactionId)) {
-                                    continue;
-                                }
-
-                                if ($orderItemExternalTransactionId == (string)$transaction['transaction_id']) {
-                                    $comment = [
-                                        'referenceType'       => Comment::REFERENCE_TYPE_ORDER,
-                                        'referenceValue'      => $orderId,
-                                        'isVisibleForContact' => true,
-                                        'text'                => '<b>' . $this->translator->trans('Etsy::order.personalizationMessage') . $orderItem->itemVariationId . ':</b><br><br>' . nl2br(html_entity_decode($attribute['formatted_value']))
-                                    ];
-                                    $commentRepo->createComment($comment);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
 			// save buyer message
 			if (isset($data['message_from_buyer']) && strlen($data['message_from_buyer'])) {
 				$commentRepo->createComment([
@@ -610,4 +585,22 @@ class OrderCreateService
 			return 0.0;
 		}
 	}
+
+    /**
+     * @param $transaction
+     * @return string
+     */
+    private function addPersonalizationInformation($transaction): string
+    {
+        $orderItemName = $transaction['title'];
+
+        if (isset($transaction['variations'])) {
+            foreach ($transaction['variations'] as $attribute) {
+                if (in_array($attribute['formatted_name'], self::PERSONALIZATION_NAMING)) {
+                    $orderItemName = $transaction['title'] . "<br />\n<br />\n" . nl2br(html_entity_decode($attribute['formatted_value']));
+                }
+            }
+        }
+        return html_entity_decode($orderItemName);
+    }
 }

@@ -1,5 +1,10 @@
 # Release Notes für Etsy
 
+## v2.1.10 (2021-11-04)
+### Behoben
+- Personalisierungsinformationen werden nun pro Auftragsposition an der Artikelbezeichnung ergänzt, damit diese auch auf den Auftragsdokumenten angezeigt werden.
+- Beim Auftragsimport wurden Zahlungen teilweise nicht angelegt. Dieses Verhalten wurde behoben.
+
 ## v2.1.9 (2021-10-25)
 ### Behoben
 - Personalisierungsinformationen wurden mehrfach importiert, wenn derselbe Artikel mehrfach als Artikelposition existierte. Dieses Verhalten wurde behoben.
