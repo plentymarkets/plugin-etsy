@@ -1,5 +1,9 @@
 # Release Notes für Etsy
 
+## v2.1.11 (2021-11-16)
+### Geändert
+- Es wurde eine kleine Veränderung bei der Auftragsanlage vorgenommen.
+
 ## v2.1.10 (2021-11-04)
 ### Behoben
 - Personalisierungsinformationen werden nun pro Auftragsposition an der Artikelbezeichnung ergänzt, damit diese auch auf den Auftragsdokumenten angezeigt werden.

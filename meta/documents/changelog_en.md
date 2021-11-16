@@ -1,5 +1,9 @@
 # Release notes for Etsy
 
+## v2.1.11 (2021-11-16)
+### Changed
+- The order creation process was changed slightly.
+
 ## v2.1.10 (2021-11-04)
 ### Fixed
 - Personalised information is now added to the item name for each order item so that it is also displayed in the order documents.
