@@ -249,6 +249,10 @@ class OrderCreateService
 				'typeId' => OrderPropertyType::EXTERNAL_ORDER_ID,
 				'value'  => $this->settingsHelper->getShopSettings('shopId') . '_'. $data['receipt_id'],
 			],
+            [
+                'typeId' => OrderPropertyType::ORDER_ORIGIN,
+                'value'  => 'Etsy'
+            ]
 		];
 
 		if (is_string($lang) && strlen($lang)){
@@ -283,7 +287,7 @@ class OrderCreateService
 		/** @var OrderRepositoryContract $orderRepo */
 		$orderRepo = pluginApp(OrderRepositoryContract::class);
 
-		$order = $orderRepo->createOrder($orderData);
+		$order = $orderRepo->create($orderData);
 
 		$this->getLogger(__FUNCTION__)
 			->addReference('etsyReceiptId', $data['receipt_id'])
