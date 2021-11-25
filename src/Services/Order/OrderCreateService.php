@@ -65,13 +65,14 @@ class OrderCreateService
      */
 	private $listingService;
 
-	/**
+    /**
      * @param Application $app
      * @param OrderHelper $orderHelper
      * @param PaymentHelper $paymentHelper
      * @param SettingsHelper $settingsHelper
      * @param Translator $translator
-	 */
+     * @param ListingService $listingService
+     */
 	public function __construct(Application $app,
 								OrderHelper $orderHelper,
 								PaymentHelper $paymentHelper,
