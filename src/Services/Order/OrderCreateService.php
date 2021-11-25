@@ -2,6 +2,7 @@
 
 namespace Etsy\Services\Order;
 
+use Etsy\Api\Services\ListingService;
 use Etsy\Helper\OrderHelper;
 use Etsy\Helper\PaymentHelper;
 use Etsy\Helper\SettingsHelper;
@@ -59,24 +60,32 @@ class OrderCreateService
 	 */
 	private $translator;
 
-	/**
-	 * @param Application    $app
-	 * @param OrderHelper    $orderHelper
+    /**
+     * @var ListingService
+     */
+	private $listingService;
+
+    /**
+     * @param Application $app
+     * @param OrderHelper $orderHelper
      * @param PaymentHelper $paymentHelper
-	 * @param SettingsHelper $settingsHelper
-	 * @param Translator     $translator
-	 */
+     * @param SettingsHelper $settingsHelper
+     * @param Translator $translator
+     * @param ListingService $listingService
+     */
 	public function __construct(Application $app,
 								OrderHelper $orderHelper,
 								PaymentHelper $paymentHelper,
 								SettingsHelper $settingsHelper,
-								Translator $translator)
+								Translator $translator,
+                                ListingService $listingService)
 	{
 		$this->app            = $app;
 		$this->orderHelper    = $orderHelper;
 		$this->paymentHelper  = $paymentHelper;
 		$this->settingsHelper = $settingsHelper;
 		$this->translator     = $translator;
+        $this->listingService = $listingService;
 	}
 
 	/**
@@ -278,7 +287,7 @@ class OrderCreateService
 			]
 		];
 
-		$orderData['orderItems'] = $this->getOrderItems($data);
+		$orderData['orderItems'] = $this->getOrderItems($data, $lang);
 
 		/** @var OrderRepositoryContract $orderRepo */
 		$orderRepo = pluginApp(OrderRepositoryContract::class);
@@ -295,12 +304,12 @@ class OrderCreateService
 		return $order;
 	}
 
-	/**
-	 * @param array $data
-	 *
-	 * @return array
-	 */
-	private function getOrderItems(array $data)
+    /**
+     * @param array $data
+     * @param $lang
+     * @return array
+     */
+	private function getOrderItems(array $data, $lang)
 	{
 		$orderItems  = [];
 		$minVatField = null;
@@ -331,7 +340,18 @@ class OrderCreateService
 					$price = $transaction['price'] + $tax;
 				}
 
-                $orderItemName = $this->addPersonalizationInformation($transaction);
+				// sometimes etsy returns no title in the order data. In this case we get the title directly from the item
+				$orderItemName = $transaction['title'];
+				if ($orderItemName == null) {
+				    $listing = $this->listingService->getListing($transaction['listing_id']);
+				    foreach ($listing['Translations'] as $translation) {
+				        if ($translation['language'] == $lang) {
+                            $orderItemName = $translation['title'];
+                        }
+                    }
+                }
+
+                $orderItemName = $this->addPersonalizationInformation($transaction, $orderItemName);
 
 				$orderItems[] = [
 					'typeId'          => $itemVariationId > 0 ? 1 : 9,
@@ -588,16 +608,15 @@ class OrderCreateService
 
     /**
      * @param $transaction
+     * @param $orderItemName
      * @return string
      */
-    private function addPersonalizationInformation($transaction): string
+    private function addPersonalizationInformation($transaction, $orderItemName): string
     {
-        $orderItemName = $transaction['title'];
-
         if (isset($transaction['variations'])) {
             foreach ($transaction['variations'] as $attribute) {
                 if (in_array($attribute['formatted_name'], self::PERSONALIZATION_NAMING)) {
-                    $orderItemName = $transaction['title'] . "<br />\n<br />\n" . nl2br(html_entity_decode($attribute['formatted_value']));
+                    $orderItemName = $orderItemName . "<br />\n<br />\n" . nl2br(html_entity_decode($attribute['formatted_value']));
                 }
             }
         }

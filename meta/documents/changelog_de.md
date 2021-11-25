@@ -1,5 +1,9 @@
 # Release Notes für Etsy
 
+## v2.1.11 (2021-11-25)
+### Behoben
+- Bei der Anlage von Auftragspositionen übermittelt Etsy in manchen Fällen keinen Titel in den Auftragsdaten. Für diesen Fall wurde nun ein Backup implementiert.
+
 ## v2.1.10 (2021-11-04)
 ### Behoben
 - Personalisierungsinformationen werden nun pro Auftragsposition an der Artikelbezeichnung ergänzt, damit diese auch auf den Auftragsdokumenten angezeigt werden.

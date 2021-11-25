@@ -35,11 +35,17 @@ class ListingService
      */
 	public function getListing($listingId)
     {
-        $params = [
-          'listing_id' => $listingId
-        ];
-
-        return $this->client->call('getListing', $params);
+        return $this->client->call(
+            'getListing',
+            [
+                'listing_id' => $listingId
+            ],
+            [],
+            [],
+            [
+                'Translations' => 'Translations'
+            ]
+        );
     }
 
 	/**
