@@ -1,7 +1,7 @@
 # Release notes for Etsy
 
 ## v2.1.11 (2021-11-25)
-### Behoben
+### Fixed
 - When creating order items, in some cases Etsy does not transmit a title in the order data. For this case, a backup has now been implemented.
 
 ## v2.1.10 (2021-11-04)
