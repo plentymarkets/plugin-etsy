@@ -1,5 +1,9 @@
 # Release notes for Etsy
 
+## v2.1.12 (2022-01-05)
+### Fixed
+- The allowed values for the field "when_made" were changed by Etsy. The plugin was updated to support those changes.
+
 ## v2.1.11 (2021-11-25)
 ### Fixed
 - When creating order items, in some cases Etsy does not transmit a title in the order data. For this case, a backup has now been implemented.

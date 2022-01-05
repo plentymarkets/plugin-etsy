@@ -1,5 +1,9 @@
 # Release Notes für Etsy
 
+## v2.1.12 (2022-01-05)
+### Behoben
+- Die möglichen Werte für das Feld "when_made" wurden von Etsy angepasst. Das Plugin wurde erweitert um diese Anpassung zu berücksichtigen.
+
 ## v2.1.11 (2021-11-25)
 ### Behoben
 - Bei der Anlage von Auftragspositionen übermittelt Etsy in manchen Fällen keinen Titel in den Auftragsdaten. Für diesen Fall wurde nun ein Backup implementiert.
