@@ -1,5 +1,9 @@
 # Release Notes für Etsy
 
+## v2.1.13 (2022-01-13)
+### Behoben
+- Der Wert "2020_2020" im Feld "when_made" wird nun automatisch auf den validen Wert "2020_2022" abgeändert.
+
 ## v2.1.12 (2022-01-05)
 ### Behoben
 - Die möglichen Werte für das Feld "when_made" wurden von Etsy angepasst. Das Plugin wurde erweitert um diese Anpassung zu berücksichtigen.

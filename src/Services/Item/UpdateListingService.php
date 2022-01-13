@@ -253,6 +253,11 @@ class UpdateListingService
             self::BOOL_CONVERTIBLE_STRINGS);
         $data['when_made'] = $listing['main']['when_made'];
 
+        if ($data['when_made'] == "2020_2020") {
+            // etsy changed this value. We adapt it here to keep customer configuration working
+            $data['when_made'] = "2020_2022";
+        }
+
         //Category
         $data['taxonomy_id'] = (int)reset($listing['main']['categories']);
 

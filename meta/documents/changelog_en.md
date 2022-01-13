@@ -1,5 +1,9 @@
 # Release notes for Etsy
 
+## v2.1.13 (2022-01-13)
+### Fixed
+- The value "2020_2020" in the field "when_made" will now be automatically changed to the valid value "2020_2022".
+
 ## v2.1.12 (2022-01-05)
 ### Fixed
 - The allowed values for the field "when_made" were changed by Etsy. The plugin was updated to support those changes.
