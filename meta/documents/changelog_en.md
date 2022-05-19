@@ -2,7 +2,7 @@
 
 ## v2.1.14 (2022-05-19)
 ### Fixed
-- Fixed PHP8 error
+- Fixed PHP8 error.
 
 ## v2.1.13 (2022-01-13)
 ### Fixed
