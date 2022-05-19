@@ -1,5 +1,9 @@
 # Release notes for Etsy
 
+## v2.1.14 (2022-05-19)
+### Fixed
+- Fixed PHP8 error.
+
 ## v2.1.13 (2022-01-13)
 ### Fixed
 - The value "2020_2020" in the field "when_made" will now be automatically changed to the valid value "2020_2022".
