@@ -552,7 +552,7 @@ class StartListingService
                 ->trans(EtsyServiceProvider::PLUGIN_NAME . '::log.longTitle');
         }
 
-        if (count($listing['main']['attributes']) > 2) {
+        if (is_array($listing['main']['attributes']) && count($listing['main']['attributes']) > 2) {
             $articleFailed = true;
             $articleErrors[] = $this->translator
                 ->trans(EtsyServiceProvider::PLUGIN_NAME . '::log.tooManyAttributes');
