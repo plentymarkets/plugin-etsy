@@ -123,7 +123,7 @@ class ItemHelper
         }
         
         $list = $this->legalInformationRepository->search(['lang' => $lang]);
-        if(count($list)) {
+        if(is_array($list) && count($list)) {
             $legalInformation = array_shift($list);
             if($legalInformation instanceof LegalInformation) {
                 $this->legalInformationCache[$lang] = (string)$legalInformation->value;
@@ -216,7 +216,7 @@ class ItemHelper
             'marketId' => $this->orderHelper->getReferrerId()
         ]);
 
-        if (count($skus) < 1) return false;
+        if (is_array($skus) && count($skus) < 1) return false;
 
         foreach ($skus as $sku) {
             $sku->status = $status;

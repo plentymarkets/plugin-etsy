@@ -414,7 +414,7 @@ class UpdateListingService
                 ->trans(EtsyServiceProvider::PLUGIN_NAME . '::log.longTitle');
         }
 
-        if (count($listing['main']['attributes']) > 2) {
+        if (is_array($listing['main']['attributes']) && count($listing['main']['attributes']) > 2) {
             $articleFailed = true;
             $articleErrors[] = $this->translator
                 ->trans(EtsyServiceProvider::PLUGIN_NAME . '::log.tooManyAttributes');
@@ -427,7 +427,7 @@ class UpdateListingService
                 ->error(EtsyServiceProvider::PLUGIN_NAME . '::log.', $errors);
         }
 
-        if ($articleFailed || count($failedVariations)) {
+        if ($articleFailed || (is_array($failedVariations) && count($failedVariations))) {
             $exceptionMessage = ($articleFailed) ? '::log.articleNotListable' : '::log.variationsNotListed';
 
             foreach ($failedVariations as $variationId => $variationErrors) {
@@ -495,7 +495,7 @@ class UpdateListingService
             if (!count($variation['attributes'])) {
                 continue;
             }
-            if (count($variation['attributes']) > 2) {
+            if (is_array($variation['attributes']) && count($variation['attributes']) > 2) {
                 $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
                     ->addReference('variationId', $variation['variationId'])
                     ->error('Etsy only allows 2 attributes');
@@ -513,7 +513,7 @@ class UpdateListingService
 
         //Some customers use the main variation just as a container so it has no attributes. If it is still active
         //it has to be filtered out at this point
-        if (count($listing['main']['attributes']) < count($dependencies)) {
+        if ((is_array($listing['main']['attributes']) && count($listing['main']['attributes'])) < (is_array($dependencies) && count($dependencies))) {
             $listing['main']['failed'] = true;
         }
 
@@ -535,7 +535,7 @@ class UpdateListingService
         $disabledCounter = 0;
         $isSingleListing = false;
 
-        if (count($listing) == 1) {
+        if (is_array($listing) && count($listing) == 1) {
             $isSingleListing = true;
         }
 
@@ -678,7 +678,7 @@ class UpdateListingService
         }
 
         //logging failed article / variations
-        if ($isEveryVariationDisabled || count($failedVariations)) {
+        if ($isEveryVariationDisabled || (is_array($failedVariations) && count($failedVariations))) {
             $exceptionMessage = ($isEveryVariationDisabled) ? 'log.articleNotListable' : 'log.variationsNotListed';
 
             foreach ($failedVariations as $variationId => $variationErrors) {

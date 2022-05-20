@@ -1,5 +1,9 @@
 # Release Notes für Etsy
 
+## v2.1.15 (2022-05-20)
+### Fixed
+- Ein Fehler im Zusammenhang mit PHP8 wurde behoben.
+
 ## v2.1.14 (2022-05-19)
 ### Fixed
 - Ein Fehler im Zusammenhang mit PHP8 wurde behoben.

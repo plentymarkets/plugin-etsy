@@ -196,7 +196,7 @@ class StartListingService
                 }
             }
 
-            if (count($skus)) {
+            if (is_array($skus) && count($skus)) {
                 $this->itemHelper->deleteListingsSkus($listingId, $this->settingsHelper
                     ->get($this->settingsHelper::SETTINGS_ORDER_REFERRER));
 
@@ -222,7 +222,7 @@ class StartListingService
                 }
             }
 
-            if (count($skus)) {
+            if (is_array($skus) && count($skus)) {
                 $this->itemHelper->deleteListingsSkus($listingId, $this->settingsHelper
                     ->get($this->settingsHelper::SETTINGS_ORDER_REFERRER));
 
@@ -403,7 +403,7 @@ class StartListingService
         }
 
         //Category
-        $data['taxonomy_id'] = (int)reset($listing['main']['categories']);
+        $data['taxonomy_id'] = is_array($listing['main']['categories']) ? (int)reset($listing['main']['categories']) : NULL;
 
         $catalogTag = 'tags' . strtoupper($mainLanguage);
 
@@ -571,7 +571,7 @@ class StartListingService
         }
 
         //Error handling
-        if ($articleFailed || count($failedVariations)) {
+        if ($articleFailed || (is_array($failedVariations) && count($failedVariations))) {
             $exceptionMessage = ($articleFailed) ? '::log.articleNotListable' : '::log.variationsNotListed';
 
             foreach ($failedVariations as $variationId => $variationErrors) {
@@ -588,6 +588,7 @@ class StartListingService
                 ->addReference('itemId', $listing['main']['itemId'])
                 ->error(EtsyServiceProvider::PLUGIN_NAME . $exceptionMessage, $failedVariations);
         }
+        
 
         //Gotta put the language into the data array, otherwise etsy enums can cause the export to fail
         $data['language'] = $mainLanguage;
@@ -644,10 +645,10 @@ class StartListingService
         $defaultCurrency = $this->currencyExchangeRepository->getDefaultCurrency();
 
         foreach ($listing as $variation) {
-            if (!count($variation['attributes'])) {
+            if (is_array($variation['attributes']) && !count($variation['attributes'])) {
                 continue;
             }
-            if (count($variation['attributes']) > 2) {
+            if (is_array($variation['attributes']) && count($variation['attributes']) > 2) {
                 $this->getLogger(EtsyServiceProvider::PLUGIN_NAME)
                     ->addReference('variationId', $variation['variationId'])
                     ->error('Etsy only allows 2 attributes');
@@ -666,7 +667,7 @@ class StartListingService
 
         //Some customers use the main variation just as a container so it has no attributes. If it is still active
         //it has to be filtered out at this point
-        if (count($listing['main']['attributes']) < count($dependencies)) {
+        if ((is_array($listing['main']['attributes']) && count($listing['main']['attributes'])) < (is_array($dependencies) && count($dependencies))) {
             $listing['main']['failed'] = true;
         }
 
@@ -798,7 +799,7 @@ class StartListingService
         }
 
         //logging failed article / variations
-        if (!$hasActiveVariations || count($failedVariations)) {
+        if (!$hasActiveVariations || (is_array($failedVariations) && count($failedVariations))) {
             $exceptionMessage = (!$hasActiveVariations) ? 'log.articleNotListable' : 'log.variationsNotListed';
 
             foreach ($failedVariations as $variationId => $variationErrors) {
@@ -911,7 +912,7 @@ class StartListingService
                 'imageUrl' => $image['url']
             ];
         }
-        if (!count($imageList)) {
+        if (is_array($imageList) && !count($imageList)) {
             $messageBag = pluginApp(MessageBag::class, [
                 'messages' =>
                     [$this->translator->trans(EtsyServiceProvider::PLUGIN_NAME . '::log.noImages')]
