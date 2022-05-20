@@ -161,7 +161,7 @@ class PropertyImportService
 		$propertySettings = $this->settingsRepository->find(SettingsHelper::PLUGIN_NAME,
 			SettingsCorrelationFactory::TYPE_PROPERTY);
 
-		if (count($propertySettings)) {
+		if (is_array($propertySettings) && count($propertySettings)) {
 			foreach ($propertySettings as $propertySetting) {
 				$this->currentProperties[$propertySetting->settings['mainPropertyKey']][$propertySetting->settings['hash']] = $propertySetting;
 			}

@@ -102,7 +102,7 @@ class ShippingProfileImportService
 	{
 		$shippingProfileSettings = $this->settingsRepository->find(SettingsHelper::PLUGIN_NAME, SettingsCorrelationFactory::TYPE_SHIPPING);
 
-		if(count($shippingProfileSettings))
+		if(is_array($shippingProfileSettings) && count($shippingProfileSettings))
 		{
 			foreach($shippingProfileSettings as $shippingProfileSetting)
 			{

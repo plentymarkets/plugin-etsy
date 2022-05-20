@@ -106,7 +106,7 @@ class CategoryRepository implements CategoryRepositoryContract
 
         $children = $plentyCategoryRepo->getChildren($categoryId, $lang);
 
-        if (count($children)) {
+        if (is_array($children) && count($children)) {
             foreach ($children as $child) {
                 /** @var Category $category */
                 $category = pluginApp(Category::class);

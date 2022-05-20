@@ -44,7 +44,7 @@ class ShippingProfileController extends Controller
 
 		$list = $marketSettingsRepository->find(SettingsHelper::PLUGIN_NAME, SettingsCorrelationFactory::TYPE_SHIPPING);
 
-		if(count($list))
+		if(is_array($list) && count($list))
 		{
 			/** @var Settings $settings */
 			foreach($list as $settings)
@@ -104,7 +104,7 @@ class ShippingProfileController extends Controller
 
 		$list = $parcelServicePresetRepository->getPresetList();
 
-		if(count($list))
+		if(is_array($list) && count($list))
 		{
 			foreach($list as $parcelServicePreset)
 			{

@@ -72,7 +72,7 @@ class LegalInformationRepository implements LegalInformationRepositoryContract
     {
         if(isset($data['lang'])) {
             $legalInformations = $this->search(['lang' => $data['lang']]);
-            if(count($legalInformations) >= 1) {
+            if(is_array($legalInformations) && count($legalInformations) >= 1) {
                 $legalInformation = array_shift($legalInformations);
                 return $this->update($legalInformation->id, $data);
             }

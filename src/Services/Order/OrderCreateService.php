@@ -388,7 +388,7 @@ class OrderCreateService
 				$minVatField = min($minVatField, $vatId);
 			}
 
-			if (count($orderItems) > 0) {
+			if (is_array($orderItems) && count($orderItems) > 0) {
 				// add coupon item position
 				if (isset($data['discount_amt']) && $data['discount_amt'] > 0) {
 					$orderItems[] = [
