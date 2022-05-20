@@ -403,7 +403,7 @@ class StartListingService
         }
 
         //Category
-        $data['taxonomy_id'] = is_array($listing['main']['categories']) ? (int)reset($listing['main']['categories']) : NULL;
+        $data['taxonomy_id'] = is_array($listing['main']['categories']) ? (int)reset($listing['main']['categories']) : 0;
 
         $catalogTag = 'tags' . strtoupper($mainLanguage);
 
