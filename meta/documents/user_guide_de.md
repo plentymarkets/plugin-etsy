@@ -2,7 +2,7 @@
 # User Guide für das Etsy-Plugin
 
 <div class="alert alert-info" role="alert">
-  Wie du das Etsy-Plugin in plentymarkets einrichtest, <a href="https://knowledge.plentymarkets.com/maerkte/etsy" target="_blank">ist im plentymarkets Handbuch beschrieben</a>.
+  Wie du das Etsy-Plugin in plentymarkets einrichtest, <a href="https://knowledge.plentymarkets.com/de-de/manual/main/maerkte/etsy.html" target="_blank">ist im plentymarkets Handbuch beschrieben</a>.
 </div>
 
 ## Lizenz

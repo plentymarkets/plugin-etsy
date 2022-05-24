@@ -593,7 +593,7 @@ class OrderCreateService
 	 */
 	private function getTaxInformation(array $transactions, $data)
 	{
-		$transactionAmount = count($transactions);
+		$transactionAmount = is_array($transactions) ? count($transactions) : 0;
 
 		if (isset($data['total_tax_cost']) && $data['total_tax_cost'] != null) {
 			$totalTax = $data['total_tax_cost'];

@@ -45,7 +45,7 @@ class CategoryRepository implements CategoryRepositoryContract
 
         $children = $plentyCategoryRepo->getChildren($categoryId, $lang);
 
-        $category->isLeaf = count($children) ? false : true;
+        $category->isLeaf = is_array($children) && count($children) ? false : true;
 
         if (in_array('children', $with)) {
             $category->children = $this->getChildren([], $categoryId, $lang);
