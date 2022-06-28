@@ -31,5 +31,8 @@
     "Etsy\\Migrations\\CreateLegalInformationTable",
     "Etsy\\Migrations\\CreateEtsyTaxonomiesTable",
     "Etsy\\Migrations\\CreateEtsyMigrationTable"
-  ]
+  ],
+  "platform": {
+    "php": ">=7.3 <8.1"
+  }
 }
