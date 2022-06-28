@@ -78,7 +78,7 @@ class AuthController extends Controller
             return [
                 [
                     'status' => $status,
-                    'shopId' => is_array($shopData) ? $shopData[$shopId]['shopName'] : '',
+                    'shopId' => is_array($shopData) && isset($shopData[$shopId]['shopName']) ? $shopData[$shopId]['shopName'] : '',
                 ]
             ];
         }
