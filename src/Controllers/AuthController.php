@@ -58,12 +58,15 @@ class AuthController extends Controller
      *
      * @return array
      */
-    public function status()
+    public function status(): array
     {
         $tokenData = $this->accountHelper->getTokenData();
         $shopData = json_decode($this->settingsHelper->get($this->settingsHelper::SETTINGS_ETSY_SHOPS), true);
 
-        $shopId = key($shopData);
+        $shopId = null;
+        if(is_array($shopData)){
+            $shopId = key($shopData);
+        }
 
         $status = false;
 
@@ -75,7 +78,7 @@ class AuthController extends Controller
             return [
                 [
                     'status' => $status,
-                    'shopId' => $shopData[$shopId]['shopName'],
+                    'shopId' => is_array($shopData) ? $shopData[$shopId]['shopName'] : '',
                 ]
             ];
         }
