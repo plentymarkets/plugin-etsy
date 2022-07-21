@@ -389,7 +389,7 @@ class StartListingService
         }
 
         //shipping profiles
-        $data['shipping_template_id'] = (int)reset($listing['main']['shipping_profiles']);
+        $data['shipping_template_id'] = isset($listing['main']['shipping_profiles']) && is_array($listing['main']['shipping_profiles']) ? (int)reset($listing['main']['shipping_profiles']) : 0;
 
         $data['who_made'] = $listing['main']['who_made'];
         $data['is_supply'] = in_array(strtolower($listing['main']['is_supply']),
