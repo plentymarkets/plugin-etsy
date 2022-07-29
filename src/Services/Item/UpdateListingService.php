@@ -445,7 +445,18 @@ class UpdateListingService
                 ->error(EtsyServiceProvider::PLUGIN_NAME . $exceptionMessage, $failedVariations);
         }
 
+        $this->getLogger(EtsyServiceProvider::UPDATE_LISTING_SERVICE)
+            ->addReference('etsyListingId',$listingId)
+            ->info(EtsyServiceProvider::PLUGIN_NAME, $data);
+
         $response = $this->listingService->updateListing($listingId, $data, $mainLanguage);
+
+        $this->getLogger(EtsyServiceProvider::UPDATE_LISTING_SERVICE)
+            ->addReference('etsyListingId',$listingId)
+            ->info(EtsyServiceProvider::PLUGIN_NAME, [
+                'data' => $data,
+                'result' => json_encode($response)
+            ]);
 
         if (!isset($response['results']) || !is_array($response['results'])) {
             $messages = [];

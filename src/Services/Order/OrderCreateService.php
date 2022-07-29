@@ -106,6 +106,12 @@ class OrderCreateService
 
 			// create order comments
 			$this->createOrderComments($order, $data);
+            $this->getLogger(__FUNCTION__)
+                ->info("OrderCreateService", [
+                    'function' => 'create',
+                    'order' => $order,
+                    'data' => $data,
+                ]);
 
 			// create payment
             if ($this->orderHelper->isDirectCheckout((string)$data['payment_method']) &&
