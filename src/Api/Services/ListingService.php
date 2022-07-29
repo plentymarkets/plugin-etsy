@@ -4,12 +4,15 @@ namespace Etsy\Api\Services;
 
 use Etsy\Api\Client;
 use Etsy\EtsyServiceProvider;
+use Plenty\Plugin\Log\Loggable;
 
 /**
  * Class ListingService
  */
 class ListingService
 {
+    use Loggable;
+
 	const STATE_DRAFT = 'draft';
 	const STATE_ACTIVE = 'active';
 	const STATE_INACTIVE = 'inactive';
