@@ -132,6 +132,12 @@ class UpdateListingStockService
 
         try {
             $etsyListing = $this->listingService->getListing($listingId);
+            $this->getLogger(EtsyServiceProvider::STOCK_UPDATE_SERVICE)
+                ->addReference('listingId', $listingId)
+                ->info(EtsyServiceProvider::PLUGIN_NAME . '::item.itemExportListings', [
+                    'function' => 'inside_updateStock',
+                    'etsyListing' => $etsyListing
+                ]);
             $state = $etsyListing['results'][0]['state'];
 
             $renew = true;
@@ -155,6 +161,12 @@ class UpdateListingStockService
             }
 
             $products = $this->update($listingId, $listing);
+            $this->getLogger(__FUNCTION__)
+                ->addReference('itemId', $listing['main']['itemId'])
+                ->info(EtsyServiceProvider::PLUGIN_NAME . '::item.itemExportListings', [
+                    'function' => 'inside_updateStock',
+                    'products' => $products
+                ]);
 
             //no positive stock
             if (is_null($products)) {
@@ -265,6 +277,12 @@ class UpdateListingStockService
      */
     protected function update($listingId, array $listing)
     {
+        $this->getLogger(EtsyServiceProvider::STOCK_UPDATE_SERVICE)
+            ->addReference('listingId', $listingId)
+            ->info(EtsyServiceProvider::PLUGIN_NAME . '::item.itemExportListings', [
+                'function' => 'updateStock->update',
+                'listing' => $listing
+            ]);
         $retrys = 3;
         $etsyInventory = null;
 
@@ -272,7 +290,12 @@ class UpdateListingStockService
         //which means the inventory must be loadable. An error at this point probably is caused by connection issues
         for ($counter = 0; $counter < $retrys; $counter++) {
             $etsyInventory = $this->listingInventoryService->getInventory($listingId);
-
+            $this->getLogger(EtsyServiceProvider::STOCK_UPDATE_SERVICE)
+                ->addReference('listingId', $listingId)
+                ->info('EtsyInventory', [
+                    'function' => 'updateStock->update',
+                    'etsyInventoryResponse' => $etsyInventory
+                ]);
             if (isset($etsyInventory['results']) && is_array($etsyInventory['results'])) {
                 break;
             }
@@ -370,7 +393,12 @@ class UpdateListingStockService
         $data['products'] = json_encode($products);
 
         $response = $this->listingInventoryService->updateInventory($listingId, $data);
-
+        $this->getLogger(EtsyServiceProvider::STOCK_UPDATE_SERVICE)
+            ->addReference('listingId', $listingId)
+            ->info('EtsyInventoryUpdate', [
+                'function' => 'updateStock->update',
+                'etsyInventoryUpdateResponse' => $response
+            ]);
         if (!isset($response['results']) || !is_array($response['results'])) {
             $messages = [];
 

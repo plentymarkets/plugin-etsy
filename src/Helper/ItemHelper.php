@@ -4,6 +4,7 @@ namespace Etsy\Helper;
 
 use Carbon\Carbon;
 use Etsy\Contracts\LegalInformationRepositoryContract;
+use Etsy\EtsyServiceProvider;
 use Etsy\Models\LegalInformation;
 use Illuminate\Database\Eloquent\Collection;
 use Plenty\Modules\Item\ItemShippingProfiles\Models\ItemShippingProfiles;
@@ -181,7 +182,12 @@ class ItemHelper
     public function updateVariationSkuStockTimestamp($variationId)
     {
         $sku = $this->getVariationSku($variationId);
-
+        $this->getLogger(__FUNCTION__)
+            ->addReference('variationId', $variationId)
+            ->info(EtsyServiceProvider::PLUGIN_NAME . '::item.itemExportListings', [
+                'function' => 'updateVariationSkuStockTimestamp',
+                'sku' => $sku
+            ]);
         if (!$sku) return false;
 
         $sku->stockUpdatedAt = date('Y-m-d H:i:s');
@@ -217,6 +223,12 @@ class ItemHelper
         ]);
 
         if (is_array($skus) && count($skus) < 1) return false;
+        $this->getLogger(__FUNCTION__)
+            ->addReference('variationId', $variationId)
+            ->info(EtsyServiceProvider::PLUGIN_NAME . '::item.itemExportListings', [
+                'function' => 'generateSku',
+                'skus' => $skus
+            ]);
 
         foreach ($skus as $sku) {
             $sku->status = $status;

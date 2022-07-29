@@ -109,6 +109,11 @@ class ItemExportService extends AbstractBatchService
             $listings[$variation['itemId']][] = $variation;
         }
 
+        $this->getLogger(EtsyServiceProvider::ITEM_EXPORT_SERVICE)
+            ->info(EtsyServiceProvider::PLUGIN_NAME . 'item.itemExportListings', [
+                $listings
+            ]);
+
         foreach ($listings as $listing) {
             try
             {

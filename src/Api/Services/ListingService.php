@@ -3,6 +3,7 @@
 namespace Etsy\Api\Services;
 
 use Etsy\Api\Client;
+use Etsy\EtsyServiceProvider;
 
 /**
  * Class ListingService
@@ -58,6 +59,11 @@ class ListingService
 	 */
 	public function createListing($language, array $data)
 	{
+        $this->getLogger(EtsyServiceProvider::START_LISTING_SERVICE)
+            ->info(EtsyServiceProvider::PLUGIN_NAME, [
+                'function' => 'createListing',
+                'data' => $data
+            ]);
 		return $this->client->call('createListing', ['language' => $language], $data);
 	}
 
@@ -77,6 +83,13 @@ class ListingService
 		{
 			$params['language'] = $language;
 		}
+
+        $this->getLogger(EtsyServiceProvider::UPDATE_LISTING_SERVICE)
+            ->addReference('etsyListingId',$id)
+            ->info(EtsyServiceProvider::PLUGIN_NAME, [
+                'params' => $params,
+                'data' => $data
+            ]);
 
 		return $this->client->call('updateListing', $params, $data);
 	}
