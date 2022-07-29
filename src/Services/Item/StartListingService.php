@@ -151,11 +151,6 @@ class StartListingService
      */
     public function start(array $listing)
     {
-
-        $this->getLogger(EtsyServiceProvider::START_LISTING_SERVICE)
-            ->addReference('itemId', $listing['main']['itemId'])
-            ->info('Start the listing', ['listing' => $listing]);
-
         if (!isset($listing['main'])) {
             $this->getLogger(EtsyServiceProvider::START_LISTING_SERVICE)
                 ->addReference('itemId', $listing['main']['itemId'])
@@ -597,13 +592,6 @@ class StartListingService
 
         //Gotta put the language into the data array, otherwise etsy enums can cause the export to fail
         $data['language'] = $mainLanguage;
-        $this->getLogger(EtsyServiceProvider::START_LISTING_SERVICE)
-            ->addReference('itemId', $listing['main']['itemId'])
-            ->info('createListing', [
-                'function'  => 'createListing',
-                'data'      => $data,
-                'language'  => $mainLanguage
-            ]);
         $response = $this->listingService->createListing($mainLanguage, $data);
 
         //Due to the api issue we need to reuse the listings data in the final update request
@@ -630,14 +618,6 @@ class StartListingService
         }
 
         $results = (array)$response['results'];
-
-        $this->getLogger(EtsyServiceProvider::START_LISTING_SERVICE)
-            ->addReference('listingId', (int)reset($results)['listing_id'])
-            ->info('createListing', [
-                'function'  => 'createListing',
-                'response'      => (array)$response['results']
-            ]);
-
         $listing['main']['listingId'] = (int)reset($results)['listing_id'];
 
         return ['listing' => $listing, 'etsyListing' => $data];

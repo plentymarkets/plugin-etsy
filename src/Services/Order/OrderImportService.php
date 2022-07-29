@@ -2,7 +2,6 @@
 
 namespace Etsy\Services\Order;
 
-use Etsy\EtsyServiceProvider;
 use Etsy\Helper\OrderHelper;
 use Etsy\Helper\SettingsHelper;
 use Etsy\Services\Country\CountryImportService;
@@ -92,17 +91,8 @@ class OrderImportService
 		$shopId = $this->settingsHelper->getShopSettings('shopId');
 
 		$receipts = $this->receiptService->findAllShopReceipts($shopId,$lang, $from, $to);
-        $this->getLogger(__FUNCTION__)
-            ->addReference('shopId', $shopId)
-            ->info("OrderImportService", [
-                'function' => 'run',
-                'shopId' => $shopId,
-                'lang' => $lang,
-                'from' => $from,
-                'to' => $to,
-            ]);
 
-        $countries = $this->countryImportService->run();
+		$countries = $this->countryImportService->run();
 
 		if(isset($receipts['error']) && $receipts['error'] === true)
 		{
@@ -118,12 +108,6 @@ class OrderImportService
 
                     try {
                         $order = $orderRepo->findOrderByExternalOrderId($shopId . '_' . $receiptData['receipt_id']);
-                        $this->getLogger(__FUNCTION__)
-                            ->addReference('orderId',  $order->id)
-                            ->info("OrderImportService", [
-                                'function' => 'run',
-                                'order' => $order,
-                            ]);
                     } catch (\Exception $exception) {
 
                     }

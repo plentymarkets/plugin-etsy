@@ -113,12 +113,6 @@ class ItemUpdateStockService extends AbstractBatchService
 
         foreach ($listings as $listing) {
             try {
-                $this->getLogger(EtsyServiceProvider::STOCK_UPDATE_SERVICE)
-                    ->addReference('itemId', $listing['main']['itemId'])
-                    ->info(EtsyServiceProvider::PLUGIN_NAME . '::item.itemExportListings', [
-                        'function' => 'updateStock',
-                        'listing' => $listing
-                    ]);
                 $this->updateListingStockService->updateStock($listing);
 
             } catch (\Exception $exception) {
