@@ -115,7 +115,7 @@ class ItemUpdateStockService extends AbstractBatchService
             try {
                 $this->getLogger(EtsyServiceProvider::STOCK_UPDATE_SERVICE)
                     ->addReference('itemId', $listing['main']['itemId'])
-                    ->info(EtsyServiceProvider::PLUGIN_NAME . '::item.itemExportListings', [
+                    ->report(EtsyServiceProvider::PLUGIN_NAME . '::item.itemExportListings', [
                         'function' => 'updateStock',
                         'listing' => $listing
                     ]);

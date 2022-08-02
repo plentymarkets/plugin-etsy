@@ -134,7 +134,7 @@ class UpdateListingStockService
             $etsyListing = $this->listingService->getListing($listingId);
             $this->getLogger(EtsyServiceProvider::STOCK_UPDATE_SERVICE)
                 ->addReference('listingId', $listingId)
-                ->info(EtsyServiceProvider::PLUGIN_NAME . '::item.itemExportListings', [
+                ->report(EtsyServiceProvider::PLUGIN_NAME . '::item.itemExportListings', [
                     'function' => 'inside_updateStock',
                     'etsyListing' => $etsyListing
                 ]);
@@ -163,7 +163,7 @@ class UpdateListingStockService
             $products = $this->update($listingId, $listing);
             $this->getLogger(__FUNCTION__)
                 ->addReference('itemId', $listing['main']['itemId'])
-                ->info(EtsyServiceProvider::PLUGIN_NAME . '::item.itemExportListings', [
+                ->report(EtsyServiceProvider::PLUGIN_NAME . '::item.itemExportListings', [
                     'function' => 'inside_updateStock',
                     'products' => $products
                 ]);

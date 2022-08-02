@@ -63,7 +63,7 @@ class ListingService
 	public function createListing($language, array $data)
 	{
         $this->getLogger(EtsyServiceProvider::START_LISTING_SERVICE)
-            ->info(EtsyServiceProvider::PLUGIN_NAME, [
+            ->report(EtsyServiceProvider::PLUGIN_NAME, [
                 'function' => 'createListing',
                 'data' => $data
             ]);
@@ -89,7 +89,7 @@ class ListingService
 
         $this->getLogger(EtsyServiceProvider::UPDATE_LISTING_SERVICE)
             ->addReference('etsyListingId',$id)
-            ->info(EtsyServiceProvider::PLUGIN_NAME, [
+            ->report(EtsyServiceProvider::PLUGIN_NAME, [
                 'params' => $params,
                 'data' => $data
             ]);
@@ -98,7 +98,7 @@ class ListingService
 
         $this->getLogger(EtsyServiceProvider::UPDATE_LISTING_SERVICE)
             ->addReference('etsyListingId',$id)
-            ->info(EtsyServiceProvider::PLUGIN_NAME, [
+            ->report(EtsyServiceProvider::PLUGIN_NAME, [
                 'action' => 'update',
                 'params' => $params,
                 'response' => $response
@@ -121,7 +121,7 @@ class ListingService
 
         $this->getLogger(EtsyServiceProvider::UPDATE_LISTING_SERVICE)
             ->addReference('etsyListingId',$id)
-            ->info(EtsyServiceProvider::PLUGIN_NAME, [
+            ->report(EtsyServiceProvider::PLUGIN_NAME, [
                 'action' => 'delete',
                 'id' => $id,
                 'response' => $response

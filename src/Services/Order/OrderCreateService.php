@@ -107,7 +107,7 @@ class OrderCreateService
 			// create order comments
 			$this->createOrderComments($order, $data);
             $this->getLogger(__FUNCTION__)
-                ->info("OrderCreateService", [
+                ->report("OrderCreateService", [
                     'function' => 'create',
                     'order' => $order,
                     'data' => $data,

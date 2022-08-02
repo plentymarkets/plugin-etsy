@@ -2,11 +2,13 @@
 
 namespace Etsy\Controllers;
 
+use Etsy\EtsyServiceProvider;
 use Etsy\Services\Batch\AbstractBatchService;
 use Etsy\Services\Batch\Item\ItemExportService;
 use Etsy\Services\Batch\Item\ItemUpdateStockService;
 use Etsy\Services\Order\OrderImportService;
 use Illuminate\Support\Collection;
+use Plenty\Plugin\Log\Loggable;
 use Plenty\Modules\Catalog\Contracts\CatalogRepositoryContract;
 use Plenty\Modules\Catalog\Contracts\TemplateContainerContract;
 use Plenty\Plugin\Controller;
@@ -17,6 +19,8 @@ use Plenty\Plugin\Http\Request;
  */
 class ActionController extends Controller
 {
+    use Loggable;
+
 	/**
 	 * Export items.
 	 */
@@ -47,6 +51,11 @@ class ActionController extends Controller
      * @param $ids
      */
 	public function exportSpecificItems($ids) {
+        $this->getLogger(__FUNCTION__)
+            ->report('Start Manual Export by id', [
+                'function' => 'exportSpecificItems',
+                'products' => $ids
+            ]);
 	    $this->setItemFilter($ids);
         $this->itemExport();
     }

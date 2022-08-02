@@ -110,7 +110,7 @@ class ItemExportService extends AbstractBatchService
         }
 
         $this->getLogger(EtsyServiceProvider::ITEM_EXPORT_SERVICE)
-            ->info(EtsyServiceProvider::PLUGIN_NAME . 'item.itemExportListings', [
+            ->report(EtsyServiceProvider::PLUGIN_NAME . 'item.itemExportListings', [
                 $listings
             ]);
 

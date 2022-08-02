@@ -184,7 +184,7 @@ class ItemHelper
         $sku = $this->getVariationSku($variationId);
         $this->getLogger(__FUNCTION__)
             ->addReference('variationId', $variationId)
-            ->info(EtsyServiceProvider::PLUGIN_NAME . '::item.itemExportListings', [
+            ->report(EtsyServiceProvider::PLUGIN_NAME . '::item.itemExportListings', [
                 'function' => 'updateVariationSkuStockTimestamp',
                 'sku' => $sku
             ]);
@@ -225,7 +225,7 @@ class ItemHelper
         if (is_array($skus) && count($skus) < 1) return false;
         $this->getLogger(__FUNCTION__)
             ->addReference('variationId', $variationId)
-            ->info(EtsyServiceProvider::PLUGIN_NAME . '::item.itemExportListings', [
+            ->report(EtsyServiceProvider::PLUGIN_NAME . '::item.itemExportListings', [
                 'function' => 'generateSku',
                 'skus' => $skus
             ]);

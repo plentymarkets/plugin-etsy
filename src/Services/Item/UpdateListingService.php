@@ -155,7 +155,7 @@ class UpdateListingService
 
         $this->getLogger(EtsyServiceProvider::UPDATE_LISTING_SERVICE)
             ->addReference('itemId', $listing['main']['itemId'])
-            ->info('Start the update listing', ['listing' => $listing, 'listingId' => $listingId]);
+            ->report('Start the update listing', ['listing' => $listing, 'listingId' => $listingId]);
 
         try {
             $listing = $this->updateListing($listing, $listingId);
@@ -451,13 +451,13 @@ class UpdateListingService
 
         $this->getLogger(EtsyServiceProvider::UPDATE_LISTING_SERVICE)
             ->addReference('etsyListingId',$listingId)
-            ->info(EtsyServiceProvider::PLUGIN_NAME, $data);
+            ->report(EtsyServiceProvider::PLUGIN_NAME, $data);
 
         $response = $this->listingService->updateListing($listingId, $data, $mainLanguage);
 
         $this->getLogger(EtsyServiceProvider::UPDATE_LISTING_SERVICE)
             ->addReference('etsyListingId',$listingId)
-            ->info(EtsyServiceProvider::PLUGIN_NAME, [
+            ->report(EtsyServiceProvider::PLUGIN_NAME, [
                 'data' => $data,
                 'result' => json_encode($response)
             ]);

@@ -535,7 +535,7 @@ class OrderHelper
                     $payment = $paymentRepo->createPayment($payment);
                     $this->getLogger(__FUNCTION__)
                         ->addReference('paymentId',  $payment->id)
-                        ->info("OrderImportService", [
+                        ->report("OrderImportService", [
                             'function' => 'createPayment',
                             'payment' => $payment,
                         ]);
