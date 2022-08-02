@@ -201,14 +201,17 @@ class StartListingService
                 }
             }
 
-            if (is_array($skus) && count($skus)) {
+            if (count($skus)) {
                 $this->itemHelper->deleteListingsSkus($listingId, $this->settingsHelper
                     ->get($this->settingsHelper::SETTINGS_ORDER_REFERRER));
 
                 $this->getLogger(EtsyServiceProvider::START_LISTING_SERVICE)
                     ->addReference('itemId', $listing['main']['itemId'])
                     ->addReference('etsyListingId', $listingId)
-                    ->report(EtsyServiceProvider::PLUGIN_NAME . '::item.skuRemovalSuccess', $skus);
+                    ->info(EtsyServiceProvider::PLUGIN_NAME . '::item.skuRemovalSuccess', [
+                        'errorType' => 'ListingException',
+                        'sku' => $skus
+                    ]);
             }
 
             $this->listingService->deleteListing($listingId);
@@ -227,14 +230,17 @@ class StartListingService
                 }
             }
 
-            if (is_array($skus) && count($skus)) {
+            if (count($skus)) {
                 $this->itemHelper->deleteListingsSkus($listingId, $this->settingsHelper
                     ->get($this->settingsHelper::SETTINGS_ORDER_REFERRER));
 
                 $this->getLogger(EtsyServiceProvider::START_LISTING_SERVICE)
                     ->addReference('itemId', $listing['main']['itemId'])
                     ->addReference('etsyListingId', $listingId)
-                    ->report(EtsyServiceProvider::PLUGIN_NAME . '::item.skuRemovalSuccess', $skus);
+                    ->info(EtsyServiceProvider::PLUGIN_NAME . '::item.skuRemovalSuccess', [
+                        'errorType' => 'Exception',
+                        'sku' => $skus
+                    ]);
             }
 
             $this->listingService->deleteListing($listingId);

@@ -94,7 +94,17 @@ class ListingService
                 'data' => $data
             ]);
 
-		return $this->client->call('updateListing', $params, $data);
+		$response = $this->client->call('updateListing', $params, $data);
+
+        $this->getLogger(EtsyServiceProvider::UPDATE_LISTING_SERVICE)
+            ->addReference('etsyListingId',$id)
+            ->info(EtsyServiceProvider::PLUGIN_NAME, [
+                'action' => 'update',
+                'params' => $params,
+                'response' => $response
+            ]);
+
+        return $response;
 	}
 
 	/**
@@ -106,7 +116,16 @@ class ListingService
 	 */
 	public function deleteListing($id)
 	{
-		$this->client->call('deleteListing', ['listing_id' => $id]);
+		$response = $this->client->call('deleteListing', ['listing_id' => $id]);
+
+
+        $this->getLogger(EtsyServiceProvider::UPDATE_LISTING_SERVICE)
+            ->addReference('etsyListingId',$id)
+            ->info(EtsyServiceProvider::PLUGIN_NAME, [
+                'action' => 'delete',
+                'id' => $id,
+                'response' => $response
+            ]);
 
 		return true;
 	}

@@ -153,6 +153,10 @@ class UpdateListingService
             }
         }
 
+        $this->getLogger(EtsyServiceProvider::UPDATE_LISTING_SERVICE)
+            ->addReference('itemId', $listing['main']['itemId'])
+            ->info('Start the update listing', ['listing' => $listing, 'listingId' => $listingId]);
+
         try {
             $listing = $this->updateListing($listing, $listingId);
             $listing = $this->updateInventory($listing, $listingId);
