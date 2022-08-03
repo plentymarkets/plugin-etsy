@@ -170,6 +170,13 @@ class UpdateListingStockService
 
             //no positive stock
             if (is_null($products)) {
+                $this->getLogger(__FUNCTION__)
+                    ->addReference('itemId', $listing['main']['itemId'])
+                    ->addReference('listingId', $listingId)
+                    ->report('updateStock Product null', [
+                        'function' => 'inside_updateStock',
+                        'data' => 'no data'
+                    ]);
                 if ($state != self::ACTIVE) {
                     return;
                 }
@@ -247,12 +254,28 @@ class UpdateListingStockService
                     ->debug(EtsyServiceProvider::PLUGIN_NAME . '::log.soldOut');
             }
 
+            $this->getLogger(__FUNCTION__)
+                ->addReference('itemId', $listing['main']['itemId'])
+                ->addReference('listingId', $listingId)
+                ->report('updateStock Has Product', [
+                    'function' => 'inside_updateStock',
+                    'data' => $data
+                ]);
+
             $this->listingService->updateListing($listingId, $data);
             $this->getLogger(__FUNCTION__)
                 ->addReference('listingId', $listingId)
                 ->addReference('itemId', $listing['main']['itemId'])
                 ->debug(EtsyServiceProvider::PLUGIN_NAME . '::log.successfullyUpdatedStock');
-        } catch (\Exception $e) {
+        } catch (\Exception $data) {
+            $this->getLogger(__FUNCTION__)
+                ->addReference('itemId', $listing['main']['itemId'])
+                ->addReference('listingId', $listingId)
+                ->report('updateStock Has Exception', [
+                    'function' => 'inside_updateStock',
+                    'data' => 'no data',
+                    'error' => $e->getMessage()
+                ]);
             $this->listingService->updateListing($listingId, ['state' => 'inactive']);
 
             foreach ($listing as $variation) {

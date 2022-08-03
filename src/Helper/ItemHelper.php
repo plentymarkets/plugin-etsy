@@ -222,13 +222,17 @@ class ItemHelper
             'marketId' => $this->orderHelper->getReferrerId()
         ]);
 
-        if (is_array($skus) && count($skus) < 1) return false;
         $this->getLogger(__FUNCTION__)
             ->addReference('variationId', $variationId)
-            ->report(EtsyServiceProvider::PLUGIN_NAME . '::item.itemExportListings', [
-                'function' => 'generateSku',
-                'skus' => $skus
+            ->addReference('status', $status)
+            ->report('UpdateVariationSkuStatus', [
+                'function' => 'updateVariationSkuStatus',
+                'skus' => $skus,
+                'referrerId' => $this->orderHelper->getReferrerId()
             ]);
+
+        if (is_array($skus) && count($skus) < 1) return false;
+
 
         foreach ($skus as $sku) {
             $sku->status = $status;

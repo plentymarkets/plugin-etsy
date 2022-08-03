@@ -89,7 +89,7 @@ class ListingService
 
         $this->getLogger(EtsyServiceProvider::UPDATE_LISTING_SERVICE)
             ->addReference('etsyListingId',$id)
-            ->report(EtsyServiceProvider::PLUGIN_NAME, [
+            ->report('updateListing before request', [
                 'params' => $params,
                 'data' => $data
             ]);
@@ -98,7 +98,7 @@ class ListingService
 
         $this->getLogger(EtsyServiceProvider::UPDATE_LISTING_SERVICE)
             ->addReference('etsyListingId',$id)
-            ->report(EtsyServiceProvider::PLUGIN_NAME, [
+            ->report('updateListing after request', [
                 'action' => 'update',
                 'params' => $params,
                 'response' => $response
