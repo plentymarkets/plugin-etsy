@@ -267,7 +267,7 @@ class UpdateListingStockService
                 ->addReference('listingId', $listingId)
                 ->addReference('itemId', $listing['main']['itemId'])
                 ->debug(EtsyServiceProvider::PLUGIN_NAME . '::log.successfullyUpdatedStock');
-        } catch (\Exception $data) {
+        } catch (\Exception $e) {
             $this->getLogger(__FUNCTION__)
                 ->addReference('itemId', $listing['main']['itemId'])
                 ->addReference('listingId', $listingId)
