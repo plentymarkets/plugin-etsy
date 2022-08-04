@@ -4,6 +4,10 @@
 ### Changes
 - Added logs for debugging.
 
+## v2.1.24 (2022-08-04)
+### Changes
+- Added logs for debugging and Fixed PHP8 error.
+
 ## v2.1.22 (2022-08-03)
 ### Changes
 - Added logs for debugging.

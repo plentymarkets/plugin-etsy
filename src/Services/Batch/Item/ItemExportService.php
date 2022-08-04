@@ -82,6 +82,10 @@ class ItemExportService extends AbstractBatchService
 
         foreach ($catalogResult as $variation) {
 
+            $this->getLogger(EtsyServiceProvider::ITEM_EXPORT_SERVICE)
+                ->report(EtsyServiceProvider::PLUGIN_NAME . 'item.itemExportListings', [
+                    'variation' => $variation
+                ]);
             /**
              * skipping every variation with the do not export property
              */
@@ -111,7 +115,7 @@ class ItemExportService extends AbstractBatchService
 
         $this->getLogger(EtsyServiceProvider::ITEM_EXPORT_SERVICE)
             ->report(EtsyServiceProvider::PLUGIN_NAME . 'item.itemExportListings', [
-                $listings
+                'listings' => $listings
             ]);
 
         foreach ($listings as $listing) {

@@ -39,7 +39,7 @@ class PropertyRepository implements PropertyRepositoryContract
 
         $list = $settingsRepository->find(SettingsHelper::PLUGIN_NAME, SettingsCorrelationFactory::TYPE_PROPERTY);
 
-        if (is_array($list) && count($list)) {
+        if (count($list)) {
             /** @var Settings $settings */
             foreach ($list as $settings) {
                 if (isset($settings->settings['propertyKey']) && isset($settings->settings['propertyValueKey'])) {

@@ -98,7 +98,7 @@ class ItemUpdateStockService extends AbstractBatchService
                 }
             }
 
-            if ((is_array($skus) && count($skus)) < 1 && !$variation['isMain']) continue;
+            if (count($skus) < 1 && !$variation['isMain']) continue;
 
             $variation['skus'] = $skus;
 

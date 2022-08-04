@@ -231,8 +231,7 @@ class ItemHelper
                 'referrerId' => $this->orderHelper->getReferrerId()
             ]);
 
-        if (is_array($skus) && count($skus) < 1) return false;
-
+        if (count($skus) < 1) return false;
 
         foreach ($skus as $sku) {
             $sku->status = $status;
