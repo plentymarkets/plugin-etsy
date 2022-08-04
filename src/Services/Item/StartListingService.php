@@ -154,7 +154,7 @@ class StartListingService
 
         $this->getLogger(EtsyServiceProvider::START_LISTING_SERVICE)
             ->addReference('itemId', $listing['main']['itemId'])
-            ->report('Start the listing', ['listing' => $listing]);
+            ->report(EtsyServiceProvider::PLUGIN_NAME . '::log.startListing', ['listing' => $listing]);
 
         if (!isset($listing['main'])) {
             $this->getLogger(EtsyServiceProvider::START_LISTING_SERVICE)
@@ -605,7 +605,7 @@ class StartListingService
         $data['language'] = $mainLanguage;
         $this->getLogger(EtsyServiceProvider::START_LISTING_SERVICE)
             ->addReference('itemId', $listing['main']['itemId'])
-            ->report('createListing', [
+            ->report(EtsyServiceProvider::PLUGIN_NAME . '::log.createListing', [
                 'function'  => 'createListing',
                 'data'      => $data,
                 'language'  => $mainLanguage
@@ -639,7 +639,7 @@ class StartListingService
 
         $this->getLogger(EtsyServiceProvider::START_LISTING_SERVICE)
             ->addReference('listingId', (int)reset($results)['listing_id'])
-            ->report('createListing', [
+            ->report(EtsyServiceProvider::PLUGIN_NAME . '::log.createListing', [
                 'function'  => 'createListing',
                 'response'      => (array)$response['results']
             ]);

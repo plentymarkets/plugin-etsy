@@ -155,7 +155,7 @@ class UpdateListingService
 
         $this->getLogger(EtsyServiceProvider::UPDATE_LISTING_SERVICE)
             ->addReference('itemId', $listing['main']['itemId'])
-            ->report('Start the update listing', ['listing' => $listing, 'listingId' => $listingId]);
+            ->report(EtsyServiceProvider::PLUGIN_NAME . '::log.startToUpdateListing', ['listing' => $listing, 'listingId' => $listingId]);
 
         try {
             $listing = $this->updateListing($listing, $listingId);
@@ -922,7 +922,7 @@ class UpdateListingService
         if (empty($translatableLanguages)) {
             $this->getLogger(EtsyServiceProvider::LISTING_TRANSLATIONS)
                 ->addReference('listingId', $listingId)
-                ->info('No more export languages activated except the main language');
+                ->info(EtsyServiceProvider::PLUGIN_NAME . '::log.languageMissing');
             return;
         }
 

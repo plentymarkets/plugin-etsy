@@ -173,8 +173,9 @@ class UpdateListingStockService
                 $this->getLogger(__FUNCTION__)
                     ->addReference('itemId', $listing['main']['itemId'])
                     ->addReference('listingId', $listingId)
-                    ->report('updateStock Product null', [
+                    ->report(EtsyServiceProvider::PLUGIN_NAME . '::log.updateStock', [
                         'function' => 'inside_updateStock',
+                        'message' => 'updateStock Product null',
                         'data' => 'no data'
                     ]);
                 if ($state != self::ACTIVE) {
@@ -257,8 +258,9 @@ class UpdateListingStockService
             $this->getLogger(__FUNCTION__)
                 ->addReference('itemId', $listing['main']['itemId'])
                 ->addReference('listingId', $listingId)
-                ->report('updateStock Has Product', [
+                ->report(EtsyServiceProvider::PLUGIN_NAME . '::log.updateStock', [
                     'function' => 'inside_updateStock',
+                    'message' => 'updateStock Has Product',
                     'data' => $data
                 ]);
 
@@ -266,13 +268,14 @@ class UpdateListingStockService
             $this->getLogger(__FUNCTION__)
                 ->addReference('listingId', $listingId)
                 ->addReference('itemId', $listing['main']['itemId'])
-                ->debug(EtsyServiceProvider::PLUGIN_NAME . '::log.successfullyUpdatedStock');
+                ->debug(EtsyServiceProvider::PLUGIN_NAME . '::log.successfullyUpdatedStock', ['data' => $data]);
         } catch (\Exception $e) {
             $this->getLogger(__FUNCTION__)
                 ->addReference('itemId', $listing['main']['itemId'])
                 ->addReference('listingId', $listingId)
-                ->report('updateStock Has Exception', [
+                ->report(EtsyServiceProvider::PLUGIN_NAME . '::log.updateStock', [
                     'function' => 'inside_updateStock',
+                    'message' => 'updateStock Has Exception',
                     'data' => 'no data',
                     'error' => $e->getMessage()
                 ]);
@@ -315,7 +318,7 @@ class UpdateListingStockService
             $etsyInventory = $this->listingInventoryService->getInventory($listingId);
             $this->getLogger(EtsyServiceProvider::STOCK_UPDATE_SERVICE)
                 ->addReference('listingId', $listingId)
-                ->info('EtsyInventory', [
+                ->report(EtsyServiceProvider::PLUGIN_NAME . '::log.etsyInventory', [
                     'function' => 'updateStock->update',
                     'etsyInventoryResponse' => $etsyInventory
                 ]);
@@ -418,7 +421,7 @@ class UpdateListingStockService
         $response = $this->listingInventoryService->updateInventory($listingId, $data);
         $this->getLogger(EtsyServiceProvider::STOCK_UPDATE_SERVICE)
             ->addReference('listingId', $listingId)
-            ->info('EtsyInventoryUpdate', [
+            ->report(EtsyServiceProvider::PLUGIN_NAME . '::log.etsyInventoryUpdate', [
                 'function' => 'updateStock->update',
                 'etsyInventoryUpdateResponse' => $response
             ]);
