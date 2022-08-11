@@ -528,7 +528,7 @@ class UpdateListingService
 
         //Some customers use the main variation just as a container so it has no attributes. If it is still active
         //it has to be filtered out at this point
-        if (is_array($listing['main']['attributes']) && (count($listing['main']['attributes']) < count($dependencies))) {
+        if (is_null($listing['main']['attributes']) || (is_array($listing['main']['attributes']) && (count($listing['main']['attributes']) < count($dependencies)))) {
             $listing['main']['failed'] = true;
         }
 
