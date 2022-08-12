@@ -671,7 +671,7 @@ class StartListingService
         $defaultCurrency = $this->currencyExchangeRepository->getDefaultCurrency();
 
         foreach ($listing as $variation) {
-            if (is_array($variation['attributes']) && !count($variation['attributes'])) {
+            if (is_null($variation['attributes']) || (is_array($variation['attributes']) && !count($variation['attributes']))) {
                 continue;
             }
             if (is_array($variation['attributes']) && count($variation['attributes']) > 2) {
