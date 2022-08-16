@@ -263,7 +263,7 @@ class UpdateListingService
         }
 
         //Category
-        $data['taxonomy_id'] = isset($listing['main']['categories']) && is_array($listing['main']['categories']) ? (int)reset($listing['main']['categories']) : 0;
+        $data['taxonomy_id'] = (int)reset($listing['main']['categories']);
 
         //Etsy properties
         $catalogTag = 'tags' . strtoupper($mainLanguage);
@@ -507,7 +507,7 @@ class UpdateListingService
         $defaultCurrency = $this->currencyExchangeRepository->getDefaultCurrency();
 
         foreach ($listing as $variation) {
-            if (!is_null($variation['attributes']) && (is_array($variation['attributes']) && !count($variation['attributes']))) {
+            if (is_null($variation['attributes']) || (is_array($variation['attributes']) && !count($variation['attributes']))) {
                 continue;
             }
             if (is_array($variation['attributes']) && count($variation['attributes']) > 2) {
