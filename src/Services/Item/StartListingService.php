@@ -414,7 +414,7 @@ class StartListingService
         }
 
         //Category
-        $data['taxonomy_id'] = is_array($listing['main']['categories']) ? (int)reset($listing['main']['categories']) : 0;
+        $data['taxonomy_id'] = isset($listing['main']['categories']) && is_array($listing['main']['categories']) ? (int)reset($listing['main']['categories']) : 0;
 
         $catalogTag = 'tags' . strtoupper($mainLanguage);
 
@@ -671,7 +671,7 @@ class StartListingService
         $defaultCurrency = $this->currencyExchangeRepository->getDefaultCurrency();
 
         foreach ($listing as $variation) {
-            if (is_null($variation['attributes']) || (is_array($variation['attributes']) && !count($variation['attributes']))) {
+            if (!is_null($variation['attributes']) && (is_array($variation['attributes']) && !count($variation['attributes']))) {
                 continue;
             }
             if (is_array($variation['attributes']) && count($variation['attributes']) > 2) {
@@ -693,7 +693,7 @@ class StartListingService
 
         //Some customers use the main variation just as a container so it has no attributes. If it is still active
         //it has to be filtered out at this point
-        if (is_null($listing['main']['attributes']) || (is_array($listing['main']['attributes']) && (count($listing['main']['attributes']) < count($dependencies)))) {
+        if (is_array($listing['main']['attributes']) && (count($listing['main']['attributes']) < count($dependencies))) {
             $listing['main']['failed'] = true;
         }
 
