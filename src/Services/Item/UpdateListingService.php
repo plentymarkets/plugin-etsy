@@ -144,6 +144,13 @@ class UpdateListingService
      */
     public function update(array $listing)
     {
+        if (!isset($listing['main'])) {
+            $this->getLogger(EtsyServiceProvider::START_LISTING_SERVICE)
+                ->error($this->translator->trans(EtsyServiceProvider::PLUGIN_NAME . '::item.updateListingError'),
+                    $this->translator->trans(EtsyServiceProvider::PLUGIN_NAME . '::log.noMainVariation'));
+            return;
+        }
+
         $listingId = 0;
 
         foreach ($listing as $variation) {
