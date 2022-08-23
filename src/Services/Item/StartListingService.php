@@ -151,18 +151,16 @@ class StartListingService
      */
     public function start(array $listing)
     {
-
-        $this->getLogger(EtsyServiceProvider::START_LISTING_SERVICE)
-            ->addReference('itemId', $listing['main']['itemId'])
-            ->report(EtsyServiceProvider::PLUGIN_NAME . '::log.startListing', ['listing' => $listing]);
-
         if (!isset($listing['main'])) {
             $this->getLogger(EtsyServiceProvider::START_LISTING_SERVICE)
-                ->addReference('itemId', $listing['main']['itemId'])
                 ->error($this->translator->trans(EtsyServiceProvider::PLUGIN_NAME . '::item.startListingError'),
                     $this->translator->trans(EtsyServiceProvider::PLUGIN_NAME . '::log.noMainVariation'));
             return;
         }
+
+        $this->getLogger(EtsyServiceProvider::START_LISTING_SERVICE)
+            ->addReference('itemId', $listing['main']['itemId'])
+            ->report(EtsyServiceProvider::PLUGIN_NAME . '::log.startListing', ['listing' => $listing]);
 
         try {
             $listingData = $this->createListing($listing);
