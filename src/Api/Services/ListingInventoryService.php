@@ -86,8 +86,8 @@ class ListingInventoryService
         }
 
         $this->getLogger(EtsyServiceProvider::UPDATE_LISTING_INVENTORY)
-            ->addReference('listingId', $listingId)
-            ->report(EtsyServiceProvider::PLUGIN_NAME . 'log.inventoryUpdate', [
+            ->addReference('etsyListingId', $listingId)
+            ->report(EtsyServiceProvider::PLUGIN_NAME . '::log.inventoryUpdate', [
                 'params' => $params,
                 'data' => $data,
             ]);

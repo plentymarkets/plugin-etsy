@@ -98,7 +98,8 @@ class EtsyServiceProvider extends ServiceProvider
                                      'etsyListingId' => 'etsyListingId',
                                      'etsyReceiptId' => 'etsyReceiptId',
                                      'etsyLanguage' => 'etsyLanguage',
-                                     'etsyExportListCount' => 'etsyExportListCount'
+                                     'etsyExportListCount' => 'etsyExportListCount',
+                                     'externalItemId' => 'externalItemId',
                                  ]);
 
         // register crons
