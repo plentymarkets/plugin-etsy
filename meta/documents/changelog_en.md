@@ -1,5 +1,9 @@
 # Release notes for Etsy
 
+## v2.1.32 (2022-08-25)
+### Changes
+- Added logs.
+
 ## v2.1.31 (2022-08-23)
 ### Changes
 - Fixed an error while creating/updating variations.
