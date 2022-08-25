@@ -159,7 +159,7 @@ class StartListingService
         }
 
         $this->getLogger(EtsyServiceProvider::START_LISTING_SERVICE)
-            ->addReference('itemId', $listing['main']['itemId'])
+            ->addReference('externalItemId', $listing['main']['itemId'])
             ->report(EtsyServiceProvider::PLUGIN_NAME . '::log.startListing', ['listing' => $listing]);
 
         try {
@@ -168,17 +168,17 @@ class StartListingService
             unset($listingData['listing']);
         } catch (ListingException $listingException) {
             $this->getLogger(EtsyServiceProvider::START_LISTING_SERVICE)
-                ->addReference('itemId', $listing['main']['itemId'])
+                ->addReference('externalItemId', $listing['main']['itemId'])
                 ->error($listingException->getMessage(), $listingException->getMessageBag());
             return;
         } catch (ValidationException $validationException) {
             $this->getLogger(EtsyServiceProvider::START_LISTING_SERVICE)
-                ->addReference('itemId', $listing['main']['itemId'])
+                ->addReference('externalItemId', $listing['main']['itemId'])
                 ->error($validationException->getMessage(), $validationException->getMessageBag());
             return;
         } catch (\Exception $exception) {
             $this->getLogger(EtsyServiceProvider::START_LISTING_SERVICE)
-                ->addReference('itemId', $listing['main']['itemId'])
+                ->addReference('externalItemId', $listing['main']['itemId'])
                 ->error($exception->getMessage());
             return;
         }
@@ -204,7 +204,7 @@ class StartListingService
                     ->get($this->settingsHelper::SETTINGS_ORDER_REFERRER));
 
                 $this->getLogger(EtsyServiceProvider::START_LISTING_SERVICE)
-                    ->addReference('itemId', $listing['main']['itemId'])
+                    ->addReference('externalItemId', $listing['main']['itemId'])
                     ->addReference('etsyListingId', $listingId)
                     ->report(EtsyServiceProvider::PLUGIN_NAME . '::item.skuRemovalSuccess', [
                         'errorType' => 'ListingException',
@@ -215,7 +215,7 @@ class StartListingService
             $this->listingService->deleteListing($listingId);
 
             $this->getLogger(EtsyServiceProvider::START_LISTING_SERVICE)
-                ->addReference('itemId', $listing['main']['itemId'])
+                ->addReference('externalItemId', $listing['main']['itemId'])
                 ->addReference('etsyListingId', $listingId)
                 ->error($listingException->getMessage(), $listingException->getMessageBag());
         } catch (\Exception $exception) {
@@ -233,7 +233,7 @@ class StartListingService
                     ->get($this->settingsHelper::SETTINGS_ORDER_REFERRER));
 
                 $this->getLogger(EtsyServiceProvider::START_LISTING_SERVICE)
-                    ->addReference('itemId', $listing['main']['itemId'])
+                    ->addReference('externalItemId', $listing['main']['itemId'])
                     ->addReference('etsyListingId', $listingId)
                     ->report(EtsyServiceProvider::PLUGIN_NAME . '::item.skuRemovalSuccess', [
                         'errorType' => 'Exception',
@@ -244,7 +244,7 @@ class StartListingService
             $this->listingService->deleteListing($listingId);
 
             $this->getLogger(EtsyServiceProvider::START_LISTING_SERVICE)
-                ->addReference('itemId', $listing['main']['itemId'])
+                ->addReference('externalItemId', $listing['main']['itemId'])
                 ->addReference('etsyListingId', $listingId)
                 ->error($exception->getMessage());
         }
@@ -479,7 +479,7 @@ class StartListingService
 
                 if (preg_match('@[^\p{L}\p{Nd}\p{Zs}]@u', $material) > 0 || $material == "") {
                     $this->getLogger(EtsyServiceProvider::START_LISTING_SERVICE)
-                        ->addReference('itemId', $listing['main']['itemId'])
+                        ->addReference('externalItemId', $listing['main']['itemId'])
                         ->warning(EtsyServiceProvider::PLUGIN_NAME . '::log.wrongMaterialFormat',
                             [$listing['main']['materials'], $material]);
                     continue;
@@ -523,7 +523,7 @@ class StartListingService
 
                 if (preg_match('@[^\p{L}\p{Nd}\p{Zs}]@u', $style) > 0 || $style == "") {
                     $this->getLogger(EtsyServiceProvider::START_LISTING_SERVICE)
-                        ->addReference('itemId', $listing['main']['itemId'])
+                        ->addReference('externalItemId', $listing['main']['itemId'])
                         ->warning(EtsyServiceProvider::PLUGIN_NAME . '::log.wrongStyleFormat',
                             [$listing['main']['style'], $style]);
                     continue;
@@ -594,7 +594,7 @@ class StartListingService
             }
 
             $this->getLogger(EtsyServiceProvider::START_LISTING_SERVICE)
-                ->addReference('itemId', $listing['main']['itemId'])
+                ->addReference('externalItemId', $listing['main']['itemId'])
                 ->error(EtsyServiceProvider::PLUGIN_NAME . $exceptionMessage, $failedVariations);
         }
         
@@ -602,7 +602,7 @@ class StartListingService
         //Gotta put the language into the data array, otherwise etsy enums can cause the export to fail
         $data['language'] = $mainLanguage;
         $this->getLogger(EtsyServiceProvider::START_LISTING_SERVICE)
-            ->addReference('itemId', $listing['main']['itemId'])
+            ->addReference('externalItemId', $listing['main']['itemId'])
             ->report(EtsyServiceProvider::PLUGIN_NAME . '::log.createListing', [
                 'function'  => 'createListing',
                 'data'      => $data,
@@ -636,7 +636,7 @@ class StartListingService
         $results = (array)$response['results'];
 
         $this->getLogger(EtsyServiceProvider::START_LISTING_SERVICE)
-            ->addReference('listingId', (int)reset($results)['listing_id'])
+            ->addReference('etsyListingId', (int)reset($results)['listing_id'])
             ->report(EtsyServiceProvider::PLUGIN_NAME . '::log.createListing', [
                 'function'  => 'createListing',
                 'response'      => (array)$response['results']
@@ -838,7 +838,7 @@ class StartListingService
             }
 
             $this->getLogger(EtsyServiceProvider::START_LISTING_INVENTORY)
-                ->addReference('itemId', $listing['main']['itemId'])
+                ->addReference('externalItemId', $listing['main']['itemId'])
                 ->addReference('etsyListingId', $listingId)
                 ->error($exceptionMessage, $failedVariations);
         }
@@ -968,7 +968,7 @@ class StartListingService
 
         if (empty($translatableLanguages)) {
             $this->getLogger(EtsyServiceProvider::LISTING_TRANSLATIONS)
-                ->addReference('listingId', $listingId)
+                ->addReference('etsyListingId', $listingId)
                 ->info('No more export languages activated except the main language');
             return;
         }
