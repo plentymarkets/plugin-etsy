@@ -83,7 +83,7 @@ class ItemExportService extends AbstractBatchService
         foreach ($catalogResult as $variation) {
 
             $this->getLogger(EtsyServiceProvider::ITEM_EXPORT_SERVICE)
-                ->report(EtsyServiceProvider::PLUGIN_NAME . 'item.itemExportListings', [
+                ->report(EtsyServiceProvider::PLUGIN_NAME . '::item.itemExportListings', [
                     'variation' => $variation
                 ]);
             /**
@@ -114,7 +114,7 @@ class ItemExportService extends AbstractBatchService
         }
 
         $this->getLogger(EtsyServiceProvider::ITEM_EXPORT_SERVICE)
-            ->report(EtsyServiceProvider::PLUGIN_NAME . 'item.itemExportListings', [
+            ->report(EtsyServiceProvider::PLUGIN_NAME . '::item.itemExportListings', [
                 'listings' => $listings
             ]);
 
@@ -132,7 +132,7 @@ class ItemExportService extends AbstractBatchService
             } catch (\Exception $exception) {
                 $this->getLogger(EtsyServiceProvider::ITEM_EXPORT_SERVICE)
                     ->addReference('itemId', $listing['main']['itemId'])
-                    ->warning(EtsyServiceProvider::PLUGIN_NAME . 'item.itemExportError', [
+                    ->warning(EtsyServiceProvider::PLUGIN_NAME . '::item.itemExportError', [
                         $exception->getMessage()
                     ]);
             }
