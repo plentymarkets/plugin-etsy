@@ -1,5 +1,9 @@
 # Release Notes für Etsy
 
+## v2.1.32 (2022-08-25)
+### Changes
+- Es wurden Logs zur Fehleranalyse hinzugefügt.
+
 ## v2.1.31 (2022-08-23)
 ### Changes
 - Es wurde ein Fehler behoben, wodurch Varianten bei dem Erstellen eines Angebots nicht übertragen wurden.

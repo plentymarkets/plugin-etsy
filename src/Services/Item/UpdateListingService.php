@@ -161,7 +161,7 @@ class UpdateListingService
         }
 
         $this->getLogger(EtsyServiceProvider::UPDATE_LISTING_SERVICE)
-            ->addReference('externalItemId', $listing['main']['itemId'])
+            ->addReference('itemId', $listing['main']['itemId'])
             ->report(EtsyServiceProvider::PLUGIN_NAME . '::log.startToUpdateListing', ['listing' => $listing, 'listingId' => $listingId]);
 
         try {
@@ -172,17 +172,17 @@ class UpdateListingService
             $this->publish($listingId, $listing);
         } catch (ListingException $listingException) {
             $this->getLogger(EtsyServiceProvider::UPDATE_LISTING_INVENTORY)
-                ->addReference('externalItemId', $listing['main']['itemId'])
+                ->addReference('itemId', $listing['main']['itemId'])
                 ->addReference('etsyListingId', $listingId)
                 ->error($listingException->getMessage(), $listingException->getMessageBag());
         } catch (ValidationException $validationException) {
             $this->getLogger(EtsyServiceProvider::UPDATE_LISTING_INVENTORY)
-                ->addReference('externalItemId', $listing['main']['itemId'])
+                ->addReference('itemId', $listing['main']['itemId'])
                 ->addReference('etsyListingId', $listingId)
                 ->error($validationException->getMessage(), $validationException->getMessageBag());
         } catch (\Exception $exception) {
             $this->getLogger(EtsyServiceProvider::UPDATE_LISTING_SERVICE)
-                ->addReference('externalItemId', $listing['main']['itemId'])
+                ->addReference('itemId', $listing['main']['itemId'])
                 ->addReference('etsyListingId', $listingId)
                 ->error($exception->getMessage());
         }
@@ -338,7 +338,7 @@ class UpdateListingService
 
                 if (preg_match('@[^\p{L}\p{Nd}\p{Zs}]@u', $material) > 0 || $material == "") {
                     $this->getLogger(EtsyServiceProvider::START_LISTING_SERVICE)
-                        ->addReference('externalItemId', $listing['main']['itemId'])
+                        ->addReference('itemId', $listing['main']['itemId'])
                         ->warning(EtsyServiceProvider::PLUGIN_NAME . '::log.wrongMaterialFormat',
                             [$listing['main']['materials'], $material]);
                     continue;
@@ -382,7 +382,7 @@ class UpdateListingService
 
                 if (preg_match('@[^\p{L}\p{Nd}\p{Zs}]@u', $style) > 0 || $style == "") {
                     $this->getLogger(EtsyServiceProvider::START_LISTING_SERVICE)
-                        ->addReference('externalItemId', $listing['main']['itemId'])
+                        ->addReference('itemId', $listing['main']['itemId'])
                         ->warning(EtsyServiceProvider::PLUGIN_NAME . '::log.wrongStyleFormat',
                             [$listing['main']['style'], $style]);
                     continue;
@@ -452,7 +452,7 @@ class UpdateListingService
             }
 
             $this->getLogger(EtsyServiceProvider::UPDATE_LISTING_SERVICE)
-                ->addReference('externalItemId', $listing['main']['itemId'])
+                ->addReference('itemId', $listing['main']['itemId'])
                 ->error(EtsyServiceProvider::PLUGIN_NAME . $exceptionMessage, $failedVariations);
         }
 
@@ -844,7 +844,7 @@ class UpdateListingService
 
         $this->getLogger(EtsyServiceProvider::DELETE_LISTING_IMAGE)
             ->addReference('etsyListingId', $listingId)
-            ->addReference('externalItemId', $listing['main']['itemId'])
+            ->addReference('itemId', $listing['main']['itemId'])
             ->debug(EtsyServiceProvider::PLUGIN_NAME . '::log.deleteImage', [
                 'deletingImages' => $deletableListings,
                 'newImages' => $slicedList

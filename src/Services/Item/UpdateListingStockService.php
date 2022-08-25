@@ -155,14 +155,14 @@ class UpdateListingStockService
                 ) && !$renew) {
                 $this->getLogger(__FUNCTION__)
                     ->addReference('etsyListingId', $listingId)
-                    ->addReference('externalItemId', $listing['main']['itemId'])
+                    ->addReference('itemId', $listing['main']['itemId'])
                     ->report(EtsyServiceProvider::PLUGIN_NAME . '::log.soldOut',
                         EtsyServiceProvider::PLUGIN_NAME . '::log.needManualRenew');
             }
 
             $products = $this->update($listingId, $listing);
             $this->getLogger(__FUNCTION__)
-                ->addReference('externalItemId', $listing['main']['itemId'])
+                ->addReference('itemId', $listing['main']['itemId'])
                 ->report(EtsyServiceProvider::PLUGIN_NAME . '::item.itemExportListings', [
                     'function' => 'inside_updateStock',
                     'products' => $products
@@ -171,7 +171,7 @@ class UpdateListingStockService
             //no positive stock
             if (is_null($products)) {
                 $this->getLogger(__FUNCTION__)
-                    ->addReference('externalItemId', $listing['main']['itemId'])
+                    ->addReference('itemId', $listing['main']['itemId'])
                     ->addReference('etsyListingId', $listingId)
                     ->report(EtsyServiceProvider::PLUGIN_NAME . '::log.updateStock', [
                         'function' => 'inside_updateStock',
@@ -251,12 +251,12 @@ class UpdateListingStockService
                 $data['renew'] = true;
                 $this->getLogger(__FUNCTION__)
                     ->addReference('etsyListingId', $listingId)
-                    ->addReference('externalItemId', $listing['main']['itemId'])
+                    ->addReference('itemId', $listing['main']['itemId'])
                     ->debug(EtsyServiceProvider::PLUGIN_NAME . '::log.soldOut');
             }
 
             $this->getLogger(__FUNCTION__)
-                ->addReference('externalItemId', $listing['main']['itemId'])
+                ->addReference('itemId', $listing['main']['itemId'])
                 ->addReference('etsyListingId', $listingId)
                 ->report(EtsyServiceProvider::PLUGIN_NAME . '::log.updateStock', [
                     'function' => 'inside_updateStock',
@@ -267,11 +267,11 @@ class UpdateListingStockService
             $this->listingService->updateListing($listingId, $data);
             $this->getLogger(__FUNCTION__)
                 ->addReference('etsyListingId', $listingId)
-                ->addReference('externalItemId', $listing['main']['itemId'])
+                ->addReference('itemId', $listing['main']['itemId'])
                 ->debug(EtsyServiceProvider::PLUGIN_NAME . '::log.successfullyUpdatedStock', ['data' => $data]);
         } catch (\Exception $e) {
             $this->getLogger(__FUNCTION__)
-                ->addReference('externalItemId', $listing['main']['itemId'])
+                ->addReference('itemId', $listing['main']['itemId'])
                 ->addReference('etsyListingId', $listingId)
                 ->error(EtsyServiceProvider::PLUGIN_NAME . '::log.updateStock', $e->getMessage());
             $this->listingService->updateListing($listingId, ['state' => 'inactive']);
