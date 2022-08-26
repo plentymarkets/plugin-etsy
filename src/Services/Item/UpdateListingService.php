@@ -513,7 +513,16 @@ class UpdateListingService
         //loading default currency
         $defaultCurrency = $this->currencyExchangeRepository->getDefaultCurrency();
 
-        foreach ($listing as $variation) {
+        $isSingleListing = false;
+
+        if (is_array($listing) && count($listing) == 1) {
+            $isSingleListing = true;
+        }
+
+        foreach ($listing as $key => $variation) {
+            if ($key == 'main' && !$isSingleListing) {
+                continue;
+            }
             if (!is_null($variation['attributes']) && (is_array($variation['attributes']) && !count($variation['attributes']))) {
                 continue;
             }
@@ -555,11 +564,6 @@ class UpdateListingService
         $counter = 0;
         $isEnabled = false;
         $disabledCounter = 0;
-        $isSingleListing = false;
-
-        if (is_array($listing) && count($listing) == 1) {
-            $isSingleListing = true;
-        }
 
         foreach ($listing as $key => $variation) {
 
