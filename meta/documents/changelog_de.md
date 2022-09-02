@@ -1,5 +1,9 @@
 # Release Notes für Etsy
 
+## v2.1.35 (2022-09-02)
+### Fixed
+- Ein Fehler, der bei der Erstellung eines Listings auftrat, wurde behoben.
+
 ## v2.1.34 (2022-09-02)
 ### Fixed
 - Es wurde ein Fehler behoben, wodurch Varianten bei dem Erstellen eines Angebots nicht übertragen wurden.

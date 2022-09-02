@@ -469,26 +469,33 @@ class StartListingService
         }
 
         if (isset($listing['main']['materials'])) {
-            $materials = explode(',', $listing['main']['materials']);
-            $materialCounter = 0;
-
-            foreach ($materials as $key => $material) {
-                if ($materialCounter > 13) {
-                    break;
-                }
-
-                if (preg_match('@[^\p{L}\p{Nd}\p{Zs}]@u', $material) > 0 || $material == "") {
-                    $this->getLogger(EtsyServiceProvider::START_LISTING_SERVICE)
-                        ->addReference('itemId', $listing['main']['itemId'])
-                        ->warning(EtsyServiceProvider::PLUGIN_NAME . '::log.wrongMaterialFormat',
-                            [$listing['main']['materials'], $material]);
-                    continue;
-                }
-
-                $data['materials'][] = $material;
-                $materialCounter++;
+            if(is_string($listing['main']['materials'])){
+                $materials = explode(',', $listing['main']['materials']);
+            }
+            if(is_array($listing['main']['materials'])){
+                $materials = $listing['main']['materials'];
             }
 
+            $materialCounter = 0;
+
+            if(is_array($materials)){
+                foreach ($materials as $key => $material) {
+                    if ($materialCounter > 13) {
+                        break;
+                    }
+
+                    if (preg_match('@[^\p{L}\p{Nd}\p{Zs}]@u', $material) > 0 || $material == "") {
+                        $this->getLogger(EtsyServiceProvider::START_LISTING_SERVICE)
+                            ->addReference('itemId', $listing['main']['itemId'])
+                            ->warning(EtsyServiceProvider::PLUGIN_NAME . '::log.wrongMaterialFormat',
+                                [$listing['main']['materials'], $material]);
+                        continue;
+                    }
+
+                    $data['materials'][] = $material;
+                    $materialCounter++;
+                }
+            }
             if ($materialCounter > 0) {
                 $data['materials'] = implode(',', $data['materials']);
             }
