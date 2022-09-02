@@ -469,39 +469,58 @@ class StartListingService
         }
 
         if (isset($listing['main']['materials'])) {
-            $materials = explode(',', $listing['main']['materials']);
-            $materialCounter = 0;
-
-            foreach ($materials as $key => $material) {
-                if ($materialCounter > 13) {
-                    break;
-                }
-
-                if (preg_match('@[^\p{L}\p{Nd}\p{Zs}]@u', $material) > 0 || $material == "") {
-                    $this->getLogger(EtsyServiceProvider::START_LISTING_SERVICE)
-                        ->addReference('itemId', $listing['main']['itemId'])
-                        ->warning(EtsyServiceProvider::PLUGIN_NAME . '::log.wrongMaterialFormat',
-                            [$listing['main']['materials'], $material]);
-                    continue;
-                }
-
-                $data['materials'][] = $material;
-                $materialCounter++;
+            if(is_string($listing['main']['materials'])){
+                $materials = explode(',', $listing['main']['materials']);
+            }
+            if(is_array($listing['main']['materials'])){
+                $materials = $listing['main']['materials'];
             }
 
+            $materialCounter = 0;
+
+            if(is_array($materials)){
+                foreach ($materials as $key => $material) {
+                    if ($materialCounter > 13) {
+                        break;
+                    }
+
+                    if (preg_match('@[^\p{L}\p{Nd}\p{Zs}]@u', $material) > 0 || $material == "") {
+                        $this->getLogger(EtsyServiceProvider::START_LISTING_SERVICE)
+                            ->addReference('itemId', $listing['main']['itemId'])
+                            ->warning(EtsyServiceProvider::PLUGIN_NAME . '::log.wrongMaterialFormat',
+                                [$listing['main']['materials'], $material]);
+                        continue;
+                    }
+
+                    $data['materials'][] = $material;
+                    $materialCounter++;
+                }
+            }
             if ($materialCounter > 0) {
                 $data['materials'] = implode(',', $data['materials']);
             }
         }
 
         if (isset($listing['main']['is_customizable'])) {
-            $data['is_customizable'] = in_array(strtolower($listing['main']['is_customizable']),
-                self::BOOL_CONVERTIBLE_STRINGS);
+            if(is_array($listing['main']['is_customizable'])){
+                $is_customizable = reset($listing['main']['is_customizable']);
+                $data['is_customizable'] = in_array(strtolower($is_customizable),
+                    self::BOOL_CONVERTIBLE_STRINGS);
+            }else{
+                $data['is_customizable'] = in_array(strtolower($listing['main']['is_customizable']),
+                    self::BOOL_CONVERTIBLE_STRINGS);
+            }
         }
 
         if (isset($listing['main']['non_taxable'])) {
-            $data['non_taxable'] = in_array(strtolower($listing['main']['non_taxable']),
-                self::BOOL_CONVERTIBLE_STRINGS);
+            if(is_array($listing['main']['non_taxable'])){
+                $non_taxable = reset($listing['main']['non_taxable']);
+                $data['non_taxable'] = in_array(strtolower($non_taxable),
+                    self::BOOL_CONVERTIBLE_STRINGS);
+            }else{
+                $data['non_taxable'] = in_array(strtolower($listing['main']['non_taxable']),
+                    self::BOOL_CONVERTIBLE_STRINGS);
+            }
         }
 
         if (isset($listing['main']['processing_min'])) {
