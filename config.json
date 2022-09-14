@@ -13,5 +13,13 @@
     "label": "Config.writeCapacityUnits",
     "type": "text",
     "default": "2"
+  },
+  {
+    "tab": "Config.general",
+    "key": "orderImport",
+    "label": "Config.orderImport",
+    "type": "text",
+    "default": "0"
   }
 ]
+
