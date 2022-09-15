@@ -20,6 +20,13 @@
     "label": "Config.orderImport",
     "type": "checkbox",
     "default": "0"
+  },
+  {
+    "tab": "Config.general",
+    "key": "listings",
+    "label": "Config.listings",
+    "type": "checkbox",
+    "default": "0"
   }
 ]
 
