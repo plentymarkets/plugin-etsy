@@ -20,6 +20,13 @@
     "label": "Config.orderImport",
     "type": "checkbox",
     "default": "0"
+  },
+  {
+    "tab": "Config.general",
+    "key": "stockUpdate",
+    "label": "Config.stockUpdate",
+    "type": "checkbox",
+    "default": "0"
   }
 ]
 

@@ -9,6 +9,7 @@ use Etsy\Services\Batch\Item\ItemUpdateStockService;
 use Etsy\Helper\AccountHelper;
 use Etsy\Helper\SettingsHelper;
 use Plenty\Plugin\Log\Loggable;
+use Plenty\Plugin\ConfigRepository;
 
 /**
  * Class StockUpdateCron
@@ -22,12 +23,19 @@ class StockUpdateCron extends Cron
 	 */
 	private $settingsHelper;
 
-	/**
-	 * @param SettingsHelper $settingsHelper
-	 */
-	public function __construct(SettingsHelper $settingsHelper)
+    /**
+     * @var ConfigRepository
+     */
+    private $config;
+
+    /**
+     * @param SettingsHelper $settingsHelper
+     * @param ConfigRepository $config
+     */
+	public function __construct(SettingsHelper $settingsHelper, ConfigRepository $config)
 	{
 		$this->settingsHelper = $settingsHelper;
+        $this->config = $config;
 	}
 
 	/**
@@ -40,6 +48,8 @@ class StockUpdateCron extends Cron
 	{
 		try
 		{
+            if($this->checkIfCanRun() == 'true') return;
+
 			if($accountHelper->isProcessActive(SettingsHelper::SETTINGS_PROCESS_STOCK_UPDATE))
 			{
                 $lastRun = $this->lastRun();
@@ -59,6 +69,16 @@ class StockUpdateCron extends Cron
 			$this->getLogger(__FUNCTION__)->error('Etsy::item.stockUpdateError', $ex->getMessage());
 		}
 	}
+
+    /**
+     * Return if we can run this cron or is disabled
+     *
+     * @return bool
+     */
+    private function checkIfCanRun(): bool
+    {
+        return $this->config->get(SettingsHelper::PLUGIN_NAME . '.stockUpdate', 'true');
+    }
 
 	/**
 	 * Get the last run.
