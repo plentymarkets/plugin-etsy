@@ -19,6 +19,7 @@ use Plenty\Modules\EventProcedures\Services\Entries\ProcedureEntry;
 use Plenty\Modules\EventProcedures\Services\EventProceduresService;
 use Plenty\Modules\Payment\Method\Contracts\PaymentMethodContainer;
 use Plenty\Plugin\ServiceProvider;
+use Plenty\Plugin\ConfigRepository;
 
 use Etsy\Crons\ItemExportCron;
 use Etsy\Crons\StockUpdateCron;
@@ -79,7 +80,10 @@ class EtsyServiceProvider extends ServiceProvider
 
         $this->getApplication()->register(EtsyRouteServiceProvider::class);
 
-        $this->getApplication()->register(CatalogBootServiceProvider::class);
+        $configRepository = pluginApp(ConfigRepository::class);
+        if(!$configRepository->get(SettingsHelper::PLUGIN_NAME . '.stockUpdate', false)){
+            $this->getApplication()->register(CatalogBootServiceProvider::class);
+        }
     }
 
     /**
