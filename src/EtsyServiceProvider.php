@@ -81,7 +81,7 @@ class EtsyServiceProvider extends ServiceProvider
         $this->getApplication()->register(EtsyRouteServiceProvider::class);
 
         $configRepository = pluginApp(ConfigRepository::class);
-        if(!$configRepository->get(SettingsHelper::PLUGIN_NAME . '.stockUpdate', false)){
+        if(!$configRepository->get(SettingsHelper::PLUGIN_NAME . '.stockUpdate', false) || !$configRepository->get(SettingsHelper::PLUGIN_NAME . '.listings', false)){
             $this->getApplication()->register(CatalogBootServiceProvider::class);
         }
     }
