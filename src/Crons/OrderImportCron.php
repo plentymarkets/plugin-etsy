@@ -77,9 +77,9 @@ class OrderImportCron extends Cron
     /**
      * Return if we can run this cron or is disabled
      *
-     * @return bool
+     * @return stringhttps://github.com/plentymarkets/module-etsy/pull/21
      */
-    private function checkIfCanRun(): bool
+    private function checkIfCanRun(): string
     {
         return $this->config->get(SettingsHelper::PLUGIN_NAME . '.orderImport', 'true');
     }
