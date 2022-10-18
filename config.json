@@ -27,6 +27,14 @@
     "label": "Config.stockUpdate",
     "type": "checkbox",
     "default": "0"
+  },
+  {
+   "tab": "Config.general",
+    "key": "imageCleanup",
+    "label": "Config.imageCleanup",
+    "type": "checkbox",
+    "default": "0"
+
   }
 ]
 
