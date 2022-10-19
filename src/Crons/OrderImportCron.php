@@ -28,16 +28,16 @@ class OrderImportCron extends Cron
 	/**
 	 * @var ConfigRepository
 	 */
-	private $config;
+	private $configRepository;
 
     /**
      * @param SettingsHelper $settingsHelper
-     * @param ConfigRepository $config
+     * @param ConfigRepository $configRepository
      */
-	public function __construct(SettingsHelper $settingsHelper, ConfigRepository $config)
+	public function __construct(SettingsHelper $settingsHelper, ConfigRepository $configRepository)
 	{
 		$this->settingsHelper = $settingsHelper;
-		$this->config = $config;
+		$this->configRepository = $configRepository;
 	}
 
 	/**
@@ -50,7 +50,7 @@ class OrderImportCron extends Cron
 	{
 		try
 		{
-            if($this->checkIfCanRun() == 'true') return;
+            if($this->checkIfCanRun() === 'true') return;
 
 			if($accountHelper->isProcessActive(SettingsHelper::SETTINGS_PROCESS_ORDER_IMPORT))
 			{
@@ -71,11 +71,11 @@ class OrderImportCron extends Cron
     /**
      * Return if we can run this cron or is disabled
      *
-     * @return bool
+     * @return string
      */
-    private function checkIfCanRun(): bool
+    private function checkIfCanRun(): string
     {
-        return $this->config->get(SettingsHelper::PLUGIN_NAME . '.orderImport', 'true');
+        return $this->configRepository->get(SettingsHelper::PLUGIN_NAME . '.orderImport', 'true');
     }
 	/**
 	 * Get the last run.

@@ -26,16 +26,16 @@ class StockUpdateCron extends Cron
     /**
      * @var ConfigRepository
      */
-    private $config;
+    private ConfigRepository $configRepository;
 
     /**
      * @param SettingsHelper $settingsHelper
-     * @param ConfigRepository $config
+     * @param ConfigRepository $configRepository
      */
-	public function __construct(SettingsHelper $settingsHelper, ConfigRepository $config)
+	public function __construct(SettingsHelper $settingsHelper, ConfigRepository $configRepository)
 	{
 		$this->settingsHelper = $settingsHelper;
-        $this->config = $config;
+        $this->configRepository = $configRepository;
 	}
 
 	/**
@@ -48,7 +48,7 @@ class StockUpdateCron extends Cron
 	{
 		try
 		{
-            if($this->checkIfCanRun() == 'true') return;
+            if($this->checkIfCanRun() === 'true') return;
 
 			if($accountHelper->isProcessActive(SettingsHelper::SETTINGS_PROCESS_STOCK_UPDATE))
 			{
@@ -73,11 +73,11 @@ class StockUpdateCron extends Cron
     /**
      * Return if we can run this cron or is disabled
      *
-     * @return bool
+     * @return string
      */
-    private function checkIfCanRun(): bool
+    private function checkIfCanRun(): string
     {
-        return $this->config->get(SettingsHelper::PLUGIN_NAME . '.stockUpdate', 'true');
+        return $this->configRepository->get(SettingsHelper::PLUGIN_NAME . '.stockUpdate', 'true');
     }
 
 	/**

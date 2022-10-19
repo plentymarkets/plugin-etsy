@@ -19,21 +19,21 @@ class ImageFileCleanupCron
     /**
      * @var ConfigRepository
      */
-    private $config;
+    private $configRepository;
 
     /**
      * ImageFileCleanupCron constructor.
      * @param LibraryCallContract $libraryCall
      */
-    public function __construct(LibraryCallContract $libraryCall, ConfigRepository $config)
+    public function __construct(LibraryCallContract $libraryCall, ConfigRepository $configRepository)
     {
         $this->libraryCall = $libraryCall;
-        $this->config = $config;
+        $this->configRepository = $configRepository;
     }
     
     public function handle()
     {
-        if($this->checkIfCanRun() == 'true') return;
+        if($this->checkIfCanRun() === 'true') return;
 
         $this->libraryCall->call(self::IMAGE_FILE_CLEANUP);
     }
@@ -41,10 +41,10 @@ class ImageFileCleanupCron
     /**
      * Return if we can run this cron or is disabled
      *
-     * @return bool
+     * @return string
      */
-    private function checkIfCanRun(): bool
+    private function checkIfCanRun(): string
     {
-        return $this->config->get(SettingsHelper::PLUGIN_NAME . '.imageCleanup', 'true');
+        return $this->configRepository->get(SettingsHelper::PLUGIN_NAME . '.imageCleanup', 'true');
     }
 }
