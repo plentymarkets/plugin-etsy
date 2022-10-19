@@ -23,6 +23,13 @@
   },
   {
     "tab": "Config.general",
+    "key": "listings",
+    "label": "Config.listings",
+    "type": "checkbox",
+    "default": "0"
+  },
+  {
+    "tab": "Config.general",
     "key": "stockUpdate",
     "label": "Config.stockUpdate",
     "type": "checkbox",
@@ -35,6 +42,13 @@
     "type": "checkbox",
     "default": "0"
 
+  },
+  {
+    "tab": "Config.general",
+    "key": "procedures",
+    "label": "Config.procedures",
+    "type": "checkbox",
+    "default": "0"
   }
 ]
 
