@@ -53,7 +53,7 @@ class OrderImportCron extends Cron
       if($this->checkIfCanRun() === 'true') return;
       $this->getLogger(__FUNCTION__)
            ->report('OrderImportStarted', [
-               'config'   => $this->config->get(SettingsHelper::PLUGIN_NAME),
+               'config'   => $this->configRepository->get(SettingsHelper::PLUGIN_NAME),
                'from'     => 'plugin'
            ]);
 

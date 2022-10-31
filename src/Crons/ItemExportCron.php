@@ -23,7 +23,7 @@ class ItemExportCron extends Cron
 	 * @var SettingsHelper
 	 */
 	private $settingsHelper;
-    private ConfigRepository $configRepository;
+    private $configRepository;
 
     /**
 	 * @param SettingsHelper $settingsHelper

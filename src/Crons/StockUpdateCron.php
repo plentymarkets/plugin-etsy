@@ -26,7 +26,7 @@ class StockUpdateCron extends Cron
     /**
      * @var ConfigRepository
      */
-    private ConfigRepository $configRepository;
+    private $configRepository;
 
     /**
      * @param SettingsHelper $settingsHelper
