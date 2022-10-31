@@ -20,6 +20,35 @@
     "label": "Config.orderImport",
     "type": "checkbox",
     "default": "0"
+  },
+  {
+    "tab": "Config.general",
+    "key": "listings",
+    "label": "Config.listings",
+    "type": "checkbox",
+    "default": "0"
+  },
+  {
+    "tab": "Config.general",
+    "key": "stockUpdate",
+    "label": "Config.stockUpdate",
+    "type": "checkbox",
+    "default": "0"
+  },
+  {
+   "tab": "Config.general",
+    "key": "imageCleanup",
+    "label": "Config.imageCleanup",
+    "type": "checkbox",
+    "default": "0"
+
+  },
+  {
+    "tab": "Config.general",
+    "key": "procedures",
+    "label": "Config.procedures",
+    "type": "checkbox",
+    "default": "0"
   }
 ]
 
