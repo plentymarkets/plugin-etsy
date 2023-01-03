@@ -398,7 +398,7 @@ class OrderHelper
 		$reEx .= '|[0-9]{1,3}[ a-zA-Z-\/\.]{0,6}'; // e.g. "Rosenstr. 14"
 		$reEx .= '|[0-9]{1,3}[ a-zA-Z-\/\.]{1,6}[0-9]{1,3}[ a-zA-Z-\/\.]{0,6}[0-9]{0,3}[ a-zA-Z-\/\.]{0,6}[0-9]{0,3}'; // e.g "Straße in Österreich 30/4/12.2"
 		$reEx .= ')$/';
-		$reExForeign = '/^(?<no>[0-9\s]{1,9}([\D]{0,2}([\s]|[^a-zA-Z0-9])))(?<ad>([\D]+))$/';    //e.g. "16 Bellevue Road"
+		$reExForeign = '/^(?<no>[0-9\s]{1,9}([\D]{0,2}([\s]|[^a-zA-Z0-9ä-üÄ-Ü])))(?<ad>([\D]+))$/';    //e.g. "16 Bellevue Road"
 
 		/*
 		if (strripos($address, 'POSTFILIALE') !== false)
