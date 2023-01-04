@@ -1,5 +1,9 @@
 # Release Notes für Etsy
 
+## v2.1.36 (2023-01-03)
+### Fixed
+- Marktplatz-ID wurde nicht im Template-Filter des Katalogs angezeigt. Dieses Verhalten wurde behoben.
+
 ## v2.1.35 (2022-09-02)
 ### Fixed
 - Ein Fehler, der bei der Erstellung eines Listings auftrat, wurde behoben.
