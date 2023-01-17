@@ -116,7 +116,7 @@ class CatalogBootServiceProvider extends ServiceProvider
         $template->addFilter([
             'name' => 'variationMarket.isVisibleForMarket',
             'params' => [
-                ["name" => "marketId", "value" => 156]
+                ["name" => "marketId", "ref" => "settings.marketId"]
             ]
         ]);
 

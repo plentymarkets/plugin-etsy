@@ -1,5 +1,9 @@
 # Release notes for Etsy
 
+## v2.1.37 (2023-01-17)
+### Fixed
+- Crons did not start correctly. This problem has been fixed.
+
 ## v2.1.36 (2023-01-03)
 ### Fixed
 - Fixed Marketplace id not shown in catalog template filter
