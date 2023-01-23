@@ -8,6 +8,8 @@ use Etsy\Helper\SettingsHelper;
 use Etsy\Helper\AccountHelper;
 use Etsy\Services\Order\OrderImportService;
 use Plenty\Plugin\Log\Loggable;
+use Plenty\Plugin\ConfigRepository;
+
 
 /**
  * Class OrderImportCron
@@ -24,11 +26,18 @@ class OrderImportCron extends Cron
 	private $settingsHelper;
 
 	/**
-	 * @param SettingsHelper $settingsHelper
+	 * @var ConfigRepository
 	 */
-	public function __construct(SettingsHelper $settingsHelper)
+	private $configRepository;
+
+    /**
+     * @param SettingsHelper $settingsHelper
+     * @param ConfigRepository $configRepository
+     */
+	public function __construct(SettingsHelper $settingsHelper, ConfigRepository $configRepository)
 	{
 		$this->settingsHelper = $settingsHelper;
+		$this->configRepository = $configRepository;
 	}
 
 	/**
@@ -41,6 +50,14 @@ class OrderImportCron extends Cron
 	{
 		try
 		{
+      if($this->checkIfCanRun() === 'true') return;
+      $this->getLogger(__FUNCTION__)
+           ->report('OrderImportStarted', [
+               'config'   => $this->configRepository->get(SettingsHelper::PLUGIN_NAME),
+               'from'     => 'plugin'
+           ]);
+
+
 			if($accountHelper->isProcessActive(SettingsHelper::SETTINGS_PROCESS_ORDER_IMPORT))
 			{
                 $from = $this->lastRun();
@@ -57,6 +74,15 @@ class OrderImportCron extends Cron
 		}
 	}
 
+    /**
+     * Return if we can run this cron or is disabled
+     *
+     * @return string
+     */
+    private function checkIfCanRun(): string
+    {
+        return $this->configRepository->get(SettingsHelper::PLUGIN_NAME . '.orderImport', 'true');
+    }
 	/**
 	 * Get the last run.
 	 *

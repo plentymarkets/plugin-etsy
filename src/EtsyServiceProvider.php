@@ -19,6 +19,7 @@ use Plenty\Modules\EventProcedures\Services\Entries\ProcedureEntry;
 use Plenty\Modules\EventProcedures\Services\EventProceduresService;
 use Plenty\Modules\Payment\Method\Contracts\PaymentMethodContainer;
 use Plenty\Plugin\ServiceProvider;
+use Plenty\Plugin\ConfigRepository;
 
 use Etsy\Crons\ItemExportCron;
 use Etsy\Crons\StockUpdateCron;
@@ -118,13 +119,13 @@ class EtsyServiceProvider extends ServiceProvider
     private function registerEventProcedures($eventProceduresService)
     {
         $eventProceduresService->registerProcedure('etsy', ProcedureEntry::PROCEDURE_GROUP_ORDER, [
-            'de' => 'Versandbestätigung an Etsy senden',
-            'en' => 'Send shipping notification to Etsy'
+            'de' => 'Versandbestätigung an Etsy senden(Veraltet)',
+            'en' => 'Send shipping notification to Etsy(Deprecated)'
         ],                                         'Etsy\\Procedures\\ShippingNotificationEventProcedure@run');
 
         $eventProceduresService->registerProcedure('etsy', ProcedureEntry::PROCEDURE_GROUP_ORDER, [
-            'de' => 'Zahlungsbestätigung an Etsy senden',
-            'en' => 'Send payment notification to Etsy'
+            'de' => 'Zahlungsbestätigung an Etsy senden(Veraltet)',
+            'en' => 'Send payment notification to Etsy(Deprecated)'
         ],                                         'Etsy\\Procedures\\PaymentNotificationEventProcedure@run');
     }
 

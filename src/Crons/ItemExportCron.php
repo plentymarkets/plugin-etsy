@@ -10,6 +10,7 @@ use Etsy\Services\Batch\Item\ItemExportService;
 use Etsy\Helper\AccountHelper;
 use Etsy\Helper\SettingsHelper;
 use Plenty\Plugin\Log\Loggable;
+use Plenty\Plugin\ConfigRepository;
 
 /**
  * Class ItemExportCron
@@ -22,14 +23,16 @@ class ItemExportCron extends Cron
 	 * @var SettingsHelper
 	 */
 	private $settingsHelper;
+    private $configRepository;
 
-	/**
+    /**
 	 * @param SettingsHelper $settingsHelper
 	 */
-	public function __construct(SettingsHelper $settingsHelper)
+	public function __construct(SettingsHelper $settingsHelper, ConfigRepository $configRepository)
 	{
 		$this->settingsHelper = $settingsHelper;
-	}
+        $this->configRepository = $configRepository;
+    }
 
 	/**
 	 * Run the item export process.
@@ -41,7 +44,9 @@ class ItemExportCron extends Cron
 	{
 		try
 		{
-			if($accountHelper->isProcessActive(SettingsHelper::SETTINGS_PROCESS_ITEM_EXPORT))
+            if($this->checkIfCanRun() === 'true') return;
+
+            if($accountHelper->isProcessActive(SettingsHelper::SETTINGS_PROCESS_ITEM_EXPORT))
 			{
 			    $lastRun = $this->lastRun();
 
@@ -60,6 +65,16 @@ class ItemExportCron extends Cron
 			$this->getLogger(EtsyServiceProvider::ITEM_EXPORT_CRON)->error('Etsy::item.itemExportError', $ex->getMessage());
 		}
 	}
+
+    /**
+     * Return if we can run this cron or is disabled
+     *
+     * @return string
+     */
+    private function checkIfCanRun(): string
+    {
+        return $this->configRepository->get(SettingsHelper::PLUGIN_NAME . '.listings', 'true');
+    }
 
 	/**
 	 * Get the last run.
