@@ -2,11 +2,13 @@
 
 namespace Etsy\Procedures;
 
+use Etsy\Helper\SettingsHelper;
 use Plenty\Modules\EventProcedures\Events\EventProceduresTriggered;
 use Plenty\Modules\Order\Models\Legacy\Order;
 
 use Etsy\Api\Services\ReceiptService;
 use Plenty\Modules\Order\Property\Models\OrderPropertyType;
+use Plenty\Plugin\ConfigRepository;
 
 /**
  * Class PaymentNotificationEventProcedure
@@ -17,13 +19,19 @@ class PaymentNotificationEventProcedure
 	 * @var ReceiptService
 	 */
 	private $receiptService;
-
 	/**
-	 * @param ReceiptService $receiptService
+	 * @var ConfigRepository
 	 */
-	public function __construct(ReceiptService $receiptService)
+	private $configRepository;
+
+    /**
+     * @param ReceiptService $receiptService
+     * @param ConfigRepository $configRepository
+     */
+	public function __construct(ReceiptService $receiptService, ConfigRepository $configRepository)
 	{
 		$this->receiptService = $receiptService;
+		$this->configRepository = $configRepository;
 	}
 
 	/**
@@ -33,12 +41,23 @@ class PaymentNotificationEventProcedure
 	 */
 	public function run(EventProceduresTriggered $eventTriggered)
 	{
+        if($this->checkIfCanRun() === 'true') return;
+
 		/** @var Order $order */
 		$order = $eventTriggered->getOrder();
 
 		$this->receiptService->updateReceipt($this->getReceiptId($order), true, null);
 	}
 
+    /**
+     * Return if we can run this procedure
+     *
+     * @return string
+     */
+    private function checkIfCanRun(): string
+    {
+        return $this->configRepository->get(SettingsHelper::PLUGIN_NAME . '.procedures', 'true');
+    }
 	/**
 	 * Get the receipt ID from the order properties.
 	 *

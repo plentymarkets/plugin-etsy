@@ -41,7 +41,13 @@
     "label": "Config.imageCleanup",
     "type": "checkbox",
     "default": "0"
-
+  },
+  {
+   "tab": "Config.general",
+    "key": "procedures",
+    "label": "Config.procedures",
+    "type": "checkbox",
+    "default": "0"
   }
 ]
 
