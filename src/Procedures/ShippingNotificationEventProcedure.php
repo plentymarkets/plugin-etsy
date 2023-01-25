@@ -12,6 +12,7 @@ use Etsy\Api\Services\ReceiptService;
 use Etsy\Helper\SettingsHelper;
 use Etsy\Helper\ShippingHelper;
 use Plenty\Modules\Order\Shipping\ParcelService\Models\ParcelServicePreset;
+use Plenty\Plugin\ConfigRepository;
 use Plenty\Plugin\Log\Loggable;
 
 /**
@@ -36,16 +37,23 @@ class ShippingNotificationEventProcedure
 	 */
 	private $settingsHelper;
 
-	/**
-	 * @param ReceiptService $receiptService
-	 * @param ShippingHelper $shippingHelper
-	 * @param SettingsHelper $settingsHelper
-	 */
-	public function __construct(ReceiptService $receiptService, ShippingHelper $shippingHelper, SettingsHelper $settingsHelper)
+    /**
+     * @var ConfigRepository
+     */
+    private $configRepository;
+
+    /**
+     * @param ReceiptService $receiptService
+     * @param ShippingHelper $shippingHelper
+     * @param SettingsHelper $settingsHelper
+     * @param ConfigRepository $configRepository
+     */
+	public function __construct(ReceiptService $receiptService, ShippingHelper $shippingHelper, SettingsHelper $settingsHelper, ConfigRepository $configRepository)
 	{
 		$this->receiptService = $receiptService;
 		$this->shippingHelper = $shippingHelper;
 		$this->settingsHelper = $settingsHelper;
+        $this->configRepository = $configRepository;
 	}
 
 	/**
@@ -55,6 +63,8 @@ class ShippingNotificationEventProcedure
 	 */
 	public function run(EventProceduresTriggered $eventTriggered)
 	{
+        if($this->checkIfCanRun() === 'true') return;
+
 		/** @var Order $order */
 		$order = $eventTriggered->getOrder();
 
@@ -75,6 +85,16 @@ class ShippingNotificationEventProcedure
 			$this->receiptService->updateReceipt($this->getReceiptId($order), null, true);
 		}
 	}
+
+    /**
+     * Return if we can run this procedure
+     *
+     * @return string
+     */
+    private function checkIfCanRun(): string
+    {
+        return $this->configRepository->get(SettingsHelper::PLUGIN_NAME . '.procedures', 'true');
+    }
 
 	/**
 	 * Get the receipt ID from the order properties.

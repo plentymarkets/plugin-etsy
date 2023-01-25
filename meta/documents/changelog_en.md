@@ -1,5 +1,9 @@
 # Release notes for Etsy
 
+## v2.1.37 (2023-01-23)
+### Fixed
+- Added Enable/Disable Etsy Module 
+
 ## v2.1.37 (2023-01-17)
 ### Fixed
 - Crons did not start correctly. This problem has been fixed.
